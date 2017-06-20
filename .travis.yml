@@ -12,4 +12,4 @@ install:
 before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 # command to run tests
-script: pytest braindsp/tests
+script: pytest neurodsp/tests
