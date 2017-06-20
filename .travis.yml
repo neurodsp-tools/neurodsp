@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.6"
+notifications:
+    email: false
+
+# Install packages
+install:
+  - pip install -r requirements.txt
+  
+# Add the current directory to the pythonpath so that tests can load braindsp
+before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
+
+# command to run tests
+script: pytest braindsp/tests

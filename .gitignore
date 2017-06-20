@@ -1,0 +1,9 @@
+# Ignore compiled py files
+*.pyc
+# Ignore ipynb checkpoint files
+**/.ipynb_checkpoints
+# Ignore test cache files
+**/.cache
+# Ignore files marked as old
+*_old
+MANIFEST
