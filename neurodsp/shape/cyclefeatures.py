@@ -6,7 +6,6 @@ Quantify the shape of oscillatory waveforms on a cycle-by-cycle basis
 import numpy as np
 import pandas as pd
 import neurodsp
-from neurodsp import shape
 import warnings
 
 
@@ -96,10 +95,10 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         raise ValueError('Parameter "center_extrema" must be either "P" or "T"')
 
     # Find peak and trough locations in the signal
-    Ps, Ts = shape.find_extrema(x, Fs, f_range, **find_extrema_kwargs)
+    Ps, Ts = neurodsp.shape.find_extrema(x, Fs, f_range, **find_extrema_kwargs)
 
     # Find zero-crossings
-    zeroxR, zeroxD = shape.find_zerox(x, Ps, Ts)
+    zeroxR, zeroxD = neurodsp.shape.find_zerox(x, Ps, Ts)
 
     # Determine number of cycles
     N_t2t = len(Ts) - 1
