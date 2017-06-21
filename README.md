@@ -7,7 +7,7 @@
 A package of modules to process and analyze neural recordings as individual voltage time series. The primary purpose of this library is to serve as the shared codebase for the [Voytek Lab](http://voyteklab.com/), but we welcome anyone's use and contributions.
 
 ## Python version support
-This package currently supports python 3 (tested on 3.6), but not python 2.
+This package has been tested on python 3.4, 3.5, and 3.6 with the latest [Anaconda](https://www.continuum.io/downloads) distribution. Support for python 2 and earlier versions of python 3 is not guaranteed.
 
 ## Get latest code
 
@@ -34,4 +34,4 @@ This package currently supports python 3 (tested on 3.6), but not python 2.
 - scipy
 - matplotlib
 - pandas
-- pytest
+- pytest (optional)
