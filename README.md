@@ -20,7 +20,7 @@ This package currently supports python 3 (tested on 3.6), but not python 2.
 ## Modules
 
 - filt : Bandpass, highpass, lowpass, and notch filters ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Filtering.ipynb))
-- laggedcoherence : Estimation of rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20Coherence.ipynb))
+- laggedcoherence : Estimation of rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb))
 - timefrequency : Estimate instantaneous measures of oscillatory activity ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb)) 
 - shape : submodules for measuring the waveform shape of neural oscillations
 	- cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Cycle-by-cycle%20features%20of%20oscillatory%20waveforms.ipynb)) 
