@@ -12,6 +12,6 @@ message:  # Customize the comment made by the bot
     no_errors: "Cheers ! There are no PEP8 issues in this Pull Request. :beers: "
 
 pycodestyle:
-    max-line-length: 100  # Default is 79 in PEP8
+    max-line-length: 1000  # Default is 79 in PEP8
     ignore:  # Errors and warnings to ignore
         - W391
