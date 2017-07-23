@@ -12,7 +12,8 @@ import warnings
 def features_by_cycle(x, Fs, f_range, center_extrema='P',
                       find_extrema_kwargs=None,
                       estimate_oscillating_periods=False,
-                      true_oscillating_periods_kwargs=None):
+                      true_oscillating_periods_kwargs=None,
+                      hilbert_increase_N=False):
     """
     Calculate several features of an oscillation's waveform
     shape for each cycle in a recording.
@@ -39,6 +40,11 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
     true_oscillating_periods_kwargs : dict or None
         Keyword arguments for function to find label cycles
         as in or not in an oscillation
+    hilbert_increase_N : bool
+        corresponding kwarg for neurodsp.amp_by_time
+        If true, this zeropads the signal when computing the
+        Fourier transform, which can be necessary for
+        computing it in a reasonable amount of time.
 
     Returns
     -------
@@ -145,7 +151,7 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
     shape_features['time_ptsym'] = shape_features['time_peak'] / (shape_features['time_peak'] + shape_features['time_trough'])
 
     # Compute average oscillatory amplitude estimate during cycle
-    amp = neurodsp.amp_by_time(x, Fs, f_range)
+    amp = neurodsp.amp_by_time(x, Fs, f_range, hilbert_increase_N=hilbert_increase_N)
     shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i+1]]) for i in range(N_t2t)]
 
     # Convert feature dictionary into a DataFrame
