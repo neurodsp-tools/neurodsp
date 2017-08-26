@@ -8,7 +8,7 @@ from scipy import signal
 import matplotlib.pylab as plt
 
 
-def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, nfft=None, detrend=False, filtlen=1.):
+def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtlen=1.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
     Transform (mean, median), or the entire signal's FFT smoothed (medfilt)
@@ -20,20 +20,16 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, nfft=N
     Fs : float, Hz
             Sampling frequency of the x time series.
     method : { 'mean', 'median', 'medfilt'}, optional
-                        methods to calculate the PSD. 'mean' is the same as Welch's method (mean of STFT), 'median' uses median of STFT instead of mean to minimize outlier effect. 'medfilt' filters the entire signals raw FFT with a median filter to smooth. Defaults to 'mean'.
-        The next 5 parameters are only relevant for method = {'mean', 'median'}
+            Methods to calculate the PSD. 'mean' is the same as Welch's method (mean of STFT), 'median' uses median of STFT instead of mean to minimize outlier effect. 'medfilt' filters the entire signals raw FFT with a median filter to smooth. Defaults to 'mean'.
+    The next 3 parameters are only relevant for method = {'mean', 'median'}
     window : str or tuple or array_like, optional
             Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
     nperseg : int, optional
             Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
     noverlap : int, optional
             Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
-    nfft : int, optional
-            Length of the FFT used, if a zero padded FFT is desired. If None, the FFT length is nperseg. Defaults to None.
-    detrend : str or function or False, optional
-            Specifies how to detrend each segment. If detrend is a string, it is passed as the type argument to the detrend function. If it is a function, it takes a segment and returns a detrended segment. If detrend is False, no detrending is done. Defaults to 'constant'.
     filten : float, Hz, optional
-                        Length of median filter in Hz (for medfilt method)
+                        (For medfilt method) Length of median filter in Hz.
 
     Returns
     -------
@@ -59,8 +55,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, nfft=N
                 nperseg = len(window)
 
     # call signal.spectrogram function in scipy to compute STFT
-    freq, t, zxx = signal.spectrogram(
-        x, Fs, window, nperseg, noverlap, nfft, detrend, return_onesided=True)
+    freq, t, zxx = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if method is 'mean':
         Pxx = np.mean(np.abs(zxx), axis=-1)
     elif method is 'median':
@@ -80,7 +75,14 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, nfft=N
     return freq, Pxx
 
 
-def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.)):
+def scv(x, Fs, window='hann', nperseg=None, noverlap=None, outlierpct=None):
+    """
+    Compute the CV of the spectrum at each frequency.
+    """
+    freq, t, zxx = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+
+
+def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
     """
     Compute the distribution of log10 power at each frequency from the signal spectrogram.
         The histogram bins are the same for every frequency, thus evenly spacing the global min and max power 
@@ -98,9 +100,11 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
     noverlap : int, optional
             Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
     nbins : int, optional
-                Number of histogram bins to use, defaults to 50
+            Number of histogram bins to use, defaults to 50
     flim : tuple, (start, end) in Hz, optional
-                Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
+            Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
+    cutpct : tuple, (low, high), in percentage, optional
+    		Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
 
     Returns
     -------
@@ -108,8 +112,8 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
             Array of frequencies.
     power_bins : ndarray
             Histogram bins used to compute the distribution.
-        spect_hist : ndarray (2D)
-                        Power distribution at every frequency, nbins x freqs 2D matrix
+    spect_hist : ndarray (2D)
+            Power distribution at every frequency, nbins x freqs 2D matrix
     """
 
     if nperseg is None:
@@ -130,9 +134,8 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
     ps = ps[:, np.logical_and(freq >= flim[0], freq < flim[1])]
     freq = freq[np.logical_and(freq >= flim[0], freq < flim[1])]
 
-    # Prepare bins for power
-    power_min = np.min(ps)
-    power_max = np.max(ps)
+    # Prepare bins for power. Min and max of bins determined by power cutoff percentage
+    power_min, power_max = np.percentile(np.ndarray.flatten(ps), cutpct)
     power_bins = np.linspace(power_min, power_max, nbins + 1)
 
     # Compute histogram of power for each frequency
@@ -177,3 +180,9 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
         # if a PSD is provided, plot over the histogram data
         plt.plot(freq, np.log10(
             psd[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])]), color='w', alpha=0.8)
+
+
+def fit_slope(freq, psd, fit_freqs=(20., 40.), fit_excl=None, method='ols'):
+    """
+    Fit PSD with straight line in log-log domain over the specified frequency range.
+    """
