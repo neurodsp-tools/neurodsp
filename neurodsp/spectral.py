@@ -55,11 +55,11 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
                 nperseg = len(window)
 
     # call signal.spectrogram function in scipy to compute STFT
-    freq, t, zxx = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if method is 'mean':
-        Pxx = np.mean(np.abs(zxx), axis=-1)
+        Pxx = np.mean(spg, axis=-1)
     elif method is 'median':
-        Pxx = np.median(np.abs(zxx), axis=-1)
+        Pxx = np.median(spg, axis=-1)
 
     elif method is 'medfilt':
         # median filtered FFT spectrum
@@ -75,11 +75,50 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
     return freq, Pxx
 
 
-def scv(x, Fs, window='hann', nperseg=None, noverlap=None, outlierpct=None):
+def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     """
-    Compute the CV of the spectrum at each frequency.
+    Compute the coefficient of variation of the spectrum at each frequency.
+    White noise should have a SCV of 1 at all frequencies.
+
+    Parameters
+    -----------
+    x : array_like 1d
+            Time series of measurement values
+    Fs : float, Hz
+            Sampling frequency of the x time series.   
+    window : str or tuple or array_like, optional
+            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+    nperseg : int, optional
+            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+    noverlap : int, optional
+            Number of points to overlap between segments. If Defaults to 0 for independence.
+    outlierpct : float, percent, optional
+            Discarding a percentage of the windows with the lowest and highest total log power.
+
+    Returns
+    -------
+    freq : ndarray
+            Array of sample frequencies.
+    SCV : ndarray
+            Spectral coefficient of variation.
     """
-    freq, t, zxx = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    if nperseg is None:
+        if type(window) in (str, tuple):
+            # window is a string or tuple, defaults to 1 second of data
+            nperseg = int(Fs)
+        else:
+            # window is an array, defaults to window length
+            nperseg = len(window)
+
+    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    if outlierpct is not None:
+        # discard time windows with very low and very high powers        
+        discard = int(spg.shape[1] / 100. * outlierpct)
+        outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[discard:-discard]        
+        spg = spg[:, outlieridx]
+
+    SCV = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
+    return freq, SCV
 
 
 def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
@@ -104,7 +143,7 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
     flim : tuple, (start, end) in Hz, optional
             Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
     cutpct : tuple, (low, high), in percentage, optional
-    		Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
+                Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
 
     Returns
     -------
@@ -125,10 +164,10 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
             nperseg = len(window)
 
     # compute spectrogram of data
-    freq, t, zxx = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
+    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
-    ps = np.transpose(np.log10(np.abs(zxx)))
+    ps = np.transpose(np.log10(spg))
 
     # Limit spectrogram to freq range of interest
     ps = ps[:, np.logical_and(freq >= flim[0], freq < flim[1])]
@@ -186,3 +225,4 @@ def fit_slope(freq, psd, fit_freqs=(20., 40.), fit_excl=None, method='ols'):
     """
     Fit PSD with straight line in log-log domain over the specified frequency range.
     """
+    ### TO DO ###
