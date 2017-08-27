@@ -91,7 +91,7 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     nperseg : int, optional
             Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
     noverlap : int, optional
-            Number of points to overlap between segments. If Defaults to 0 for independence.
+            Number of points to overlap between segments. Defaults to 0 for independence.
     outlierpct : float, percent, optional
             Discarding a percentage of the windows with the lowest and highest total log power.
 
@@ -112,13 +112,93 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
 
     freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
-        # discard time windows with very low and very high powers        
+        # discard time windows with very low and very high powers
         discard = int(spg.shape[1] / 100. * outlierpct)
-        outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[discard:-discard]        
+        outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[discard:-discard]
         spg = spg[:, outlieridx]
 
     SCV = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
     return freq, SCV
+
+
+def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rsParams=None):
+    """
+    Resampled version of scv: instead of a single estimate of mean and standard deviation, the spectrogram is
+    resampled, either randomly (bootstrap) or time-stepped (rolling).
+
+    Parameters
+    -----------
+    x : array_like 1d
+            Time series of measurement values
+    Fs : float, Hz
+            Sampling frequency of the x time series.   
+    window : str or tuple or array_like, optional
+            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+    nperseg : int, optional
+            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+    noverlap : int, optional
+            Number of points to overlap between segments. Defaults to 0 for independence.
+    method : {'bootstrap', 'rolling'}, optional
+            Method of resampling: bootstrap randomly samples a subset of the spectrogram repeatedly, while rolling takes the rolling window scv.
+            Defaults to 'bootstrap'.
+    rsParams : tuple, (int, int), optional
+            Parameters for resampling algorithm. 
+            If 'bootstrap', rsParams = (nslices, ndraws), representing number of slices per draw, and number of random draws, defaults to (10% of slices, 100 draws).
+            If 'rolling', rsParams = (nslices, nsteps), representing number of slices per draw, and number of slices to step forward, defaults to (10, 5).
+    Returns
+    -------
+    freq : ndarray
+            Array of sample frequencies.
+    T : ndarray
+            Array of time indices, for 'rolling' resampling. If 'bootstrap', T = None.
+    SCVrs : ndarray
+            Resampled spectral coefficient of variation.
+    """
+    if nperseg is None:
+        if type(window) in (str, tuple):
+            # window is a string or tuple, defaults to 1 second of data
+            nperseg = int(Fs)
+        else:
+            # window is an array, defaults to window length
+            nperseg = len(window)
+
+    # compute spectrogram
+    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+
+    if method is 'bootstrap':
+        # params are number of slices of STFT to compute SCV over, and number of draws
+        if rsParams is None:
+            # defaults to draw 1/10 of STFT slices, 100 draws
+            rsParams = (int(spg.shape[1] / 10.), 100)
+
+        nslices, ndraws = rsParams
+        SCVrs = np.zeros((len(freq), ndraws))
+        for draw in range(ndraws):
+            # repeated subsampling of spectrogram randomly, with replacement between draws
+            idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
+            SCVrs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
+
+        T = None  # no time component, return nothing
+
+    elif method is 'rolling':
+        # params are number of slices of STFT to compute SCV over, and number of slices to roll forward
+        if rsParams is None:
+            # defaults to 10 STFT slices, move forward by 5 slices
+            rsParams = (10, 5)
+
+        nslices, nsteps = rsParams
+        outlen = int(np.ceil((spg.shape[1] - nslices) / float(nsteps))) + 1
+        SCVrs = np.zeros((len(freq), outlen))
+        for ind in range(outlen):
+            curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
+            SCVrs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
+
+        T = t[0::nsteps]  # grab the time indices from the spectrogram
+
+    else:
+        raise ValueError('Unknown resampling method: %s' % method)
+
+    return freq, T, SCVrs
 
 
 def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
@@ -205,7 +285,7 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
     psd_freq : array_like, 1d, optional
             Frequency axis of the PSD to be plotted.
     psd : array_like, 1d, optional
-            PSD to be plotted over the histograms.			
+            PSD to be plotted over the histograms.          
     """
     # automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freq)))
