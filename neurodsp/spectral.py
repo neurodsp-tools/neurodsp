@@ -63,8 +63,9 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
 
     elif method is 'medfilt':
         # median filtered FFT spectrum
-        FT = np.fft.fft(x)
-        freq = np.fft.fftfreq(len(x), 1. / Fs)  # get freq axis
+        # take the positive half of the spectrum since it's symmetrical        
+        FT = np.fft.fft(x)[:int(np.ceil(len(x) / 2.))]
+        freq = np.fft.fftfreq(len(x), 1. / Fs)[:int(np.ceil(len(x) / 2.))]  # get freq axis
         # convert median filter length from Hz to samples
         filtlen_samp = int(filtlen / (freq[1] - freq[0])) / 2 * 2 + 1
         Pxx = signal.medfilt(np.abs(FT)**2. / (Fs * len(x)), filtlen_samp)
