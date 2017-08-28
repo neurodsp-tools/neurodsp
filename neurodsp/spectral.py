@@ -63,7 +63,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
 
     elif method is 'medfilt':
         # median filtered FFT spectrum
-        # take the positive half of the spectrum since it's symmetrical        
+        # take the positive half of the spectrum since it's symmetrical
         FT = np.fft.fft(x)[:int(np.ceil(len(x) / 2.))]
         freq = np.fft.fftfreq(len(x), 1. / Fs)[:int(np.ceil(len(x) / 2.))]  # get freq axis
         # convert median filter length from Hz to samples
@@ -298,7 +298,7 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
 
     if psd is not None:
         # if a PSD is provided, plot over the histogram data
-        plt.plot(freq, np.log10(
+        plt.plot(psd_freq[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])], np.log10(
             psd[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])]), color='w', alpha=0.8)
 
 
