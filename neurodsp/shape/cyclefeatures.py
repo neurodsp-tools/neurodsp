@@ -179,6 +179,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         df.rename(columns=rename_dict, inplace=True)
 
         # Need to reverse symmetry measures
+        df['volt_peak'] = -df['volt_peak']
+        df['volt_trough'] = -df['volt_trough']
         df['volt_rdsym'] = -df['volt_rdsym']
         df['volt_ptsym'] = -df['volt_ptsym']
         df['time_rdsym'] = 1 - df['time_rdsym']
