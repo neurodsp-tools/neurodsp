@@ -6,4 +6,6 @@
 **/.cache
 # Ignore files marked as old
 *_old
+# Ignore dist directory
+dist/
 MANIFEST
