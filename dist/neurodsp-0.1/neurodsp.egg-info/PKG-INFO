@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: neurodsp
+Version: 0.1
+Summary: A package of modules for analyzing neural signals
+Home-page: https://github.com/voytekresearch/neurodsp
+Author: The Voytek Lab
+Author-email: voyteklab@gmail.com
+License: MIT
+Download-URL: https://github.com/voytekresearch/neurodsp/archive/0.1.tar.gz
+Description: UNKNOWN
+Keywords: neuroscience,neural oscillations,time series analysis,spectral analysis,LFP
+Platform: UNKNOWN
