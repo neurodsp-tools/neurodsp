@@ -3,7 +3,6 @@ test_laggedcoherence.py
 Test function to compute lagged coherence
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp
@@ -21,7 +20,8 @@ def test_laggedcoherence_consistent():
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
-    lc_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_laggedcoherence.npy')
+    lc_true = np.load(os.path.dirname(neurodsp.__file__) +
+                      '/tests/data/sample_data_' + str(data_idx) + '_laggedcoherence.npy')
 
     # Compute lagged coherence
     lag_coh_beta = neurodsp.lagged_coherence(x, f_range, Fs)

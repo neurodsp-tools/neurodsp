@@ -3,7 +3,6 @@ test_cyclefeatures.py
 Test measurement of cycle-by-cycle features of oscillatory waveforms
 """
 
-import pytest
 import numpy as np
 import pandas as pd
 import os
@@ -23,7 +22,8 @@ def test_cyclefeatures_consistent():
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
-    df_true = pd.read_csv(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_cyclefeatures.csv')
+    df_true = pd.read_csv(os.path.dirname(neurodsp.__file__) +
+                          '/tests/data/sample_data_' + str(data_idx) + '_cyclefeatures.csv')
 
     # Compute lagged coherence
     true_oscillating_periods_kwargs = {'restrict_by_amplitude_consistency': False,
