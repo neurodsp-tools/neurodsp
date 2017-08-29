@@ -9,3 +9,6 @@
 # Ignore dist directory
 dist/
 MANIFEST
+.DS_Store
+# ignore dev notebooks
+neurodsp/*_sandbox.ipynb

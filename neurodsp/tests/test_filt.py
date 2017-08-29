@@ -98,7 +98,8 @@ def test_filter_length():
     f_lo = 4
     f_hi = 8
     N_cycles = 5
-    x_filt, kernel = neurodsp.filter(x, Fs, 'bandpass', f_lo=f_lo, f_hi=f_hi, N_cycles=N_cycles, return_kernel=True)
+    x_filt, kernel = neurodsp.filter(x, Fs, 'bandpass', f_lo=f_lo,
+                                     f_hi=f_hi, N_cycles=N_cycles, return_kernel=True)
 
     # Compute how long the kernel should be
     force_kernel_length = int(np.ceil(Fs * N_cycles / f_lo))
@@ -113,10 +114,11 @@ def test_filter_length():
     f_lo = 4
     f_hi = 8
     N_seconds = .8
-    x_filt, kernel = neurodsp.filter(x, Fs, 'bandpass', f_lo=f_lo, f_hi=f_hi, N_seconds=N_seconds, return_kernel=True)
+    x_filt, kernel = neurodsp.filter(x, Fs, 'bandpass', f_lo=f_lo,
+                                     f_hi=f_hi, N_seconds=N_seconds, return_kernel=True)
 
     # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(Fs*N_seconds))
+    force_kernel_length = int(np.ceil(Fs * N_seconds))
     if force_kernel_length % 2 == 0:
         force_kernel_length = force_kernel_length + 1
 
