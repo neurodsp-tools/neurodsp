@@ -3,6 +3,7 @@ test_filt.py
 Test filtering functions
 """
 
+import pytest
 import numpy as np
 import neurodsp
 from neurodsp.tests import _load_example_data, _generate_random_x

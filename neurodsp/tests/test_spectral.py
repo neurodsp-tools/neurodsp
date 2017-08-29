@@ -70,12 +70,12 @@ def test_scvrs():
 
     # compute SCV and compare differences
     np.random.seed(99)
-    freqbs, Tbs, SCVrsbs = spectral.scv_rs(x, fs, method='bootstrap', rsParams=(5, 20))
+    freqbs, Tbs, SCVrsbs = spectral.scv_rs(x, fs, method='bootstrap', rs_params=(5, 20))
     assert np.allclose(np.sum(np.abs(gt_scvrs['freqbs'] - freqbs)), 0, atol=10 ** -5)
     assert Tbs is None
     assert np.allclose(np.sum(np.abs(gt_scvrs['SCVrsbs'] - SCVrsbs)), 0, atol=10 ** -5)
 
-    freqro, Tro, SCVrsro = spectral.scv_rs(x, fs, method='rolling', rsParams=(4, 2))
+    freqro, Tro, SCVrsro = spectral.scv_rs(x, fs, method='rolling', rs_params=(4, 2))
     assert np.allclose(np.sum(np.abs(gt_scvrs['freqro'] - freqro)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scvrs['Tro'] - Tro)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scvrs['SCVrsro'] - SCVrsro)), 0, atol=10 ** -5)
