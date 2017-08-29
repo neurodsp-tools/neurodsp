@@ -53,18 +53,18 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
             else:
                 # window is an array, defaults to window length
                 nperseg = len(window)
+        else:
+            nperseg = int(nperseg)
 
-    # call signal.spectrogram function in scipy to compute STFT
-    if nperseg is not None:
-        nperseg = int(nperseg)
-    if noverlap is not None:
-        noverlap = int(noverlap)
+        if noverlap is not None:
+            noverlap = int(noverlap)
 
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
-    if method is 'mean':
-        Pxx = np.mean(spg, axis=-1)
-    elif method is 'median':
-        Pxx = np.median(spg, axis=-1)
+        # call signal.spectrogram function in scipy to compute STFT
+        freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+        if method is 'mean':
+            Pxx = np.mean(spg, axis=-1)
+        elif method is 'median':
+            Pxx = np.median(spg, axis=-1)
 
     elif method is 'medfilt':
         # median filtered FFT spectrum
@@ -115,11 +115,12 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
         else:
             # window is an array, defaults to window length
             nperseg = len(window)
-
-    if nperseg is not None:
+    else:
         nperseg = int(nperseg)
+
     if noverlap is not None:
         noverlap = int(noverlap)
+
     freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
         # discard time windows with very low and very high powers
@@ -140,7 +141,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     x : array_like 1d
             Time series of measurement values
     Fs : float, Hz
-            Sampling frequency of the x time series.   
+            Sampling frequency of the x time series.
     window : str or tuple or array_like, optional
             Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
     nperseg : int, optional
@@ -151,7 +152,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
             Method of resampling: bootstrap randomly samples a subset of the spectrogram repeatedly, while rolling takes the rolling window scv.
             Defaults to 'bootstrap'.
     rsParams : tuple, (int, int), optional
-            Parameters for resampling algorithm. 
+            Parameters for resampling algorithm.
             If 'bootstrap', rsParams = (nslices, ndraws), representing number of slices per draw, and number of random draws, defaults to (10% of slices, 100 draws).
             If 'rolling', rsParams = (nslices, nsteps), representing number of slices per draw, and number of slices to step forward, defaults to (10, 5).
     Returns
@@ -170,12 +171,12 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
         else:
             # window is an array, defaults to window length
             nperseg = len(window)
-
-    # compute spectrogram
-    if nperseg is not None:
+    else:
         nperseg = int(nperseg)
+
     if noverlap is not None:
         noverlap = int(noverlap)
+    # compute spectrogram
     freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
     if method is 'bootstrap':
@@ -217,7 +218,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
 def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
     """
     Compute the distribution of log10 power at each frequency from the signal spectrogram.
-        The histogram bins are the same for every frequency, thus evenly spacing the global min and max power 
+        The histogram bins are the same for every frequency, thus evenly spacing the global min and max power
 
     Parameters
     -----------
@@ -255,12 +256,13 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
         else:
             # window is an array, defaults to window length
             nperseg = len(window)
-
-    # compute spectrogram of data
-    if nperseg is not None:
+    else:
         nperseg = int(nperseg)
+
     if noverlap is not None:
         noverlap = int(noverlap)
+
+    # compute spectrogram of data
     freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
@@ -302,7 +304,7 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
     psd_freq : array_like, 1d, optional
             Frequency axis of the PSD to be plotted.
     psd : array_like, 1d, optional
-            PSD to be plotted over the histograms.          
+            PSD to be plotted over the histograms.
     """
     # automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freq)))
