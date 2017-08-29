@@ -20,7 +20,8 @@ def test_swm_consistent():
     Fs = 1000
 
     # Load ground truth lagged coherence
-    avg_window_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_swm.npy')
+    avg_window_true = np.load(os.path.dirname(neurodsp.__file__) +
+                              '/tests/data/sample_data_' + str(data_idx) + '_swm.npy')
 
     # Compute lagged coherence
     L = .055

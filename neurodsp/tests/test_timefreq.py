@@ -20,7 +20,8 @@ def test_phase_by_time_consistent():
     f_range = (13, 30)
 
     # Load ground truth phase time series
-    pha_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_pha.npy')
+    pha_true = np.load(os.path.dirname(neurodsp.__file__) +
+                       '/tests/data/sample_data_' + str(data_idx) + '_pha.npy')
 
     # Compute phase time series
     pha = neurodsp.phase_by_time(x, Fs, f_range)
@@ -41,7 +42,8 @@ def test_amp_by_time_consistent():
     f_range = (13, 30)
 
     # Load ground truth amplitude time series
-    amp_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_amp.npy')
+    amp_true = np.load(os.path.dirname(neurodsp.__file__) +
+                       '/tests/data/sample_data_' + str(data_idx) + '_amp.npy')
 
     # Compute amplitude time series
     amp = neurodsp.amp_by_time(x, Fs, f_range)
@@ -62,7 +64,8 @@ def test_freq_by_time_consistent():
     f_range = (13, 30)
 
     # Load ground truth frequency time series
-    i_f_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_i_f.npy')
+    i_f_true = np.load(os.path.dirname(neurodsp.__file__) +
+                       '/tests/data/sample_data_' + str(data_idx) + '_i_f.npy')
 
     # Compute frequency time series
     i_f = neurodsp.freq_by_time(x, Fs, f_range)

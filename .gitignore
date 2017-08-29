@@ -9,4 +9,4 @@
 MANIFEST
 .DS_Store
 # ignore dev notebooks
-*_sandbox
+neurodsp/*_sandbox.ipynb
