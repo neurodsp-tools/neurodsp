@@ -3,7 +3,6 @@ test_timefreq.py
 Test functions in the time-frequency analysis module
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp

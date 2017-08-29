@@ -3,7 +3,6 @@ test_cyclepoints.py
 Test identification of extrema and zerocrossings
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp

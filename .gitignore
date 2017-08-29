@@ -7,3 +7,6 @@
 # Ignore files marked as old
 *_old
 MANIFEST
+.DS_Store
+# ignore dev notebooks
+*_sandbox

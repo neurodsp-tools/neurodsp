@@ -3,7 +3,6 @@ test_laggedcoherence.py
 Test function to compute lagged coherence
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp

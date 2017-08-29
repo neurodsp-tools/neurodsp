@@ -3,7 +3,6 @@ test_swm.py
 Test the sliding window matching function
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp

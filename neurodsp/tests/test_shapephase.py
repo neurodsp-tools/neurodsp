@@ -3,7 +3,6 @@ test_shapephase.py
 Test the phase estimation technique based on extrema and zerocrossings
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp

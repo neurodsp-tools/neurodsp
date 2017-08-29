@@ -83,7 +83,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
 
 def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     """
-    Compute the coefficient of variation of the spectrum at each frequency.
+    Compute the spectral coefficient of variation (SCV) at each frequency.
     White noise should have a SCV of 1 at all frequencies.
 
     Parameters
@@ -128,11 +128,11 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
         outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[discard:-discard]
         spg = spg[:, outlieridx]
 
-    SCV = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
-    return freq, SCV
+    spectcv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
+    return freq, spectcv
 
 
-def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rsParams=None):
+def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
     """
     Resampled version of scv: instead of a single estimate of mean and standard deviation, the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
 
@@ -151,17 +151,17 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     method : {'bootstrap', 'rolling'}, optional
             Method of resampling: bootstrap randomly samples a subset of the spectrogram repeatedly, while rolling takes the rolling window scv.
             Defaults to 'bootstrap'.
-    rsParams : tuple, (int, int), optional
+    rs_params : tuple, (int, int), optional
             Parameters for resampling algorithm.
-            If 'bootstrap', rsParams = (nslices, ndraws), representing number of slices per draw, and number of random draws, defaults to (10% of slices, 100 draws).
-            If 'rolling', rsParams = (nslices, nsteps), representing number of slices per draw, and number of slices to step forward, defaults to (10, 5).
+            If 'bootstrap', rs_params = (nslices, ndraws), representing number of slices per draw, and number of random draws, defaults to (10% of slices, 100 draws).
+            If 'rolling', rs_params = (nslices, nsteps), representing number of slices per draw, and number of slices to step forward, defaults to (10, 5).
     Returns
     -------
     freq : ndarray
             Array of sample frequencies.
     T : ndarray
             Array of time indices, for 'rolling' resampling. If 'bootstrap', T = None.
-    SCVrs : ndarray
+    spectcv_rs : ndarray
             Resampled spectral coefficient of variation.
     """
     if nperseg is None:
@@ -181,38 +181,38 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
 
     if method is 'bootstrap':
         # params are number of slices of STFT to compute SCV over, and number of draws
-        if rsParams is None:
+        if rs_params is None:
             # defaults to draw 1/10 of STFT slices, 100 draws
-            rsParams = (int(spg.shape[1] / 10.), 100)
+            rs_params = (int(spg.shape[1] / 10.), 100)
 
-        nslices, ndraws = rsParams
-        SCVrs = np.zeros((len(freq), ndraws))
+        nslices, ndraws = rs_params
+        spectcv_rs = np.zeros((len(freq), ndraws))
         for draw in range(ndraws):
             # repeated subsampling of spectrogram randomly, with replacement between draws
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
-            SCVrs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
+            spectcv_rs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
         T = None  # no time component, return nothing
 
     elif method is 'rolling':
         # params are number of slices of STFT to compute SCV over, and number of slices to roll forward
-        if rsParams is None:
+        if rs_params is None:
             # defaults to 10 STFT slices, move forward by 5 slices
-            rsParams = (10, 5)
+            rs_params = (10, 5)
 
-        nslices, nsteps = rsParams
+        nslices, nsteps = rs_params
         outlen = int(np.ceil((spg.shape[1] - nslices) / float(nsteps))) + 1
-        SCVrs = np.zeros((len(freq), outlen))
+        spectcv_rs = np.zeros((len(freq), outlen))
         for ind in range(outlen):
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
-            SCVrs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
+            spectcv_rs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
 
         T = t[0::nsteps]  # grab the time indices from the spectrogram
 
     else:
         raise ValueError('Unknown resampling method: %s' % method)
 
-    return freq, T, SCVrs
+    return freq, T, spectcv_rs
 
 
 def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):

@@ -3,7 +3,6 @@ test_cyclefeatures.py
 Test measurement of cycle-by-cycle features of oscillatory waveforms
 """
 
-import pytest
 import numpy as np
 import pandas as pd
 import os
