@@ -324,4 +324,5 @@ def fit_slope(freq, psd, fit_freqs=(20., 40.), fit_excl=None, method='ols'):
     """
     Fit PSD with straight line in log-log domain over the specified frequency range.
     """
-    ### TO DO ###
+    # TO DO #
+    raise NotImplementedError('Richard was bad and didnt finish this function.')
