@@ -152,7 +152,7 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     # Compute average oscillatory amplitude estimate during cycle
     amp = neurodsp.amp_by_time(x, Fs, f_range, hilbert_increase_N=hilbert_increase_N)
-    shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i+1]]) for i in range(N_t2t)]
+    shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
 
     # Convert feature dictionary into a DataFrame
     df = pd.DataFrame.from_dict(shape_features)
@@ -179,6 +179,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         df.rename(columns=rename_dict, inplace=True)
 
         # Need to reverse symmetry measures
+        df['volt_peak'] = -df['volt_peak']
+        df['volt_trough'] = -df['volt_trough']
         df['volt_rdsym'] = -df['volt_rdsym']
         df['volt_ptsym'] = -df['volt_ptsym']
         df['time_rdsym'] = 1 - df['time_rdsym']
@@ -249,7 +251,7 @@ def _define_true_oscillating_periods(df, restrict_by_amplitude=True,
     # Compute if each cycle meets the amplitude reqt
     if restrict_by_amplitude:
         amps = df['oscillator_amplitude'].values
-        ampnorm = (amps - np.min(amps)) / (np.max(amps)-np.min(amps))
+        ampnorm = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
         cycle_good_amp = ampnorm > amplitude_fraction_threshold
     else:
         cycle_good_amp = np.ones(P, dtype=bool)
