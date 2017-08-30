@@ -3,7 +3,6 @@ test_cyclepoints.py
 Test identification of extrema and zerocrossings
 """
 
-import pytest
 import numpy as np
 import os
 import neurodsp
@@ -22,7 +21,8 @@ def test_Ps_consistent():
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
-    Ps_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_Ps.npy')
+    Ps_true = np.load(os.path.dirname(neurodsp.__file__) +
+                      '/tests/data/sample_data_' + str(data_idx) + '_Ps.npy')
 
     # Compute lagged coherence
     Ps, Ts = shape.find_extrema(x, Fs, f_range)
@@ -43,7 +43,8 @@ def test_zeroxR_consistent():
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
-    zeroxR_true = np.load(os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_'+str(data_idx)+'_zeroxR.npy')
+    zeroxR_true = np.load(os.path.dirname(neurodsp.__file__) +
+                          '/tests/data/sample_data_' + str(data_idx) + '_zeroxR.npy')
 
     # Compute lagged coherence
     Ps, Ts = shape.find_extrema(x, Fs, f_range)
@@ -52,3 +53,4 @@ def test_zeroxR_consistent():
     # Compute difference between current and past signals
     signal_diff = zeroxR - zeroxR_true
     assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)
+
