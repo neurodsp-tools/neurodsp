@@ -71,4 +71,14 @@ def extrema_interpolated_phase(x, Ps, Ts, zeroxR=None, zeroxD=None):
     diffs = np.append(diffs, 99)
     pha_tnpi[diffs < 0] = pha_tpi[diffs < 0]
 
+    # Assign the periods before the first empirical phase timepoint to NaN
+    diffs = np.diff(pha_tnpi)
+    first_empirical_idx = next(i for i, xi in enumerate(diffs) if xi > 0)
+    pha_tnpi[:first_empirical_idx] = np.nan
+
+    # Assign the periods after the last empirical phase timepoint to NaN
+    diffs = np.diff(pha_tnpi)
+    last_empirical_idx = next(i for i, xi in enumerate(diffs[::-1]) if xi > 0)
+    pha_tnpi[-last_empirical_idx+1:] = np.nan
+
     return pha_tnpi
