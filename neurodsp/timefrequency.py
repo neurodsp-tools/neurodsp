@@ -140,6 +140,6 @@ def _hilbert_ignore_nan(x, hilbert_increase_N=False):
         x_hilb_nonan = signal.hilbert(x_nonan)
 
     # Fill in output hilbert with nans on edges
-    x_hilb = np.ones(len(x), dtype=complex)*np.nan
+    x_hilb = np.ones(len(x), dtype=complex) * np.nan
     x_hilb[first_nonan:last_nonan] = x_hilb_nonan
     return x_hilb
