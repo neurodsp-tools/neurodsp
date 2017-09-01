@@ -73,3 +73,26 @@ def test_freq_by_time_consistent():
     # Compute difference between current and past filtered signals
     signal_diff = i_f[~np.isnan(i_f)] - i_f_true[~np.isnan(i_f_true)]
     assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)
+
+
+def test_NaN_in_x():
+    """
+    Assure that time-resolved timefrequency functions do not return all NaN
+    if one of the elements in the input array is NaN.
+    Do this by replacing edge artifacts with NaN for a lowpass filter
+    """
+
+    # Generate a low-pass filtered signal with NaNs
+    x = np.random.randn(10000)
+    Fs = 1000
+    x = neurodsp.filter(x, Fs, 'lowpass', f_lo=50)
+
+    # Compute phase, amp, and freq time series
+    f_range = (4, 8)
+    pha = neurodsp.phase_by_time(x, Fs, f_range)
+    amp = neurodsp.amp_by_time(x, Fs, f_range)
+    i_f = neurodsp.freq_by_time(x, Fs, f_range)
+
+    assert len(pha[~np.isnan(pha)]) > 0
+    assert len(amp[~np.isnan(amp)]) > 0
+    assert len(i_f[~np.isnan(i_f)]) > 0
