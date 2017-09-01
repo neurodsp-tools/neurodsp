@@ -30,5 +30,5 @@ def test_interpolated_phase_consistent():
     phaPTRD = shape.extrema_interpolated_phase(x, Ps, Ts, zeroxR=zeroxR, zeroxD=zeroxD)
 
     # Compute difference between current and past filtered signals
-    signal_diff = phaPTRD - phaPTRD_true
+    signal_diff = phaPTRD[~np.isnan(phaPTRD)] - phaPTRD_true[~np.isnan(phaPTRD_true)]
     assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)
