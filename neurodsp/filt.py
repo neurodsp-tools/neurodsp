@@ -88,10 +88,17 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
     else:
         raise ValueError('Input for "pass_type" not recognized. Must indicate bandpass, bandstop, lowpass, or highpass.')
 
+    # Remove any NaN on the edges of 'x'
+    first_nonan = np.where(~np.isnan(x))[0][0]
+    last_nonan = np.where(~np.isnan(x))[0][-1] + 1
+    x_old = np.copy(x)
+    x = x[first_nonan:last_nonan]
+
     # Process input for IIR filters
     if iir:
-        if verbose:
-            warnings.warn('Edge artifacts are not removed when using an IIR filter.')
+        if remove_edge_artifacts:
+            if verbose:
+                warnings.warn('Edge artifacts are not removed when using an IIR filter.')
         if pass_type != 'bandstop':
             if verbose:
                 warnings.warn('IIR filters are not recommended other than for notch filters.')
@@ -150,7 +157,7 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         else:
             _plot_frequency_response(Fs, kernel)
 
-    # COmpute transition bandwidth
+    # Compute transition bandwidth
     if compute_transition_band and verbose:
         try:
             # Compute the frequency response in terms of Hz and dB
@@ -198,6 +205,7 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
                 cf_3db = next(f_db[i] for i in range(len(db)) if db[i] > -3)
                 # Compute transition bandwidth
                 transition_bw = cf_3db - cf_20db
+
             elif pass_type == 'lowpass':
                 pass_bw = f_lo
                 # Identify edges of transition band (-3dB and -20dB)
@@ -217,6 +225,11 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         N_rmv = int(np.ceil(N / 2))
         x_filt[:N_rmv] = np.nan
         x_filt[-N_rmv:] = np.nan
+
+    # Add NaN back on the edges of 'x', if there were any at the beginning
+    x_filt_full = np.ones(len(x_old)) * np.nan
+    x_filt_full[first_nonan:last_nonan] = x_filt
+    x_filt = x_filt_full
 
     # Return kernel if desired
     if return_kernel:
