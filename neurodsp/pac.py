@@ -315,7 +315,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     N_bins_pha = len(f_pha_bin_edges) - 1
     pha_by_bin = np.zeros((N_bins_pha, len(x_pha)))
     for i in range(N_bins_pha):
-        f_range_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i+1])
+        f_range_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i + 1])
         pha_by_bin[i] = neurodsp.phase_by_time(x_pha, Fs, f_range_temp,
                                                filter_fn=filter_fn,
                                                filter_kwargs=filter_kwargs,
@@ -325,7 +325,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     N_bins_amp = len(f_amp_bin_edges) - 1
     amp_by_bin = np.zeros((N_bins_amp, len(x_pha)))
     for i in range(N_bins_amp):
-        f_range_temp = (f_amp_bin_edges[i], f_amp_bin_edges[i+1])
+        f_range_temp = (f_amp_bin_edges[i], f_amp_bin_edges[i + 1])
         amp_by_bin[i] = neurodsp.amp_by_time(x_amp, Fs, f_range_temp,
                                              filter_fn=filter_fn,
                                              filter_kwargs=filter_kwargs,
@@ -335,8 +335,8 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     pac = np.zeros((N_bins_pha, N_bins_amp))
     for i in range(N_bins_pha):
         for j in range(N_bins_amp):
-            f_range_pha_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i+1])
-            f_range_amp_temp = (f_amp_bin_edges[j], f_amp_bin_edges[j+1])
+            f_range_pha_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i + 1])
+            f_range_amp_temp = (f_amp_bin_edges[j], f_amp_bin_edges[j + 1])
             pac[i, j] = compute_pac(pha_by_bin[i], amp_by_bin[j], Fs,
                                     f_range_pha_temp, f_range_amp_temp,
                                     filter_fn=False, pac_method=pac_method,
