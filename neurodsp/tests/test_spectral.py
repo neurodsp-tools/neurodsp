@@ -98,3 +98,29 @@ def test_spectralhist():
     assert np.allclose(np.sum(np.abs(gt_sphist['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_sphist['bins'] - bins)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_sphist['sp_hist'] - sp_hist)), 0, atol=10 ** -5)
+
+
+def test_fitpsd():
+    """
+    Confirm PSD fitting procedure
+    """
+    # Load data
+    data_idx = 1
+
+    # load test data PSDs for testing
+    gt_psd = np.load(os.path.dirname(neurodsp.__file__) +
+                     '/tests/data/sample_data_' + str(data_idx) + '_psd.npz')
+
+    psd = gt_psd['PSDmean']
+    freq = gt_psd['freq']
+    slope_ols, offset_ols = spectral.fit_slope(freq, psd, (30, 100), method='ols')
+    slope_rsc, offset_rsc = spectral.fit_slope(freq, psd, (30, 100), method='RANSAC')
+
+    # load ground truth fits
+    gt_fitpsd = np.load(os.path.dirname(neurodsp.__file__) +
+                        '/tests/data/sample_data_' + str(data_idx) + '_fitpsd.npz')
+
+    assert np.allclose(gt_fitpsd['slope_ols'] - slope_ols, 0, atol=10 ** -5)
+    assert np.allclose(gt_fitpsd['slope_rsc'] - slope_rsc, 0, atol=10 ** -5)
+    assert np.allclose(gt_fitpsd['offset_ols'] - offset_ols, 0, atol=10 ** -5)
+    assert np.allclose(gt_fitpsd['offset_rsc'] - offset_rsc, 0, atol=10 ** -5)
