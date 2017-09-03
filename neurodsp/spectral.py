@@ -358,6 +358,10 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
     fmask[np.logical_and(freq >= fit_frange[0], freq <= fit_frange[1])] = 1
     # discard freq indices within the exclusion frequencies
     if fit_excl is not None:
+        # if a tuple is given, convert it to a list
+        if type(fit_excl) is tuple:
+            fit_excl = [fit_excl]
+
         for exc_frange in fit_excl:
             fmask[np.logical_and(freq >= exc_frange[0], freq <= exc_frange[1])] = 0
 
