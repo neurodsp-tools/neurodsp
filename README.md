@@ -33,5 +33,6 @@ This package has been tested on python 3.4, 3.5, and 3.6 with the latest [Anacon
 - numpy
 - scipy
 - matplotlib
+- scikit-learn
 - pandas
 - pytest (optional)
