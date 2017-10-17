@@ -125,10 +125,9 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
         # discard time windows with high powers
-        discard = int(np.ceil(spg.shape[1] / 100. * outlierpct)) # round up so it doesn't get a zero
+        discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))   # round up so it doesn't get a zero
         outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
         spg = spg[:, outlieridx]
-
 
     spectcv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
     return freq, spectcv
