@@ -102,16 +102,16 @@ def test_spectralhist():
 
 def test_fitpsd():
     """
-    Confirm PSD fitting procedure
+    Confirm PSD fitting procedure.
     """
     # Load data
     data_idx = 1
 
     # load test data PSDs for testing
     gt_psd = np.load(os.path.dirname(neurodsp.__file__) +
-                     '/tests/data/sample_data_' + str(data_idx) + '_psd.npz')
+                     '/tests/data/sample_data_sim_psd.npz')
 
-    psd = gt_psd['PSDmean']
+    psd = gt_psd['sim_psd']
     freq = gt_psd['freq']
     slope_ols, offset_ols = spectral.fit_slope(freq, psd, (30, 100), method='ols')
     slope_rsc, offset_rsc = spectral.fit_slope(freq, psd, (30, 100), method='RANSAC')
