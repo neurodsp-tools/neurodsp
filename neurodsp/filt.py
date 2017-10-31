@@ -3,11 +3,11 @@ filt.py
 Filter a neural signal using a bandpass, highpass, lowpass, or bandstop filter.
 """
 
+import warnings
 import numpy as np
 import scipy as sp
 from scipy import signal
 import matplotlib.pyplot as plt
-import warnings
 
 
 def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
