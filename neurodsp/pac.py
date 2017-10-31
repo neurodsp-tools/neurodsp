@@ -291,6 +291,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         phase-amplitude coupling strength values for each combination of phase-providing
         frequency bin and amplitude-providing frequency bin.
     """
+    #TODO: N_cycles_amp is not used. Figure this out.
 
     # Display warning about the true width of frequency bins
     if verbose:
