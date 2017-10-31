@@ -55,7 +55,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
     if method in ('mean', 'median'):
         # welch-style spectrum (mean/median of STFT)
         if nperseg is None:
-            if type(window) in (str, tuple):
+            if isinstance(window, str) or isinstance(window, tuple):
                 # window is a string or tuple, defaults to 1 second of data
                 nperseg = int(Fs)
             else:
@@ -121,7 +121,7 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
         Spectral coefficient of variation.
     """
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -186,7 +186,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
         Resampled spectral coefficient of variation.
     """
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -274,9 +274,8 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
     spect_hist : ndarray (2D)
         Power distribution at every frequency, nbins x freqs 2D matrix
     """
-
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -384,7 +383,7 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
     # discard freq indices within the exclusion frequencies
     if fit_excl is not None:
         # if a tuple is given, convert it to a list
-        if type(fit_excl) is tuple:
+        if isinstance(fit_excl, tuple):
             fit_excl = [fit_excl]
 
         for exc_frange in fit_excl:
