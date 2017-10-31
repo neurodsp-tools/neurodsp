@@ -20,16 +20,16 @@ def phase_by_time(x, Fs, f_range,
     ----------
     x : array-like, 1d
         Time series
-    f_range : (low, high), Hz
-        Frequency range
     Fs : float, Hz
         Sampling rate
-    filter_fn : function
+    f_range : (low, high), Hz
+        Frequency range
+    filter_fn : function, optional
         The filtering function, with api:
         `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
 
@@ -44,7 +44,8 @@ def phase_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+                       remove_edge_artifacts=False, **filter_kwargs)
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     return pha
@@ -60,16 +61,16 @@ def amp_by_time(x, Fs, f_range,
     ----------
     x : array-like, 1d
         Time series
-    f_range : (low, high), Hz
-        The frequency filtering range
     Fs : float, Hz
         Sampling rate
-    filter_fn : function
+    f_range : (low, high), Hz
+        The frequency filtering range
+    filter_fn : function, optional
         The filtering function, `filterfn(x, f_range, filter_kwargs)`
         Must have the same API as filt.bandpass
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
 
@@ -84,7 +85,8 @@ def amp_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+                       remove_edge_artifacts=False, **filter_kwargs)
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     return amp
