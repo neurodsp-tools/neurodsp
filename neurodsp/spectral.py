@@ -68,7 +68,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
             noverlap = int(noverlap)
 
         # call signal.spectrogram function in scipy to compute STFT
-        freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+        freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
         if method is 'mean':
             Pxx = np.mean(spg, axis=-1)
         elif method is 'median':
@@ -133,7 +133,7 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     if noverlap is not None:
         noverlap = int(noverlap)
 
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
         # discard time windows with high powers
         discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))   # round up so it doesn't get a zero
@@ -180,8 +180,8 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     -------
     freq : ndarray
         Array of sample frequencies.
-    T : ndarray
-        Array of time indices, for 'rolling' resampling. If 'bootstrap', T = None.
+    t_inds : ndarray
+        Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
     spectcv_rs : ndarray
         Resampled spectral coefficient of variation.
     """
@@ -198,7 +198,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     if noverlap is not None:
         noverlap = int(noverlap)
     # compute spectrogram
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    freq, ts, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
     if method is 'bootstrap':
         # params are number of slices of STFT to compute SCV over, and number of draws
@@ -213,7 +213,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
             spectcv_rs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
-        T = None  # no time component, return nothing
+        t_inds = None  # no time component, return nothing
 
     elif method is 'rolling':
         # params are number of slices of STFT to compute SCV over, and number of slices to roll forward
@@ -228,12 +228,12 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
             spectcv_rs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
 
-        T = t[0::nsteps]  # grab the time indices from the spectrogram
+        t_inds = ts[0::nsteps]  # grab the time indices from the spectrogram
 
     else:
         raise ValueError('Unknown resampling method: %s' % method)
 
-    return freq, T, spectcv_rs
+    return freq, t_inds, spectcv_rs
 
 
 def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
@@ -289,7 +289,7 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
         noverlap = int(noverlap)
 
     # compute spectrogram of data
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
+    freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
     ps = np.transpose(np.log10(spg))
