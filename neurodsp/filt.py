@@ -28,32 +28,32 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         'bandstop' : apply a bandstop (notch) filter
         'lowpass' : apply a lowpass filter
         'highpass' : apply a highpass filter
-    f_lo : float
+    f_lo : float, optional
         Low-frequency cutoff (Hz)
-    f_hi : float
+    f_hi : float, optional
         High-frequency cutoff (Hz)
-    N_cycles : float
+    N_cycles : float, optional
         Length of filter in terms of number of cycles at 'f_lo' frequency
         This parameter is overwritten by 'N_seconds'
-    N_seconds : float
+    N_seconds : float, optional
         Length of filter (seconds)
-    iir : bool
+    iir : bool, optional
         if True, use an infinite-impulse response (IIR) filter
         The only IIR filter to be used is a butterworth filter
-    butterworth_order : int
+    butterworth_order : int, optional
         order of the butterworth filter
         see input 'N' in scipy.signal.butter
-    plot_frequency_response : bool
+    plot_frequency_response : bool, optional
         if True, plot the frequency response of the filter
-    return_kernel : bool
+    return_kernel : bool, optional
         if True, return the complex filter kernel
-    verbose : bool
+    verbose : bool, optional
         if True, print optional information
-    compute_transition_band : bool
+    compute_transition_band : bool, optional
         if True, the function computes the transition bandwidth,
         defined as the frequency range between -20dB and -3dB attenuation,
         and warns the user if this band is longer than the frequency bandwidth.
-    remove_edge_artifacts : bool
+    remove_edge_artifacts : bool, optional
         if True, replace the samples that are within half a kernel's length to
         the signal edge with np.nan
 
@@ -249,7 +249,7 @@ def _plot_frequency_response(Fs, b, a=1):
     plt.title('Frequency response')
     plt.ylabel('Attenuation (dB)')
     plt.xlabel('Frequency (Hz)')
-    if type(a) is int:
+    if isinstance(a, int):
         # Plot filter kernel
         plt.subplot(1, 2, 2)
         plt.plot(b, 'k')
