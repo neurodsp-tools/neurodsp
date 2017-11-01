@@ -2,9 +2,9 @@
 pac.py
 Compute the phase-amplitude coupling between two oscillators
 """
+import warnings
 import numpy as np
 import neurodsp
-import warnings
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
