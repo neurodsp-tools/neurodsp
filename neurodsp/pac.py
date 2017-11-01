@@ -305,11 +305,15 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     if filter_fn is None:
         filter_fn = neurodsp.filter
     if filter_kwargs is None:
-        filter_kwargs = {'N_cycles': N_cycles_pha,
+        filter_kwargs_pha = {'N_cycles': N_cycles_pha,
+                         'verbose': False}
+        filter_kwargs_amp = {'N_cycles': N_cycles_amp,
                          'verbose': False}
     else:
-        filter_kwargs['N_cycles'] = N_cycles_pha
-        filter_kwargs['verbose'] = False
+        filter_kwargs_pha['N_cycles'] = N_cycles_pha
+        filter_kwargs_pha['verbose'] = False
+        filter_kwargs_amp['N_cycles'] = N_cycles_amp
+        filter_kwargs_amp['verbose'] = False
 
     # Compute phase time series for each frequency bin
     N_bins_pha = len(f_pha_bin_edges) - 1
@@ -318,7 +322,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         f_range_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i + 1])
         pha_by_bin[i] = neurodsp.phase_by_time(x_pha, Fs, f_range_temp,
                                                filter_fn=filter_fn,
-                                               filter_kwargs=filter_kwargs,
+                                               filter_kwargs=filter_kwargs_pha,
                                                hilbert_increase_N=False)
 
     # Compute amplitude time series for each frequency bin
@@ -328,7 +332,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         f_range_temp = (f_amp_bin_edges[i], f_amp_bin_edges[i + 1])
         amp_by_bin[i] = neurodsp.amp_by_time(x_amp, Fs, f_range_temp,
                                              filter_fn=filter_fn,
-                                             filter_kwargs=filter_kwargs,
+                                             filter_kwargs=filter_kwargs_amp,
                                              hilbert_increase_N=False)
 
     # For each pair of frequency bins, compute PAC
