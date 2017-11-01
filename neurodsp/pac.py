@@ -69,12 +69,14 @@ def compute_pac(x_pha, x_amp, Fs, f_range_lo, f_range_hi,
     # Set default filtering parameters
     if N_seconds_lo is None:
         if verbose:
-            warnings.warn('Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
+            warnings.warn(
+                'Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
         N_cycles = 3
         N_seconds_lo = N_cycles / f_range_lo[0]
     if N_seconds_hi is None:
         if verbose:
-            warnings.warn('Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
+            warnings.warn(
+                'Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
         N_cycles = 3
         N_seconds_hi = N_cycles / f_range_hi[0]
     if filter_fn is None:
@@ -306,9 +308,9 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         filter_fn = neurodsp.filter
     if filter_kwargs is None:
         filter_kwargs_pha = {'N_cycles': N_cycles_pha,
-                         'verbose': False}
+                             'verbose': False}
         filter_kwargs_amp = {'N_cycles': N_cycles_amp,
-                         'verbose': False}
+                             'verbose': False}
     else:
         filter_kwargs_pha['N_cycles'] = N_cycles_pha
         filter_kwargs_pha['verbose'] = False
