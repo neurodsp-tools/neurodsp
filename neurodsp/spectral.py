@@ -1,6 +1,6 @@
 """
 spectral.py
-Frequency domain analysis of neural signals: creating PSD, fitting 1/f, spectral histograms
+Frequency domain analysis of neural signals: creating PSD, fitting 1/f, spectral histograms.
 """
 
 import numpy as np
@@ -12,32 +12,39 @@ from sklearn import linear_model
 def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtlen=1.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
-    Transform (mean, median), or the entire signal's FFT smoothed (medfilt)
+    Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
 
     Parameters
     -----------
     x : array_like 1d
-            Time series of measurement values
+        Time series of measurement values.
     Fs : float, Hz
-            Sampling frequency of the x time series.
+        Sampling frequency of the x time series.
     method : { 'mean', 'median', 'medfilt'}, optional
-            Methods to calculate the PSD. 'mean' is the same as Welch's method (mean of STFT), 'median' uses median of STFT instead of mean to minimize outlier effect. 'medfilt' filters the entire signals raw FFT with a median filter to smooth. Defaults to 'mean'.
+        Methods to calculate the PSD. Defaults to 'mean'.
+            'mean' is the same as Welch's method (mean of STFT).
+            'median' uses median of STFT instead of mean to minimize outlier effect.
+            'medfilt' filters the entire signals raw FFT with a median filter to smooth.
     The next 3 parameters are only relevant for method = {'mean', 'median'}
     window : str or tuple or array_like, optional
-            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+        Desired window to use. Defaults to a Hann window.
+            See scipy.signal.get_window for a list of windows and required parameters.
+            If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples. Defaults to None.
+            If None, and window is str or tuple, is set to 1 second of data.
+            If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-            Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
+        Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
     filten : float, Hz, optional
-                        (For medfilt method) Length of median filter in Hz.
+        (For medfilt method) Length of median filter in Hz.
 
     Returns
     -------
     freq : ndarray
-            Array of sample frequencies.
+        Array of sample frequencies.
     Pxx : ndarray
-            Power spectral density of x.
+        Power spectral density of x.
 
     References
     ----------
@@ -48,7 +55,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
     if method in ('mean', 'median'):
         # welch-style spectrum (mean/median of STFT)
         if nperseg is None:
-            if type(window) in (str, tuple):
+            if isinstance(window, str) or isinstance(window, tuple):
                 # window is a string or tuple, defaults to 1 second of data
                 nperseg = int(Fs)
             else:
@@ -61,7 +68,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
             noverlap = int(noverlap)
 
         # call signal.spectrogram function in scipy to compute STFT
-        freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+        freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
         if method is 'mean':
             Pxx = np.mean(spg, axis=-1)
         elif method is 'median':
@@ -90,27 +97,31 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     Parameters
     -----------
     x : array_like 1d
-            Time series of measurement values
+        Time series of measurement values
     Fs : float, Hz
-            Sampling frequency of the x time series.
+        Sampling frequency of the x time series.
     window : str or tuple or array_like, optional
-            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+        Desired window to use. Defaults to a Hann window.
+            See scipy.signal.get_window for a list of windows and required parameters.
+            If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples. Defaults to None.
+            If None, and window is str or tuple, is set to 1 second of data.
+            If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-            Number of points to overlap between segments. Defaults to 0 for independence.
+        Number of points to overlap between segments. Defaults to 0 for independence.
     outlierpct : float, percent, optional
-            Discarding a percentage of the windows with the lowest and highest total log power.
+        Discarding a percentage of the windows with the lowest and highest total log power.
 
     Returns
     -------
     freq : ndarray
-            Array of sample frequencies.
+        Array of sample frequencies.
     SCV : ndarray
-            Spectral coefficient of variation.
+        Spectral coefficient of variation.
     """
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -122,7 +133,7 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     if noverlap is not None:
         noverlap = int(noverlap)
 
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
         # discard time windows with high powers
         discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))   # round up so it doesn't get a zero
@@ -135,38 +146,47 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
 
 def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
     """
-    Resampled version of scv: instead of a single estimate of mean and standard deviation, the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
+    Resampled version of scv: instead of a single estimate of mean and standard deviation,
+    the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
 
     Parameters
     -----------
     x : array_like 1d
-            Time series of measurement values
+        Time series of measurement values
     Fs : float, Hz
-            Sampling frequency of the x time series.
+        Sampling frequency of the x time series.
     window : str or tuple or array_like, optional
-            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+        Desired window to use. Defaults to a Hann window.
+            See scipy.signal.get_window for a list of windows and required parameters.
+            If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples. Defaults to None.
+            If None, and window is str or tuple, is set to 1 second of data.
+            If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-            Number of points to overlap between segments. Defaults to 0 for independence.
+        Number of points to overlap between segments. Defaults to 0 for independence.
     method : {'bootstrap', 'rolling'}, optional
-            Method of resampling: bootstrap randomly samples a subset of the spectrogram repeatedly, while rolling takes the rolling window scv.
-            Defaults to 'bootstrap'.
+        Method of resampling. Defaults to 'bootstrap'.
+            'bootstrap' randomly samples a subset of the spectrogram repeatedly.
+            'rolling' takes the rolling window scv.
     rs_params : tuple, (int, int), optional
-            Parameters for resampling algorithm.
-            If 'bootstrap', rs_params = (nslices, ndraws), representing number of slices per draw, and number of random draws, defaults to (10% of slices, 100 draws).
-            If 'rolling', rs_params = (nslices, nsteps), representing number of slices per draw, and number of slices to step forward, defaults to (10, 5).
+        Parameters for resampling algorithm.
+        If method is 'bootstrap', rs_params = (nslices, ndraws), defaults to (10% of slices, 100 draws).
+            This specifies the number of slices per draw, and number of random draws,
+        If method is 'rolling', rs_params = (nslices, nsteps), defaults to (10, 5).
+            This specifies the number of slices per draw, and number of slices to step forward,
+
     Returns
     -------
     freq : ndarray
-            Array of sample frequencies.
-    T : ndarray
-            Array of time indices, for 'rolling' resampling. If 'bootstrap', T = None.
+        Array of sample frequencies.
+    t_inds : ndarray
+        Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
     spectcv_rs : ndarray
-            Resampled spectral coefficient of variation.
+        Resampled spectral coefficient of variation.
     """
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -178,7 +198,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     if noverlap is not None:
         noverlap = int(noverlap)
     # compute spectrogram
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+    freq, ts, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
     if method is 'bootstrap':
         # params are number of slices of STFT to compute SCV over, and number of draws
@@ -193,7 +213,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
             spectcv_rs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
-        T = None  # no time component, return nothing
+        t_inds = None  # no time component, return nothing
 
     elif method is 'rolling':
         # params are number of slices of STFT to compute SCV over, and number of slices to roll forward
@@ -208,50 +228,54 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
             spectcv_rs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
 
-        T = t[0::nsteps]  # grab the time indices from the spectrogram
+        t_inds = ts[0::nsteps]  # grab the time indices from the spectrogram
 
     else:
         raise ValueError('Unknown resampling method: %s' % method)
 
-    return freq, T, spectcv_rs
+    return freq, t_inds, spectcv_rs
 
 
-def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
+def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
+                  nbins=50, flim=(0., 100.), cutpct=(0., 100.)):
     """
     Compute the distribution of log10 power at each frequency from the signal spectrogram.
-        The histogram bins are the same for every frequency, thus evenly spacing the global min and max power
+    The histogram bins are the same for every frequency, thus evenly spacing the global min and max power
 
     Parameters
     -----------
     x : array_like 1d
-            Time series of measurement values
+        Time series of measurement values
     Fs : float, Hz
-            Sampling frequency of the x time series.
+        Sampling frequency of the x time series.
     window : str or tuple or array_like, optional
-            Desired window to use. See scipy.signal.get_window for a list of windows and required parameters. If window is array_like it will be used directly as the window and its length must be nperseg. Defaults to a Hann window.
+        Desired window to use. Defaults to a Hann window.
+            See scipy.signal.get_window for a list of windows and required parameters.
+            If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-            Length of each segment. Defaults to None, but if window is str or tuple, is set to 1 second of data, and if window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples. Defaults to None.
+            If None, and window is str or tuple, is set to 1 second of data.
+            If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-            Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
+        Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
     nbins : int, optional
-            Number of histogram bins to use, defaults to 50
+        Number of histogram bins to use, defaults to 50
     flim : tuple, (start, end) in Hz, optional
-            Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
+        Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
     cutpct : tuple, (low, high), in percentage, optional
-                Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
+        Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
 
     Returns
     -------
     freq : ndarray
-            Array of frequencies.
+        Array of frequencies.
     power_bins : ndarray
-            Histogram bins used to compute the distribution.
+        Histogram bins used to compute the distribution.
     spect_hist : ndarray (2D)
-            Power distribution at every frequency, nbins x freqs 2D matrix
+        Power distribution at every frequency, nbins x freqs 2D matrix
     """
-
     if nperseg is None:
-        if type(window) in (str, tuple):
+        if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -264,7 +288,7 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None, nbins=50, f
         noverlap = int(noverlap)
 
     # compute spectrogram of data
-    freq, t, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
+    freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
     ps = np.transpose(np.log10(spg))
@@ -297,15 +321,15 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
     Parameters
     ----------
     freq : array_like, 1d
-            Frequencies over which the histogram is calculated.
+        Frequencies over which the histogram is calculated.
     power_bins : array_like, 1d
-            Power bins within which histogram is aggregated.
+        Power bins within which histogram is aggregated.
     spect_hist : ndarray, 2d
-            Spectral histogram to be plotted.
+        Spectral histogram to be plotted.
     psd_freq : array_like, 1d, optional
-            Frequency axis of the PSD to be plotted.
+        Frequency axis of the PSD to be plotted.
     psd : array_like, 1d, optional
-            PSD to be plotted over the histograms.
+        PSD to be plotted over the histograms.
     """
     # automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freq)))
@@ -325,31 +349,31 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
     """
     Fit PSD with straight line in log-log domain over the specified frequency range.
 
-        Parameters
-        ----------
-        freq : array_like, 1d
-                        Frequency axis of PSD
-        psd : array_like, 1d
-                        PSD to be fit over
-        fit_frange : tuple, (start, end), Hz
-                        Frequency range to be fit over, in Hz, inclusive on both ends.
-        fit_excl : list of tuples, [(start, end), (start, end), ...], Hz, optional
-                        Frequency ranges to be excluded from fit. Each element in list describes
-                        the start and end of an exclusion zone.
-        method : str, {'ols', 'RANSAC'}, optional
-                        Line fitting method. Defaults to 'ols'
-                        'ols' is ordinary least squares fit with polyfit.
-                        'RANSAC' is iterative robust fit discarding outliers.
-        plot_fit : bool, optional
-                        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion freqs),
-                        as well as the fitted line itself. Defaults to False.
+    Parameters
+    ----------
+    freq : array_like, 1d
+        Frequency axis of PSD
+    psd : array_like, 1d
+        PSD to be fit over
+    fit_frange : tuple, (start, end), Hz
+        Frequency range to be fit over, in Hz, inclusive on both ends.
+    fit_excl : list of tuples, [(start, end), (start, end), ...], Hz, optional
+        Frequency ranges to be excluded from fit. Each element in list describes
+        the start and end of an exclusion zone.
+    method : str, {'ols', 'RANSAC'}, optional
+        Line fitting method. Defaults to 'ols'
+        'ols' is ordinary least squares fit with polyfit.
+        'RANSAC' is iterative robust fit discarding outliers.
+    plot_fit : bool, optional
+        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion freqs),
+        as well as the fitted line itself. Defaults to False.
 
-        Returns
-        -------
-        slope : float
-                Slope of loglog fitted line, m in y = mx+b
-        offset : float
-                Offset of loglog fitted line, b in y = mx+b
+    Returns
+    -------
+    slope : float
+        Slope of loglog fitted line, m in y = mx+b
+    offset : float
+        Offset of loglog fitted line, b in y = mx+b
     """
 
     # make a mask for included and excluded frequency regions
@@ -359,7 +383,7 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
     # discard freq indices within the exclusion frequencies
     if fit_excl is not None:
         # if a tuple is given, convert it to a list
-        if type(fit_excl) is tuple:
+        if isinstance(fit_excl, tuple):
             fit_excl = [fit_excl]
 
         for exc_frange in fit_excl:

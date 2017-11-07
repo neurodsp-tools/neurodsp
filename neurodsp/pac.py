@@ -2,9 +2,9 @@
 pac.py
 Compute the phase-amplitude coupling between two oscillators
 """
+import warnings
 import numpy as np
 import neurodsp
-import warnings
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
@@ -31,34 +31,34 @@ def compute_pac(x_pha, x_amp, Fs, f_range_lo, f_range_hi,
         The low frequency filtering range (Hz)
     f_range_hi : tuple, 2 elements
         The high frequency filtering range (Hz)
-    N_seconds_lo : float
+    N_seconds_lo : float, optional
         Length of the low band-pass filter (seconds)
-    N_seconds_hi : float
+    N_seconds_hi : float, optional
         Length of the high band-pass filter (seconds)
-    filter_fn : function or False
+    filter_fn : function or None, optional
         The filtering function, with api:
         `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
         If False, it is assumed that x_pha and x_amp are the phase time
         series and the amplitude time series, respectively. Therefore, no
         filtering or hilbert transform will be done.
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
-    pac_method : str
+    pac_method : {'ozkurt', 'plv', 'glm', 'tort', 'canolty'}, optional
         Indicates the method used to correlate the phase and amplitude time series in order to
         quantify the strength of pac.
+        'ozkurt' : normalized modulation index method (see Ozkurt & Schnitzler, 2011, J Neuro Methods)
         'plv': phase-locking value method (see Penny et al., 2008, J Neuro Methods)
         'glm': general linear model method (see Penny et al., 2008, J Neuro Methods)
         'tort': modulation index method (see Tort et al., 2010, J Neurophys)
         'canolty' : modulation index method (see Canolty et al., 2006, Science)
-        'ozkurt' : normalized modulation index method (see Ozkurt & Schnitzler, 2011, J Neuro Methods)
-    N_bins_tort : int or None
+    N_bins_tort : int or None, optional
         Number of phase bins to use in Tort's modulation index method of estimating PAC
-    N_surr_canolty : int or None
+    N_surr_canolty : int or None, optional
         Number of surrograte runs for Canolty's modulation index method of estimating PAC
-    verbose : bool
+    verbose : bool, optional
         if True, print optional warning information
 
     Returns
@@ -69,12 +69,14 @@ def compute_pac(x_pha, x_amp, Fs, f_range_lo, f_range_hi,
     # Set default filtering parameters
     if N_seconds_lo is None:
         if verbose:
-            warnings.warn('Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
+            warnings.warn(
+                'Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
         N_cycles = 3
         N_seconds_lo = N_cycles / f_range_lo[0]
     if N_seconds_hi is None:
         if verbose:
-            warnings.warn('Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
+            warnings.warn(
+                'Filter order not specified. Filter length automatically set to 3 cycles of the low cutoff frequency.')
         N_cycles = 3
         N_seconds_hi = N_cycles / f_range_hi[0]
     if filter_fn is None:
@@ -253,36 +255,36 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     f_amp_bin_edges : array-like, 1d
         An array of frequency values (Hz) that define the edges of the
         frequency ranges on which to estimate amplitude
-    N_cycles_pha : float
+    N_cycles_pha : float, optional
         Length of the low band-pass filter in terms of the number of cycles
         of a sine wave with a frequency at the low-cutoff of the bandpass filter
-    N_cycles_amp : float
+    N_cycles_amp : float, optional
         Length of the high band-pass filter in terms of the number of cycles
         of a sine wave with a frequency at the low-cutoff of the bandpass filter
-    filter_fn : function or False
+    filter_fn : function or False, optional
         The filtering function, with api:
         `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
         If False, it is assumed that x_pha and x_amp are the phase time
         series and the amplitude time series, respectively. Therefore, no
         filtering or hilbert transform will be done.
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
-    pac_method : str
+    pac_method : {'ozkurt', 'plv', 'glm', 'tort', 'canolty'}, optional
         Indicates the method used to correlate the phase and amplitude time series in order to
         quantify the strength of pac.
+        'ozkurt' : normalized modulation index method (see Ozkurt & Schnitzler, 2011, J Neuro Methods)
         'plv': phase-locking value method (see Penny et al., 2008, J Neuro Methods)
         'glm': general linear model method (see Penny et al., 2008, J Neuro Methods)
         'tort': modulation index method (see Tort et al., 2010, J Neurophys)
         'canolty' : modulation index method (see Canolty et al., 2006, Science)
-        'ozkurt' : normalized modulation index method (see Ozkurt & Schnitzler, 2011, J Neuro Methods)
-    N_bins_tort : int or None
+    N_bins_tort : int or None, optional
         Number of phase bins to use in Tort's modulation index method of estimating PAC
-    N_surr_canolty : int or None
+    N_surr_canolty : int or None, optional
         Number of surrograte runs for Canolty's modulation index method of estimating PAC
-    verbose : bool
+    verbose : bool, optional
         if True, print optional warning information
 
     Returns
@@ -305,11 +307,15 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
     if filter_fn is None:
         filter_fn = neurodsp.filter
     if filter_kwargs is None:
-        filter_kwargs = {'N_cycles': N_cycles_pha,
-                         'verbose': False}
+        filter_kwargs_pha = {'N_cycles': N_cycles_pha,
+                             'verbose': False}
+        filter_kwargs_amp = {'N_cycles': N_cycles_amp,
+                             'verbose': False}
     else:
-        filter_kwargs['N_cycles'] = N_cycles_pha
-        filter_kwargs['verbose'] = False
+        filter_kwargs_pha['N_cycles'] = N_cycles_pha
+        filter_kwargs_pha['verbose'] = False
+        filter_kwargs_amp['N_cycles'] = N_cycles_amp
+        filter_kwargs_amp['verbose'] = False
 
     # Compute phase time series for each frequency bin
     N_bins_pha = len(f_pha_bin_edges) - 1
@@ -318,7 +324,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         f_range_temp = (f_pha_bin_edges[i], f_pha_bin_edges[i + 1])
         pha_by_bin[i] = neurodsp.phase_by_time(x_pha, Fs, f_range_temp,
                                                filter_fn=filter_fn,
-                                               filter_kwargs=filter_kwargs,
+                                               filter_kwargs=filter_kwargs_pha,
                                                hilbert_increase_N=False)
 
     # Compute amplitude time series for each frequency bin
@@ -328,7 +334,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         f_range_temp = (f_amp_bin_edges[i], f_amp_bin_edges[i + 1])
         amp_by_bin[i] = neurodsp.amp_by_time(x_amp, Fs, f_range_temp,
                                              filter_fn=filter_fn,
-                                             filter_kwargs=filter_kwargs,
+                                             filter_kwargs=filter_kwargs_amp,
                                              hilbert_increase_N=False)
 
     # For each pair of frequency bins, compute PAC
@@ -361,11 +367,11 @@ def plot_pac_comodulogram(pac, f_pha_bin_edges, f_amp_bin_edges,
     f_amp_bin_edges : array-like, 1d
         An array of frequency values (Hz) that define the edges of the
         frequency ranges on which to estimate amplitude
-    clim : 2-element tuple
+    clim : 2-element tuple, optional
         Limits in the colorbar that represents PAC strength
-    figsize: 2-element tuple
+    figsize: 2-element tuple, optional
         size of figure, as in the 'figsize' kwarg used in plt.figure()
-    colormap: matplotlib-compatible colormap
+    colormap: matplotlib-compatible colormap, optional
         a colormap from matplotlib's colormap module (matplotlib.cm)
     """
 
