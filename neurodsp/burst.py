@@ -6,7 +6,7 @@ Detect periods of bursting in EEG waveforms
 from neurodsp import amp_by_time, filt
 import numpy as np
 
-def detect(x, f_range, Fs, algorithm, thresh, magnitudetype='amplitude',
+def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
            min_osc_periods=3, filter_fn=None, filter_kwargs=None, **kwargs):
     """
     Detect bursts using one of several methods.
