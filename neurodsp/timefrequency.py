@@ -20,16 +20,16 @@ def phase_by_time(x, Fs, f_range,
     ----------
     x : array-like, 1d
         Time series
-    f_range : (low, high), Hz
-        Frequency range
     Fs : float, Hz
         Sampling rate
-    filter_fn : function
+    f_range : (low, high), Hz
+        Frequency range
+    filter_fn : function, optional
         The filtering function, with api:
         `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
 
@@ -44,15 +44,10 @@ def phase_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+                       remove_edge_artifacts=False, **filter_kwargs)
     # Compute phase time series
-    if hilbert_increase_N:
-        # If desired, pad the signal to length next power of two.
-        N = len(x_filt)
-        N2 = 2**(int(math.log(len(x), 2)) + 1)
-        pha = np.angle(sp.signal.hilbert(x_filt, N2))
-    else:
-        pha = np.angle(sp.signal.hilbert(x_filt))
+    pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     return pha
 
 
@@ -66,16 +61,16 @@ def amp_by_time(x, Fs, f_range,
     ----------
     x : array-like, 1d
         Time series
-    f_range : (low, high), Hz
-        The frequency filtering range
     Fs : float, Hz
         Sampling rate
-    filter_fn : function
+    f_range : (low, high), Hz
+        The frequency filtering range
+    filter_fn : function, optional
         The filtering function, `filterfn(x, f_range, filter_kwargs)`
         Must have the same API as filt.bandpass
-    filter_kwargs : dict
+    filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool
+    hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
 
@@ -90,15 +85,10 @@ def amp_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+                       remove_edge_artifacts=False, **filter_kwargs)
     # Compute amplitude time series
-    if hilbert_increase_N:
-        # If desired, pad the signal to length next power of two.
-        N = len(x_filt)
-        N2 = 2**(int(math.log(len(x), 2)) + 1)
-        amp = np.abs(sp.signal.hilbert(x_filt, N2))
-    else:
-        amp = np.abs(sp.signal.hilbert(x_filt))
+    amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     return amp
 
 
@@ -131,3 +121,27 @@ def freq_by_time(x, Fs, f_range):
     i_f = Fs * phadiff / (2 * np.pi)
     i_f = np.insert(i_f, 0, np.nan)
     return i_f
+
+
+def _hilbert_ignore_nan(x, hilbert_increase_N=False):
+    """
+    Compute the hilbert transform of x.
+    Ignoring the boundaries of x that are filled with NaN
+    """
+    # Extract the signal that is not nan
+    first_nonan = np.where(~np.isnan(x))[0][0]
+    last_nonan = np.where(~np.isnan(x))[0][-1] + 1
+    x_nonan = x[first_nonan:last_nonan]
+
+    # Compute hilbert transform of signal without nans
+    if hilbert_increase_N:
+        N = len(x_nonan)
+        N2 = 2**(int(math.log(N, 2)) + 1)
+        x_hilb_nonan = signal.hilbert(x_nonan, N2)
+    else:
+        x_hilb_nonan = signal.hilbert(x_nonan)
+
+    # Fill in output hilbert with nans on edges
+    x_hilb = np.ones(len(x), dtype=complex) * np.nan
+    x_hilb[first_nonan:last_nonan] = x_hilb_nonan
+    return x_hilb

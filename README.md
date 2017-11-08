@@ -7,7 +7,7 @@
 A package of modules to process and analyze neural recordings as individual voltage time series. The primary purpose of this library is to serve as the shared codebase for the [Voytek Lab](http://voyteklab.com/), but we welcome anyone's use and contributions.
 
 ## Python version support
-This package currently supports python 3 (tested on 3.6), but not python 2.
+This package has been tested on python 3.4, 3.5, and 3.6 with the latest [Anaconda](https://www.continuum.io/downloads) distribution. Support for python 2 and earlier versions of python 3 is not guaranteed.
 
 ## Get latest code
 
@@ -20,18 +20,21 @@ This package currently supports python 3 (tested on 3.6), but not python 2.
 ## Modules
 
 - filt : Bandpass, highpass, lowpass, and notch filters ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Filtering.ipynb))
-- laggedcoherence : Estimation of rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20Coherence.ipynb))
-- timefrequency : Estimate instantaneous measures of oscillatory activity ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb)) 
+- spectral : computing spectral domain features (PSD and 1/f slope, etc) ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Spectral%20domain%20analysis.ipynb))
+- timefrequency : Estimate instantaneous measures of oscillatory activity ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb))
+- pac : Estimate phase-amplitude coupling ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Phase%20amplitude%20coupling.ipynb)) 
 - shape : submodules for measuring the waveform shape of neural oscillations
-	- cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Cycle-by-cycle%20features%20of%20oscillatory%20waveforms.ipynb)) 
-	- cyclepoints : Identify the extrema and zerocrossings for each cycle ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Extrema%20and%20zerocross%20finding.ipynb)) 
-	- phase : Estimate instantaneous phase by interpolating between extrema and zerocrossings ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Phase%20estimation%20by%20extrema%20interpolation.ipynb)) 
-	- swm : Identify recurrent patterns in a signal using sliding window matching ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Sliding%20Window%20Matching.ipynb)) 
+	- cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Cycle-by-cycle%20features%20of%20oscillatory%20waveforms.ipynb))
+	- cyclepoints : Identify the extrema and zerocrossings for each cycle ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Extrema%20and%20zerocross%20finding.ipynb))
+	- phase : Estimate instantaneous phase by interpolating between extrema and zerocrossings ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Phase%20estimation%20by%20extrema%20interpolation.ipynb))
+	- swm : Identify recurrent patterns in a signal using sliding window matching ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Sliding%20Window%20Matching.ipynb))
+- laggedcoherence : Estimation of rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb))
 
 ## Dependencies
 
 - numpy
 - scipy
 - matplotlib
+- scikit-learn
 - pandas
-- pytest
+- pytest (optional)

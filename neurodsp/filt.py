@@ -3,11 +3,11 @@ filt.py
 Filter a neural signal using a bandpass, highpass, lowpass, or bandstop filter.
 """
 
+import warnings
 import numpy as np
 import scipy as sp
 from scipy import signal
 import matplotlib.pyplot as plt
-import warnings
 
 
 def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
@@ -28,32 +28,32 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         'bandstop' : apply a bandstop (notch) filter
         'lowpass' : apply a lowpass filter
         'highpass' : apply a highpass filter
-    f_lo : float
+    f_lo : float, optional
         Low-frequency cutoff (Hz)
-    f_hi : float
+    f_hi : float, optional
         High-frequency cutoff (Hz)
-    N_cycles : float
+    N_cycles : float, optional
         Length of filter in terms of number of cycles at 'f_lo' frequency
         This parameter is overwritten by 'N_seconds'
-    N_seconds : float
+    N_seconds : float, optional
         Length of filter (seconds)
-    iir : bool
+    iir : bool, optional
         if True, use an infinite-impulse response (IIR) filter
         The only IIR filter to be used is a butterworth filter
-    butterworth_order : int
+    butterworth_order : int, optional
         order of the butterworth filter
         see input 'N' in scipy.signal.butter
-    plot_frequency_response : bool
+    plot_frequency_response : bool, optional
         if True, plot the frequency response of the filter
-    return_kernel : bool
+    return_kernel : bool, optional
         if True, return the complex filter kernel
-    verbose : bool
+    verbose : bool, optional
         if True, print optional information
-    compute_transition_band : bool
+    compute_transition_band : bool, optional
         if True, the function computes the transition bandwidth,
         defined as the frequency range between -20dB and -3dB attenuation,
         and warns the user if this band is longer than the frequency bandwidth.
-    remove_edge_artifacts : bool
+    remove_edge_artifacts : bool, optional
         if True, replace the samples that are within half a kernel's length to
         the signal edge with np.nan
 
@@ -88,10 +88,17 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
     else:
         raise ValueError('Input for "pass_type" not recognized. Must indicate bandpass, bandstop, lowpass, or highpass.')
 
+    # Remove any NaN on the edges of 'x'
+    first_nonan = np.where(~np.isnan(x))[0][0]
+    last_nonan = np.where(~np.isnan(x))[0][-1] + 1
+    x_old = np.copy(x)
+    x = x[first_nonan:last_nonan]
+
     # Process input for IIR filters
     if iir:
-        if verbose:
-            warnings.warn('Edge artifacts are not removed when using an IIR filter.')
+        if remove_edge_artifacts:
+            if verbose:
+                warnings.warn('Edge artifacts are not removed when using an IIR filter.')
         if pass_type != 'bandstop':
             if verbose:
                 warnings.warn('IIR filters are not recommended other than for notch filters.')
@@ -104,7 +111,7 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
     else:
         # Compute filter length if specified in seconds
         if N_seconds is not None:
-            N = int(np.ceil(Fs*N_seconds))
+            N = int(np.ceil(Fs * N_seconds))
         else:
             if pass_type == 'highpass':
                 N = int(np.ceil(Fs * N_cycles / f_hi))
@@ -150,73 +157,77 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         else:
             _plot_frequency_response(Fs, kernel)
 
-    # COmpute transition bandwidth
+    # Compute transition bandwidth
     if compute_transition_band and verbose:
-        try:
-            # Compute the frequency response in terms of Hz and dB
-            if not iir:
-                b = kernel
-                a = 1
-            w, h = signal.freqz(b, a)
-            f_db = w * Fs / (2. * np.pi)
-            db = 20 * np.log10(abs(h))
 
-            # Compute pass bandwidth and transition bandwidth
-            if pass_type == 'bandpass':
-                pass_bw = f_hi - f_lo
-                # Identify edges of transition band (-3dB and -20dB)
-                cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -20)
-                cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -3)
-                cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -20)
-                cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -3)
-                # Compute transition bandwidth
-                transition_bw1 = cf_3db_1 - cf_20db_1
-                transition_bw2 = cf_20db_2 - cf_3db_2
-                transition_bw = max(transition_bw1, transition_bw2)
+        # Compute the frequency response in terms of Hz and dB
+        if not iir:
+            b = kernel
+            a = 1
+        w, h = signal.freqz(b, a)
+        f_db = w * Fs / (2. * np.pi)
+        db = 20 * np.log10(abs(h))
 
-                if cf_20db_1 == f_db[0]:
-                    warnings.warn('The low frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
-                if cf_20db_2 == f_db[-1]:
-                    warnings.warn('The high frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
+        # Compute pass bandwidth and transition bandwidth
+        if pass_type == 'bandpass':
+            pass_bw = f_hi - f_lo
+            # Identify edges of transition band (-3dB and -20dB)
+            cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -20)
+            cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -3)
+            cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -20)
+            cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -3)
+            # Compute transition bandwidth
+            transition_bw1 = cf_3db_1 - cf_20db_1
+            transition_bw2 = cf_20db_2 - cf_3db_2
+            transition_bw = max(transition_bw1, transition_bw2)
 
-            elif pass_type == 'bandstop':
-                pass_bw = f_hi - f_lo
-                # Identify edges of transition band (-3dB and -20dB)
-                cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -20)
-                cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -3)
-                cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -20)
-                cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -3)
-                # Compute transition bandwidth
-                transition_bw1 = cf_20db_1 - cf_3db_1
-                transition_bw2 = cf_3db_2 - cf_20db_2
-                transition_bw = max(transition_bw1, transition_bw2)
+            if cf_20db_1 == f_db[0]:
+                warnings.warn('The low frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
+            if cf_20db_2 == f_db[-1]:
+                warnings.warn('The high frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
 
-            elif pass_type == 'highpass':
-                pass_bw = f_hi
-                # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[i] for i in range(len(db)) if db[i] > -20)
-                cf_3db = next(f_db[i] for i in range(len(db)) if db[i] > -3)
-                # Compute transition bandwidth
-                transition_bw = cf_3db - cf_20db
-            elif pass_type == 'lowpass':
-                pass_bw = f_lo
-                # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[i] for i in range(len(db)) if db[i] < -20)
-                cf_3db = next(f_db[i] for i in range(len(db)) if db[i] < -3)
-                # Compute transition bandwidth
-                transition_bw = cf_20db - cf_3db
+        elif pass_type == 'bandstop':
+            pass_bw = f_hi - f_lo
+            # Identify edges of transition band (-3dB and -20dB)
+            cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -20)
+            cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -3)
+            cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -20)
+            cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -3)
+            # Compute transition bandwidth
+            transition_bw1 = cf_20db_1 - cf_3db_1
+            transition_bw2 = cf_3db_2 - cf_20db_2
+            transition_bw = max(transition_bw1, transition_bw2)
 
-            # Raise warning if transition bandwidth is too high
-            if transition_bw > pass_bw:
-                warnings.warn('Transition bandwidth is '+str(np.round(transition_bw, 1))+' Hz. This is greater than the desired pass/stop bandwidth of '+str(np.round(pass_bw, 1))+' Hz')
-        except:
-            warnings.warn('Error when trying to estimate transition bandwidth. Visualize filter frequency response using the plot_frequency_response keyword argument to assure filter has appropriate response.')
+        elif pass_type == 'highpass':
+            pass_bw = f_hi
+            # Identify edges of transition band (-3dB and -20dB)
+            cf_20db = next(f_db[i] for i in range(len(db)) if db[i] > -20)
+            cf_3db = next(f_db[i] for i in range(len(db)) if db[i] > -3)
+            # Compute transition bandwidth
+            transition_bw = cf_3db - cf_20db
+
+        elif pass_type == 'lowpass':
+            pass_bw = f_lo
+            # Identify edges of transition band (-3dB and -20dB)
+            cf_20db = next(f_db[i] for i in range(len(db)) if db[i] < -20)
+            cf_3db = next(f_db[i] for i in range(len(db)) if db[i] < -3)
+            # Compute transition bandwidth
+            transition_bw = cf_20db - cf_3db
+
+        # Raise warning if transition bandwidth is too high
+        if transition_bw > pass_bw:
+            warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. This is greater than the desired pass/stop bandwidth of ' + str(np.round(pass_bw, 1)) + ' Hz')
 
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:
         N_rmv = int(np.ceil(N / 2))
         x_filt[:N_rmv] = np.nan
         x_filt[-N_rmv:] = np.nan
+
+    # Add NaN back on the edges of 'x', if there were any at the beginning
+    x_filt_full = np.ones(len(x_old)) * np.nan
+    x_filt_full[first_nonan:last_nonan] = x_filt
+    x_filt = x_filt_full
 
     # Return kernel if desired
     if return_kernel:
@@ -238,7 +249,7 @@ def _plot_frequency_response(Fs, b, a=1):
     plt.title('Frequency response')
     plt.ylabel('Attenuation (dB)')
     plt.xlabel('Frequency (Hz)')
-    if type(a) is int:
+    if isinstance(a, int):
         # Plot filter kernel
         plt.subplot(1, 2, 2)
         plt.plot(b, 'k')

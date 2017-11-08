@@ -43,16 +43,16 @@ def extrema_interpolated_phase(x, Ps, Ts, zeroxR=None, zeroxD=None):
     # 2 phase arrays: trough pi and trough -pi
     L = len(x)
     t = np.arange(L)
-    pha_tpi = np.zeros(L)*np.nan
-    pha_tnpi = np.zeros(L)*np.nan
+    pha_tpi = np.zeros(L) * np.nan
+    pha_tnpi = np.zeros(L) * np.nan
 
     # If specified, assign phases to zerocrossings
     if zeroxR is not None:
-        pha_tpi[zeroxR] = -np.pi/2
-        pha_tnpi[zeroxR] = -np.pi/2
+        pha_tpi[zeroxR] = -np.pi / 2
+        pha_tnpi[zeroxR] = -np.pi / 2
     if zeroxD is not None:
-        pha_tpi[zeroxD] = np.pi/2
-        pha_tnpi[zeroxD] = np.pi/2
+        pha_tpi[zeroxD] = np.pi / 2
+        pha_tnpi[zeroxD] = np.pi / 2
 
     # Define phases
     pha_tpi[Ps] = 0
@@ -70,5 +70,15 @@ def extrema_interpolated_phase(x, Ps, Ts, zeroxR=None, zeroxD=None):
     diffs = np.diff(pha_tnpi)
     diffs = np.append(diffs, 99)
     pha_tnpi[diffs < 0] = pha_tpi[diffs < 0]
+
+    # Assign the periods before the first empirical phase timepoint to NaN
+    diffs = np.diff(pha_tnpi)
+    first_empirical_idx = next(i for i, xi in enumerate(diffs) if xi > 0)
+    pha_tnpi[:first_empirical_idx] = np.nan
+
+    # Assign the periods after the last empirical phase timepoint to NaN
+    diffs = np.diff(pha_tnpi)
+    last_empirical_idx = next(i for i, xi in enumerate(diffs[::-1]) if xi > 0)
+    pha_tnpi[-last_empirical_idx + 1:] = np.nan
 
     return pha_tnpi
