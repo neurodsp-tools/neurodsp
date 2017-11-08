@@ -13,12 +13,12 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
     
     Parameters
     ----------
+    Fs : float
+        The sampling rate
     x : array-like 1d
         voltage time series
     f_range : (low, high), Hz
         frequency range for narrowband signal of interest
-    Fs : float
-        The sampling rate
     algorithm : string
         Name of algorithm to be used.
         'deviation' : 
@@ -34,7 +34,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
     filter_kwargs : dict
         keyword arguments to the filter_fn
     Keyword Arguments : 
-        baseline : string in ('median', 'mean')
+        baseline : string in ('median', 'mean'), optional
             (thresh only) metric to normalize magnitude used for thresholding
         thresh_bandpow_pc
             (magnorm only)
@@ -57,7 +57,10 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         raise ValueError("Invalid 'magnitude' parameter")
 
     if algorithm == 'deviation':
-        baseline = kwargs['baseline']
+        if 'baseline' in kwargs:
+            baseline = kwargs['baseline']
+        else:
+            baseline = 'median'
         
         # Calculate normalized magnitude
         if baseline == 'median':
@@ -65,12 +68,12 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         elif baseline == 'mean':
             norm_mag = x_magnitude / np.mean(x_magnitude)
         else:
-            raise ValueError("Invalid 'baseline' parameter")
+            raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
 
         if len(thresh) == 2:
             thresh_lo, thresh_hi = thresh[0], thresh[1]
         else:
-            raise ValueError("Invalid 'baseline' parameter")
+            raise ValueError("Invalid number of elements in 'thresh' parameter")
         
     else:
         raise ValueError("Invalid 'algorithm' parameter")
