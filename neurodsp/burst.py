@@ -6,11 +6,12 @@ Detect periods of bursting in EEG waveforms
 from neurodsp import amp_by_time, filt
 import numpy as np
 
+
 def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
-           min_osc_periods=3, filter_fn=None, filter_kwargs=None, **kwargs):
+                  min_osc_periods=3, filter_fn=None, filter_kwargs=None, **kwargs):
     """
     Detect bursts using one of several methods.
-    
+
     Parameters
     ----------
     Fs : float
@@ -21,7 +22,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         frequency range for narrowband signal of interest
     algorithm : string
         Name of algorithm to be used.
-        'deviation' : 
+        'deviation' :
     thresh : (low, high), units depend on other parameters
         Threshold value(s) for determining burst
         NOTE: only one value is needed for 'slopefit'
@@ -33,11 +34,11 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         function to use to filter original time series, x; optional
     filter_kwargs : dict
         keyword arguments to the filter_fn
-    Keyword Arguments : 
+    Keyword Arguments :
         baseline : string in ('median', 'mean'), optional
             (thresh only) metric to normalize magnitude used for thresholding
     """
-    
+
     # Set default filtering parameters
     if filter_kwargs is None:
         filter_kwargs = {}
@@ -58,7 +59,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
             baseline = kwargs['baseline']
         else:
             baseline = 'median'
-        
+
         # Calculate normalized magnitude
         if baseline == 'median':
             norm_mag = x_magnitude / np.median(x_magnitude)
@@ -71,7 +72,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
             thresh_lo, thresh_hi = thresh[0], thresh[1]
         else:
             raise ValueError("Invalid number of elements in 'thresh' parameter")
-        
+
     else:
         raise ValueError("Invalid 'algorithm' parameter")
 
