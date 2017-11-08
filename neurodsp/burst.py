@@ -3,6 +3,9 @@ burst.py
 Detect periods of bursting in EEG waveforms
 """
 
+from neurodsp import amp_by_time, filt
+import numpy as np
+
 def detect(x, f_range, Fs, algorithm, thresh, magnitudetype='amplitude',
            min_osc_periods=3, filter_fn=None, filter_kwargs=None, **kwargs):
     """
@@ -43,17 +46,19 @@ def detect(x, f_range, Fs, algorithm, thresh, magnitudetype='amplitude',
         filter_kwargs = {}
 
     # Compute amplitude time series
-    x_amplitude = timefrequency.amp_by_time(x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
+    x_amplitude = amp_by_time(x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
 
     # Set magnitude as power or amplitude
-    if magnitude == 'power':
+    if magnitudetype == 'power':
         x_magnitude = x_amplitude**2
-    elif magnitude == 'amplitude':
+    elif magnitudetype == 'amplitude':
         x_magnitude = x_amplitude
     else:
         raise ValueError("Invalid 'magnitude' parameter")
 
     if algorithm == 'deviation':
+        baseline = kwargs['baseline']
+        
         # Calculate normalized magnitude
         if baseline == 'median':
             norm_mag = x_magnitude / np.median(x_magnitude)
@@ -61,6 +66,12 @@ def detect(x, f_range, Fs, algorithm, thresh, magnitudetype='amplitude',
             norm_mag = x_magnitude / np.mean(x_magnitude)
         else:
             raise ValueError("Invalid 'baseline' parameter")
+
+        if len(thresh) == 2:
+            thresh_lo, thresh_hi = thresh[0], thresh[1]
+        else:
+            raise ValueError("Invalid 'baseline' parameter")
+        
     else:
         raise ValueError("Invalid 'algorithm' parameter")
 
