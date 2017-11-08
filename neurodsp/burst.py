@@ -25,20 +25,17 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
     thresh : (low, high), units depend on other parameters
         Threshold value(s) for determining burst
         NOTE: only one value is needed for 'slopefit'
-    magnitudetype : string in ('power', 'amplitude')
+    magnitudetype : string in ('power', 'amplitude'), optional
         metric of magnitude used for thresholding
-    min_osc_periods : float
+    min_osc_periods : float, optional
         minimum length of an oscillatory period in terms of the period length of f_range[0]
     filter_fn : filter function with required inputs (x, f_range, Fs, rmv_edge)
-        function to use to filter original time series, x
+        function to use to filter original time series, x; optional
     filter_kwargs : dict
         keyword arguments to the filter_fn
     Keyword Arguments : 
         baseline : string in ('median', 'mean'), optional
             (thresh only) metric to normalize magnitude used for thresholding
-        thresh_bandpow_pc
-            (magnorm only)
-        whitten parameters
     """
     
     # Set default filtering parameters
