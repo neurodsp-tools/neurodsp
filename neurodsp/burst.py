@@ -22,7 +22,10 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         frequency range for narrowband signal of interest
     algorithm : string
         Name of algorithm to be used.
-        'deviation' :
+        'deviation' : uses multiple of amplitude in frequency range like in
+                      Feingold et al., 2015 (esp. Fig. 4)
+        'fixed_thresh' : uses a given threshold in the same units as 'magnitude'
+                         parameter
     thresh : (low, high), units depend on other parameters
         Threshold value(s) for determining burst
         NOTE: only one value is needed for 'slopefit'
@@ -48,25 +51,28 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
 
     # Set magnitude as power or amplitude
     if magnitudetype == 'power':
-        x_magnitude = x_amplitude**2
+        x_magnitude = x_amplitude**2 # np.power faster?
     elif magnitudetype == 'amplitude':
         x_magnitude = x_amplitude
     else:
         raise ValueError("Invalid 'magnitude' parameter")
 
-    if algorithm == 'deviation':
+    if algorithm in ['deviation', 'fixed_thresh']:
         if 'baseline' in kwargs:
             baseline = kwargs['baseline']
+            
+            if baseline not in ['median', 'mean']:
+                raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
         else:
             baseline = 'median'
 
-        # Calculate normalized magnitude
-        if baseline == 'median':
-            norm_mag = x_magnitude / np.median(x_magnitude)
-        elif baseline == 'mean':
-            norm_mag = x_magnitude / np.mean(x_magnitude)
-        else:
-            raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
+        if algorithm == 'deviation':
+            # Calculate normalized magnitude
+            if baseline == 'median':
+                x_magnitude = x_magnitude / np.median(x_magnitude)
+            elif baseline == 'mean':
+                x_magnitude = x_magnitude / np.mean(x_magnitude)
+        # If 'fixed_thresh', x_magnitude is fine how it is
 
         if len(thresh) == 2:
             thresh_lo, thresh_hi = thresh[0], thresh[1]
@@ -77,7 +83,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         raise ValueError("Invalid 'algorithm' parameter")
 
     # Identify time periods of oscillation
-    isosc = _2threshold_split(norm_mag, thresh_hi, thresh_lo)
+    isosc = _2threshold_split(x_magnitude, thresh_hi, thresh_lo)
 
     # Remove short time periods of oscillation
     min_period_length = int(np.ceil(min_osc_periods * Fs / f_range[0]))
