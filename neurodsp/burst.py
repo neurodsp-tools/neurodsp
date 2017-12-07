@@ -8,7 +8,8 @@ import numpy as np
 
 
 def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
-                  min_osc_periods=3, filter_fn=None, filter_kwargs=None, **kwargs):
+                  return_amplitude=False, min_osc_periods=3, filter_fn=None,
+                  filter_kwargs=None, **kwargs):
     """
     Detect bursts using one of several methods.
 
@@ -89,7 +90,10 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
     min_period_length = int(np.ceil(min_osc_periods * Fs / f_range[0]))
     isosc_noshort = _rmv_short_periods(isosc, min_period_length)
 
-    return isosc_noshort
+    if return_amplitude:
+        return isosc_noshort, x_magnitude
+    else:
+        return isosc_noshort
 
 
 def _2threshold_split(x, thresh_hi, thresh_lo):
