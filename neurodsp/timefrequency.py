@@ -137,7 +137,7 @@ def _hilbert_ignore_nan(x, hilbert_increase_N=False):
     if hilbert_increase_N:
         N = len(x_nonan)
         N2 = 2**(int(math.log(N, 2)) + 1)
-        x_hilb_nonan = signal.hilbert(x_nonan, N2)
+        x_hilb_nonan = signal.hilbert(x_nonan, N2)[:N]
     else:
         x_hilb_nonan = signal.hilbert(x_nonan)
 
