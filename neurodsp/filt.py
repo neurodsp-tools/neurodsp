@@ -220,7 +220,7 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
                 warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. This is greater than the desired pass/stop bandwidth of ' + str(np.round(pass_bw, 1)) + ' Hz')
         except StopIteration:
             raise ValueError('Error computing transition bandwidth of the filter. Defined filter length may be too short.')
-                
+
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:
         N_rmv = int(np.ceil(N / 2))
