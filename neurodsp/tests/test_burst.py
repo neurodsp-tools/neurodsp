@@ -27,13 +27,3 @@ def test_detect_bursts_consistent():
     bursting = neurodsp.detect_bursts(Fs, x, (f_lo, f_hi,),
                                       algorithm='deviation', thresh=(0.9, 2.0))
     assert np.isclose(np.sum(bursting - bursting_true), 0)
-
-
-def test_detect_bursts_length():
-    """
-    Confirm length of burst detection results on a generated neural signal
-    """
-    raise NotImplementedError
-
-    bursting = neurodsp.detect_bursts(Fs, x, alpha, algorithm='deviation', thresh=(3, 3))
-
