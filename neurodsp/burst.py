@@ -52,7 +52,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
 
     # Set magnitude as power or amplitude
     if magnitudetype == 'power':
-        x_magnitude = x_amplitude**2 # np.power faster?
+        x_magnitude = x_amplitude**2  # np.power faster?
     elif magnitudetype == 'amplitude':
         x_magnitude = x_amplitude
     else:
@@ -61,7 +61,7 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
     if algorithm in ['deviation', 'fixed_thresh']:
         if 'baseline' in kwargs:
             baseline = kwargs['baseline']
-            
+
             if baseline not in ['median', 'mean']:
                 raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
         else:
