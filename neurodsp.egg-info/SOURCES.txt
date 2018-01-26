@@ -18,6 +18,7 @@ neurodsp/shape/cyclepoints.py
 neurodsp/shape/phase.py
 neurodsp/shape/swm.py
 neurodsp/tests/__init__.py
+neurodsp/tests/test_burst.py
 neurodsp/tests/test_cyclefeatures.py
 neurodsp/tests/test_cyclepoints.py
 neurodsp/tests/test_filt.py
