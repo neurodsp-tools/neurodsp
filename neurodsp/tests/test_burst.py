@@ -8,7 +8,7 @@ import pytest
 import numpy as np
 import neurodsp
 from neurodsp.tests import _load_example_data
- 
+
 
 def test_detect_bursts_consistent():
     """
@@ -23,10 +23,11 @@ def test_detect_bursts_consistent():
     Fs = 1000
     f_lo = 8
     f_hi = 12
-    
-    bursting = neurodsp.detect_bursts(Fs, x, (f_lo, f_hi),
+
+    bursting = neurodsp.detect_bursts(Fs, x, (f_lo, f_hi,),
                                       algorithm='deviation', thresh=(0.9, 2.0))
-    assert np.isclose(np.sum(bursting-bursting_true), 0)
+    assert np.isclose(np.sum(bursting - bursting_true), 0)
+
 
 def test_detect_bursts_length():
     """
