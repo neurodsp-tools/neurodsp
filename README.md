@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/voytekresearch/neurodsp.svg)](https://travis-ci.org/voytekresearch/neurodsp)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/voytekresearch/neurodsp/master)
 
 A package of modules to process and analyze neural recordings as individual voltage time series. The primary purpose of this library is to serve as the shared codebase for the [Voytek Lab](http://voyteklab.com/), but we welcome anyone's use and contributions.
 
