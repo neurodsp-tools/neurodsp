@@ -102,7 +102,7 @@ def get_stats(bursting, Fs):
 
     Parameters
     ----------
-    x : array-like 1d
+    bursting : array-like 1d
         binary time series, output of detect_bursts()
     Fs : float
         The sampling rate in Hz
