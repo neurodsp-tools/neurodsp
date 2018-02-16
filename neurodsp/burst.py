@@ -15,10 +15,10 @@ def detect_bursts(x, Fs, f_range, algorithm, thresh, magnitudetype='amplitude',
 
     Parameters
     ----------
-    Fs : float
-        The sampling rate
     x : array-like 1d
         voltage time series
+    Fs : float
+        The sampling rate in Hz
     f_range : (low, high), Hz
         frequency range for narrowband signal of interest
     algorithm : string
