@@ -7,7 +7,7 @@ from neurodsp import amp_by_time, filt
 import numpy as np
 
 
-def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
+def detect_bursts(x, Fs, f_range, algorithm, thresh, magnitudetype='amplitude',
                   return_amplitude=False, min_osc_periods=3, filter_fn=None,
                   filter_kwargs=None, **kwargs):
     """
