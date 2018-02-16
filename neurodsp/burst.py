@@ -96,6 +96,51 @@ def detect_bursts(Fs, x, f_range, algorithm, thresh, magnitudetype='amplitude',
         return isosc_noshort
 
 
+def get_stats(bursting, Fs):
+    """
+    Get statistics of bursts.
+
+    Parameters
+    ----------
+    x : array-like 1d
+        binary time series, output of detect_bursts()
+    Fs : float
+        The sampling rate in Hz
+
+    Returns
+    -------
+    stats_dict : dict
+        dict with following keys: 'N_bursts' - the number of bursts
+                                  'duration_mean' - mean duration of bursts (sec)
+                                  'duration_std' - std dev of burst durations (sec)
+                                  'percent_burst' - % time in bursts
+                                  'burst_rate' - bursts/sec
+    """
+
+    tot_time = len(bursting) / Fs
+    
+    # find burst starts and ends
+    starts = np.array([])
+    ends = np.array([])
+
+    for i, index in enumerate(np.where(np.diff(bursting) != 0)[0]):
+        if (i % 2) == 0:
+            starts = np.append(starts, index)
+        else:
+            ends = np.append(ends, index)
+
+    # duration of each burst
+    durations = (ends - starts) / Fs
+
+
+    ret_dict = {'N_bursts':len(starts),
+                'duration_mean':np.mean(durations),
+                'duration_std':np.std(durations),
+                'percent_burst':np.sum(bursting)/len(bursting),
+                'rate':len(starts)/tot_time}
+    return ret_dict
+
+
 def _2threshold_split(x, thresh_hi, thresh_lo):
     """
     Identify periods of a time series that are above thresh_lo and have at
