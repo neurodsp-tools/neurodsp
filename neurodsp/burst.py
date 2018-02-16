@@ -132,11 +132,11 @@ def get_stats(bursting, Fs):
     # duration of each burst
     durations = (ends - starts) / Fs
 
-    ret_dict = {'N_bursts' : len(starts),
-                'duration_mean' : np.mean(durations),
-                'duration_std' : np.std(durations),
-                'percent_burst' : np.sum(bursting)/len(bursting),
-                'rate' : len(starts) / tot_time}
+    ret_dict = {'N_bursts': len(starts),
+                'duration_mean': np.mean(durations),
+                'duration_std': np.std(durations),
+                'percent_burst': np.sum(bursting) / len(bursting),
+                'rate': len(starts) / tot_time}
     return ret_dict
 
 
