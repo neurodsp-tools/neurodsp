@@ -21,9 +21,9 @@ def test_detect_bursts_consistent():
 
     # Detect bursts
     Fs = 1000
-    f_lo = 8
-    f_hi = 12
+    f_lo = 13
+    f_hi = 30
 
-    bursting = neurodsp.detect_bursts(Fs, x, (f_lo, f_hi,),
+    bursting = neurodsp.detect_bursts(x, Fs, (f_lo, f_hi,),
                                       algorithm='deviation', thresh=(0.9, 2.0))
     assert np.isclose(np.sum(bursting - bursting_true), 0)
