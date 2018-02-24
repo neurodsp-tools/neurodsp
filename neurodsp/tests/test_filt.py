@@ -55,7 +55,7 @@ def test_filter_length_error():
     """
     T = 2
     Fs = 1000
-    x = np.random.randn(T*Fs)
+    x = np.random.randn(T * Fs)
     with pytest.raises(ValueError) as excinfo:
         x_filt = neurodsp.filt.filter(x, Fs, 'bandpass', f_lo=1, f_hi=10)
     assert 'The filter needs to be shortened by decreasing the N_cycles' in str(excinfo.value)
