@@ -122,6 +122,13 @@ def filter(x, Fs, pass_type, f_lo=None, f_hi=None, N_cycles=3, N_seconds=None,
         if N % 2 == 0:
             N = int(N + 1)
 
+        # Raise an error if the filter is longer than the signal
+        if N >= len(x):
+            raise ValueError(
+                '''The designed filter (length: {:d}) is longer than the signal (length: {:d}).
+                The filter needs to be shortened by decreasing the N_cycles or N_seconds parameter.
+                However, this will decrease the frequency resolution of the filter.'''.format(N, len(x)))
+
     # Compute nyquist frequency
     f_nyq = Fs / 2.
 

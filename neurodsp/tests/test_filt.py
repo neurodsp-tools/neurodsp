@@ -48,6 +48,19 @@ def test_edge_nan():
     assert all(~np.isnan(x_filt))
 
 
+def test_filter_length_error():
+    """
+    Confirm that the proper error is raised when the filter designed is longer than
+    the signal
+    """
+    T = 2
+    Fs = 1000
+    x = np.random.randn(T * Fs)
+    with pytest.raises(ValueError) as excinfo:
+        x_filt = neurodsp.filt.filter(x, Fs, 'bandpass', f_lo=1, f_hi=10)
+    assert 'The filter needs to be shortened by decreasing the N_cycles' in str(excinfo.value)
+
+
 def test_frequency_input_errors():
     """
     Check that errors are properly raised when incorrectly enter frequency information
