@@ -1,17 +1,23 @@
 """
 burst.py
-Detect periods of bursting in EEG waveforms
+Analyze periods of oscillatory bursting in a neural signal
 """
 
-from neurodsp import amp_by_time, filt
+from neurodsp import amp_by_time, filt, spectral
 import numpy as np
+import warnings
+from scipy import stats, signal
 
-
-def detect_bursts(x, Fs, f_range, algorithm, thresh, magnitudetype='amplitude',
-                  return_amplitude=False, min_osc_periods=3, filter_fn=None,
-                  filter_kwargs=None, **kwargs):
+def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
+                  dual_thresh=None,
+                  deviation_type='median',
+                  magnitude_type='amplitude',
+                  return_amplitude=False,
+                  filter_fn=None, filter_kwargs=None,
+                  bosc_f_range_slope=None, bosc_thresh=None,
+                  bosc_plot_slope_fit=None):
     """
-    Detect bursts using one of several methods.
+    Detect periods of oscillatory bursting in a neural signal
 
     Parameters
     ----------
@@ -27,64 +33,88 @@ def detect_bursts(x, Fs, f_range, algorithm, thresh, magnitudetype='amplitude',
                       Feingold et al., 2015 (esp. Fig. 4)
         'fixed_thresh' : uses a given threshold in the same units as 'magnitude'
                          parameter
-    thresh : (low, high), units depend on other parameters
-        Threshold value(s) for determining burst
-        NOTE: only one value is needed for 'slopefit'
-    magnitudetype : string in ('power', 'amplitude'), optional
+        'bosc' : "Better OSCillation detection" method in
+                 Whitten et al. 2011, NeuroImage.
+                 Computes amplitude cutoff based on a chi square distribution
+                 parametrized by the background PSD
+    min_osc_periods : float
+        minimum burst duration in terms of number of cycles of f_range[0]
+    dual_thresh : (low, high), units depend on other parameters
+        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
+        Threshold values for determining burst
+    deviation_type : string in ('median', 'mean')
+        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
+        metric to normalize magnitude used for thresholding
+    magnitude_type : string in ('power', 'amplitude')
+        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         metric of magnitude used for thresholding
-    min_osc_periods : float, optional
-        minimum length of an oscillatory period in terms of the period length of f_range[0]
     filter_fn : filter function with required inputs (x, f_range, Fs, rmv_edge)
-        function to use to filter original time series, x; optional
+        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
+        function to use to filter original time series, x
     filter_kwargs : dict
+        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         keyword arguments to the filter_fn
-    Keyword Arguments :
-        baseline : string in ('median', 'mean'), optional
-            (thresh only) metric to normalize magnitude used for thresholding
+    bosc_f_range_slope : (low, high), Hz
+        NOTE: Only used when algorithm = 'bosc'
+        Frequency range over which to estimate slope
+    bosc_thresh : int (0 to 1)
+        NOTE: Only used when algorithm = 'bosc'
+        the probability of the chi-square distribution at which to cut off oscillation
+    bosc_plot_slope_fit : bool
+        NOTE: Only used when algorithm = 'bosc'
+        whether to plot the fitted slope to the power spectrum
     """
 
-    # Set default filtering parameters
-    if filter_kwargs is None:
-        filter_kwargs = {}
-
-    # Compute amplitude time series
-    x_amplitude = amp_by_time(x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
-
-    # Set magnitude as power or amplitude
-    if magnitudetype == 'power':
-        x_magnitude = x_amplitude**2  # np.power faster?
-    elif magnitudetype == 'amplitude':
-        x_magnitude = x_amplitude
-    else:
-        raise ValueError("Invalid 'magnitude' parameter")
-
     if algorithm in ['deviation', 'fixed_thresh']:
-        if 'baseline' in kwargs:
-            baseline = kwargs['baseline']
 
-            if baseline not in ['median', 'mean']:
-                raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
+        # Set default filtering parameters
+        if filter_kwargs is None:
+            filter_kwargs = {}
+
+        # Assure dual_thresh has input
+        if dual_thresh is None:
+            raise ValueError('Need to specify dual magnitude thresholds for this algorithm')
+
+        # Process deviation_type kwarg
+        if deviation_type not in ['median', 'mean']:
+            raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
+
+        # Compute amplitude time series
+        x_amplitude = amp_by_time(x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
+
+        # Set magnitude as power or amplitude
+        if magnitude_type == 'power':
+            x_magnitude = x_amplitude**2  # np.power faster?
+        elif magnitude_type == 'amplitude':
+            x_magnitude = x_amplitude
         else:
-            baseline = 'median'
+            raise ValueError("Invalid 'magnitude' parameter")
 
+        # Rescale magnitude by median or mean
+        # If 'fixed_thresh', x_magnitude is unchanged
         if algorithm == 'deviation':
             # Calculate normalized magnitude
-            if baseline == 'median':
+            if deviation_type == 'median':
                 x_magnitude = x_magnitude / np.median(x_magnitude)
-            elif baseline == 'mean':
+            elif deviation_type == 'mean':
                 x_magnitude = x_magnitude / np.mean(x_magnitude)
-        # If 'fixed_thresh', x_magnitude is fine how it is
 
-        if len(thresh) == 2:
-            thresh_lo, thresh_hi = thresh[0], thresh[1]
-        else:
-            raise ValueError("Invalid number of elements in 'thresh' parameter")
+        if len(dual_thresh) != 2:
+            raise ValueError("Invalid number of elements in 'dual_thresh' parameter")
+
+        # Identify time periods of oscillation using the 2 thresholds
+        isosc = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
+
+    elif algorithm == 'bosc':
+        if bosc_f_range_slope is None:
+            raise ValueError('For the BOSC method, you must specify the f_range_slope parameter.')
+
+        isosc = _bosc(x, Fs, f_range, bosc_f_range_slope,
+                      percentile_thresh=bosc_thresh,
+                      plot_slope_fit=bosc_plot_slope_fit)
 
     else:
         raise ValueError("Invalid 'algorithm' parameter")
-
-    # Identify time periods of oscillation
-    isosc = _2threshold_split(x_magnitude, thresh_hi, thresh_lo)
 
     # Remove short time periods of oscillation
     min_period_length = int(np.ceil(min_osc_periods * Fs / f_range[0]))
@@ -94,6 +124,77 @@ def detect_bursts(x, Fs, f_range, algorithm, thresh, magnitudetype='amplitude',
         return isosc_noshort, x_magnitude
     else:
         return isosc_noshort
+
+
+def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=None):
+    """
+    Detect bursts of oscillations using the Better OSCillation detection algorithm
+    described in Whitten et al., 2011, NeuroImage.
+
+    Briefly, we estimate the background 1/f process of the signal, and use this to
+    determine a power threshold at our frequency of interest.
+
+    Rather than looking at the whole frequency band, we only look at a single frequency value.
+    This frequency value is chosen as the middle of the frequency band defined,
+    rounded to the nearest integer, rounded down.
+
+    Note that the BOSC paper recommends a minimum of 3 cycles to be identified as a burst.
+
+    Parameters
+    ----------
+    x : array-like 1d
+        voltage time series
+    Fs : float
+        The sampling rate
+        The sampling rate is also used for the window size to assure that the frequency spacing is 1Hz
+    f_range : (low, high), Hz
+        frequency range for narrowband signal of interest
+        Note this frequency range is strategically ignored when fitting slope
+    f_range_slope : (low, high), Hz
+        Frequency range over which to estimate slope
+    percentile_thresh : int (0 to 1)
+        the probability of the chi-square distribution at which to cut off oscillation
+    plot_slope_fit : bool
+        whether to plot the fitted slope to the power spectrum
+
+    Returns
+    -------
+    isosc : array-like 1d
+        binary time series. 1 = in oscillation; 0 = not in oscillation
+        if return_oscbounds is true: this is 2 lists with the start and end burst samples
+    """
+
+    # Set default threshold of chi2 distribution
+    if percentile_thresh is None:
+        percentile_thresh = .95
+
+    # Set default sloep plotting
+    if plot_slope_fit is None:
+        plot_slope_fit = False
+
+    # Compute frequency of interest
+    f_oi = int(np.floor(np.mean(f_range)))
+    warnings.warn('NOTE: The BOSC method detects oscillations at a single frequency value,'+
+                  ' {:d}Hz, rather than your defined frequency range'.format(f_oi))
+
+    # Compute Morlet Transform with 6 cycles
+    f0s = np.arange(f_range_slope[0], f_range_slope[1])
+    mwt = spectral.morlet_transform(x, f0s, Fs, w=6)
+    mwt_power = np.abs(mwt**2)
+
+    # Compute average spectrum, and fit slope to it
+    avg_spectrum = np.mean(mwt_power, axis=1)
+    slope, offset = spectral.fit_slope(f0s, avg_spectrum, f_range_slope,
+                                       fit_excl = f_range, plot_fit=plot_slope_fit)
+
+    # Compute background power at frequency of interest, and the power threshold
+    f_oi_background_power = 10**(np.log10(f_oi) * slope + offset)
+    power_thresh = stats.chi2.ppf(percentile_thresh, 2, scale=f_oi_background_power/2)
+
+    # Determine periods that are oscillating
+    power_ts = mwt_power[f0s==f_oi][0]
+    isosc = power_ts > power_thresh
+    return isosc
 
 
 def get_stats(bursting, Fs):
