@@ -14,9 +14,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                   deviation_type='median',
                   magnitude_type='amplitude',
                   return_amplitude=False,
-                  filter_fn=None, filter_kwargs=None,
-                  bosc_f_range_slope=None, bosc_thresh=None,
-                  bosc_plot_slope_fit=None):
+                  filter_fn=None, filter_kwargs=None):
     """
     Detect periods of oscillatory bursting in a neural signal
 
@@ -27,6 +25,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
     Fs : float
         The sampling rate in Hz
     f_range : (low, high), Hz
+        NOTE: Not relevant in the 'bosc' method
         frequency range for narrowband signal of interest
     algorithm : string
         Name of algorithm to be used.
@@ -34,10 +33,6 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                       Feingold et al., 2015 (esp. Fig. 4)
         'fixed_thresh' : uses a given threshold in the same units as 'magnitude'
                          parameter
-        'bosc' : "Better OSCillation detection" method in
-                 Whitten et al. 2011, NeuroImage.
-                 Computes amplitude cutoff based on a chi square distribution
-                 parametrized by the background PSD
     min_osc_periods : float
         minimum burst duration in terms of number of cycles of f_range[0]
     dual_thresh : (low, high), units depend on other parameters
@@ -55,15 +50,6 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
     filter_kwargs : dict
         NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         keyword arguments to the filter_fn
-    bosc_f_range_slope : (low, high), Hz
-        NOTE: Only used when algorithm = 'bosc'
-        Frequency range over which to estimate slope
-    bosc_thresh : int (0 to 1)
-        NOTE: Only used when algorithm = 'bosc'
-        the probability of the chi-square distribution at which to cut off oscillation
-    bosc_plot_slope_fit : bool
-        NOTE: Only used when algorithm = 'bosc'
-        whether to plot the fitted slope to the power spectrum
     """
 
     if algorithm in ['deviation', 'fixed_thresh']:
@@ -110,15 +96,6 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
         # Identify time periods of oscillation using the 2 thresholds
         isosc = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
 
-    elif algorithm == 'bosc':
-        if bosc_f_range_slope is None:
-            raise ValueError(
-                'For the BOSC method, you must specify the f_range_slope parameter.')
-
-        isosc = _bosc(x, Fs, f_range, bosc_f_range_slope,
-                      percentile_thresh=bosc_thresh,
-                      plot_slope_fit=bosc_plot_slope_fit)
-
     else:
         raise ValueError("Invalid 'algorithm' parameter")
 
@@ -132,7 +109,8 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
         return isosc_noshort
 
 
-def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=None):
+def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
+                       percentile_thresh=None, plot_slope_fit=None):
     """
     Detect bursts of oscillations using the Better OSCillation detection algorithm
     described in Whitten et al., 2011, NeuroImage.
@@ -153,11 +131,13 @@ def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=
     Fs : float
         The sampling rate
         The sampling rate is also used for the window size to assure that the frequency spacing is 1Hz
-    f_range : (low, high), Hz
-        frequency range for narrowband signal of interest
-        Note this frequency range is strategically ignored when fitting slope
+    f_oi : int
+        frequency of the oscillation of interest (Hz)
     f_range_slope : (low, high), Hz
-        Frequency range over which to estimate slope
+        frequency range over which to estimate slope
+    f_slope_excl : (low, high), Hz'
+        Frequency range to ignore in slope fit. This should contain the
+        frequency of the oscillation of interest
     percentile_thresh : int (0 to 1)
         the probability of the chi-square distribution at which to cut off oscillation
     plot_slope_fit : bool
@@ -178,20 +158,18 @@ def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=
     if plot_slope_fit is None:
         plot_slope_fit = False
 
-    # Compute frequency of interest
-    f_oi = int(np.floor(np.mean(f_range)))
-    warnings.warn('NOTE: The BOSC method detects oscillations at a single frequency value,' +
-                  ' {:d}Hz, rather than your defined frequency range'.format(f_oi))
-
     # Compute Morlet Transform with 6 cycles
     f0s = np.arange(f_range_slope[0], f_range_slope[1])
     mwt = spectral.morlet_transform(x, f0s, Fs, w=6)
     mwt_power = np.abs(mwt**2)
 
+    if sum(f_oi == f0s) != 1:
+        raise ValueError('The frequency of interest, f_oi, must be within the frequency range used to fit the slope')
+
     # Compute average spectrum, and fit slope to it
     avg_spectrum = np.mean(mwt_power, axis=1)
     slope, offset = spectral.fit_slope(f0s, avg_spectrum, f_range_slope,
-                                       fit_excl=f_range, plot_fit=plot_slope_fit)
+                                       fit_excl=f_slope_excl, plot_fit=plot_slope_fit)
 
     # Compute background power at frequency of interest, and the power
     # threshold
@@ -202,7 +180,11 @@ def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=
     # Determine periods that are oscillating
     power_ts = mwt_power[f0s == f_oi][0]
     isosc = power_ts > power_thresh
-    return isosc
+
+    # Remove bursts less than 3 cycles in duration
+    min_period_length = int(3 * Fs / f_oi)
+    isosc_noshort = _rmv_short_periods(isosc, min_period_length)
+    return isosc_noshort
 
 
 def get_stats(bursting, Fs):
