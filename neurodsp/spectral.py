@@ -417,3 +417,86 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
         plt.ylabel('Log10 Power (V^2/Hz)', fontsize=15)
 
     return slope, offset
+
+
+def morlet_transform(x, f0s, Fs, w=7, s=.5):
+    """
+    Calculate the time-frequency representation of the signal 'x' over the
+    frequencies in 'f0s' using morlet wavelets
+    Parameters
+    ----------
+    x : array
+        time series
+    f0s : array
+        frequency axis
+    Fs : float
+        Sampling rate
+    w : float
+        Length of the filter in terms of the number of cycles of the oscillation
+        whose frequency is the center of the bandpass filter
+    s : float
+        Scaling factor
+    Returns
+    -------
+    mwt : 2-D array
+        time-frequency representation of signal x
+    """
+    if w <= 0:
+        raise ValueError('Number of cycles in a filter must be a positive number.')
+
+    T = len(x)
+    F = len(f0s)
+    mwt = np.zeros([F, T], dtype=complex)
+    for f in range(F):
+        mwt[f] = morlet_convolve(x, f0s[f], Fs, w=w, s=s)
+
+    return mwt
+
+
+def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
+    """
+    Convolve a signal with a complex wavelet
+    The real part is the filtered signal
+    Taking np.abs() of output gives the analytic amplitude
+    Taking np.angle() of output gives the analytic phase
+    x : array
+        Time series to filter
+    f0 : float
+        Center frequency of bandpass filter
+    Fs : float
+        Sampling rate
+    w : float
+        Length of the filter in terms of the number of cycles of the oscillation
+        with frequency f0
+    s : float
+        Scaling factor for the morlet wavelet
+    M : integer
+        Length of the filter. Overrides the f0 and w inputs
+    norm : string
+        Normalization method
+        'sss' - divide by the sqrt of the sum of squares of points
+        'amp' - divide by the sum of amplitudes divided by 2
+    Returns
+    -------
+    x_trans : array
+        Complex time series
+    """
+    if w <= 0:
+        raise ValueError('Number of cycles in a filter must be a positive number.')
+
+    if M is None:
+        M = w * Fs / f0
+
+    morlet_f = signal.morlet(M, w=w, s=s)
+
+    if norm == 'sss':
+        morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
+    elif norm == 'abs':
+        morlet_f = morlet_f / np.sum(np.abs(morlet_f))
+    else:
+        raise ValueError('Not a valid wavelet normalization method.')
+
+    mwt_real = np.convolve(x, np.real(morlet_f), mode='same')
+    mwt_imag = np.convolve(x, np.imag(morlet_f), mode='same')
+
+    return mwt_real + 1j*mwt_imag
