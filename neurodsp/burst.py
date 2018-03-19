@@ -8,6 +8,7 @@ import numpy as np
 import warnings
 from scipy import stats, signal
 
+
 def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                   dual_thresh=None,
                   deviation_type='median',
@@ -73,14 +74,17 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
 
         # Assure dual_thresh has input
         if dual_thresh is None:
-            raise ValueError('Need to specify dual magnitude thresholds for this algorithm')
+            raise ValueError(
+                'Need to specify dual magnitude thresholds for this algorithm')
 
         # Process deviation_type kwarg
         if deviation_type not in ['median', 'mean']:
-            raise ValueError("Invalid 'baseline' parameter. Must be 'median' or 'mean'")
+            raise ValueError(
+                "Invalid 'baseline' parameter. Must be 'median' or 'mean'")
 
         # Compute amplitude time series
-        x_amplitude = amp_by_time(x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
+        x_amplitude = amp_by_time(
+            x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
 
         # Set magnitude as power or amplitude
         if magnitude_type == 'power':
@@ -100,14 +104,16 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                 x_magnitude = x_magnitude / np.mean(x_magnitude)
 
         if len(dual_thresh) != 2:
-            raise ValueError("Invalid number of elements in 'dual_thresh' parameter")
+            raise ValueError(
+                "Invalid number of elements in 'dual_thresh' parameter")
 
         # Identify time periods of oscillation using the 2 thresholds
         isosc = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
 
     elif algorithm == 'bosc':
         if bosc_f_range_slope is None:
-            raise ValueError('For the BOSC method, you must specify the f_range_slope parameter.')
+            raise ValueError(
+                'For the BOSC method, you must specify the f_range_slope parameter.')
 
         isosc = _bosc(x, Fs, f_range, bosc_f_range_slope,
                       percentile_thresh=bosc_thresh,
@@ -174,7 +180,7 @@ def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=
 
     # Compute frequency of interest
     f_oi = int(np.floor(np.mean(f_range)))
-    warnings.warn('NOTE: The BOSC method detects oscillations at a single frequency value,'+
+    warnings.warn('NOTE: The BOSC method detects oscillations at a single frequency value,' +
                   ' {:d}Hz, rather than your defined frequency range'.format(f_oi))
 
     # Compute Morlet Transform with 6 cycles
@@ -185,14 +191,16 @@ def _bosc(x, Fs, f_range, f_range_slope, percentile_thresh=None, plot_slope_fit=
     # Compute average spectrum, and fit slope to it
     avg_spectrum = np.mean(mwt_power, axis=1)
     slope, offset = spectral.fit_slope(f0s, avg_spectrum, f_range_slope,
-                                       fit_excl = f_range, plot_fit=plot_slope_fit)
+                                       fit_excl=f_range, plot_fit=plot_slope_fit)
 
-    # Compute background power at frequency of interest, and the power threshold
+    # Compute background power at frequency of interest, and the power
+    # threshold
     f_oi_background_power = 10**(np.log10(f_oi) * slope + offset)
-    power_thresh = stats.chi2.ppf(percentile_thresh, 2, scale=f_oi_background_power/2)
+    power_thresh = stats.chi2.ppf(
+        percentile_thresh, 2, scale=f_oi_background_power / 2)
 
     # Determine periods that are oscillating
-    power_ts = mwt_power[f0s==f_oi][0]
+    power_ts = mwt_power[f0s == f_oi][0]
     isosc = power_ts > power_thresh
     return isosc
 

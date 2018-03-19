@@ -78,7 +78,8 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
         # median filtered FFT spectrum
         # take the positive half of the spectrum since it's symmetrical
         FT = np.fft.fft(x)[:int(np.ceil(len(x) / 2.))]
-        freq = np.fft.fftfreq(len(x), 1. / Fs)[:int(np.ceil(len(x) / 2.))]  # get freq axis
+        freq = np.fft.fftfreq(
+            len(x), 1. / Fs)[:int(np.ceil(len(x) / 2.))]  # get freq axis
         # convert median filter length from Hz to samples
         filtlen_samp = int(int(filtlen / (freq[1] - freq[0])) / 2 * 2 + 1)
         Pxx = signal.medfilt(np.abs(FT)**2. / (Fs * len(x)), filtlen_samp)
@@ -136,7 +137,8 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
     if outlierpct is not None:
         # discard time windows with high powers
-        discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))   # round up so it doesn't get a zero
+        # round up so it doesn't get a zero
+        discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))
         outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
         spg = spg[:, outlieridx]
 
@@ -201,7 +203,8 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     freq, ts, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
     if method is 'bootstrap':
-        # params are number of slices of STFT to compute SCV over, and number of draws
+        # params are number of slices of STFT to compute SCV over, and number
+        # of draws
         if rs_params is None:
             # defaults to draw 1/10 of STFT slices, 100 draws
             rs_params = (int(spg.shape[1] / 10.), 100)
@@ -209,14 +212,17 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
         nslices, ndraws = rs_params
         spectcv_rs = np.zeros((len(freq), ndraws))
         for draw in range(ndraws):
-            # repeated subsampling of spectrogram randomly, with replacement between draws
+            # repeated subsampling of spectrogram randomly, with replacement
+            # between draws
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
-            spectcv_rs[:, draw] = np.std(spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
+            spectcv_rs[:, draw] = np.std(
+                spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
         t_inds = None  # no time component, return nothing
 
     elif method is 'rolling':
-        # params are number of slices of STFT to compute SCV over, and number of slices to roll forward
+        # params are number of slices of STFT to compute SCV over, and number
+        # of slices to roll forward
         if rs_params is None:
             # defaults to 10 STFT slices, move forward by 5 slices
             rs_params = (10, 5)
@@ -226,7 +232,8 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
         spectcv_rs = np.zeros((len(freq), outlen))
         for ind in range(outlen):
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
-            spectcv_rs[:, ind] = np.std(curblock, axis=-1) / np.mean(curblock, axis=-1)
+            spectcv_rs[:, ind] = np.std(
+                curblock, axis=-1) / np.mean(curblock, axis=-1)
 
         t_inds = ts[0::nsteps]  # grab the time indices from the spectrogram
 
@@ -288,7 +295,8 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
         noverlap = int(noverlap)
 
     # compute spectrogram of data
-    freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap, return_onesided=True)
+    freq, _, spg = signal.spectrogram(
+        x, Fs, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
     ps = np.transpose(np.log10(spg))
@@ -297,7 +305,8 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
     ps = ps[:, np.logical_and(freq >= flim[0], freq < flim[1])]
     freq = freq[np.logical_and(freq >= flim[0], freq < flim[1])]
 
-    # Prepare bins for power. Min and max of bins determined by power cutoff percentage
+    # Prepare bins for power. Min and max of bins determined by power cutoff
+    # percentage
     power_min, power_max = np.percentile(np.ndarray.flatten(ps), cutpct)
     power_bins = np.linspace(power_min, power_max, nbins + 1)
 
@@ -334,7 +343,8 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
     # automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freq)))
     # plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spect_hist, extent=[freq[0], freq[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spect_hist, extent=[
+               freq[0], freq[-1], power_bins[0], power_bins[-1]], aspect='auto')
     plt.xlabel('Frequency (Hz)', fontsize=15)
     plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
@@ -387,7 +397,8 @@ def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False
             fit_excl = [fit_excl]
 
         for exc_frange in fit_excl:
-            fmask[np.logical_and(freq >= exc_frange[0], freq <= exc_frange[1])] = 0
+            fmask[np.logical_and(freq >= exc_frange[0],
+                                 freq <= exc_frange[1])] = 0
 
     # grab the psd and freqs to be fit over
     logf = np.log10(freq[fmask == 1])
@@ -442,7 +453,8 @@ def morlet_transform(x, f0s, Fs, w=7, s=.5):
         time-frequency representation of signal x
     """
     if w <= 0:
-        raise ValueError('Number of cycles in a filter must be a positive number.')
+        raise ValueError(
+            'Number of cycles in a filter must be a positive number.')
 
     T = len(x)
     F = len(f0s)
@@ -482,7 +494,8 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
         Complex time series
     """
     if w <= 0:
-        raise ValueError('Number of cycles in a filter must be a positive number.')
+        raise ValueError(
+            'Number of cycles in a filter must be a positive number.')
 
     if M is None:
         M = w * Fs / f0
@@ -499,4 +512,4 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     mwt_real = np.convolve(x, np.real(morlet_f), mode='same')
     mwt_imag = np.convolve(x, np.imag(morlet_f), mode='same')
 
-    return mwt_real + 1j*mwt_imag
+    return mwt_real + 1j * mwt_imag
