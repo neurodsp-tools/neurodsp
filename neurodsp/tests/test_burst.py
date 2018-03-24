@@ -19,7 +19,7 @@ def test_detect_bursts_consistent():
     Fs = 1000
     f_range = (13, 30)
     f_oi = np.floor(np.mean(f_range))
-    f_range_slope = (3,50)
+    f_range_slope = (3, 50)
     f_slope_excl = f_range
 
     # Load past burst findings
