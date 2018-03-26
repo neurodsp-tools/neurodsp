@@ -145,7 +145,7 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     shape_features['volt_decay'] = x[Ps[1:]] - x[Ts[1:]]
     shape_features['volt_rise'] = x[Ps[1:]] - x[Ts[:-1]]
-    shape_features['volt_amp'] = (shape_features['volt_decay'] + shape_features['volt_rise'])/2
+    shape_features['volt_amp'] = (shape_features['volt_decay'] + shape_features['volt_rise']) / 2
 
     # Comptue rise-decay symmetry features
     shape_features['volt_rdsym'] = shape_features['volt_rise'] - shape_features['volt_decay']
@@ -261,8 +261,8 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     decays = df['volt_decay'].values
     for p in range(1, C - 1):
         consist_current = np.min([rises[p], decays[p]]) / np.max([rises[p], decays[p]])
-        consist_last = np.min([rises[p-1], decays[p]]) / np.max([rises[p-1], decays[p]])
-        consist_next = np.min([rises[p], decays[p+1]]) / np.max([rises[p], decays[p+1]])
+        consist_last = np.min([rises[p - 1], decays[p]]) / np.max([rises[p - 1], decays[p]])
+        consist_next = np.min([rises[p], decays[p + 1]]) / np.max([rises[p], decays[p + 1]])
         amp_consists[p] = np.min([consist_current, consist_next, consist_last])
     df['amp_consistency'] = amp_consists
 
@@ -270,8 +270,8 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     period_consists = np.ones(C) * np.nan
     periods = df['period'].values
     for p in range(1, C - 1):
-        consist_last = np.min([periods[p], periods[p-1]]) / np.max([periods[p], periods[p-1]])
-        consist_next = np.min([periods[p+1], periods[p]]) / np.max([periods[p+1], periods[p]])
+        consist_last = np.min([periods[p], periods[p - 1]]) / np.max([periods[p], periods[p - 1]])
+        consist_next = np.min([periods[p + 1], periods[p]]) / np.max([periods[p + 1], periods[p]])
         period_consists[p] = np.min([consist_next, consist_last])
     df['period_consistency'] = period_consists
 
