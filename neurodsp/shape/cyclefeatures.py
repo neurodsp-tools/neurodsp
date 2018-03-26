@@ -12,7 +12,7 @@ import warnings
 def features_by_cycle(x, Fs, f_range, center_extrema='P',
                       find_extrema_kwargs=None,
                       estimate_oscillating_periods=False,
-                      true_oscillating_periods_kwargs=None,
+                      estimate_oscillating_periods_kwargs=None,
                       hilbert_increase_N=False):
     """
     Calculate several features of an oscillation's waveform
@@ -37,7 +37,7 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
     estimate_oscillating_periods: bool
         if True, call _define_true_oscillating_periods to
         declare each cycle as in an oscillating or not.
-    true_oscillating_periods_kwargs : dict or None
+    estimate_oscillating_periods_kwargs : dict or None
         Keyword arguments for function to find label cycles
         as in or not in an oscillation
     hilbert_increase_N : bool
@@ -51,6 +51,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
     df : pandas DataFrame
         dataframe containing several features and identifiers
         for each oscillatory cycle. Each row is one cycle.
+        Note that columns are slightly different depending on if
+        'center_extrema' is set to 'P' or 'T'.
         Each column is described below for peak-centered cycles,
         but are similar for trough-centered cycles:
         sample_peak : sample of 'x' at which the peak occurs
@@ -65,13 +67,15 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         time_trough : duration of previous trough estimated by zerocrossings
         volt_decay : voltage change between peak and next trough
         volt_rise : voltage change between peak and previous trough
+        volt_amp : average of rise and decay voltage
         volt_peak : voltage at the peak
         volt_trough : voltage at the last trough
         volt_rdsym : voltage difference between rise and decay
         time_rdsym : fraction of cycle in the rise period
         volt_ptsym : voltage difference between peak and trough
         time_ptsym : fraction of cycle in the peak period
-        oscillator_amplitude : average amplitude of the oscillation in that frequency band during the cycle
+        oscillator_amplitude : average amplitude of the oscillation in that
+                               frequency band during the cycle
 
     Notes
     -----
@@ -81,8 +85,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
     """
 
     # Set defaults if user input is None
-    if true_oscillating_periods_kwargs is None:
-        true_oscillating_periods_kwargs = {}
+    if estimate_oscillating_periods_kwargs is None:
+        estimate_oscillating_periods_kwargs = {}
     if find_extrema_kwargs is None:
         find_extrema_kwargs = {}
     else:
@@ -141,13 +145,14 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     shape_features['volt_decay'] = x[Ps[1:]] - x[Ts[1:]]
     shape_features['volt_rise'] = x[Ps[1:]] - x[Ts[:-1]]
+    shape_features['volt_amp'] = (shape_features['volt_decay'] + shape_features['volt_rise']) / 2
 
     # Comptue rise-decay symmetry features
     shape_features['volt_rdsym'] = shape_features['volt_rise'] - shape_features['volt_decay']
     shape_features['time_rdsym'] = shape_features['time_rise'] / shape_features['period']
 
     # Compute peak-trough symmetry features
-    shape_features['volt_ptsym'] = shape_features['volt_peak'] - shape_features['volt_trough']
+    shape_features['volt_ptsym'] = shape_features['volt_peak'] + shape_features['volt_trough']
     shape_features['time_ptsym'] = shape_features['time_peak'] / (shape_features['time_peak'] + shape_features['time_trough'])
 
     # Compute average oscillatory amplitude estimate during cycle
@@ -156,10 +161,6 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     # Convert feature dictionary into a DataFrame
     df = pd.DataFrame.from_dict(shape_features)
-
-    # Define whether or not each cycle is part of an oscillation
-    if estimate_oscillating_periods:
-        df = _define_true_oscillating_periods(df, **true_oscillating_periods_kwargs)
 
     # Rename columns if they are actually trough-centered
     if center_extrema == 'T':
@@ -186,33 +187,28 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         df['time_rdsym'] = 1 - df['time_rdsym']
         df['time_ptsym'] = 1 - df['time_ptsym']
 
+    # Define whether or not each cycle is part of an oscillation
+    if estimate_oscillating_periods:
+        if center_extrema == 'T':
+            x = -x
+        df = define_true_oscillating_periods(df, x, **estimate_oscillating_periods_kwargs)
+
     return df
 
 
-def _define_true_oscillating_periods(df, restrict_by_amplitude=True,
-                                     restrict_by_amplitude_consistency=True,
-                                     restrict_by_period_consistency=True,
-                                     amplitude_fraction_threshold=.5,
-                                     amplitude_consistency_threshold=.5,
-                                     period_consistency_threshold=.5):
+def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
+                                    amplitude_consistency_threshold=.5,
+                                    period_consistency_threshold=.5,
+                                    monotonicity_threshold=.8,
+                                    N_cycles_min=3):
     """
-    Denote which cycles in df meet the criteria to be in an oscillatory mode
+    Compute consistency between cycles and determine which are truly oscillating
 
     Parameters
     ----------
     df : pandas DataFrame
-        dataframe of waveform features for individual cyclces
-    restrict_by_amplitude : bool
-        if True, require a cycle to have an amplitude above the threshold
-        set in 'amplitude_fraction_threshold' in order to be considered
-        in an oscillatory mode
-    restrict_by_amplitude_consistency : bool
-        if True, require the rise and decays within the cycle of interest
-        and the two adjacent cycles to have consistent magnitudes,
-        as defined by the 'amplitude_consistency_threshold' parameter
-    restrict_by_period_consistency : bool
-        if True, require an extrema to be adjacent to 2 cycles with consistent
-        periods in order to be considered to be in an oscillatory mode
+        dataframe of waveform features for individual cycles, trough-centered
+    x : trace used to compute monotonicity
     amplitude_fraction_threshold : float (0 to 1)
         the minimum normalized amplitude a cycle must have
         in order to be considered in an oscillation.
@@ -227,13 +223,25 @@ def _define_true_oscillating_periods(df, restrict_by_amplitude=True,
     period_consistency_threshold : float (0 to 1)
         the minimum normalized difference in period between two adjacent cycles
         to be considered as in an oscillatory mode
-        1 corresponds to the same period for both cycles
-        .5 corresponds to one cycle being half the duration of another cycle
+        1 = the same period for both cycles
+        .5 = one cycle is half the duration of another cycle
+    monotonicity_threshold : float (0 to 1)
+        the minimum fraction of time segments between samples that must be
+        going in the same direction.
+        1 = rise and decay are perfectly monotonic
+        .5 = both rise and decay are rising half of the time
+             and decay half the time
+        0 = rise period is all decaying and decay period is all rising
+    N_cycles_min : int
+        minimum number of cycles to be identified as truly oscillating
+        needed in a row in order for them to remain identified as
+        truly oscillating
 
     Returns
     -------
     df : pandas DataFrame
-        same df as input, except now with an extra boolean column,
+        same df as input, with additional columns for
+        amp_fraction: normalized amplitude
         oscillating: True if that cycle met the criteria for an oscillatory mode
 
     Notes
@@ -242,58 +250,74 @@ def _define_true_oscillating_periods(df, restrict_by_amplitude=True,
     if the consistency measures are used.
     """
 
-    # Make a binary array to indicate if a peak is in an oscillatory mode ("good")
-    P = len(df)
-    cycle_good_amp = np.zeros(P, dtype=bool)
-    cycle_good_amp_consist = np.zeros(P, dtype=bool)
-    cycle_good_period_consist = np.zeros(P, dtype=bool)
+    # Compute normalized amplitude for all cycles
+    amps = df['oscillator_amplitude'].values
+    df['amp_fraction'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
 
-    # Compute if each cycle meets the amplitude reqt
-    if restrict_by_amplitude:
-        amps = df['oscillator_amplitude'].values
-        ampnorm = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
-        cycle_good_amp = ampnorm > amplitude_fraction_threshold
+    # Compute amplitude consistency
+    C = len(df)
+    amp_consists = np.ones(C) * np.nan
+    rises = df['volt_rise'].values
+    decays = df['volt_decay'].values
+    for p in range(1, C - 1):
+        consist_current = np.min([rises[p], decays[p]]) / np.max([rises[p], decays[p]])
+        consist_last = np.min([rises[p - 1], decays[p]]) / np.max([rises[p - 1], decays[p]])
+        consist_next = np.min([rises[p], decays[p + 1]]) / np.max([rises[p], decays[p + 1]])
+        amp_consists[p] = np.min([consist_current, consist_next, consist_last])
+    df['amp_consistency'] = amp_consists
+
+    # Compute period consistency
+    period_consists = np.ones(C) * np.nan
+    periods = df['period'].values
+    for p in range(1, C - 1):
+        consist_last = np.min([periods[p], periods[p - 1]]) / np.max([periods[p], periods[p - 1]])
+        consist_next = np.min([periods[p + 1], periods[p]]) / np.max([periods[p + 1], periods[p]])
+        period_consists[p] = np.min([consist_next, consist_last])
+    df['period_consistency'] = period_consists
+
+    # Compute monotonicity
+    monotonicity = np.ones(C) * np.nan
+    if 'sample_trough' in df.columns:
+        for i, row in df.iterrows():
+            decay_period = x[int(row['sample_last_peak']):int(row['sample_trough'])]
+            rise_period = x[int(row['sample_trough']):int(row['sample_next_peak'])]
+            decay_mono = np.mean(np.diff(decay_period) < 0)
+            rise_mono = np.mean(np.diff(rise_period) > 0)
+            monotonicity[i] = np.mean([decay_mono, rise_mono])
     else:
-        cycle_good_amp = np.ones(P, dtype=bool)
+        for i, row in df.iterrows():
+            rise_period = x[int(row['sample_last_trough']):int(row['sample_peak'])]
+            decay_period = x[int(row['sample_peak']):int(row['sample_next_trough'])]
+            decay_mono = np.mean(np.diff(decay_period) < 0)
+            rise_mono = np.mean(np.diff(rise_period) > 0)
+            monotonicity[i] = np.mean([decay_mono, rise_mono])
+    df['monotonicity'] = monotonicity
 
-    # Compute if each cycle meets the amplitude consistency reqt
-    if restrict_by_amplitude_consistency:
-        rises = df['volt_rise'].values
-        decays = df['volt_decay'].values
-        for p in range(1, P - 1):
-            if cycle_good_amp[p]:
-                frac1 = np.min([rises[p], decays[p]]) / np.max([rises[p], decays[p]])
-                frac2 = np.min([rises[p], decays[p - 1]]) / \
-                    np.max([rises[p], decays[p - 1]])
-                frac3 = np.min([rises[p + 1], decays[p]]) / \
-                    np.max([rises[p + 1], decays[p]])
-                if np.min([frac1, frac2, frac3]) >= amplitude_consistency_threshold:
-                    cycle_good_amp_consist[p] = True
-    else:
-        cycle_good_amp_consist = np.ones(P, dtype=bool)
-
-    # Compute if each cycle meets the period consistency reqt
-    if restrict_by_period_consistency:
-        P_times = df['sample_peak'].values
-        for p in range(1, P - 1):
-            if np.logical_and(cycle_good_amp[p], cycle_good_amp_consist[p]):
-                p1 = P_times[p] - P_times[p - 1]
-                p2 = P_times[p + 1] - P_times[p]
-                frac = np.min([p1, p2]) / np.max([p1, p2])
-                if frac > period_consistency_threshold:
-                    cycle_good_period_consist[p] = True
-    else:
-        cycle_good_period_consist = np.ones(P, dtype=bool)
-
-    # Add indication for oscillating cycles to dataframe
-    cycle_good = np.logical_and(cycle_good_amp, cycle_good_amp_consist)
-    cycle_good = np.logical_and(cycle_good, cycle_good_period_consist)
-
-    # Make first and last cycle nan if consistency measure used
-    if restrict_by_amplitude_consistency or restrict_by_period_consistency:
-        cycle_good[0] = np.nan
-        cycle_good[-1] = np.nan
-
-    # Add oscillating detector to the dataframe
-    df['oscillating'] = cycle_good
+    # Compute if each period is part of an oscillation
+    cycle_good_amp = df['amp_fraction'] > amplitude_fraction_threshold
+    cycle_good_amp_consist = df['amp_consistency'] > amplitude_consistency_threshold
+    cycle_good_period_consist = df['period_consistency'] > period_consistency_threshold
+    cycle_good_monotonicity = df['monotonicity'] > monotonicity_threshold
+    is_cycle = cycle_good_amp * cycle_good_amp_consist * cycle_good_period_consist * cycle_good_monotonicity
+    is_cycle[0] = np.nan
+    is_cycle[-1] = np.nan
+    df['is_cycle'] = is_cycle
+    df = _min_consecutive_cycles(df, N_cycles_min=N_cycles_min)
+    df['is_cycle'] = df['is_cycle'].astype(bool)
     return df
+
+
+def _min_consecutive_cycles(df_shape, N_cycles_min=3):
+    '''Enforce minimum number of consecutive cycles'''
+    is_cycle = np.copy(df_shape['is_cycle'].values)
+    temp_cycle_count = 0
+    for i, c in enumerate(is_cycle):
+        if c:
+            temp_cycle_count += 1
+        else:
+            if temp_cycle_count < N_cycles_min:
+                for c_rm in range(temp_cycle_count):
+                    is_cycle[i - 1 - c_rm] = False
+            temp_cycle_count = 0
+    df_shape['is_cycle'] = is_cycle
+    return df_shape
