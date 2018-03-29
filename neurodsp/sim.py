@@ -207,6 +207,8 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     -------
     signal : np.array
         bursty oscillator
+    df : pd.DataFrame
+        cycle-by-cycle properties of the simulated oscillator
     """
 
     # Set default prob_enter_burst and prob_leave_burst and rdsym
@@ -399,7 +401,13 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     Returns
     -------
     signal : np.array
-        bursty oscillator with brown noise
+        bursty oscillator with brown noise time series
+    oscillator : np.array
+        bursty oscillator component of signal
+    brown : np.array
+        brown noise component of signal
+    df : pd.DataFrame
+        cycle-by-cycle properties of the simulated oscillator
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_brown)
@@ -435,9 +443,9 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     signal = oscillator + brown
 
     if return_components:
-        return signal, oscillator, brown
         if return_cycle_df:
             return signal, oscillator, brown, df
+        return signal, oscillator, brown
     else:
         if return_cycle_df:
             return signal, df
