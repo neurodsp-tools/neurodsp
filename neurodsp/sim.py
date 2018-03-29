@@ -339,7 +339,8 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
 def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1,
                                 prob_enter_burst=None, prob_leave_burst=None,
-                                cycle_features=None, return_components=False):
+                                cycle_features=None, return_components=False,
+                                return_cycle_df=False):
     """Simulate a band-pass filtered signal with 1/f^2
     Input suggestions: f_range=(2,None), Fs=1000, N=1001
 
@@ -388,6 +389,12 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     return_components: bool
         if True, return the oscillator and noise separate,
         in addition to the signal
+    return_cycle_df : bool
+        if True, return the dataframe that contains the simulation
+        parameters for each cycle. This may be useful for computing
+        power, for example. Because the power of the oscillator
+        should only be considered over the times where there's
+        bursts, not when there's nothing.
 
     Returns
     -------
@@ -429,5 +436,9 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
 
     if return_components:
         return signal, oscillator, brown
+        if return_cycle_df:
+            return signal, oscillator, brown, df
     else:
+        if return_cycle_df:
+            return signal, df
         return signal
