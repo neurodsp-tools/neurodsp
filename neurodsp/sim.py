@@ -6,6 +6,7 @@ Simulating oscillators and brown noise
 import numpy as np
 import pandas as pd
 from scipy import signal
+import warnings
 
 
 def sim_filtered_brown_noise(T, Fs, f_range, N):
@@ -450,3 +451,219 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
         if return_cycle_df:
             return signal, df
         return signal
+
+
+def sim_poisson_pop(T, Fs, N_neurons, FR):
+    """Simulates a poisson population. It is essentially white noise, but satisfies
+    the Poisson property, i.e. mean(X) = var(X).
+
+    The lambda parameter of the Poisson process (total rate) is determined as
+    firing rate * number of neurons, i.e. summation of poisson processes is still
+    a poisson processes.
+
+    Note that the Gaussian approximation for a sum of Poisson processes is only
+    a good approximation for large lambdas.
+
+    Parameters
+    ----------
+    T : float
+        Length of simulated signal in seconds.
+    Fs : float
+        Sampling rate in Hz.
+    N_neurons : int
+        Number of neurons in the simulated population.
+    FR : type
+        Firing rate of individual neurons in the population.
+
+    Returns
+    -------
+    x : array (1-D)
+        Simulated population activity.
+
+    """
+    L = int(T*Fs)
+    # poisson population rate signal scales with # of neurons and individual rate
+    lam = N_neurons*FR
+
+    # variance is equal to the mean
+    x = np.random.normal(loc=lam, scale=lam**0.5, size=L)
+
+    # enforce that X is non-negative in cases of low FR
+    x[np.where(x<0.)] = 0.
+    return x
+
+def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
+    """
+    Creates synaptic kernels that with specified time constants.
+
+    3 types of kernels are available, based on combinations of time constants:
+		tauR == tauD : alpha (function) synapse
+    	tauR = 0     : instantaneous rise, (single) exponential decay
+    	tauR!=tauD!=0: double-exponential (rise and decay)
+
+    Parameters
+    ----------
+    T_ker : float
+        Length of simulated signal in seconds.
+    Fs : float (Hz)
+        Sampling rate.
+    tauR : float, seconds
+            Rise time of synaptic kernel.
+    tauD : fload, seconds
+    		Decay time of synaptic kernel.
+
+    Returns
+    -------
+    kernel : array_like
+    		Computed synaptic kernel with length equal to t
+
+    """
+    t = np.arange(0,T_ker,1/Fs)
+    if tauR==0:
+        # single exponential synapse
+        kernel = np.exp(-t/tauD)
+        ktype = 'single exponential'
+
+    elif tauR==tauD:
+    	# alpha synapse
+    	# I(t) = t/tau * exp(-t/tau)
+    	kernel = (t/tauR) * np.exp(-t/tauR)
+    	ktype = 'alpha'
+
+    else:
+        # double exponential synapse of the form:
+        # I(t)=(tauR/(tauR-tauD))*(exp(-t/tauD)-exp(-t/tauR))
+        if tauR>tauD:
+            warnings.warn('Rise time constant should be shorter than decay time constant.')
+        kernel = (np.exp(-t/tauD)-np.exp(-t/tauR))
+        ktype = 'double exponential'
+
+
+    kernel = kernel/np.sum(kernel)  # normalize the integral to 1
+    return kernel
+
+def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01):
+    """ Simulate a neural signal with 1/f characteristics beyond a knee frequency.
+    The resulting signal is most similar to unsigned intracellular current or
+    conductance change.
+
+    Parameters
+    ----------
+    T : float
+        Length of simulated signal in seconds.
+    Fs : float
+        Sampling rate in Hz.
+    N_neurons : int
+        Number of neurons in the simulated population.
+    FR : type
+        Firing rate of individual neurons in the population.
+    T_ker : float
+        Length of simulated kernel in seconds. Usually 1 second will suffice.
+    tauR : float, seconds
+            Rise time of synaptic kernel.
+    tauD : fload, seconds
+    		Decay time of synaptic kernel.
+
+    Returns
+    -------
+    x : array_like (1D)
+        Simulated signal.
+
+    """
+    # simulate an extra bit because the convolution will snip it
+    x = sim_poisson_pop(T=(T+T_ker), Fs=Fs, N_neurons=N_neurons, FR=FR)
+    ker = make_synaptic_kernel(T_ker=T_ker, Fs=Fs, tauR=tauR, tauD=tauD)
+    return np.convolve(x,ker,'valid')[:-1]
+
+
+def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01)):
+    """ Simulated a jittered oscillator, as defined by the oscillator frequency,
+    the oscillator cycle, and how much (in time) to jitter each period.
+
+    Parameters
+    ----------
+    T : float (seconds)
+        Simulation length.
+    Fs : float (Hz)
+        Sampling frequency.
+    freq : float (Hz)
+        Frequency of simulated oscillator.
+    jitter : float (seconds)
+        Maximum jitter of oscillation period.
+    cycle : tuple or array (1D)
+        Oscillation cycle used in the simulation.
+        If array, it's used directly.
+        If tuple, it is generated based on given parameters.
+        Possible values:
+        ('gaussian', std): gaussian cycle, standard deviation in seconds
+        ('exp', decay time): exponential decay, decay time constant in seconds
+        ('2exp', rise time, decay time): exponential rise and decay
+
+    Returns
+    -------
+    x : array (1D)
+        Simulated oscillation with jitter.
+
+    """
+
+    # if cycle is a tuple, generate the window with given params, and if
+    # cycle is an array, just use it to do the convolution
+    if type(cycle) is tuple:
+        # defaults to 1 second window for a cycle, which is more than enough
+        # if interested in longer period oscillations, just pass in premade cycle
+        osc_cycle = make_osc_cycle(1, Fs, cycle)
+    else:
+        osc_cycle = cycle
+
+    # binary "spike-train" of when each cycle should occur
+    spks = np.zeros(int(T*Fs+len(osc_cycle))-1)
+    osc_period = int(Fs/freq)
+    # generate oscillation "event" indices
+    spk_indices = np.arange(osc_period,len(spks),osc_period)
+
+    if jitter!=0:
+        # add jitter to "spike" indices
+        spk_indices = spk_indices + np.random.randint(low=-int(Fs*jitter), high=int(Fs*jitter), size=len(spk_indices))
+
+    spks[spk_indices] = 1
+
+    return np.convolve(spks, osc_cycle, 'valid')
+
+def make_osc_cycle(T_ker, Fs, cycle_params):
+    """ Make 1 cycle of oscillation.
+
+    Parameters
+    ----------
+    T_ker : float
+        Length of cycle window in seconds.
+        Note that this is NOT the period of the cycle, but the length of the
+        returned array that contains the cycle, which can be (and usually is)
+        much shorter.
+    Fs : float
+        Sampling frequency of the cycle simulation.
+    cycle_params : tuple
+        Defines the parameters for the oscillation cycle.
+        Possible values:
+        ('gaussian', std): gaussian cycle, standard deviation in seconds
+        ('exp', decay time): exponential decay, decay time constant in seconds
+        ('2exp', rise time, decay time): exponential rise and decay
+
+    Returns
+    -------
+    x: array_like (1D)
+        Simulated oscillation cycle.
+
+    """
+    if cycle_params[0] is 'gaussian':
+        # cycle_params defines std in seconds
+        return signal.gaussian(T_ker*Fs, cycle_params[1]*Fs)
+    elif cycle_params[0] is 'exp':
+        # cycle_params defines decay time constant in seconds
+        return make_synaptic_kernel(T_ker, Fs, 0, cycle_params[1])
+    elif cycle_params[0] is '2exp':
+        # cycle_params defines rise and decay time constant in seconds
+        return make_synaptic_kernel(T_ker, Fs, cycle_params[1], cycle_params[2])
+    else:
+        # Is this the proper way to handle errors???
+        print('Did not recognize cycle type.')
+        return None
