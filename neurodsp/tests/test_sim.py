@@ -41,6 +41,15 @@ def test_sim_consistent():
     # Simulate noisy bursty oscillator
     bursty_signal = neurodsp.sim_noisy_bursty_oscillator(6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_bursty_osc.npy', bursty_signal)
+
+    np.random.seed(0)
+
+    # Simulate synaptic background noise
+    syn_noise = sim.sim_synaptic_noise(2, 1000, 1000, 2, 1., 0.002, 2)
+    np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_synaptic_noise.npy', syn_noise)
+
+    # Simulate jittered oscillatior
+
     """
 
     # Simulate noise and oscillation
@@ -53,6 +62,9 @@ def test_sim_consistent():
     bursty_osc = neurodsp.sim_bursty_oscillator(6, 10, 1000)
     bursty_noisy_osc = neurodsp.sim_noisy_bursty_oscillator(
         6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
+
+    np.random.seed(0)
+    
 
     # Load noise and oscillation
     brown_true = np.load(os.path.dirname(
