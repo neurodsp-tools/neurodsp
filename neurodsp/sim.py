@@ -619,7 +619,6 @@ def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
     Ws = np.random.normal(size=len(t))
     ex = np.exp(-theta * t)
     Ws[0] = 0.
-    
     return x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * t) * np.sqrt(dt) * Ws)
 
 
