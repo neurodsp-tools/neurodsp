@@ -226,8 +226,8 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     mean_period_samples = int(Fs / freq)
     cycle_features_use = {'amp_mean': 1, 'amp_burst_std': .1, 'amp_std': .2,
                           'period_mean': mean_period_samples,
-                          'period_burst_std': .1*mean_period_samples,
-                          'period_std': .1*mean_period_samples,
+                          'period_burst_std': .1 * mean_period_samples,
+                          'period_std': .1 * mean_period_samples,
                           'rdsym_mean': rdsym, 'rdsym_burst_std': .05, 'rdsym_std': .05}
 
     # Overwrite default cycle features with those specified
@@ -237,7 +237,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
     # Determine number of cycles to generate
     N_samples = T * Fs
-    N_cycles_overestimate = int(np.ceil(N_samples/mean_period_samples*2))
+    N_cycles_overestimate = int(np.ceil(N_samples / mean_period_samples * 2))
 
     # Simulate if a series of cycles are oscillating or not oscillating
     is_oscillating = [False]
@@ -257,7 +257,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     for is_osc in is_oscillating:
         if is_osc is False:
             period = cycle_features_use['period_mean'] + \
-                     np.random.randn()*cycle_features_use['period_std']
+                np.random.randn() * cycle_features_use['period_std']
             periods.append(int(period))
             amps.append(np.nan)
             rdsyms.append(np.nan)
@@ -268,17 +268,17 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
         else:
             if np.isnan(current_burst_period_mean):
                 current_burst_period_mean = cycle_features_use['period_mean'] + \
-                                            np.random.randn()*cycle_features_use['period_burst_std']
+                    np.random.randn() * cycle_features_use['period_burst_std']
                 current_burst_amp_mean = cycle_features_use['amp_mean'] + \
-                                         np.random.randn()*cycle_features_use['amp_burst_std']
+                    np.random.randn() * cycle_features_use['amp_burst_std']
                 current_burst_rdsym_mean = cycle_features_use['rdsym_mean'] + \
-                                           np.random.randn()*cycle_features_use['rdsym_burst_std']
+                    np.random.randn() * cycle_features_use['rdsym_burst_std']
             period = current_burst_period_mean + \
-                     np.random.randn()*cycle_features_use['period_std']
+                np.random.randn() * cycle_features_use['period_std']
             amp = current_burst_amp_mean + \
-                     np.random.randn()*cycle_features_use['amp_std']
+                np.random.randn() * cycle_features_use['amp_std']
             rdsym = current_burst_rdsym_mean + \
-                     np.random.randn()*cycle_features_use['rdsym_std']
+                np.random.randn() * cycle_features_use['rdsym_std']
             periods.append(int(period))
             amps.append(amp)
             rdsyms.append(rdsym)
@@ -297,11 +297,11 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
         if row['is_cycle'] is False:
             # If last cycle was oscillating, add a decay to 0 then 0s
             if last_cycle_oscillating:
-                decay_pha = np.linspace(0, np.pi/2, int(row['period']/4))
+                decay_pha = np.linspace(0, np.pi / 2, int(row['period'] / 4))
                 decay_t = np.cos(decay_pha) * x[-1]
                 x = np.append(x, decay_t)
 
-                cycle_t = np.zeros(row['period'] - int(row['period']/4))
+                cycle_t = np.zeros(row['period'] - int(row['period'] / 4))
                 x = np.append(x, cycle_t)
             else:
                 # Add a blank cycle
@@ -311,7 +311,8 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
         else:
             # If last cycle was oscillating, add a decay to 0
             if not last_cycle_oscillating:
-                rise_pha = np.linspace(-np.pi/2, 0, int(row['period']/4))[1:]
+                rise_pha = np.linspace(-np.pi / 2, 0,
+                                       int(row['period'] / 4))[1:]
                 rise_t = np.cos(rise_pha) * row['amp']
                 x[-len(rise_t):] = rise_t
 
@@ -324,9 +325,10 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
             # Adjust decay if the last cycle was oscillating
             if last_cycle_oscillating:
-                scaling = (row['amp'] + x[-1])/2
-                offset = (x[-1] - row['amp'])/2
-                cycle_t[:decay_samples] = cycle_t[:decay_samples]*scaling + offset
+                scaling = (row['amp'] + x[-1]) / 2
+                offset = (x[-1] - row['amp']) / 2
+                cycle_t[:decay_samples] = cycle_t[:decay_samples] * \
+                    scaling + offset
                 cycle_t[decay_samples:] = cycle_t[decay_samples:] * row['amp']
             else:
                 cycle_t = cycle_t * row['amp']
@@ -433,7 +435,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     is_osc = np.zeros(len(oscillator), dtype=bool)
     for i, row in df.iterrows():
         if row['is_cycle']:
-            is_osc[row['start_sample']:row['start_sample']+row['period']] = True
+            is_osc[row['start_sample']:row['start_sample'] + row['period']] = True
 
     # Normalize brown noise power
     oscillator_power = np.mean(oscillator[is_osc]**2)
@@ -481,25 +483,26 @@ def sim_poisson_pop(T, Fs, N_neurons, FR):
         Simulated population activity.
 
     """
-    L = int(T*Fs)
+    L = int(T * Fs)
     # poisson population rate signal scales with # of neurons and individual rate
-    lam = N_neurons*FR
+    lam = N_neurons * FR
 
     # variance is equal to the mean
     x = np.random.normal(loc=lam, scale=lam**0.5, size=L)
 
     # enforce that X is non-negative in cases of low FR
-    x[np.where(x<0.)] = 0.
+    x[np.where(x < 0.)] = 0.
     return x
+
 
 def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
     """
     Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
-		tauR == tauD : alpha (function) synapse
-    	tauR = 0     : instantaneous rise, (single) exponential decay
-    	tauR!=tauD!=0: double-exponential (rise and decay)
+                tauR == tauD : alpha (function) synapse
+        tauR = 0     : instantaneous rise, (single) exponential decay
+        tauR!=tauD!=0: double-exponential (rise and decay)
 
     Parameters
     ----------
@@ -510,37 +513,38 @@ def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
     tauR : float, seconds
             Rise time of synaptic kernel.
     tauD : fload, seconds
-    		Decay time of synaptic kernel.
+                Decay time of synaptic kernel.
 
     Returns
     -------
     kernel : array_like
-    		Computed synaptic kernel with length equal to t
+                Computed synaptic kernel with length equal to t
 
     """
-    t = np.arange(0,T_ker,1/Fs)
-    if tauR==0:
+    t = np.arange(0, T_ker, 1 / Fs)
+    if tauR == 0:
         # single exponential synapse
-        kernel = np.exp(-t/tauD)
+        kernel = np.exp(-t / tauD)
         ktype = 'single exponential'
 
-    elif tauR==tauD:
-    	# alpha synapse
-    	# I(t) = t/tau * exp(-t/tau)
-    	kernel = (t/tauR) * np.exp(-t/tauR)
-    	ktype = 'alpha'
+    elif tauR == tauD:
+        # alpha synapse
+        # I(t) = t/tau * exp(-t/tau)
+        kernel = (t / tauR) * np.exp(-t / tauR)
+        ktype = 'alpha'
 
     else:
         # double exponential synapse of the form:
         # I(t)=(tauR/(tauR-tauD))*(exp(-t/tauD)-exp(-t/tauR))
-        if tauR>tauD:
-            warnings.warn('Rise time constant should be shorter than decay time constant.')
-        kernel = (np.exp(-t/tauD)-np.exp(-t/tauR))
+        if tauR > tauD:
+            warnings.warn(
+                'Rise time constant should be shorter than decay time constant.')
+        kernel = (np.exp(-t / tauD) - np.exp(-t / tauR))
         ktype = 'double exponential'
 
-
-    kernel = kernel/np.sum(kernel)  # normalize the integral to 1
+    kernel = kernel / np.sum(kernel)  # normalize the integral to 1
     return kernel
+
 
 def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01):
     """ Simulate a neural signal with 1/f characteristics beyond a knee frequency.
@@ -562,7 +566,7 @@ def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01)
     tauR : float, seconds
             Rise time of synaptic kernel.
     tauD : fload, seconds
-    		Decay time of synaptic kernel.
+                Decay time of synaptic kernel.
 
     Returns
     -------
@@ -571,9 +575,9 @@ def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01)
 
     """
     # simulate an extra bit because the convolution will snip it
-    x = sim_poisson_pop(T=(T+T_ker), Fs=Fs, N_neurons=N_neurons, FR=FR)
+    x = sim_poisson_pop(T=(T + T_ker), Fs=Fs, N_neurons=N_neurons, FR=FR)
     ker = make_synaptic_kernel(T_ker=T_ker, Fs=Fs, tauR=tauR, tauD=tauD)
-    return np.convolve(x,ker,'valid')[:-1]
+    return np.convolve(x, ker, 'valid')[:-1]
 
 
 def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01)):
@@ -616,18 +620,21 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
         osc_cycle = cycle
 
     # binary "spike-train" of when each cycle should occur
-    spks = np.zeros(int(T*Fs+len(osc_cycle))-1)
-    osc_period = int(Fs/freq)
+    spks = np.zeros(int(T * Fs + len(osc_cycle)) - 1)
+    osc_period = int(Fs / freq)
     # generate oscillation "event" indices
-    spk_indices = np.arange(osc_period,len(spks),osc_period)
+    spk_indices = np.arange(osc_period, len(spks), osc_period)
 
-    if jitter!=0:
+    if jitter != 0:
         # add jitter to "spike" indices
-        spk_indices = spk_indices + np.random.randint(low=-int(Fs*jitter), high=int(Fs*jitter), size=len(spk_indices))
+        spk_indices = spk_indices + \
+            np.random.randint(low=-int(Fs * jitter),
+                              high=int(Fs * jitter), size=len(spk_indices))
 
     spks[spk_indices] = 1
 
     return np.convolve(spks, osc_cycle, 'valid')
+
 
 def make_osc_cycle(T_ker, Fs, cycle_params):
     """ Make 1 cycle of oscillation.
@@ -656,7 +663,7 @@ def make_osc_cycle(T_ker, Fs, cycle_params):
     """
     if cycle_params[0] is 'gaussian':
         # cycle_params defines std in seconds
-        return signal.gaussian(T_ker*Fs, cycle_params[1]*Fs)
+        return signal.gaussian(T_ker * Fs, cycle_params[1] * Fs)
     elif cycle_params[0] is 'exp':
         # cycle_params defines decay time constant in seconds
         return make_synaptic_kernel(T_ker, Fs, 0, cycle_params[1])

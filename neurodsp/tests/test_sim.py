@@ -63,8 +63,8 @@ def test_sim_consistent():
         6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
 
     np.random.seed(0)
-    syn_noise = sim.sim_synaptic_noise(2, 1000, 1000, 2, 1., 0.002, 2)
-    jittered_osc = sim.sim_jittered_oscillator(2, 1000, 20, 0.00, ('gaussian',0.01))
+    syn_noise = neurodsp.sim.sim_synaptic_noise(2, 1000, 1000, 2, 1., 0.002, 2)
+    jittered_osc = neurodsp.sim.sim_jittered_oscillator(2, 1000, 20, 0.00, ('gaussian',0.01))
 
     # Load noise and oscillation
     brown_true = np.load(os.path.dirname(
