@@ -580,6 +580,49 @@ def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01)
     return np.convolve(x, ker, 'valid')[:-1]
 
 
+def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
+    """Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)
+
+    Discretized Ornstein-Uhlenbeck process:
+        dx = theta*(x-mu)*dt + sigma*dWt, where
+    dWt: increments of Wiener process, i.e. white noise
+    theta: memory scale (higher = faster fluc)
+    mu: mean
+    sigma: std
+
+    see: https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
+    for integral solution
+
+    Parameters
+    ----------
+    T : float
+        Length of simulated signal in seconds.
+    Fs : float
+        Sampling rate in Hz.
+    theta : float, default = 1.
+        Memory scale (larger theta = faster fluctuation).
+    mu : float, default = 0.
+        Mean.
+    sigma : float, default = 5.
+        Standard deviation.
+
+    Returns
+    -------
+    x : array (1-D)
+        Simulated signal.
+
+    """
+
+    t = np.arange(0, T, 1 / Fs)
+    x0 = mu
+    dt = t[1] - t[0]
+    Ws = np.random.normal(size=len(t))
+    ex = np.exp(-theta * t)
+    Ws[0] = 0.
+    
+    return x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * t) * np.sqrt(dt) * Ws)
+
+
 def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01)):
     """ Simulated a jittered oscillator, as defined by the oscillator frequency,
     the oscillator cycle, and how much (in time) to jitter each period.
