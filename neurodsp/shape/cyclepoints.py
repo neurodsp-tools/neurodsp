@@ -29,7 +29,7 @@ def find_extrema(x, Fs, f_range, boundary=None, first_extrema='peak',
         if 'peak', then force the output to begin with a peak and end in a trough
         if 'trough', then force the output to begin with a trough and end in peak
         if None, force nothing
-    filter_fn : filter function, `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
+    filter_fn : filter function, `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
         Must have the same API as neurodsp.filter
     filter_kwargs : dict
         keyword arguments to the filter_fn
@@ -58,7 +58,7 @@ def find_extrema(x, Fs, f_range, boundary=None, first_extrema='peak',
         boundary = int(np.ceil(Fs / float(f_range[0])))
 
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range, remove_edge_artifacts=False, **filter_kwargs)
 
     # Find rising and falling zerocrossings
     zeroriseN = _fzerorise(x_filt)

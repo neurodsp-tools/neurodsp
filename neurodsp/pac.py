@@ -37,7 +37,7 @@ def compute_pac(x_pha, x_amp, Fs, f_range_lo, f_range_hi,
         Length of the high band-pass filter (seconds)
     filter_fn : function or None, optional
         The filtering function, with api:
-        `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
+        `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
         If False, it is assumed that x_pha and x_amp are the phase time
         series and the amplitude time series, respectively. Therefore, no
         filtering or hilbert transform will be done.
@@ -263,7 +263,7 @@ def compute_pac_comodulogram(x_pha, x_amp, Fs,
         of a sine wave with a frequency at the low-cutoff of the bandpass filter
     filter_fn : function or False, optional
         The filtering function, with api:
-        `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
+        `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
         If False, it is assumed that x_pha and x_amp are the phase time
         series and the amplitude time series, respectively. Therefore, no
         filtering or hilbert transform will be done.

@@ -35,4 +35,4 @@ and should have at least a sentence describition what the function does.
 7. Naming conventions
     * Try to keep naming conventions consistent with other modules, for example:
         * Function names are in all lowercase with underscores
-        * Variables named 'f_...' refer to frequencies (e.g. 'f_lo' is a bandpass filter's low-frequency cutoff)
+        * Variables named 'f_...' refer to frequencies (e.g. 'f_range' is a bandpass filter's cutoff frequencies)
