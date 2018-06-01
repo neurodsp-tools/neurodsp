@@ -5,7 +5,6 @@ Quantify the shape of oscillatory waveforms on a cycle-by-cycle basis
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import neurodsp
 import warnings
 
@@ -75,9 +74,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         time_rdsym : fraction of cycle in the rise period
         volt_ptsym : voltage difference between peak and trough
         time_ptsym : fraction of cycle in the peak period
-        band_amp : average amplitude of the oscillation in that
-                   frequency band during the cycle
-        oscillator_amplitude : same as band_amp but being deprecated
+        oscillator_amplitude : average amplitude of the oscillation in that
+                               frequency band during the cycle
 
     Notes
     -----
@@ -159,8 +157,7 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     # Compute average oscillatory amplitude estimate during cycle
     amp = neurodsp.amp_by_time(x, Fs, f_range, hilbert_increase_N=hilbert_increase_N)
-    shape_features['band_amp'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
-    shape_features['oscillator_amplitude'] = shape_features['band_amp']
+    shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
 
     # Convert feature dictionary into a DataFrame
     df = pd.DataFrame.from_dict(shape_features)
@@ -254,7 +251,7 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     """
 
     # Compute normalized amplitude for all cycles
-    amps = df['band_amp'].values
+    amps = df['oscillator_amplitude'].values
     df['amp_fraction'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
 
     # Compute amplitude consistency
@@ -302,8 +299,8 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     cycle_good_period_consist = df['period_consistency'] > period_consistency_threshold
     cycle_good_monotonicity = df['monotonicity'] > monotonicity_threshold
     is_cycle = cycle_good_amp * cycle_good_amp_consist * cycle_good_period_consist * cycle_good_monotonicity
-    is_cycle[0] = False
-    is_cycle[-1] = False
+    is_cycle[0] = np.nan
+    is_cycle[-1] = np.nan
     df['is_cycle'] = is_cycle
     df = _min_consecutive_cycles(df, N_cycles_min=N_cycles_min)
     df['is_cycle'] = df['is_cycle'].astype(bool)
@@ -324,92 +321,3 @@ def _min_consecutive_cycles(df_shape, N_cycles_min=3):
             temp_cycle_count = 0
     df_shape['is_cycle'] = is_cycle
     return df_shape
-
-
-def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs,
-                             figsize=(16, 3)):
-    """
-    Create a plot to study how the cycle-by-cycle burst detection
-    algorithm determine bursting periods of a signal.
-
-    Parameters
-    ----------
-    t : np.array
-        array of time points matching the signal, x
-    x : np.array
-        signal analyzed
-    df_plt : pd.DataFrame
-        dataframe of cycle analysis of signal x
-    tlims : tuple, length 2
-        start and stop times for plot
-    osc_kwargs : dict
-        dictionary of thresholds for burst detection
-        used in creating df_plt
-    figsize : tuple, length 2
-        size of figure
-    """
-
-    # Determine extrema strs
-    if 'sample_trough' in df_plt.columns:
-        center_e = 'trough'
-        side_e = 'peak'
-    else:
-        center_e = 'peak'
-        side_e = 'trough'
-
-    # Determine osc array
-    is_osc = np.zeros(len(x), dtype=bool)
-    df_osc = df_plt[df_plt['is_cycle']]
-    for _, cyc in df_osc.iterrows():
-        is_osc[cyc['sample_last_' + side_e]:cyc['sample_next_' + side_e] + 1] = True
-
-    # Plot
-    plt.figure(figsize=figsize)
-    plt.plot(t, x, 'k')
-    plt.plot(t[is_osc], x[is_osc], 'r')
-    plt.plot(t[df_plt['sample_' + center_e]], x[df_plt['sample_' + center_e]], 'k.', ms=15)
-    plt.plot(t[df_plt['sample_last_' + side_e]], x[df_plt['sample_last_' + side_e]], 'r.', ms=15)
-    plt.xlim(tlims)
-    plt.tight_layout()
-    plt.title('burst detection')
-    plt.show()
-
-    plt.figure(figsize=figsize)
-    amps = df_plt['band_amp']
-    df_plt['band_amp_frac'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
-    plt.plot(t[df_plt['sample_' + center_e]], df_plt['band_amp_frac'], 'k.-')
-    plt.plot(tlims, [osc_kwargs['amplitude_fraction_threshold'],
-                     osc_kwargs['amplitude_fraction_threshold']], 'k--')
-    plt.xlim(tlims)
-    plt.ylim((0, 1))
-    plt.title('amplitude fraction')
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure(figsize=figsize)
-    plt.plot(t[df_plt['sample_' + center_e]], df_plt['amp_consistency'], 'k.-')
-    plt.plot(tlims, [osc_kwargs['amplitude_consistency_threshold'],
-                     osc_kwargs['amplitude_consistency_threshold']], 'k--')
-    plt.xlim(tlims)
-    plt.ylim((0, 1))
-    plt.title('amplitude consistency')
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure(figsize=figsize)
-    plt.plot(t[df_plt['sample_' + center_e]], df_plt['period_consistency'], 'k.-')
-    plt.plot(tlims, [osc_kwargs['period_consistency_threshold'],
-                     osc_kwargs['period_consistency_threshold']], 'k--')
-    plt.xlim(tlims)
-    plt.title('period consistency')
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure(figsize=figsize)
-    plt.plot(t[df_plt['sample_' + center_e]], df_plt['monotonicity'], 'k.-')
-    plt.plot(tlims, [osc_kwargs['monotonicity_threshold'],
-                     osc_kwargs['monotonicity_threshold']], 'k--')
-    plt.xlim(tlims)
-    plt.title('monotonicity')
-    plt.tight_layout()
-    plt.show()
