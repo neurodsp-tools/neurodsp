@@ -302,8 +302,8 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     cycle_good_period_consist = df['period_consistency'] > period_consistency_threshold
     cycle_good_monotonicity = df['monotonicity'] > monotonicity_threshold
     is_cycle = cycle_good_amp * cycle_good_amp_consist * cycle_good_period_consist * cycle_good_monotonicity
-    is_cycle[0] = np.nan
-    is_cycle[-1] = np.nan
+    is_cycle[0] = False
+    is_cycle[-1] = False
     df['is_cycle'] = is_cycle
     df = _min_consecutive_cycles(df, N_cycles_min=N_cycles_min)
     df['is_cycle'] = df['is_cycle'].astype(bool)
