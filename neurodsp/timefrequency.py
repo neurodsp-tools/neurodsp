@@ -26,7 +26,7 @@ def phase_by_time(x, Fs, f_range,
         Frequency range
     filter_fn : function, optional
         The filtering function, with api:
-        `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
+        `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
     filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
     hilbert_increase_N : bool, optional
@@ -44,7 +44,7 @@ def phase_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range,
                        remove_edge_artifacts=False, **filter_kwargs)
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
@@ -85,7 +85,7 @@ def amp_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1],
+    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range,
                        remove_edge_artifacts=False, **filter_kwargs)
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
