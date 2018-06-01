@@ -92,12 +92,12 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         f_lo, f_hi = fc
 
     if pass_type == 'lowpass':
-        if not (isinstance(fc, float) or isinstance(fc, int)) :
+        if not (isinstance(fc, float) or isinstance(fc, int)):
             raise ValueError('Cutoff frequency should be float or int for lowpass filters')
         f_lo = fc
 
     if pass_type == 'highpass':
-        if not (isinstance(fc, float) or isinstance(fc, int)) :
+        if not (isinstance(fc, float) or isinstance(fc, int)):
             raise ValueError('Cutoff frequency should be float or int for highpass filters')
         f_hi = fc
 
