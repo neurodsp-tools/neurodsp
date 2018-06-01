@@ -326,7 +326,8 @@ def _min_consecutive_cycles(df_shape, N_cycles_min=3):
     return df_shape
 
 
-def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
+def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs,
+                             figsize=(16, 3)):
     """
     Create a plot to study how the cycle-by-cycle burst detection
     algorithm determine bursting periods of a signal.
@@ -344,29 +345,39 @@ def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
     osc_kwargs : dict
         dictionary of thresholds for burst detection
         used in creating df_plt
+    figsize : tuple, length 2
+        size of figure
     """
+
+    # Determine extrema strs
+    if 'sample_trough' in df_plt.columns:
+        center_e = 'trough'
+        side_e = 'peak'
+    else:
+        center_e = 'peak'
+        side_e = 'trough'
 
     # Determine osc array
     is_osc = np.zeros(len(x), dtype=bool)
     df_osc = df_plt[df_plt['is_cycle']]
     for _, cyc in df_osc.iterrows():
-        is_osc[cyc['sample_last_trough']:cyc['sample_next_trough'] + 1] = True
+        is_osc[cyc['sample_last_' + side_e]:cyc['sample_next_' + side_e] + 1] = True
 
     # Plot
-    plt.figure(figsize=(16, 3))
+    plt.figure(figsize=figsize)
     plt.plot(t, x, 'k')
     plt.plot(t[is_osc], x[is_osc], 'r')
-    plt.plot(t[df_plt['sample_peak']], x[df_plt['sample_peak']], 'k.', ms=15)
-    plt.plot(t[df_plt['sample_last_trough']], x[df_plt['sample_last_trough']], 'r.', ms=15)
+    plt.plot(t[df_plt['sample_' + center_e]], x[df_plt['sample_' + center_e]], 'k.', ms=15)
+    plt.plot(t[df_plt['sample_last_' + side_e]], x[df_plt['sample_last_' + side_e]], 'r.', ms=15)
     plt.xlim(tlims)
     plt.tight_layout()
     plt.title('burst detection')
     plt.show()
 
-    plt.figure(figsize=(16, 3))
+    plt.figure(figsize=figsize)
     amps = df_plt['band_amp']
     df_plt['band_amp_frac'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
-    plt.plot(t[df_plt['sample_peak']], df_plt['band_amp_frac'], 'k.-')
+    plt.plot(t[df_plt['sample_' + center_e]], df_plt['band_amp_frac'], 'k.-')
     plt.plot(tlims, [osc_kwargs['amplitude_fraction_threshold'],
                      osc_kwargs['amplitude_fraction_threshold']], 'k--')
     plt.xlim(tlims)
@@ -375,8 +386,8 @@ def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
     plt.tight_layout()
     plt.show()
 
-    plt.figure(figsize=(16, 3))
-    plt.plot(t[df_plt['sample_peak']], df_plt['amp_consistency'], 'k.-')
+    plt.figure(figsize=figsize)
+    plt.plot(t[df_plt['sample_' + center_e]], df_plt['amp_consistency'], 'k.-')
     plt.plot(tlims, [osc_kwargs['amplitude_consistency_threshold'],
                      osc_kwargs['amplitude_consistency_threshold']], 'k--')
     plt.xlim(tlims)
@@ -385,8 +396,8 @@ def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
     plt.tight_layout()
     plt.show()
 
-    plt.figure(figsize=(16, 3))
-    plt.plot(t[df_plt['sample_peak']], df_plt['period_consistency'], 'k.-')
+    plt.figure(figsize=figsize)
+    plt.plot(t[df_plt['sample_' + center_e]], df_plt['period_consistency'], 'k.-')
     plt.plot(tlims, [osc_kwargs['period_consistency_threshold'],
                      osc_kwargs['period_consistency_threshold']], 'k--')
     plt.xlim(tlims)
@@ -394,8 +405,8 @@ def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
     plt.tight_layout()
     plt.show()
 
-    plt.figure(figsize=(16, 3))
-    plt.plot(t[df_plt['sample_peak']], df_plt['monotonicity'], 'k.-')
+    plt.figure(figsize=figsize)
+    plt.plot(t[df_plt['sample_' + center_e]], df_plt['monotonicity'], 'k.-')
     plt.plot(tlims, [osc_kwargs['monotonicity_threshold'],
                      osc_kwargs['monotonicity_threshold']], 'k--')
     plt.xlim(tlims)
