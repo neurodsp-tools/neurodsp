@@ -5,6 +5,7 @@ Quantify the shape of oscillatory waveforms on a cycle-by-cycle basis
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import neurodsp
 import warnings
 
@@ -74,8 +75,9 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         time_rdsym : fraction of cycle in the rise period
         volt_ptsym : voltage difference between peak and trough
         time_ptsym : fraction of cycle in the peak period
-        oscillator_amplitude : average amplitude of the oscillation in that
-                               frequency band during the cycle
+        band_amp : average amplitude of the oscillation in that
+                   frequency band during the cycle
+        oscillator_amplitude : same as band_amp but being deprecated
 
     Notes
     -----
@@ -157,7 +159,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     # Compute average oscillatory amplitude estimate during cycle
     amp = neurodsp.amp_by_time(x, Fs, f_range, hilbert_increase_N=hilbert_increase_N)
-    shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
+    shape_features['band_amp'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
+    shape_features['oscillator_amplitude'] = shape_features['band_amp']
 
     # Convert feature dictionary into a DataFrame
     df = pd.DataFrame.from_dict(shape_features)
@@ -251,7 +254,7 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     """
 
     # Compute normalized amplitude for all cycles
-    amps = df['oscillator_amplitude'].values
+    amps = df['band_amp'].values
     df['amp_fraction'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
 
     # Compute amplitude consistency
@@ -321,3 +324,81 @@ def _min_consecutive_cycles(df_shape, N_cycles_min=3):
             temp_cycle_count = 0
     df_shape['is_cycle'] = is_cycle
     return df_shape
+
+
+def plot_burst_detect_params(t, x, df_plt, tlims, osc_kwargs):
+    """
+    Create a plot to study how the cycle-by-cycle burst detection
+    algorithm determine bursting periods of a signal.
+
+    Parameters
+    ----------
+    t : np.array
+        array of time points matching the signal, x
+    x : np.array
+        signal analyzed
+    df_plt : pd.DataFrame
+        dataframe of cycle analysis of signal x
+    tlims : tuple, length 2
+        start and stop times for plot
+    osc_kwargs : dict
+        dictionary of thresholds for burst detection
+        used in creating df_plt
+    """
+
+    # Determine osc array
+    is_osc = np.zeros(len(x), dtype=bool)
+    df_osc = df_plt[df_plt['is_cycle']]
+    for _, cyc in df_osc.iterrows():
+        is_osc[cyc['sample_last_trough']:cyc['sample_next_trough'] + 1] = True
+
+    # Plot
+    plt.figure(figsize=(16, 3))
+    plt.plot(t, x, 'k')
+    plt.plot(t[is_osc], x[is_osc], 'r')
+    plt.plot(t[df_plt['sample_peak']], x[df_plt['sample_peak']], 'k.', ms=15)
+    plt.plot(t[df_plt['sample_last_trough']], x[df_plt['sample_last_trough']], 'r.', ms=15)
+    plt.xlim(tlims)
+    plt.tight_layout()
+    plt.title('burst detection')
+    plt.show()
+
+    plt.figure(figsize=(16, 3))
+    amps = df_plt['band_amp']
+    df_plt['band_amp_frac'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
+    plt.plot(t[df_plt['sample_peak']], df_plt['band_amp_frac'], 'k.-')
+    plt.plot(tlims, [osc_kwargs['amplitude_fraction_threshold'],
+                     osc_kwargs['amplitude_fraction_threshold']], 'k--')
+    plt.xlim(tlims)
+    plt.ylim((0, 1))
+    plt.title('amplitude fraction')
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(16, 3))
+    plt.plot(t[df_plt['sample_peak']], df_plt['amp_consistency'], 'k.-')
+    plt.plot(tlims, [osc_kwargs['amplitude_consistency_threshold'],
+                     osc_kwargs['amplitude_consistency_threshold']], 'k--')
+    plt.xlim(tlims)
+    plt.ylim((0, 1))
+    plt.title('amplitude consistency')
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(16, 3))
+    plt.plot(t[df_plt['sample_peak']], df_plt['period_consistency'], 'k.-')
+    plt.plot(tlims, [osc_kwargs['period_consistency_threshold'],
+                     osc_kwargs['period_consistency_threshold']], 'k--')
+    plt.xlim(tlims)
+    plt.title('period consistency')
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(16, 3))
+    plt.plot(t[df_plt['sample_peak']], df_plt['monotonicity'], 'k.-')
+    plt.plot(tlims, [osc_kwargs['monotonicity_threshold'],
+                     osc_kwargs['monotonicity_threshold']], 'k--')
+    plt.xlim(tlims)
+    plt.title('monotonicity')
+    plt.tight_layout()
+    plt.show()
