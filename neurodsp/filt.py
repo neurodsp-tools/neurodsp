@@ -80,26 +80,27 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
             raise ValueError('"f_lo" or "f_hi" inputs are being deprecated. Use only "fc" to specify cutoff frequencies.')
 
     # Check that frequency cutoff inputs are appropriate
-    if pass_type == 'bandpass' or pass_type == 'bandstop':
-        if isinstance(fc, float) or isinstance(fc, int):
-            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
-        if len(fc) != 2:
-            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
-        if fc[0] >= fc[1]:
-            raise ValueError('Second cutoff frequency must be greater than first for bandpass and bandstop filters')
+    if fc is not None:
+        if pass_type == 'bandpass' or pass_type == 'bandstop':
+            if isinstance(fc, float) or isinstance(fc, int):
+                raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
+            if len(fc) != 2:
+                raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
+            if fc[0] >= fc[1]:
+                raise ValueError('Second cutoff frequency must be greater than first for bandpass and bandstop filters')
 
-        # Map fc to previous code for f_lo and f_hi
-        f_lo, f_hi = fc
+            # Map fc to previous code for f_lo and f_hi
+            f_lo, f_hi = fc
 
-    if pass_type == 'lowpass':
-        if not (isinstance(fc, float) or isinstance(fc, int)):
-            raise ValueError('Cutoff frequency should be float or int for lowpass filters')
-        f_lo = fc
+        if pass_type == 'lowpass':
+            if not (isinstance(fc, float) or isinstance(fc, int)):
+                raise ValueError('Cutoff frequency should be float or int for lowpass filters')
+            f_lo = fc
 
-    if pass_type == 'highpass':
-        if not (isinstance(fc, float) or isinstance(fc, int)):
-            raise ValueError('Cutoff frequency should be float or int for highpass filters')
-        f_hi = fc
+        if pass_type == 'highpass':
+            if not (isinstance(fc, float) or isinstance(fc, int)):
+                raise ValueError('Cutoff frequency should be float or int for highpass filters')
+            f_hi = fc
 
     # Remove any NaN on the edges of 'x'
     first_nonan = np.where(~np.isnan(x))[0][0]
