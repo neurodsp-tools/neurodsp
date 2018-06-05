@@ -5,6 +5,7 @@ Quantify the shape of oscillatory waveforms on a cycle-by-cycle basis
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import neurodsp
 import warnings
 
@@ -74,8 +75,9 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
         time_rdsym : fraction of cycle in the rise period
         volt_ptsym : voltage difference between peak and trough
         time_ptsym : fraction of cycle in the peak period
-        oscillator_amplitude : average amplitude of the oscillation in that
-                               frequency band during the cycle
+        band_amp : average amplitude of the oscillation in that
+                   frequency band during the cycle
+        oscillator_amplitude : same as band_amp but being deprecated
 
     Notes
     -----
@@ -157,7 +159,8 @@ def features_by_cycle(x, Fs, f_range, center_extrema='P',
 
     # Compute average oscillatory amplitude estimate during cycle
     amp = neurodsp.amp_by_time(x, Fs, f_range, hilbert_increase_N=hilbert_increase_N)
-    shape_features['oscillator_amplitude'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
+    shape_features['band_amp'] = [np.mean(amp[Ts[i]:Ts[i + 1]]) for i in range(N_t2t)]
+    shape_features['oscillator_amplitude'] = shape_features['band_amp']
 
     # Convert feature dictionary into a DataFrame
     df = pd.DataFrame.from_dict(shape_features)
@@ -251,7 +254,7 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     """
 
     # Compute normalized amplitude for all cycles
-    amps = df['oscillator_amplitude'].values
+    amps = df['band_amp'].values
     df['amp_fraction'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
 
     # Compute amplitude consistency
@@ -298,9 +301,9 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     cycle_good_amp_consist = df['amp_consistency'] > amplitude_consistency_threshold
     cycle_good_period_consist = df['period_consistency'] > period_consistency_threshold
     cycle_good_monotonicity = df['monotonicity'] > monotonicity_threshold
-    is_cycle = cycle_good_amp * cycle_good_amp_consist * cycle_good_period_consist * cycle_good_monotonicity
-    is_cycle[0] = np.nan
-    is_cycle[-1] = np.nan
+    is_cycle = cycle_good_amp & cycle_good_amp_consist & cycle_good_period_consist & cycle_good_monotonicity
+    is_cycle[0] = False
+    is_cycle[-1] = False
     df['is_cycle'] = is_cycle
     df = _min_consecutive_cycles(df, N_cycles_min=N_cycles_min)
     df['is_cycle'] = df['is_cycle'].astype(bool)
@@ -321,3 +324,164 @@ def _min_consecutive_cycles(df_shape, N_cycles_min=3):
             temp_cycle_count = 0
     df_shape['is_cycle'] = is_cycle
     return df_shape
+
+
+def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
+                             tlims=None, figsize=(16, 3),
+                             plot_only_result=False):
+    """
+    Create a plot to study how the cycle-by-cycle burst detection
+    algorithm determine bursting periods of a signal.
+
+    Parameters
+    ----------
+    x : np.array
+        signal analyzed
+    Fs : float
+        sampling rate
+    df_shape : pd.DataFrame
+        dataframe output of `features_by_cycle`
+    osc_kwargs : dict
+        dictionary of thresholds for burst detection
+        used in the function `features_by_cycle` using
+        the kward `estimate_oscillating_periods_kwargs`
+    tlims : tuple, length 2
+        start and stop times for plot
+    figsize : tuple, length 2
+        size of figure
+
+    Returns
+    -------
+    A figure with 5 subplots.
+    In the top plot, the raw signal is plotted in black, and the
+    red line indicates periods defined as oscillatory bursts.
+    The highlighted regions indicate when each burst requirement
+    was violated, color-coded consistently with the plots below.
+
+    * blue: amplitude_fraction_threshold'],
+    * red: amplitude_consistency_threshold
+    * yellow: period_consistency_threshold
+    * green: monotonicity_threshold
+    """
+
+    # Determine time array
+    t = np.arange(0, len(x) / Fs, 1 / Fs)
+
+    if tlims is None:
+        tlims = (t[0], t[-1])
+
+    # Compute band amplitude as a fraction of the difference between min and max
+    amps = df_shape['band_amp']
+    df_shape['band_amp_frac'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
+
+    # Determine extrema strs
+    if 'sample_trough' in df_shape.columns:
+        center_e = 'trough'
+        side_e = 'peak'
+    else:
+        center_e = 'peak'
+        side_e = 'trough'
+
+    # Determine which samples are defined as bursting
+    is_osc = np.zeros(len(x), dtype=bool)
+    df_osc = df_shape[df_shape['is_cycle']]
+    for _, cyc in df_osc.iterrows():
+        is_osc[cyc['sample_last_' + side_e]:cyc['sample_next_' + side_e] + 1] = True
+
+    if plot_only_result:
+        # Plot the time series and indicate peaks and troughs
+        plt.figure(figsize=figsize)
+        plt.plot(t, x, 'k')
+        plt.plot(t[is_osc], x[is_osc], 'r.')
+        plt.xlim(tlims)
+        plt.tight_layout()
+        plt.title('Raw signal. Red trace indicates periods of bursting', size=15)
+        plt.ylim((min(x), max(x)))
+        plt.xlabel('Time (s)')
+        plt.show()
+
+    else:
+        # Plot the time series and indicate peaks and troughs
+        plt.figure(figsize=figsize)
+        plt.plot(t, x, 'k')
+        plt.plot(t[is_osc], x[is_osc], 'r', linewidth=2)
+        plt.plot(t[df_shape['sample_' + center_e]], x[df_shape['sample_' + center_e]], 'k.', ms=15)
+        plt.plot(t[df_shape['sample_last_' + side_e]], x[df_shape['sample_last_' + side_e]], 'r.', ms=15)
+        plt.xlim(tlims)
+        plt.tight_layout()
+        plt.title('Raw signal with highlights indicating violations of oscillatory burst requirements')
+        plt.ylim((min(x), max(x)))
+        plt.xlabel('Time (s)')
+
+        # Highlight where burst detection parameters were violated
+        # Use a different color for each burst detection parameter
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
+                         where=df_shape['band_amp_frac'] < osc_kwargs['amplitude_fraction_threshold'],
+                         interpolate=True, facecolor='blue', alpha=0.5, )
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
+                         where=df_shape['amp_consistency'] < osc_kwargs['amplitude_consistency_threshold'],
+                         interpolate=True, facecolor='red', alpha=0.5)
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
+                         where=df_shape['period_consistency'] < osc_kwargs['period_consistency_threshold'],
+                         interpolate=True, facecolor='yellow', alpha=0.5)
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
+                         where=df_shape['monotonicity'] < osc_kwargs['monotonicity_threshold'],
+                         interpolate=True, facecolor='green', alpha=0.5)
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=figsize)
+        plt.plot(t[df_shape['sample_' + center_e]], df_shape['band_amp_frac'], 'k.-')
+        plt.plot(tlims, [osc_kwargs['amplitude_fraction_threshold'],
+                         osc_kwargs['amplitude_fraction_threshold']], 'k--')
+        plt.xlim(tlims)
+        plt.ylim((-.02, 1.02))
+        plt.title('Band amplitude fraction, threshold={:.02f}'.format(osc_kwargs['amplitude_fraction_threshold']))
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], 0, 100,
+                         where=df_shape['band_amp_frac'] < osc_kwargs['amplitude_fraction_threshold'],
+                         interpolate=True, facecolor='blue', alpha=0.5)
+        plt.xlabel('Time (s)')
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=figsize)
+        plt.plot(t[df_shape['sample_' + center_e]], df_shape['amp_consistency'], 'k.-')
+        plt.plot(tlims, [osc_kwargs['amplitude_consistency_threshold'],
+                         osc_kwargs['amplitude_consistency_threshold']], 'k--')
+        plt.xlim(tlims)
+        plt.ylim((-.02, 1.02))
+        plt.title('Amplitude consistency, threshold={:.02f}'.format(osc_kwargs['amplitude_consistency_threshold']))
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], 0, 100,
+                         where=df_shape['amp_consistency'] < osc_kwargs['amplitude_consistency_threshold'],
+                         interpolate=True, facecolor='red', alpha=0.5)
+        plt.xlabel('Time (s)')
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=figsize)
+        plt.plot(t[df_shape['sample_' + center_e]], df_shape['period_consistency'], 'k.-')
+        plt.plot(tlims, [osc_kwargs['period_consistency_threshold'],
+                         osc_kwargs['period_consistency_threshold']], 'k--')
+        plt.xlim(tlims)
+        plt.title('Period consistency, threshold={:.02f}'.format(osc_kwargs['period_consistency_threshold']))
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], 0, 100,
+                         where=df_shape['period_consistency'] < osc_kwargs['period_consistency_threshold'],
+                         interpolate=True, facecolor='yellow', alpha=0.5)
+        plt.ylim((-.02, 1.02))
+        plt.xlabel('Time (s)')
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=figsize)
+        plt.plot(t[df_shape['sample_' + center_e]], df_shape['monotonicity'], 'k.-')
+        plt.plot(tlims, [osc_kwargs['monotonicity_threshold'],
+                         osc_kwargs['monotonicity_threshold']], 'k--')
+        plt.xlim(tlims)
+        plt.title('Monotonicity, threshold={:.02f}'.format(osc_kwargs['monotonicity_threshold']))
+        plt.fill_between(t[df_shape['sample_last_' + side_e]], 0, 100,
+                         where=df_shape['monotonicity'] < osc_kwargs['monotonicity_threshold'],
+                         interpolate=True, facecolor='green', alpha=0.5)
+        plt.ylim((-.02, 1.02))
+        plt.xlabel('Time (s)')
+        plt.tight_layout()
+        plt.show()
