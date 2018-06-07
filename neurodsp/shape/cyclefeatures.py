@@ -254,8 +254,7 @@ def define_true_oscillating_periods(df, x, amplitude_fraction_threshold=0,
     """
 
     # Compute normalized amplitude for all cycles
-    amps = df['band_amp'].values
-    df['amp_fraction'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
+    df['amp_fraction'] = df['band_amp'].rank()/len(df)
 
     # Compute amplitude consistency
     C = len(df)
@@ -370,10 +369,6 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
     if tlims is None:
         tlims = (t[0], t[-1])
 
-    # Compute band amplitude as a fraction of the difference between min and max
-    amps = df_shape['band_amp']
-    df_shape['band_amp_frac'] = (amps - np.min(amps)) / (np.max(amps) - np.min(amps))
-
     # Determine extrema strs
     if 'sample_trough' in df_shape.columns:
         center_e = 'trough'
@@ -416,7 +411,7 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
         # Highlight where burst detection parameters were violated
         # Use a different color for each burst detection parameter
         plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
-                         where=df_shape['band_amp_frac'] < osc_kwargs['amplitude_fraction_threshold'],
+                         where=df_shape['amp_fraction'] < osc_kwargs['amplitude_fraction_threshold'],
                          interpolate=True, facecolor='blue', alpha=0.5, )
         plt.fill_between(t[df_shape['sample_last_' + side_e]], min(x), max(x) + (max(x) - min(x)) * 100,
                          where=df_shape['amp_consistency'] < osc_kwargs['amplitude_consistency_threshold'],
@@ -431,14 +426,14 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
         plt.show()
 
         plt.figure(figsize=figsize)
-        plt.plot(t[df_shape['sample_' + center_e]], df_shape['band_amp_frac'], 'k.-')
+        plt.plot(t[df_shape['sample_' + center_e]], df_shape['amp_fraction'], 'k.-')
         plt.plot(tlims, [osc_kwargs['amplitude_fraction_threshold'],
                          osc_kwargs['amplitude_fraction_threshold']], 'k--')
         plt.xlim(tlims)
         plt.ylim((-.02, 1.02))
         plt.title('Band amplitude fraction, threshold={:.02f}'.format(osc_kwargs['amplitude_fraction_threshold']))
         plt.fill_between(t[df_shape['sample_last_' + side_e]], 0, 100,
-                         where=df_shape['band_amp_frac'] < osc_kwargs['amplitude_fraction_threshold'],
+                         where=df_shape['amp_fraction'] < osc_kwargs['amplitude_fraction_threshold'],
                          interpolate=True, facecolor='blue', alpha=0.5)
         plt.xlabel('Time (s)')
         plt.tight_layout()
