@@ -363,12 +363,6 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
     * green: monotonicity_threshold
     """
 
-    # Determine time array
-    t = np.arange(0, len(x) / Fs, 1 / Fs)
-
-    if tlims is None:
-        tlims = (t[0], t[-1])
-
     # Determine extrema strs
     if 'sample_trough' in df_shape.columns:
         center_e = 'trough'
@@ -383,30 +377,40 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
     for _, cyc in df_osc.iterrows():
         is_osc[cyc['sample_last_' + side_e]:cyc['sample_next_' + side_e] + 1] = True
 
+    # Determine time array
+    t = np.arange(0, len(x) / Fs, 1 / Fs)
+    if tlims is None:
+        tlims = (t[0], t[-1])
+
+    # Limit plotting to time of interest
+    tidxs = np.logical_and(t >= tlims[0], t <= tlims[1])
+    df_shape = df_shape[(df_shape['sample_last_' + side_e] >= tlims[0] * Fs) &
+                        (df_shape['sample_next_' + side_e] <= tlims[1] * Fs)]
+
     if plot_only_result:
         # Plot the time series and indicate peaks and troughs
         plt.figure(figsize=figsize)
-        plt.plot(t, x, 'k')
-        plt.plot(t[is_osc], x[is_osc], 'r.')
+        plt.plot(t[tidxs], x[tidxs], 'k')
+        plt.plot(t[tidxs][is_osc[tidxs]], x[tidxs][is_osc[tidxs]], 'r.')
         plt.xlim(tlims)
         plt.tight_layout()
         plt.title('Raw signal. Red trace indicates periods of bursting', size=15)
-        plt.ylim((min(x), max(x)))
         plt.xlabel('Time (s)')
+        plt.ylim((np.min(x[tidxs]), np.max(x[tidxs])))
         plt.show()
 
     else:
         # Plot the time series and indicate peaks and troughs
         plt.figure(figsize=figsize)
-        plt.plot(t, x, 'k')
-        plt.plot(t[is_osc], x[is_osc], 'r', linewidth=2)
+        plt.plot(t[tidxs], x[tidxs], 'k')
+        plt.plot(t[tidxs][is_osc[tidxs]], x[tidxs][is_osc[tidxs]], 'r.')
         plt.plot(t[df_shape['sample_' + center_e]], x[df_shape['sample_' + center_e]], 'k.', ms=15)
-        plt.plot(t[df_shape['sample_last_' + side_e]], x[df_shape['sample_last_' + side_e]], 'r.', ms=15)
+        plt.plot(t[df_shape['sample_last_' + side_e]], x[df_shape['sample_last_' + side_e]], 'k.', ms=15)
         plt.xlim(tlims)
         plt.tight_layout()
         plt.title('Raw signal with highlights indicating violations of oscillatory burst requirements')
-        plt.ylim((min(x), max(x)))
         plt.xlabel('Time (s)')
+        plt.ylim((np.min(x[tidxs]), np.max(x[tidxs])))
 
         # Highlight where burst detection parameters were violated
         # Use a different color for each burst detection parameter
