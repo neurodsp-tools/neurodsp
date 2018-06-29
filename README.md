@@ -12,13 +12,19 @@ A package of modules to process and analyze neural recordings as individual volt
 ## Python version support
 This package has been tested on python 3.4, 3.5, and 3.6 with the latest [Anaconda](https://www.continuum.io/downloads) distribution. Support for python 2 and earlier versions of python 3 is not guaranteed.
 
-## Get latest code
+## Install
+
+To install the latest release of neurodsp, you can install from pip:
+
+`$ pip install neurodsp`
+
+To get the development version (updates that are not yet published to pip), you can clone this repo.
 
 `$ git clone https://github.com/voytekresearch/neurodsp.git`
 
-## Install latest release of neurodsp
+To install this cloned copy of neurodsp, move into the directory you just cloned, and run:
 
-`$ pip install neurodsp`
+`$ pip install .`
 
 ## Modules
 
