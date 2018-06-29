@@ -41,8 +41,8 @@ setup(
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
     url = 'https://github.com/voytekresearch/neurodsp',
-    packages=find_packages(),
-    license='MIT',
+    packages = find_packages(),
+    license = 'MIT',
     download_url = 'https://github.com/voytekresearch/neurodsp/releases',
     keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
     install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn'],
@@ -60,5 +60,5 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6'
-    ]
+        ]
 )
