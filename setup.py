@@ -4,7 +4,7 @@ import os
 from setuptools import setup, find_packages
 
 # Get the current version number from inside the module
-with open(os.path.join('fooof', 'version.py')) as vf:
+with open(os.path.join('neurodsp', 'version.py')) as vf:
     exec(vf.read())
 
 # Copy in long description.
