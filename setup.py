@@ -1,5 +1,11 @@
 """neurodsp setup script"""
+
+import os
 from setuptools import setup, find_packages
+
+# Get the current version number from inside the module
+with open(os.path.join('fooof', 'version.py')) as vf:
+    exec(vf.read())
 
 # Copy in long description.
 #  Note: this is a partial copy from the README
@@ -30,14 +36,29 @@ Neurodsp contains several modules:
 
 setup(
     name = 'neurodsp',
-    version = '0.3.1',
-    description = 'A package of modules for analyzing neural signals',
+    version = __version__,
+    description = long_description,
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
     url = 'https://github.com/voytekresearch/neurodsp',
     packages=find_packages(),
     license='MIT',
-    download_url = 'https://github.com/voytekresearch/neurodsp/archive/0.3.1.tar.gz',
+    download_url = 'https://github.com/voytekresearch/neurodsp/releases',
     keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
-    classifiers = []
+    install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn'],
+    tests_require = ['pytest'],
+    classifiers = [
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: Unix',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6'
+    ]
 )
