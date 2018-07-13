@@ -40,5 +40,8 @@ def test_cyclefeatures_consistent():
 
     # Compute difference between calculated and ground truth values for each column
     for k in df.keys():
-        signal_diff = np.logical_xor(df[k].values[~np.isnan(df[k].values)], df_true[k].values[~np.isnan(df_true[k].values)])
+        if df[k].dtype == bool:
+            signal_diff = df[k].values[~np.isnan(df[k].values)].astype(int) - df_true[k].values[~np.isnan(df_true[k].values)].astype(int)
+        else:
+            signal_diff = df[k].values[~np.isnan(df[k].values)] - df_true[k].values[~np.isnan(df_true[k].values)]
         assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)

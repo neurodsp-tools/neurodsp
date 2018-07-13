@@ -54,7 +54,7 @@ def test_NaN_in_x():
     # Generate a low-pass filtered signal with NaNs
     x = np.random.randn(10000)
     Fs = 1000
-    x = neurodsp.filter(x, Fs, 'lowpass', f_lo=50)
+    x = neurodsp.filter(x, Fs, 'lowpass', fc=50)
 
     # Compute phase, amp, and freq time series
     f_range = (4, 8)

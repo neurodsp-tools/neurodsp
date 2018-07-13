@@ -29,7 +29,7 @@ def find_extrema(x, Fs, f_range, boundary=None, first_extrema='peak',
         if 'peak', then force the output to begin with a peak and end in a trough
         if 'trough', then force the output to begin with a trough and end in peak
         if None, force nothing
-    filter_fn : filter function, `filterfn(x, Fs, pass_type, f_lo, f_hi, remove_edge_artifacts=True)
+    filter_fn : filter function, `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
         Must have the same API as neurodsp.filter
     filter_kwargs : dict
         keyword arguments to the filter_fn
@@ -58,7 +58,7 @@ def find_extrema(x, Fs, f_range, boundary=None, first_extrema='peak',
         boundary = int(np.ceil(Fs / float(f_range[0])))
 
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', f_lo=f_range[0], f_hi=f_range[1], remove_edge_artifacts=False, **filter_kwargs)
+    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range, remove_edge_artifacts=False, **filter_kwargs)
 
     # Find rising and falling zerocrossings
     zeroriseN = _fzerorise(x_filt)
@@ -177,18 +177,16 @@ def find_zerox(x, Ps, Ts):
         x_temp = np.copy(x[Ts[i]:Ps[i + 1 - idx_bias] + 1])
         x_temp -= (x_temp[0] + x_temp[-1]) / 2.
 
-        # Catch if rise is actually a net decay
-        if x_temp[0] > x_temp[-1]:
+        # If data is all 0s, just set the zerocrossing to be halfway between.
+        if np.sum(np.abs(x_temp)) == 0:
             zeroxR[i] = Ts[i] + int(len(x_temp) / 2.)
+
+        # If rise is actually decay, just set the zerocrossing to be halfway between.
+        elif x_temp[0] > x_temp[-1]:
+            zeroxR[i] = Ts[i] + int(len(x_temp) / 2.)
+
         else:
-            try:
-                zeroxR[i] = Ts[i] + int(np.median(_fzerorise(x_temp)))
-            except:
-                warnings.warn('Error when estimating rising zerocrossing after trough ' + str(i) +
-                              ' at sample ' + str(Ts[i]) +
-                              '. Therefore, the zerocrossing has been set to halfway between the two extrema.' +
-                              ' This is potentially due to the two extrema being too close together')
-                zeroxR[i] = Ts[i] + int(len(x_temp) / 2.)
+            zeroxR[i] = Ts[i] + int(np.median(_fzerorise(x_temp)))
 
     # Find zerocrossings for decays
     zeroxD = np.zeros(N_decays, dtype=int)
@@ -196,16 +194,14 @@ def find_zerox(x, Ps, Ts):
         x_temp = np.copy(x[Ps[i]:Ts[i + idx_bias] + 1])
         x_temp -= (x_temp[0] + x_temp[-1]) / 2.
 
-        # Catch if the decay period is actually a net rise
-        if x_temp[0] < x_temp[-1]:
+        # If data is all 0s, just set the zerocrossing to be halfway between.
+        if np.sum(np.abs(x_temp)) == 0:
+            zeroxD[i] = Ps[i] + int(len(x_temp) / 2.)
+
+        # If decay is actually rise, just set the zerocrossing to be halfway between.
+        elif x_temp[0] < x_temp[-1]:
             zeroxD[i] = Ps[i] + int(len(x_temp) / 2.)
         else:
-            try:
-                zeroxD[i] = Ps[i] + int(np.median(_fzerofall(x_temp)))
-            except:
-                warnings.warn('Error when estimating decaying zerocrossing after peak ' + str(i) +
-                              ' at sample ' + str(Ps[i]) +
-                              '. Therefore, the zerocrossing has been set to halfway between the two extrema.')
-                zeroxD[i] = Ps[i] + int(len(x_temp) / 2.)
+            zeroxD[i] = Ps[i] + int(np.median(_fzerofall(x_temp)))
 
     return zeroxR, zeroxD
