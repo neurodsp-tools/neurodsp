@@ -719,14 +719,14 @@ def make_osc_cycle(T_ker, Fs, cycle_params):
         return None
 
 
-def sim_variable_powerlaw(T, fs, exponent):
+def sim_variable_powerlaw(T, Fs, exponent):
     """ Generate a power law time series with specified exponent by spectrally rotating white noise.
 
     Parameters
     ----------
     T : float, seconds
         Simulation time.
-    fs : float, Hz
+    Fs : float, Hz
         Sampling rate of simulated signal.
     exponent : float
         Desired power-law exponent; alpha in P(f)=f^alpha;
@@ -737,13 +737,13 @@ def sim_variable_powerlaw(T, fs, exponent):
         Time-series with the desired power-law exponent.
 
     """
-    sig_len = int(T * fs)
+    sig_len = int(T * Fs)
     x = np.random.randn(sig_len)
-    x_ = rotate_powerlaw(x, fs, delta_f=exponent, f_rotation=0)
-    return sp.stats.zscore(x_)
+    x_rotated = _rotate_powerlaw(x, Fs, delta_f=exponent, f_rotation=0)
+    return sp.stats.zscore(x_rotated)
 
 
-def rotate_powerlaw(data, fs, delta_f, f_rotation=30):
+def _rotate_powerlaw(data, Fs, delta_f, f_rotation=30):
     """Takes a time series and changes its power law exponent via rotation in
     the spectral domain.
 
@@ -751,7 +751,7 @@ def rotate_powerlaw(data, fs, delta_f, f_rotation=30):
     ----------
     data : array, 1-D
         Time-series to be rotated.
-    fs : float, Hz
+    Fs : float, Hz
         Sampling rate.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
@@ -769,7 +769,7 @@ def rotate_powerlaw(data, fs, delta_f, f_rotation=30):
 
     # compute FFT and frequency axis
     FC = np.fft.fft(data)
-    f_axis = np.fft.fftfreq(len(data), 1. / fs)
+    f_axis = np.fft.fftfreq(len(data), 1. / Fs)
 
     # make the 1/f mask
     f_mask = np.zeros_like(f_axis)
