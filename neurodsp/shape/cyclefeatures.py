@@ -391,8 +391,8 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
         plt.xlim(tlims)
         plt.tight_layout()
         plt.title('Raw signal. Red trace indicates periods of bursting', size=15)
-        plt.xlabel('Time (s)')
         plt.ylim((min(x), max(x)))
+        plt.xlabel('Time (s)')
         plt.show()
 
     else:
@@ -405,8 +405,8 @@ def plot_burst_detect_params(x, Fs, df_shape, osc_kwargs,
         plt.xlim(tlims)
         plt.tight_layout()
         plt.title('Raw signal with highlights indicating violations of oscillatory burst requirements')
-        plt.xlabel('Time (s)')
         plt.ylim((min(x), max(x)))
+        plt.xlabel('Time (s)')
 
         # Highlight where burst detection parameters were violated
         # Use a different color for each burst detection parameter
