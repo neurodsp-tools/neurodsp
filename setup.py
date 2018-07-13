@@ -3,7 +3,7 @@ import os
 from setuptools import setup, find_packages
 
 # Get the current version number from inside the module
-with open(os.path.join('fooof', 'version.py')) as vf:
+with open(os.path.join('neurodsp', 'version.py')) as vf:
     exec(vf.read())
 
 # Copy in long description.
@@ -24,10 +24,10 @@ Neurodsp contains several modules:
 - spectral : Compute spectral domain features (PSD and 1/f slope, etc)
 - timefrequency : Estimate instantaneous measures of oscillatory activity
 - shape : Measure the waveform shape of neural oscillations
-	- cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis
-	- cyclepoints : Identify the extrema and zerocrossings for each cycle
-	- phase : Estimate instantaneous phase by interpolating between extrema and zerocrossings
-	- swm : Identify recurrent patterns in a signal using sliding window matching
+    - cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis
+    - cyclepoints : Identify the extrema and zerocrossings for each cycle
+    - phase : Estimate instantaneous phase by interpolating between extrema and zerocrossings
+    - swm : Identify recurrent patterns in a signal using sliding window matching
 - burst : Detect bursting oscillators in neural signals
 - sim : Simulate bursting or stationary oscillators with brown noise
 - pac : Estimate phase-amplitude coupling between two frequency bands
@@ -35,23 +35,30 @@ Neurodsp contains several modules:
 """
 
 setup(
-    name='neurodsp',
-    version=__version__,
-    description='A package of modules for analyzing neural signals',
-    long_description=long_description,
-    author='The Voytek Lab',
-    author_email='voyteklab@gmail.com',
-    url='https://github.com/voytekresearch/neurodsp',
-    packages=find_packages(),
-    license='MIT',
-    classifiers=[
-        'Development Status :: 3 - Alpha',
+    name = 'neurodsp',
+    version = __version__,
+    description = long_description,
+    author = 'The Voytek Lab',
+    author_email = 'voyteklab@gmail.com',
+    url = 'https://github.com/voytekresearch/neurodsp',
+    packages = find_packages(),
+    license = 'MIT',
+    download_url = 'https://github.com/voytekresearch/neurodsp/releases',
+    keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
+    install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn'],
+    tests_require = ['pytest'],
+    classifiers = [
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: Unix',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6'
-    ],
-    download_url='https://github.com/voytekresearch/neurodsp/archive/0.3.1.tar.gz',
-    keywords=['neuroscience', 'time series']
+        ]
 )
