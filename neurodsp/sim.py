@@ -84,7 +84,7 @@ def sim_brown_noise(N):
 
 
 def sim_oscillator(N_samples_cycle, N_cycles, rdsym=.5):
-    """Simulate a band-pass filtered signal with 1/f^2.
+    """Simulate an oscillation.
 
     Parameters
     ----------
@@ -120,7 +120,7 @@ def sim_oscillator(N_samples_cycle, N_cycles, rdsym=.5):
 
 
 def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
-    """Simulate a band-pass filtered signal with 1/f^2.
+    """Simulate an oscillation embedded in background 1/f.
 
     Parameters
     ----------
@@ -168,13 +168,14 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
 
     # Combine oscillator and noise
     signal = oscillator + brown
+
     return signal
 
 
 def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
                           prob_leave_burst=None, cycle_features=None,
                           return_cycle_df=False):
-    """Simulate a band-pass filtered signal with 1/f^2.
+    """Simulate a bursty oscillation.
 
     Parameters
     ----------
@@ -357,7 +358,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
                                 prob_enter_burst=None, prob_leave_burst=None,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
-    """Simulate a band-pass filtered signal with 1/f^2 and noisy bursty oscillations.
+    """Simulate a bursty oscillation embedded in background 1/f.
 
     Parameters
     ----------
