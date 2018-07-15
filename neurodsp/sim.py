@@ -70,7 +70,6 @@ def sim_brown_noise(N):
 
 def sim_oscillator(N_samples_cycle, N_cycles, rdsym=.5):
     """Simulate a band-pass filtered signal with 1/f^2
-    Input suggestions: f_range=(2,None), Fs=1000, N=1001
 
     Parameters
     ----------
