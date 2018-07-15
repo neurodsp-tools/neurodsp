@@ -738,9 +738,7 @@ def make_osc_cycle(T_ker, Fs, cycle_params):
         return make_synaptic_kernel(T_ker, Fs, cycle_params[1], cycle_params[2])
 
     else:
-        # Is this the proper way to handle errors???
-        print('Did not recognize cycle type.')
-        return None
+        raise ValueError('Did not recognize cycle type.')
 
 
 def sim_variable_powerlaw(T, Fs, exponent):
