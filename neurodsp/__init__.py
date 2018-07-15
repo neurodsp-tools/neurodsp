@@ -1,3 +1,5 @@
+from .version import __version__
+
 from .filt import filter
 from .pac import compute_pac, compute_pac_comodulogram, plot_pac_comodulogram
 from .laggedcoherence import lagged_coherence
