@@ -1,6 +1,6 @@
 """
 sim.py
-Simulating oscillators and aperiodic backgrounds.
+Simulating time series, including oscillations and aperiodic backgrounds.
 """
 
 import warnings
@@ -146,7 +146,7 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
 
     Returns
     -------
-    signal : np.array
+    1d array
         Oscillator with brown noise
     """
 
@@ -174,9 +174,9 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
                     (brown_power * SNR)) * np.sign(brown)
 
     # Combine oscillator and noise
-    signal = oscillator + brown
+    output = oscillator + brown
 
-    return signal
+    return output
 
 
 def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
@@ -431,9 +431,6 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     if filter_order % 2 == 0:
         filter_order += 1
 
-    # Determine length of signal in samples
-    n_samples = int(T * Fs)
-
     # Generate filtered brown noise
     brown = sim_filtered_brown_noise(T, Fs, (f_hipass_brown, None), filter_order)
 
@@ -457,16 +454,16 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
                     (brown_power * SNR)) * np.sign(brown)
 
     # Combine oscillator and noise
-    signal = oscillator + brown
+    output = oscillator + brown
 
     if return_components:
         if return_cycle_df:
-            return signal, oscillator, brown, df
-        return signal, oscillator, brown
+            return output, oscillator, brown, df
+        return output, oscillator, brown
     else:
         if return_cycle_df:
-            return signal, df
-        return signal
+            return output, df
+        return output
 
 
 def sim_poisson_pop(T, Fs, n_neurons, FR):
@@ -538,27 +535,29 @@ def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
     """
 
     t = np.arange(0, t_ker, 1 / Fs)
-    if tau_r == 0:
-        # single exponential synapse
-        kernel = np.exp(-t / tau_d)
-        ktype = 'single exponential'
 
+    # Kernel type: single exponential
+    if tau_r == 0:
+
+        kernel = np.exp(-t / tau_d)
+
+    # Kernel type: alpha
     elif tau_r == tau_d:
-        # alpha synapse
+
         # I(t) = t/tau * exp(-t/tau)
         kernel = (t / tau_r) * np.exp(-t / tau_r)
-        ktype = 'alpha'
 
+    # Kernel type: double exponential
     else:
-        # double exponential synapse of the form:
-        # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
-        if tau_r > tau_d:
-            warnings.warn(
-                'Rise time constant should be shorter than decay time constant.')
-        kernel = (np.exp(-t / tau_d) - np.exp(-t / tau_r))
-        ktype = 'double exponential'
 
-    kernel = kernel / np.sum(kernel)  # normalize the integral to 1
+        if tau_r > tau_d:
+            warnings.warn('Rise time constant should be shorter than decay time constant.')
+
+        # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
+        kernel = (np.exp(-t / tau_d) - np.exp(-t / tau_r))
+
+    # Normalize the integral to 1
+    kernel = kernel / np.sum(kernel)
 
     return kernel
 
@@ -669,23 +668,27 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
         Simulated oscillation with jitter.
     """
 
-    # if cycle is a tuple, generate the window with given params, and if
-    # cycle is an array, just use it to do the convolution
-    if type(cycle) is tuple:
+    # If cycle is a tuple, generate the window with given params,
+    if isinstance(cycle, tuple):
+
         # defaults to 1 second window for a cycle, which is more than enough
         # if interested in longer period oscillations, just pass in premade cycle
         osc_cycle = make_osc_cycle(1, Fs, cycle)
+
+    # If cycle is an array, just use it to do the convolution
     else:
         osc_cycle = cycle
 
-    # binary "spike-train" of when each cycle should occur
+    # Binary "spike-train" of when each cycle should occur
     spks = np.zeros(int(T * Fs + len(osc_cycle)) - 1)
     osc_period = int(Fs / freq)
-    # generate oscillation "event" indices
+
+    # Generate oscillation "event" indices
     spk_indices = np.arange(osc_period, len(spks), osc_period)
 
+    # Add jitter to "spike" indices
     if jitter != 0:
-        # add jitter to "spike" indices
+
         spk_indices = spk_indices + \
             np.random.randint(low=-int(Fs * jitter),
                               high=int(Fs * jitter), size=len(spk_indices))
@@ -720,15 +723,15 @@ def make_osc_cycle(t_ker, Fs, cycle_params):
         Simulated oscillation cycle.
     """
 
-    if cycle_params[0] is 'gaussian':
+    if cycle_params[0] == 'gaussian':
         # cycle_params defines std in seconds
         return signal.gaussian(t_ker * Fs, cycle_params[1] * Fs)
 
-    elif cycle_params[0] is 'exp':
+    elif cycle_params[0] == 'exp':
         # cycle_params defines decay time constant in seconds
         return make_synaptic_kernel(t_ker, Fs, 0, cycle_params[1])
 
-    elif cycle_params[0] is '2exp':
+    elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
         return make_synaptic_kernel(t_ker, Fs, cycle_params[1], cycle_params[2])
 
