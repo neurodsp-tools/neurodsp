@@ -35,7 +35,7 @@ def sim_filtered_brown_noise(T, Fs, f_range, N):
     if f_range is None:
         # Do not filter
         # Generate 1/f^2 noise
-        brown_n = simbrown(int(T * Fs))
+        brown_n = sim_brown_noise(int(T * Fs))
         return brown_n
 
     elif f_range[1] is None:
@@ -56,7 +56,7 @@ def sim_filtered_brown_noise(T, Fs, f_range, N):
     else:
         # Bandpass filter
         # Generate 1/f^2 noise
-        brown_n = simbrown(int(T * Fs + N * 2))
+        brown_n = sim_brown_noise(int(T * Fs + N * 2))
         # Filter
         nyq = Fs / 2.
         taps = signal.firwin(N, np.array(f_range) / nyq, pass_zero=False)
@@ -79,7 +79,7 @@ def sim_brown_noise(N):
 
     Notes
     -----
-    Brown noise is simulated by cumulative sum of white noise
+    Brown noise is simulated by cumulative sum of white noise.
     """
 
     return np.cumsum(np.random.randn(N))
@@ -118,6 +118,7 @@ def sim_oscillator(N_samples_cycle, N_cycles, rdsym=.5):
 
     # Transform phase into an oscillator
     oscillator = np.cos(phase_t)
+
     return oscillator
 
 
