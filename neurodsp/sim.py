@@ -3,11 +3,12 @@ sim.py
 Simulating oscillators and aperiodic backgrounds.
 """
 
-import numpy as np
-import scipy as sp
-import pandas as pd
-from scipy import signal
 import warnings
+
+import numpy as np
+import pandas as pd
+import scipy as sp
+from scipy import signal
 
 
 def sim_filtered_brown_noise(T, Fs, f_range, N):
@@ -36,6 +37,7 @@ def sim_filtered_brown_noise(T, Fs, f_range, N):
         # Generate 1/f^2 noise
         brown_n = simbrown(int(T * Fs))
         return brown_n
+
     elif f_range[1] is None:
         # Make filter order odd if necessary
         nyq = Fs / 2.
@@ -166,6 +168,7 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
     brown_power = np.mean(brown**2)
     brown = np.sqrt(brown**2 * oscillator_power /
                     (brown_power * SNR)) * np.sign(brown)
+
     # Combine oscillator and noise
     signal = oscillator + brown
     return signal
@@ -307,7 +310,8 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     # Simulate time series for each cycle
     x = np.array([])
     last_cycle_oscillating = False
-    for i, row in df.iterrows():
+    for ind, row in df.iterrows():
+    for ind, row in df.iterrows():
         if row['is_cycle'] is False:
             # If last cycle was oscillating, add a decay to 0 then 0s
             if last_cycle_oscillating:
@@ -455,6 +459,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     brown_power = np.mean(brown**2)
     brown = np.sqrt(brown**2 * oscillator_power /
                     (brown_power * SNR)) * np.sign(brown)
+
     # Combine oscillator and noise
     signal = oscillator + brown
 
@@ -498,6 +503,7 @@ def sim_poisson_pop(T, Fs, N_neurons, FR):
     """
 
     L = int(T * Fs)
+
     # poisson population rate signal scales with # of neurons and individual rate
     lam = N_neurons * FR
 
@@ -506,16 +512,17 @@ def sim_poisson_pop(T, Fs, N_neurons, FR):
 
     # enforce that X is non-negative in cases of low FR
     x[np.where(x < 0.)] = 0.
+
     return x
 
 
-def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
+def make_synaptic_kernel(T_ker, Fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
-                tauR == tauD : alpha (function) synapse
-        tauR = 0     : instantaneous rise, (single) exponential decay
-        tauR!=tauD!=0: double-exponential (rise and decay)
+                tau_r == tau_d : alpha (function) synapse
+        tau_r = 0     : instantaneous rise, (single) exponential decay
+        tau_r!=tau_d!=0: double-exponential (rise and decay)
 
     Parameters
     ----------
@@ -523,9 +530,9 @@ def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
         Length of simulated signal in seconds.
     Fs : float (Hz)
         Sampling rate.
-    tauR : float, seconds
+    tau_r : float, seconds
         Rise time of synaptic kernel.
-    tauD : fload, seconds
+    tau_d : fload, seconds
         Decay time of synaptic kernel.
 
     Returns
@@ -535,31 +542,32 @@ def make_synaptic_kernel(T_ker, Fs, tauR, tauD):
     """
 
     t = np.arange(0, T_ker, 1 / Fs)
-    if tauR == 0:
+    if tau_r == 0:
         # single exponential synapse
-        kernel = np.exp(-t / tauD)
+        kernel = np.exp(-t / tau_d)
         ktype = 'single exponential'
 
-    elif tauR == tauD:
+    elif tau_r == tau_d:
         # alpha synapse
         # I(t) = t/tau * exp(-t/tau)
-        kernel = (t / tauR) * np.exp(-t / tauR)
+        kernel = (t / tau_r) * np.exp(-t / tau_r)
         ktype = 'alpha'
 
     else:
         # double exponential synapse of the form:
-        # I(t)=(tauR/(tauR-tauD))*(exp(-t/tauD)-exp(-t/tauR))
-        if tauR > tauD:
+        # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
+        if tau_r > tau_d:
             warnings.warn(
                 'Rise time constant should be shorter than decay time constant.')
-        kernel = (np.exp(-t / tauD) - np.exp(-t / tauR))
+        kernel = (np.exp(-t / tau_d) - np.exp(-t / tau_r))
         ktype = 'double exponential'
 
     kernel = kernel / np.sum(kernel)  # normalize the integral to 1
+
     return kernel
 
 
-def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01):
+def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tau_r=0, tau_d=0.01):
     """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
     The resulting signal is most similar to unsigned intracellular current or
     conductance change.
@@ -576,9 +584,9 @@ def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01)
         Firing rate of individual neurons in the population.
     T_ker : float
         Length of simulated kernel in seconds. Usually 1 second will suffice.
-    tauR : float, seconds
+    tau_r : float, seconds
         Rise time of synaptic kernel.
-    tauD : fload, seconds
+    tau_d : fload, seconds
         Decay time of synaptic kernel.
 
     Returns
@@ -589,7 +597,8 @@ def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tauR=0, tauD=0.01)
 
     # simulate an extra bit because the convolution will snip it
     x = sim_poisson_pop(T=(T + T_ker), Fs=Fs, N_neurons=N_neurons, FR=FR)
-    ker = make_synaptic_kernel(T_ker=T_ker, Fs=Fs, tauR=tauR, tauD=tauD)
+    ker = make_synaptic_kernel(T_ker=T_ker, Fs=Fs, tau_r=tau_r, tau_d=tau_d)
+
     return np.convolve(x, ker, 'valid')[:-1]
 
 
@@ -718,12 +727,15 @@ def make_osc_cycle(T_ker, Fs, cycle_params):
     if cycle_params[0] is 'gaussian':
         # cycle_params defines std in seconds
         return signal.gaussian(T_ker * Fs, cycle_params[1] * Fs)
+
     elif cycle_params[0] is 'exp':
         # cycle_params defines decay time constant in seconds
         return make_synaptic_kernel(T_ker, Fs, 0, cycle_params[1])
+
     elif cycle_params[0] is '2exp':
         # cycle_params defines rise and decay time constant in seconds
         return make_synaptic_kernel(T_ker, Fs, cycle_params[1], cycle_params[2])
+
     else:
         # Is this the proper way to handle errors???
         print('Did not recognize cycle type.')
@@ -751,6 +763,7 @@ def sim_variable_powerlaw(T, Fs, exponent):
     sig_len = int(T * Fs)
     x = np.random.randn(sig_len)
     x_rotated = _rotate_powerlaw(x, Fs, delta_f=exponent, f_rotation=0)
+
     return sp.stats.zscore(x_rotated)
 
 
