@@ -17,12 +17,12 @@ def sim_filtered_brown_noise(T, Fs, f_range, N):
     Parameters
     ----------
     T : float
-        length of time of simulated oscillation
+        Length of time of simulated signal, in seconds
     Fs : float
-        oscillation sampling rate
-    f_range : 2-element array (lo,hi)
-        frequency range of simulated data
-        if None: do not filter
+        Sampling rate, in Hz
+    f_range : 2-element array (lo,hi) or None
+        Frequency range of simulated data
+            if None: do not filter
     N : int
         order of filter
 
@@ -67,6 +67,8 @@ def sim_filtered_brown_noise(T, Fs, f_range, N):
 def sim_brown_noise(N):
     """Simulate a brown noise signal (power law distribution 1/f^2).
 
+    Brown noise is simulated by cumulative sum of white noise.
+
     Parameters
     ----------
     N : int
@@ -76,10 +78,6 @@ def sim_brown_noise(N):
     -------
     1d array
         Simulated brown noise signal
-
-    Notes
-    -----
-    Brown noise is simulated by cumulative sum of white noise.
     """
 
     return np.cumsum(np.random.randn(N))
@@ -95,16 +93,15 @@ def sim_oscillator(N_samples_cycle, N_cycles, rdsym=.5):
     N_cycles : int
         Number of cycles to simulate
     rdsym : float
-        rise-decay symmetry of the oscillator;
-        fraction of the period in the rise time;
-        =0.5 - symmetric (sine wave)
-        <0.5 - shorter rise, longer decay
-        >0.5 - longer rise, shorter decay
+        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time
+            =0.5 - symmetric (sine wave)
+            <0.5 - shorter rise, longer decay
+            >0.5 - longer rise, shorter decay
 
     Returns
     -------
-    oscillator : np.array
-        oscillating time series
+    oscillator : 1d array
+        Oscillating time series
     """
 
     # Determine number of samples in rise and decay periods
@@ -128,23 +125,22 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
     Parameters
     ----------
     freq : float
-        oscillator frequency
+        Oscillator frequency
     T : float
-        signal duration (seconds)
+        Signal duration, in seconds
     Fs : float
-        signal sampling rate
+        Signal sampling rate, in Hz
     f_hipass_brown : float
-        frequency (Hz) at which to high-pass-filter
-        brown noise
+        Frequency (Hz) at which to high-pass-filter brown noise
     SNR : float
-        ratio of oscillator power to brown noise power
-        >1 - oscillator is stronger
-        <1 - noise is stronger
+        Ratio of oscillator power to brown noise power
+            >1 - oscillator is stronger
+            <1 - noise is stronger
 
     Returns
     -------
     signal : np.array
-        oscillator with brown noise
+        Oscillator with brown noise
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_brown)
@@ -183,23 +179,20 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     Parameters
     ----------
     freq : float
-        oscillator frequency
+        Oscillator frequency, in Hz
     T : float
-        signal duration (seconds)
+        Signal duration, in seconds
     Fs : float
-        signal sampling rate
+        Signal sampling rate, in Hz
     rdsym : float
-        rise-decay symmetry of the oscillator;
-        fraction of the period in the rise time;
-        =0.5 - symmetric (sine wave)
-        <0.5 - shorter rise, longer decay
-        >0.5 - longer rise, shorter decay
+        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;
+            =0.5 - symmetric (sine wave)
+            <0.5 - shorter rise, longer decay
+            >0.5 - longer rise, shorter decay
     prob_enter_burst : float
-        probability of a cycle being oscillating given
-        the last cycle is not oscillating
+        Rrobability of a cycle being oscillating given the last cycle is not oscillating
     prob_leave_burst : float
-        probability of a cycle not being oscillating
-        given the last cycle is oscillating
+        Probability of a cycle not being oscillating given the last cycle is oscillating
     cycle_features : dict
         specify the mean and standard deviations
         (within and across bursts) of each cycle's
@@ -224,7 +217,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
     Returns
     -------
-    signal : np.array
+    signal : 1d array
         bursty oscillator
     df : pd.DataFrame
         cycle-by-cycle properties of the simulated oscillator
@@ -365,35 +358,31 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
                                 prob_enter_burst=None, prob_leave_burst=None,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
-    """Simulate a band-pass filtered signal with 1/f^2.
+    """Simulate a band-pass filtered signal with 1/f^2 and noisy bursty oscillations.
 
     Parameters
     ----------
     freq : float
-        oscillator frequency
+        Oscillator frequency, in Hz
     T : float
-        signal duration (seconds)
+        Signal duration, in seconds
     Fs : float
-        signal sampling rate
+        Signal sampling rate, in Hz
     rdsym : float
-        rise-decay symmetry of the oscillator;
-        fraction of the period in the rise time;
-        =0.5 - symmetric (sine wave)
-        <0.5 - shorter rise, longer decay
-        >0.5 - longer rise, shorter decay
+        Rise-decay symmetry of the oscillator as fraction of the period in the rise time
+            =0.5 - symmetric (sine wave)
+            <0.5 - shorter rise, longer decay
+            >0.5 - longer rise, shorter decay
     f_hipass_brown : float
-        frequency (Hz) at which to high-pass-filter
-        brown noise
+        Frequency, in Hz, at which to high-pass-filter brown noise
     SNR : float
-        ratio of oscillator power to brown noise power
-        >1 - oscillator is stronger
-        <1 - noise is stronger
+        Ratio of oscillator power to brown noise power
+            >1 - oscillator is stronger
+            <1 - noise is stronger
     prob_enter_burst : float
-        probability of a cycle being oscillating given
-        the last cycle is not oscillating
+        Probability of a cycle being oscillating given the last cycle is not oscillating
     prob_leave_burst : float
-        probability of a cycle not being oscillating
-        given the last cycle is oscillating
+        Probability of a cycle not being oscillating given the last cycle is oscillating
     cycle_features : dict
         specify the mean and standard deviations
         (within and across bursts) of each cycle's
@@ -410,8 +399,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
         rdsym_std - standard deviation of rdsym
         rdsym_burst_std - std. of mean rdsym for each burst
     return_components: bool
-        if True, return the oscillator and noise separate,
-        in addition to the signal
+        Whether to return the oscillator and noise separately, in addition to the signal
     return_cycle_df : bool
         if True, return the dataframe that contains the simulation
         parameters for each cycle. This may be useful for computing
@@ -489,17 +477,17 @@ def sim_poisson_pop(T, Fs, N_neurons, FR):
     Parameters
     ----------
     T : float
-        Length of simulated signal in seconds.
+        Length of simulated signal in seconds
     Fs : float
-        Sampling rate in Hz.
+        Sampling rate in Hz
     N_neurons : int
-        Number of neurons in the simulated population.
+        Number of neurons in the simulated population
     FR : type
-        Firing rate of individual neurons in the population.
+        Firing rate of individual neurons in the population
 
     Returns
     -------
-    x : array (1-D)
+    x : 1d array
         Simulated population activity.
     """
 
@@ -521,20 +509,20 @@ def make_synaptic_kernel(T_ker, Fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
-                tau_r == tau_d : alpha (function) synapse
-        tau_r = 0     : instantaneous rise, (single) exponential decay
-        tau_r!=tau_d!=0: double-exponential (rise and decay)
+        tau_r == tau_d  : alpha (function) synapse
+        tau_r = 0       : instantaneous rise, (single) exponential decay
+        tau_r!=tau_d!=0 : double-exponential (rise and decay)
 
     Parameters
     ----------
     T_ker : float
         Length of simulated signal in seconds.
-    Fs : float (Hz)
-        Sampling rate.
-    tau_r : float, seconds
-        Rise time of synaptic kernel.
-    tau_d : fload, seconds
-        Decay time of synaptic kernel.
+    Fs : float
+        Sampling rate, in Hz.
+    tau_r : float
+        Rise time of synaptic kernel, in seconds.
+    tau_d : float
+        Decay time of synaptic kernel, in seconds.
 
     Returns
     -------
@@ -570,25 +558,25 @@ def make_synaptic_kernel(T_ker, Fs, tau_r, tau_d):
 
 def sim_synaptic_noise(T, Fs, N_neurons=1000, FR=2, T_ker=1., tau_r=0, tau_d=0.01):
     """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
-    The resulting signal is most similar to unsigned intracellular current or
-    conductance change.
+
+    The resulting signal is most similar to unsigned intracellular current or conductance change.
 
     Parameters
     ----------
     T : float
-        Length of simulated signal in seconds.
+        Length of simulated signal, in seconds
     Fs : float
-        Sampling rate in Hz.
+        Sampling rate, in Hz
     N_neurons : int
-        Number of neurons in the simulated population.
-    FR : type
-        Firing rate of individual neurons in the population.
+        Number of neurons in the simulated population
+    FR : float
+        Firing rate of individual neurons in the population
     T_ker : float
         Length of simulated kernel in seconds. Usually 1 second will suffice.
-    tau_r : float, seconds
-        Rise time of synaptic kernel.
-    tau_d : fload, seconds
-        Decay time of synaptic kernel.
+    tau_r : float
+        Rise time of synaptic kernel, in seconds.
+    tau_d : fload
+        Decay time of synaptic kernel, in seconds.
 
     Returns
     -------
@@ -608,10 +596,10 @@ def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
 
     Discretized Ornstein-Uhlenbeck process:
         dx = theta*(x-mu)*dt + sigma*dWt, where
-    dWt: increments of Wiener process, i.e. white noise
-    theta: memory scale (higher = faster fluc)
-    mu: mean
-    sigma: std
+    dWt     : increments of Wiener process, i.e. white noise
+    theta   : memory scale (higher = faster fluc)
+    mu      : mean
+    sigma   : std
 
     see: https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
     for integral solution
@@ -651,15 +639,15 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
 
     Parameters
     ----------
-    T : float (seconds)
-        Simulation length.
-    Fs : float (Hz)
-        Sampling frequency.
-    freq : float (Hz)
-        Frequency of simulated oscillator.
-    jitter : float (seconds)
-        Maximum jitter of oscillation period.
-    cycle : tuple or array (1D)
+    T : float
+        Simulation length, in seconds
+    Fs : float
+        Sampling frequency, in Hz.
+    freq : float
+        Frequency of simulated oscillator, in Hz.
+    jitter : float
+        Maximum jitter of oscillation period, in seconds
+    cycle : tuple or 1d array
         Oscillation cycle used in the simulation.
         If array, it's used directly.
         If tuple, it is generated based on given parameters.
@@ -670,7 +658,7 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
 
     Returns
     -------
-    x : array (1D)
+    x : 1d array
         Simulated oscillation with jitter.
     """
 
@@ -715,13 +703,13 @@ def make_osc_cycle(T_ker, Fs, cycle_params):
     cycle_params : tuple
         Defines the parameters for the oscillation cycle.
         Possible values:
-        ('gaussian', std): gaussian cycle, standard deviation in seconds
-        ('exp', decay time): exponential decay, decay time constant in seconds
-        ('2exp', rise time, decay time): exponential rise and decay
+            ('gaussian', std): gaussian cycle, standard deviation in seconds
+            ('exp', decay time): exponential decay, decay time constant in seconds
+            ('2exp', rise time, decay time): exponential rise and decay
 
     Returns
     -------
-    x: array_like (1D)
+    x: 1d array_like
         Simulated oscillation cycle.
     """
 
@@ -746,17 +734,17 @@ def sim_variable_powerlaw(T, Fs, exponent):
 
     Parameters
     ----------
-    T : float, seconds
-        Simulation time.
-    Fs : float, Hz
-        Sampling rate of simulated signal.
+    T : float
+        Simulation time, in seconds
+    Fs : float
+        Sampling rate of simulated signal, in Hz
     exponent : float
-        Desired power-law exponent; alpha in P(f)=f^alpha;
+        Desired power-law exponent - beta in P(f)=f^beta
 
     Returns
     -------
-    x : array, 1-D
-        Time-series with the desired power-law exponent.
+    x : 1d array
+        Time-series with the desired power-law exponent
     """
 
     sig_len = int(T * Fs)
@@ -771,33 +759,34 @@ def _rotate_powerlaw(data, Fs, delta_f, f_rotation=30):
 
     Parameters
     ----------
-    data : array, 1-D
-        Time-series to be rotated.
-    Fs : float, Hz
-        Sampling rate.
+    data : 1d array
+        Time-series to be rotated
+    Fs : float
+        Sampling rate, in Hz
     delta_f : float
-        Change in power law exponent to be applied. Positive is counterclockwise
-        rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, Hz
-        Axis of rotation frequency, such that power at that frequency is unchanged
+        Change in power law exponent to be applied.
+            Positive numbers are counterclockwise rotations(flatten).
+            Negative numbers are clockwise rotations (steepen).
+    f_rotation : float
+        Axis of rotation frequency, in Hz, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
 
     Returns
     -------
-    x : array, 1-D
-        Power-law rotated time-series.
+    x : 1d array
+        Power-law rotated time-series
     """
 
-    # compute FFT and frequency axis
+    # Compute FFT and frequency axis
     FC = np.fft.fft(data)
     f_axis = np.fft.fftfreq(len(data), 1. / Fs)
 
-    # make the 1/f mask
+    # Make the 1/f mask
     f_mask = np.zeros_like(f_axis)
     f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f / 2))
     f_mask[0] = 1.
 
-    # normalize power at rotation frequency
+    # Normalize power at rotation frequency
     f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     return np.real(np.fft.ifft(FC * f_mask))
