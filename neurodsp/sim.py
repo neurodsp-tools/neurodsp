@@ -305,7 +305,6 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     x = np.array([])
     last_cycle_oscillating = False
     for ind, row in df.iterrows():
-    for ind, row in df.iterrows():
         if row['is_cycle'] is False:
             # If last cycle was oscillating, add a decay to 0 then 0s
             if last_cycle_oscillating:
