@@ -1,7 +1,4 @@
-"""
-sim.py
-Simulating time series, including oscillations and aperiodic backgrounds.
-"""
+"""Simulating time series, including oscillations and aperiodic backgrounds."""
 
 import warnings
 
@@ -10,6 +7,8 @@ import pandas as pd
 import scipy as sp
 from scipy import signal
 
+###################################################################################################
+###################################################################################################
 
 def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     """Simulate a band-pass filtered signal with brown noise.
@@ -613,20 +612,20 @@ def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
     Parameters
     ----------
     T : float
-        Length of simulated signal in seconds.
+        Length of simulated signal, in seconds
     Fs : float
-        Sampling rate in Hz.
-    theta : float, default = 1.
-        Memory scale (larger theta = faster fluctuation).
-    mu : float, default = 0.
-        Mean.
-    sigma : float, default = 5.
-        Standard deviation.
+        Sampling rate, in Hz
+    theta : float
+        Memory scale - larger theta = faster fluctuation
+    mu : float
+        Mean
+    sigma : float
+        Standard deviation
 
     Returns
     -------
-    x : array (1-D)
-        Simulated signal.
+    x : 1d array
+        Simulated signal
     """
 
     t = np.arange(0, T, 1 / Fs)
@@ -648,9 +647,9 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
     T : float
         Simulation length, in seconds
     Fs : float
-        Sampling frequency, in Hz.
+        Sampling frequency, in Hz
     freq : float
-        Frequency of simulated oscillator, in Hz.
+        Frequency of simulated oscillator, in Hz
     jitter : float
         Maximum jitter of oscillation period, in seconds
     cycle : tuple or 1d array
@@ -719,8 +718,8 @@ def make_osc_cycle(t_ker, Fs, cycle_params):
 
     Returns
     -------
-    x: 1d array_like
-        Simulated oscillation cycle.
+    1d array
+        Simulated oscillation cycle
     """
 
     if cycle_params[0] == 'gaussian':
@@ -753,7 +752,7 @@ def sim_variable_powerlaw(T, Fs, exponent):
 
     Returns
     -------
-    x : 1d array
+    1d array
         Time-series with the desired power-law exponent
     """
 
