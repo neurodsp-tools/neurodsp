@@ -1,6 +1,5 @@
 matplotlib
 numpy
-pandas
 pytest
 scipy
 scikit-learn
