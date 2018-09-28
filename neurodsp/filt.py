@@ -233,6 +233,7 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
                 # Compute transition bandwidth
                 transition_bw = cf_20db - cf_3db
 
+            print (('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. Pass/stop bandwidth is ' + str(np.round(pass_bw, 1)) + ' Hz'))
             # Raise warning if transition bandwidth is too high
             if transition_bw > pass_bw:
                 warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. This is greater than the desired pass/stop bandwidth of ' + str(np.round(pass_bw, 1)) + ' Hz')
