@@ -124,3 +124,21 @@ def test_fitpsd():
     assert np.allclose(gt_fitpsd['slope_rsc'] - slope_rsc, 0, atol=10 ** -5)
     assert np.allclose(gt_fitpsd['offset_ols'] - offset_ols, 0, atol=10 ** -5)
     assert np.allclose(gt_fitpsd['offset_rsc'] - offset_rsc, 0, atol=10 ** -5)
+
+def test_rotatepsd():
+    """
+    Confirm PSD rotation procedure.
+    """
+    rot_exp = -2
+    P = np.ones(500)
+    f_axis = np.arange(0,500.)
+    P_rot = neurodsp.spectral.rotate_powerlaw(P,f_axis,rot_exp,0)
+
+    # load test data PSDs for testing
+    P_test = np.load(os.path.dirname(neurodsp.__file__) +
+                     '/tests/data/sim_rotatepsd.npy')
+
+    slope_ols, _ = spectral.fit_slope(f_axis, P_rot, (2, 200))
+
+    assert np.allclose(P_rot - P_test, 0, atol=10 ** -5)
+    assert np.allclose(slope_ols - rot_exp, 0, atol=10 ** -5)
