@@ -10,11 +10,11 @@ from scipy import signal
 import matplotlib.pyplot as plt
 
 
-def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
+def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
            iir=False, butterworth_order=None,
            plot_frequency_response=False, return_kernel=False,
            verbose=True, compute_transition_band=True, remove_edge_artifacts=True,
-           f_lo=None, f_hi=None):
+           ):
     """
     Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal
 
@@ -29,10 +29,12 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         'bandstop' : apply a bandstop (notch) filter
         'lowpass' : apply a lowpass filter
         'highpass' : apply a highpass filter
-    fc : float, optional
+    fc : tuple or float
         cutoff frequency(ies) used for filter
-        Should be a float for lowpass and highpass
         Should be a tuple of 2 floats for bandpass and bandstop
+        Can be a tuple of 2 floats, or a single float, for low/highpass.
+        If float, it's taken as the cutoff frequency. If tuple, it's assumed
+            as (None,f_hi) for LP, and (f_lo,None) for HP.
     N_cycles : float, optional
         Length of filter in terms of number of cycles at 'f_lo' frequency
         This parameter is overwritten by 'N_seconds'
@@ -57,12 +59,6 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
     remove_edge_artifacts : bool, optional
         if True, replace the samples that are within half a kernel's length to
         the signal edge with np.nan
-    f_lo : float, optional
-        NO LONGER RECOMMENDED, use fc to control frequency cutoff
-        Low-frequency cutoff (Hz)
-    f_hi : float, optional
-        NO LONGER RECOMMENDED, use fc to control frequency cutoff
-        High-frequency cutoff (Hz)
 
     Returns
     -------
@@ -73,34 +69,35 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         returned only if 'return_kernel' == True
     """
 
-    # Check if f_lo and/or f_hi are used
-    if f_lo is not None or f_hi is not None:
-        warnings.warn('"f_lo" or "f_hi" inputs are being deprecated. Use "fc" to specify cutoff frequencies.')
-        if fc is not None:
-            raise ValueError('"f_lo" or "f_hi" inputs are being deprecated. Use only "fc" to specify cutoff frequencies.')
+    # Check, if fc is a tuple, that the second cutoff frequency is greater than the first
+    if isinstance(fc, tuple):
+        if fc[0] >= fc[1]:
+            raise ValueError('Second cutoff frequency must be greater than first.')
 
     # Check that frequency cutoff inputs are appropriate
-    if fc is not None:
-        if pass_type == 'bandpass' or pass_type == 'bandstop':
-            if isinstance(fc, float) or isinstance(fc, int):
-                raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
-            if len(fc) != 2:
-                raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
-            if fc[0] >= fc[1]:
-                raise ValueError('Second cutoff frequency must be greater than first for bandpass and bandstop filters')
+    if pass_type == 'bandpass' or pass_type == 'bandstop':
+        if isinstance(fc, float) or isinstance(fc, int):
+            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
+        if len(fc) != 2:
+            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
 
-            # Map fc to previous code for f_lo and f_hi
-            f_lo, f_hi = fc
+        # Map fc to f_lo and f_hi
+        f_lo, f_hi = fc
 
-        if pass_type == 'lowpass':
-            if not (isinstance(fc, float) or isinstance(fc, int)):
-                raise ValueError('Cutoff frequency should be float or int for lowpass filters')
-            f_lo = fc
-
-        if pass_type == 'highpass':
-            if not (isinstance(fc, float) or isinstance(fc, int)):
-                raise ValueError('Cutoff frequency should be float or int for highpass filters')
+    # for LP and HP, a tuple or int/float can be passed
+    #   if a tuple is passed, it's assumed (0,f_hi) for LP; (f_lo,Nyq) for HP
+    # i.e., highpass is a bandpass with second cutoff freq at Nyquist freq
+    if pass_type == 'lowpass':
+        if (isinstance(fc, float) or isinstance(fc, int)):
             f_hi = fc
+        elif isinstance(fc, tuple):
+            f_hi = fc[1]
+
+    if pass_type == 'highpass':
+        if (isinstance(fc, float) or isinstance(fc, int)):
+            f_lo = fc
+        elif isinstance(fc, tuple):
+            f_lo = fc[0]
 
     # Remove any NaN on the edges of 'x'
     first_nonan = np.where(~np.isnan(x))[0][0]
@@ -127,7 +124,7 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         if N_seconds is not None:
             N = int(np.ceil(Fs * N_seconds))
         else:
-            if pass_type == 'highpass':
+            if pass_type == 'lowpass':
                 N = int(np.ceil(Fs * N_cycles / f_hi))
             else:
                 N = int(np.ceil(Fs * N_cycles / f_lo))
@@ -151,9 +148,9 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         if pass_type == 'bandpass' or pass_type == 'bandstop':
             Wn = (f_lo / f_nyq, f_hi / f_nyq)
         elif pass_type == 'highpass':
-            Wn = f_hi / f_nyq
-        elif pass_type == 'lowpass':
             Wn = f_lo / f_nyq
+        elif pass_type == 'lowpass':
+            Wn = f_hi / f_nyq
         b, a = sp.signal.butter(butterworth_order, Wn, pass_type)
     else:
         if pass_type == 'bandpass':
@@ -161,9 +158,9 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
         elif pass_type == 'bandstop':
             kernel = sp.signal.firwin(N, (f_lo, f_hi), nyq=f_nyq)
         elif pass_type == 'highpass':
-            kernel = sp.signal.firwin(N, f_hi, pass_zero=False, nyq=f_nyq)
+            kernel = sp.signal.firwin(N, f_lo, pass_zero=False, nyq=f_nyq)
         elif pass_type == 'lowpass':
-            kernel = sp.signal.firwin(N, f_lo, nyq=f_nyq)
+            kernel = sp.signal.firwin(N, f_hi, nyq=f_nyq)
 
     # Apply filter
     if iir:
@@ -221,7 +218,7 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
                 transition_bw = max(transition_bw1, transition_bw2)
 
             elif pass_type == 'highpass':
-                pass_bw = f_hi
+                pass_bw = f_nyq - f_lo
                 # Identify edges of transition band (-3dB and -20dB)
                 cf_20db = next(f_db[i] for i in range(len(db)) if db[i] > -20)
                 cf_3db = next(f_db[i] for i in range(len(db)) if db[i] > -3)
@@ -229,13 +226,14 @@ def filter(x, Fs, pass_type, fc=None, N_cycles=3, N_seconds=None,
                 transition_bw = cf_3db - cf_20db
 
             elif pass_type == 'lowpass':
-                pass_bw = f_lo
+                pass_bw = f_hi
                 # Identify edges of transition band (-3dB and -20dB)
                 cf_20db = next(f_db[i] for i in range(len(db)) if db[i] < -20)
                 cf_3db = next(f_db[i] for i in range(len(db)) if db[i] < -3)
                 # Compute transition bandwidth
                 transition_bw = cf_20db - cf_3db
 
+            print (('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. Pass/stop bandwidth is ' + str(np.round(pass_bw, 1)) + ' Hz'))
             # Raise warning if transition bandwidth is too high
             if transition_bw > pass_bw:
                 warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. This is greater than the desired pass/stop bandwidth of ' + str(np.round(pass_bw, 1)) + ' Hz')

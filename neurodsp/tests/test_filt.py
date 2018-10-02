@@ -80,6 +80,12 @@ def test_frequency_input_errors():
     with pytest.raises(ValueError):
         x_filt = neurodsp.filter(x, 1000, 'bandstop', fc=(62, 58))
 
+    # Check that a float or partially filled tuple for fc is passable
+    x_filt = neurodsp.filter(x, 1000, 'lowpass', fc=58)
+    x_filt = neurodsp.filter(x, 1000, 'lowpass', fc=(0,58))
+    x_filt = neurodsp.filter(x, 1000, 'highpass', fc=58)
+    x_filt = neurodsp.filter(x, 1000, 'highpass', fc=(58,1000))
+
     # Check that frequencies cannot be inverted
     with pytest.raises(ValueError):
         x_filt = neurodsp.filter(x, 1000, 'lowpass', fc=(100, 10))

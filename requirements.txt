@@ -1,6 +1,9 @@
 matplotlib
 numpy
+<<<<<<< HEAD
 pandas
+=======
+>>>>>>> voytekresearch/master
 pytest
 scipy
 scikit-learn

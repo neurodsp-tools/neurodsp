@@ -1,12 +1,55 @@
-"""
-test_sim.py
-Test simulation of noisy oscillators
-"""
+"""Test simulation functions."""
 
 import numpy as np
 import os
 import neurodsp
 
+###################################################################################################
+###################################################################################################
+
+def test_sim_filtered_brown_noise():
+    pass
+
+def test_sim_brown_noise():
+    pass
+
+def test_sim_oscillatory():
+    pass
+
+def test_sim_noisy_oscillatory():
+    pass
+
+def test_sim_bursty_oscillatory():
+    pass
+
+def test_sim_noisy_bursty_oscillator():
+    pass
+
+def test_sim_poisson_pop():
+    pass
+
+def test_sim_make_synaptic_kernel():
+    pass
+
+def test_sim_synaptic_noise():
+    pass
+
+def test_sim_ou_process():
+    pass
+
+def test_sim_jittered_oscillator():
+    pass
+
+def test_make_osc_cycle():
+    pass
+
+def test_make_variable_powerlaw():
+    pass
+
+def test_rotate_powerlar():
+    pass
+
+## OLD:
 
 def test_sim_consistent():
     """
@@ -53,6 +96,11 @@ def test_sim_consistent():
 
     OU_noise = sim.sim_OU_process(2, 1000, 1., 0., 5.)
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_OU_process.npy', OU_noise)
+
+    np.random.seed(0)
+    powerlaw_sig = sim.sim_variable_powerlaw(60,1000,-2.25)
+    np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_variable_powerlaw.npy', powerlaw_sig)
+
     """
 
     # Simulate noise and oscillation
@@ -71,6 +119,9 @@ def test_sim_consistent():
     jittered_osc = neurodsp.sim.sim_jittered_oscillator(
         2, 1000, 20, 0.00, ('gaussian', 0.01))
     OU_noise = neurodsp.sim.sim_OU_process(2, 1000, 1., 0., 5.)
+
+    np.random.seed(0)
+    powerlaw_sig = neurodsp.sim.sim_variable_powerlaw(60, 1000, -2.25)
 
     # Load noise and oscillation
     brown_true = np.load(os.path.dirname(
@@ -91,6 +142,8 @@ def test_sim_consistent():
         neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy')
     OU_noise_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_OU_process.npy')
+    powerlaw_true = np.load(os.path.dirname(
+        neurodsp.__file__) + '/tests/data/sim_variable_powerlaw.npy')
 
     # Test consistency between all signals
     assert np.allclose(np.sum(np.abs(brown - brown_true)), 0, atol=10 ** -5)
@@ -109,3 +162,5 @@ def test_sim_consistent():
         np.sum(np.abs(jittered_osc - jittered_osc_true)), 0, atol=10 ** -5)
     assert np.allclose(
         np.sum(np.abs(OU_noise - OU_noise_true)), 0, atol=10 ** -5)
+    assert np.allclose(
+        np.sum(np.abs(powerlaw_sig - powerlaw_true)), 0, atol=10 ** -5)
