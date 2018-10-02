@@ -168,7 +168,7 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
     # Compute average spectrum, and fit slope to it
     avg_spectrum = np.mean(mwt_power, axis=1)
-    slope, offset = spectral.fit_slope(f0s, avg_spectrum, f_range_slope,
+    slope, offset = _fit_slope(f0s, avg_spectrum, f_range_slope,
                                        fit_excl=f_slope_excl, plot_fit=plot_slope_fit)
 
     # Compute background power at frequency of interest, and the power
@@ -306,3 +306,63 @@ def _rmv_short_periods(x, N):
     for osc in range(len(osc_starts_long)):
         is_osc[osc_starts_long[osc]:osc_ends_long[osc]] = 1
     return is_osc
+
+
+def _fit_slope(freq, psd, fit_frange, fit_excl=None, plot_fit=False):
+    """
+    Fit PSD with straight line in log-log domain over the specified frequency range.
+
+    Parameters
+    ----------
+    freq : array_like, 1d
+        Frequency axis of PSD
+    psd : array_like, 1d
+        PSD to be fit over
+    fit_frange : tuple, (start, end), Hz
+        Frequency range to be fit over, in Hz, inclusive on both ends.
+    fit_excl : list of tuples, [(start, end), (start, end), ...], Hz, optional
+        Frequency ranges to be excluded from fit. Each element in list describes
+        the start and end of an exclusion zone.
+    plot_fit : bool, optional
+        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion freqs),
+        as well as the fitted line itself. Defaults to False.
+
+    Returns
+    -------
+    slope : float
+        Slope of loglog fitted line, m in y = mx+b
+    offset : float
+        Offset of loglog fitted line, b in y = mx+b
+    """
+
+    # make a mask for included and excluded frequency regions
+    fmask = np.zeros_like(freq)
+    # get freq indices within the fit frequencies
+    fmask[np.logical_and(freq >= fit_frange[0], freq <= fit_frange[1])] = 1
+    # discard freq indices within the exclusion frequencies
+    if fit_excl is not None:
+        # if a tuple is given, convert it to a list
+        if isinstance(fit_excl, tuple):
+            fit_excl = [fit_excl]
+
+        for exc_frange in fit_excl:
+            fmask[np.logical_and(freq >= exc_frange[0],
+                                 freq <= exc_frange[1])] = 0
+
+    # grab the psd and freqs to be fit over
+    logf = np.log10(freq[fmask == 1])
+    logpsd = np.log10(psd[fmask == 1])
+
+    # fit line
+    slope, offset = np.polyfit(logf, logpsd, deg=1)
+
+    if plot_fit:
+        plt.figure(figsize=(5, 5))
+        plt.plot(np.log10(freq), np.log10(psd), label='Whole PSD')
+        plt.plot(logf, logpsd, '-o', label='Fitted PSD', alpha=0.4)
+        plt.plot(logf, logf * slope + offset, '-k', label='Fit Line', lw=3)
+        plt.legend()
+        plt.xlabel('Log10 Frequency (Hz)', fontsize=15)
+        plt.ylabel('Log10 Power (V^2/Hz)', fontsize=15)
+
+    return slope, offset

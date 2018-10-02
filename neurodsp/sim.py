@@ -8,7 +8,7 @@ import scipy as sp
 import pandas as pd
 from scipy import signal
 import warnings
-
+from neurodsp import spectral
 
 def sim_filtered_brown_noise(T, Fs, f_range, N):
     """Simulate a band-pass filtered signal with brown noise
@@ -739,44 +739,11 @@ def sim_variable_powerlaw(T, Fs, exponent):
     """
     sig_len = int(T * Fs)
     x = np.random.randn(sig_len)
-    x_rotated = _rotate_powerlaw(x, Fs, delta_f=exponent, f_rotation=0)
-    return sp.stats.zscore(x_rotated)
 
+    # compute FFT
+    FC = np.fft.fft(x)
+    f_axis = np.fft.fftfreq(len(x), 1. / Fs)
 
-def _rotate_powerlaw(data, Fs, delta_f, f_rotation=30):
-    """Takes a time series and changes its power law exponent via rotation in
-    the spectral domain.
-
-    Parameters
-    ----------
-    data : array, 1-D
-        Time-series to be rotated.
-    Fs : float, Hz
-        Sampling rate.
-    delta_f : float
-        Change in power law exponent to be applied. Positive is counterclockwise
-        rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, Hz
-        Axis of rotation frequency, such that power at that frequency is unchanged
-        by the rotation. Only matters if not further normalizing signal variance.
-
-    Returns
-    -------
-    x : array, 1-D
-        Power-law rotated time-series.
-
-    """
-
-    # compute FFT and frequency axis
-    FC = np.fft.fft(data)
-    f_axis = np.fft.fftfreq(len(data), 1. / Fs)
-
-    # make the 1/f mask
-    f_mask = np.zeros_like(f_axis)
-    f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f / 2))
-    f_mask[0] = 1.
-
-    # normalize power at rotation frequency
-    f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
-
-    return np.real(np.fft.ifft(FC * f_mask))
+    # rotate spectrum and invert, zscore to normalize
+    FC_rot = spectral.rotate_powerlaw(FC, f_axis, exponent/2., f_rotation=0)
+    return sp.stats.zscore(np.real(np.fft.ifft(FC_rot)))
