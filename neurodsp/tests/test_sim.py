@@ -1,12 +1,55 @@
-"""
-test_sim.py
-Test simulation of noisy oscillators
-"""
+"""Test simulation functions."""
 
 import numpy as np
 import os
 import neurodsp
 
+###################################################################################################
+###################################################################################################
+
+def test_sim_filtered_brown_noise():
+    pass
+
+def test_sim_brown_noise():
+    pass
+
+def test_sim_oscillatory():
+    pass
+
+def test_sim_noisy_oscillatory():
+    pass
+
+def test_sim_bursty_oscillatory():
+    pass
+
+def test_sim_noisy_bursty_oscillator():
+    pass
+
+def test_sim_poisson_pop():
+    pass
+
+def test_sim_make_synaptic_kernel():
+    pass
+
+def test_sim_synaptic_noise():
+    pass
+
+def test_sim_ou_process():
+    pass
+
+def test_sim_jittered_oscillator():
+    pass
+
+def test_make_osc_cycle():
+    pass
+
+def test_make_variable_powerlaw():
+    pass
+
+def test_rotate_powerlar():
+    pass
+
+## OLD:
 
 def test_sim_consistent():
     """
