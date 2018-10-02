@@ -6,9 +6,8 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from scipy import signal
-
-###################################################################################################
-###################################################################################################
+import warnings
+from neurodsp import spectral
 
 def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     """Simulate a band-pass filtered signal with brown noise.
@@ -755,47 +754,13 @@ def sim_variable_powerlaw(T, Fs, exponent):
     1d array
         Time-series with the desired power-law exponent
     """
+    sig_len = int(T * Fs)
+    x = np.random.randn(sig_len)
 
-    n_samples = int(T * Fs)
-    x = np.random.randn(n_samples)
-    x_rotated = _rotate_powerlaw(x, Fs, delta_f=exponent, f_rotation=0)
+    # compute FFT
+    FC = np.fft.fft(x)
+    f_axis = np.fft.fftfreq(len(x), 1. / Fs)
 
-    return sp.stats.zscore(x_rotated)
-
-
-def _rotate_powerlaw(data, Fs, delta_f, f_rotation=30):
-    """Takes a time series and changes its power law exponent via rotation in the spectral domain.
-
-    Parameters
-    ----------
-    data : 1d array
-        Time-series to be rotated
-    Fs : float
-        Sampling rate, in Hz
-    delta_f : float
-        Change in power law exponent to be applied.
-            Positive numbers are counterclockwise rotations(flatten).
-            Negative numbers are clockwise rotations (steepen).
-    f_rotation : float
-        Axis of rotation frequency, in Hz, such that power at that frequency is unchanged
-        by the rotation. Only matters if not further normalizing signal variance.
-
-    Returns
-    -------
-    1d array
-        Power-law rotated time-series
-    """
-
-    # Compute FFT and frequency axis
-    fft_dat = np.fft.fft(data)
-    f_axis = np.fft.fftfreq(len(data), 1. / Fs)
-
-    # Make the 1/f mask
-    f_mask = np.zeros_like(f_axis)
-    f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f / 2))
-    f_mask[0] = 1.
-
-    # Normalize power at rotation frequency
-    f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
-
-    return np.real(np.fft.ifft(fft_dat * f_mask))
+    # rotate spectrum and invert, zscore to normalize
+    FC_rot = spectral.rotate_powerlaw(FC, f_axis, exponent/2., f_rotation=0)
+    return sp.stats.zscore(np.real(np.fft.ifft(FC_rot)))

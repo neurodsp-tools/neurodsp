@@ -20,18 +20,13 @@ The primary purpose of this library is to serve as the shared codebase for the V
 but we welcome anyone's use and contributions.
 
 Neurodsp contains several modules:
-- filt : Filter data with bandpass, highpass, lowpass, or notch filters
-- spectral : Compute spectral domain features (PSD and 1/f slope, etc)
-- timefrequency : Estimate instantaneous measures of oscillatory activity
-- shape : Measure the waveform shape of neural oscillations
-    - cyclefeatures : Compute features of an oscillation on a cycle-by-cycle basis
-    - cyclepoints : Identify the extrema and zerocrossings for each cycle
-    - phase : Estimate instantaneous phase by interpolating between extrema and zerocrossings
-    - swm : Identify recurrent patterns in a signal using sliding window matching
 - burst : Detect bursting oscillators in neural signals
-- sim : Simulate bursting or stationary oscillators with brown noise
-- pac : Estimate phase-amplitude coupling between two frequency bands
+- filt : Filter data with bandpass, highpass, lowpass, or notch filters
 - laggedcoherence : Estimate rhythmicity using the lagged coherence measure
+- sim : Simulate bursting or stationary oscillators with brown noise
+- spectral : Compute spectral domain features (PSD and 1/f slope, etc)
+- swm : Identify recurrent patterns in a signal using sliding window matching
+- timefrequency : Estimate instantaneous measures of oscillatory activity
 """
 
 setup(

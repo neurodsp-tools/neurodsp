@@ -6,7 +6,7 @@ Test the sliding window matching function
 import numpy as np
 import os
 import neurodsp
-from neurodsp import shape
+from neurodsp import sliding_window_matching
 from neurodsp.tests import _load_example_data
 
 
@@ -27,7 +27,7 @@ def test_swm_consistent():
     L = .055
     G = .2
     np.random.seed(1)
-    avg_window, _, _ = shape.sliding_window_matching(x, Fs, L, G, max_iterations=500)
+    avg_window, _, _ = sliding_window_matching(x, Fs, L, G, max_iterations=500)
 
     # Compute difference between current and past signals
     signal_diff = avg_window - avg_window_true

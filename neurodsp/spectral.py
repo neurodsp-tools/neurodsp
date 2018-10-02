@@ -354,82 +354,6 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
         plt.plot(psd_freq[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])], np.log10(
             psd[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])]), color='w', alpha=0.8)
 
-
-def fit_slope(freq, psd, fit_frange, fit_excl=None, method='ols', plot_fit=False):
-    """
-    Fit PSD with straight line in log-log domain over the specified frequency range.
-
-    Parameters
-    ----------
-    freq : array_like, 1d
-        Frequency axis of PSD
-    psd : array_like, 1d
-        PSD to be fit over
-    fit_frange : tuple, (start, end), Hz
-        Frequency range to be fit over, in Hz, inclusive on both ends.
-    fit_excl : list of tuples, [(start, end), (start, end), ...], Hz, optional
-        Frequency ranges to be excluded from fit. Each element in list describes
-        the start and end of an exclusion zone.
-    method : str, {'ols', 'RANSAC'}, optional
-        Line fitting method. Defaults to 'ols'
-        'ols' is ordinary least squares fit with polyfit.
-        'RANSAC' is iterative robust fit discarding outliers.
-    plot_fit : bool, optional
-        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion freqs),
-        as well as the fitted line itself. Defaults to False.
-
-    Returns
-    -------
-    slope : float
-        Slope of loglog fitted line, m in y = mx+b
-    offset : float
-        Offset of loglog fitted line, b in y = mx+b
-    """
-
-    # make a mask for included and excluded frequency regions
-    fmask = np.zeros_like(freq)
-    # get freq indices within the fit frequencies
-    fmask[np.logical_and(freq >= fit_frange[0], freq <= fit_frange[1])] = 1
-    # discard freq indices within the exclusion frequencies
-    if fit_excl is not None:
-        # if a tuple is given, convert it to a list
-        if isinstance(fit_excl, tuple):
-            fit_excl = [fit_excl]
-
-        for exc_frange in fit_excl:
-            fmask[np.logical_and(freq >= exc_frange[0],
-                                 freq <= exc_frange[1])] = 0
-
-    # grab the psd and freqs to be fit over
-    logf = np.log10(freq[fmask == 1])
-    logpsd = np.log10(psd[fmask == 1])
-
-    # fit line
-    if method is 'ols':
-        # solve regular least square
-        slope, offset = np.polyfit(logf, logpsd, deg=1)
-
-    elif method is 'RANSAC':
-        lm = linear_model.RANSACRegressor(random_state=42)
-        lm.fit(logf.reshape(-1, 1), logpsd.reshape(-1, 1))
-        offset = lm.predict(0.)[0][0]
-        slope = lm.estimator_.coef_[0][0]
-
-    else:
-        raise ValueError('Unknown PSD fitting method: %s' % method)
-
-    if plot_fit:
-        plt.figure(figsize=(5, 5))
-        plt.plot(np.log10(freq), np.log10(psd), label='Whole PSD')
-        plt.plot(logf, logpsd, '-o', label='Fitted PSD', alpha=0.4)
-        plt.plot(logf, logf * slope + offset, '-k', label='Fit Line', lw=3)
-        plt.legend()
-        plt.xlabel('Log10 Frequency (Hz)', fontsize=15)
-        plt.ylabel('Log10 Power (V^2/Hz)', fontsize=15)
-
-    return slope, offset
-
-
 def morlet_transform(x, f0s, Fs, w=7, s=.5):
     """
     Calculate the time-frequency representation of the signal 'x' over the
@@ -513,3 +437,38 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     mwt_imag = np.convolve(x, np.imag(morlet_f), mode='same')
 
     return mwt_real + 1j * mwt_imag
+
+
+def rotate_powerlaw(spectrum, f_axis, delta_f, f_rotation=30):
+    """Takes a PSD and changes its power law exponent about a given axis (frequency).
+
+    Parameters
+    ----------
+    spectrum : array, 1-D
+        Power spectrum to be rotated.
+    f_axis : array, 1-D, Hz
+        Frequency axis of input spectrum. Must be same dimension as spectrum.
+    delta_f : float
+        Change in power law exponent to be applied. Positive is counterclockwise
+        rotation (flatten), negative is clockwise rotation (steepen).
+    f_rotation : float, Hz
+        Axis of rotation frequency, such that power at that frequency is unchanged
+        by the rotation. Only matters if not further normalizing signal variance.
+
+    Returns
+    -------
+    x : array, 1-D
+        Rotated spectrum.
+
+    """
+
+    # make the 1/f rotation mask
+    f_mask = np.zeros_like(f_axis)
+    f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
+    f_mask[0] = 1.
+
+    # normalize power at rotation frequency
+    f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
+
+    # apply mask
+    return spectrum * f_mask
