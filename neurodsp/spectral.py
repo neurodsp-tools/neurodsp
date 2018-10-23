@@ -466,36 +466,78 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(spectrum, f_axis, delta_f, f_rotation=30):
-    """Takes a PSD and changes its power law exponent about a given axis (frequency).
+def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=30):
+    """Change the power law exponent of a PSD about an axis frequency.
 
     Parameters
     ----------
-    spectrum : array, 1-D
+    psd : 1d array
         Power spectrum to be rotated.
-    f_axis : array, 1-D, Hz
-        Frequency axis of input spectrum. Must be same dimension as spectrum.
+    freqs : 1d array, Hz
+        Frequency axis of input PSD. Must be same length as psd.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
         rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, Hz
+    f_rotation : float, Hz, optional
         Axis of rotation frequency, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
 
     Returns
     -------
-    x : array, 1-D
-        Rotated spectrum.
+    x : 1d array
+        Rotated psd.
 
     """
+    if np.all(f_rotation<np.abs(f_axis).min()) or np.all(f_rotation>np.abs(f_axis).max()):
+        raise ValueError('Rotation frequency not within frequency range.')
 
     # make the 1/f rotation mask
     f_mask = np.zeros_like(f_axis)
-    f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
-    f_mask[0] = 1.
+    if f_axis[0] == 0.:
+        # If starting freq is 0Hz, default power at 0Hz to old value because log
+        # will return inf. Use case occurs in simulating/manipulating time series.
+        f_mask[0] = 1.
+        f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
+    else:
+        # Otherwise, apply rotation to all frequencies.
+        f_mask = 10**(np.log10(np.abs(f_axis)) * (delta_f))
 
     # normalize power at rotation frequency
     f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     # apply mask
-    return spectrum * f_mask
+    return psd * f_mask
+
+# def rotate_powerlaw(spectrum, f_axis, delta_f, f_rotation=30):
+#     """Takes a PSD and changes its power law exponent about a given axis (frequency).
+#
+#     Parameters
+#     ----------
+#     spectrum : array, 1-D
+#         Power spectrum to be rotated.
+#     f_axis : array, 1-D, Hz
+#         Frequency axis of input spectrum. Must be same dimension as spectrum.
+#     delta_f : float
+#         Change in power law exponent to be applied. Positive is counterclockwise
+#         rotation (flatten), negative is clockwise rotation (steepen).
+#     f_rotation : float, Hz
+#         Axis of rotation frequency, such that power at that frequency is unchanged
+#         by the rotation. Only matters if not further normalizing signal variance.
+#
+#     Returns
+#     -------
+#     x : array, 1-D
+#         Rotated spectrum.
+#
+#     """
+#
+#     # make the 1/f rotation mask
+#     f_mask = np.zeros_like(f_axis)
+#     f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
+#     f_mask[0] = 1.
+#
+#     # normalize power at rotation frequency
+#     f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
+#
+#     # apply mask
+#     return spectrum * f_mask
