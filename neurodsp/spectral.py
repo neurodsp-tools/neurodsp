@@ -502,10 +502,10 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=None):
 
     if f_rotation is not None:
         # normalize power at rotation frequency
-        f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
-
         if np.all(f_rotation<np.abs(f_axis).min()) or np.all(f_rotation>np.abs(f_axis).max()):
             raise ValueError('Rotation frequency not within frequency range.')
+
+        f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     # apply mask
     return psd * f_mask
