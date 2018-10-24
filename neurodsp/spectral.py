@@ -466,7 +466,7 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=30):
+def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=None):
     """Change the power law exponent of a PSD about an axis frequency.
 
     Parameters
@@ -481,6 +481,7 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=30):
     f_rotation : float, Hz, optional
         Axis of rotation frequency, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
+        If None, the transform normalizes to power at 1Hz by defaults.
 
     Returns
     -------
@@ -488,9 +489,6 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=30):
         Rotated psd.
 
     """
-    if np.all(f_rotation<np.abs(f_axis).min()) or np.all(f_rotation>np.abs(f_axis).max()):
-        raise ValueError('Rotation frequency not within frequency range.')
-
     # make the 1/f rotation mask
     f_mask = np.zeros_like(f_axis)
     if f_axis[0] == 0.:
@@ -502,8 +500,12 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=30):
         # Otherwise, apply rotation to all frequencies.
         f_mask = 10**(np.log10(np.abs(f_axis)) * (delta_f))
 
-    # normalize power at rotation frequency
-    f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
+    if f_rotation is not None:
+        # normalize power at rotation frequency
+        f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
+
+        if np.all(f_rotation<np.abs(f_axis).min()) or np.all(f_rotation>np.abs(f_axis).max()):
+            raise ValueError('Rotation frequency not within frequency range.')
 
     # apply mask
     return psd * f_mask
