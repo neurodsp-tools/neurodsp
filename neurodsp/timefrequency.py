@@ -92,7 +92,9 @@ def amp_by_time(x, Fs, f_range,
     return amp
 
 
-def freq_by_time(x, Fs, f_range):
+def freq_by_time(x, Fs, f_range,
+                 filter_fn=None, filter_kwargs=None,
+                 hilbert_increase_N=False):
     '''
     Estimate the instantaneous frequency at each sample
 
@@ -104,6 +106,14 @@ def freq_by_time(x, Fs, f_range):
         sampling rate
     f_range : (low, high), Hz
         frequency range for filtering
+    filter_fn : function, optional
+        The filtering function, `filterfn(x, f_range, filter_kwargs)`
+        Must have the same API as filt.bandpass
+    filter_kwargs : dict, optional
+        Keyword parameters to pass to `filterfn(.)`
+    hilbert_increase_N : bool, optional
+        if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
+        This is because scipy.signal.hilbert can be very slow for some lengths of x
 
     Returns
     -------
@@ -115,7 +125,9 @@ def freq_by_time(x, Fs, f_range):
     * This function assumes monotonic phase, so
     a phase slip will be processed as a very high frequency
     '''
-    pha = phase_by_time(x, Fs, f_range)
+    pha = phase_by_time(x, Fs, f_range, filter_fn=filter_fn,
+                        filter_kwargs=filter_kwargs,
+                        hilbert_increase_N=hilbert_increase_N)
     phadiff = np.diff(pha)
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
     i_f = Fs * phadiff / (2 * np.pi)
