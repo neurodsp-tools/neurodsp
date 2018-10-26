@@ -466,15 +466,15 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=None):
+def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
     """Change the power law exponent of a PSD about an axis frequency.
 
     Parameters
     ----------
+    f_axis : 1d array, Hz
+        Frequency axis of input PSD. Must be same length as psd.
     psd : 1d array
         Power spectrum to be rotated.
-    freqs : 1d array, Hz
-        Frequency axis of input PSD. Must be same length as psd.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
         rotation (flatten), negative is clockwise rotation (steepen).
@@ -485,7 +485,7 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=None):
 
     Returns
     -------
-    x : 1d array
+    1d array
         Rotated psd.
 
     """
@@ -508,4 +508,4 @@ def rotate_powerlaw(psd, f_axis, delta_f, f_rotation=None):
         f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     # apply mask
-    return psd * f_mask
+    return f_mask * psd
