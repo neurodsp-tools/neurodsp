@@ -762,5 +762,5 @@ def sim_variable_powerlaw(T, Fs, exponent):
     f_axis = np.fft.fftfreq(len(x), 1. / Fs)
 
     # rotate spectrum and invert, zscore to normalize
-    FC_rot = spectral.rotate_powerlaw(FC, f_axis, exponent/2., f_rotation=0)
+    FC_rot = spectral.rotate_powerlaw(f_axis, FC, exponent/2., f_rotation=None)
     return sp.stats.zscore(np.real(np.fft.ifft(FC_rot)))
