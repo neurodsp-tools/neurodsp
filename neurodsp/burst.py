@@ -1,13 +1,12 @@
-"""
-burst.py
-Analyze periods of oscillatory bursting in a neural signal
-"""
+"""Analyze periods of oscillatory bursting in a neural signal."""
+
+import numpy as np
+from scipy import stats
 
 from neurodsp import amp_by_time, filt, spectral
-import numpy as np
-import warnings
-from scipy import stats, signal
 
+###################################################################################################
+###################################################################################################
 
 def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                   dual_thresh=None,
@@ -15,8 +14,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                   magnitude_type='amplitude',
                   return_amplitude=False,
                   filter_fn=None, filter_kwargs=None):
-    """
-    Detect periods of oscillatory bursting in a neural signal
+    """Detect periods of oscillatory bursting in a neural signal.
 
     Parameters
     ----------
@@ -50,6 +48,14 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
     filter_kwargs : dict
         NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         keyword arguments to the filter_fn
+
+    Returns
+    -------
+    isosc_noshort : ?
+        xx
+    x_magnitude : ?
+        xx
+            Only returned if requested.
     """
 
     if algorithm in ['deviation', 'fixed_thresh']:
@@ -111,9 +117,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
 
 def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
                        percentile_thresh=None, plot_slope_fit=None):
-    """
-    Detect bursts of oscillations using the Better OSCillation detection algorithm
-    described in Whitten et al., 2011, NeuroImage.
+    """Detect bursts of oscillations using the Better OSCillation detection algorithm.
 
     Briefly, we estimate the background 1/f process of the signal, and use this to
     determine a power threshold at our frequency of interest.
@@ -126,11 +130,10 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
     Parameters
     ----------
-    x : array-like 1d
-        voltage time series
+    x : 1d array-like
+        Voltage time series
     Fs : float
-        The sampling rate
-        The sampling rate is also used for the window size to assure that the frequency spacing is 1Hz
+        The sampling rate. Also used for the window size to get frequency spacing of 1Hz
     f_oi : int
         frequency of the oscillation of interest (Hz)
     f_range_slope : (low, high), Hz
@@ -145,9 +148,13 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
     Returns
     -------
-    isosc : array-like 1d
+    isosc : 1d array-like
         binary time series. 1 = in oscillation; 0 = not in oscillation
         if return_oscbounds is true: this is 2 lists with the start and end burst samples
+
+    Reference
+    ---------
+    Implements algorithm as described in Whitten et al., 2011, NeuroImage.
     """
 
     # Set default threshold of chi2 distribution
@@ -164,12 +171,13 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
     mwt_power = np.abs(mwt**2)
 
     if sum(f_oi == f0s) != 1:
-        raise ValueError('The frequency of interest, f_oi, must be within the frequency range used to fit the slope')
+        raise ValueError("The frequency of interest, f_oi, must be within\
+                          the frequency range used to fit the slope")
 
     # Compute average spectrum, and fit slope to it
     avg_spectrum = np.mean(mwt_power, axis=1)
     slope, offset = _fit_slope(f0s, avg_spectrum, f_range_slope,
-                                       fit_excl=f_slope_excl, plot_fit=plot_slope_fit)
+                               fit_excl=f_slope_excl, plot_fit=plot_slope_fit)
 
     # Compute background power at frequency of interest, and the power
     # threshold
@@ -188,8 +196,7 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
 
 def get_stats(bursting, Fs):
-    """
-    Get statistics of bursts.
+    """Get statistics of bursts.
 
     Parameters
     ----------
@@ -228,6 +235,7 @@ def get_stats(bursting, Fs):
                 'duration_std': np.std(durations),
                 'percent_burst': np.sum(bursting) / len(bursting),
                 'rate': len(starts) / tot_time}
+
     return ret_dict
 
 
@@ -309,8 +317,7 @@ def _rmv_short_periods(x, N):
 
 
 def _fit_slope(freq, psd, fit_frange, fit_excl=None, plot_fit=False):
-    """
-    Fit PSD with straight line in log-log domain over the specified frequency range.
+    """Fit PSD with straight line in log-log domain over the specified frequency range.
 
     Parameters
     ----------

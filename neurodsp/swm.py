@@ -1,16 +1,12 @@
-"""
-swm.py
-Identify the waveform shape of neural oscillations using the sliding window matching algorithm
-"""
+"""Identify the waveform shape of neural oscillations using the sliding window matching algorithm."""
 
 import numpy as np
 
+###################################################################################################
+###################################################################################################
 
-def sliding_window_matching(x, Fs, L, G,
-                            max_iterations=500, T=1, window_starts_custom=None):
-    """
-    Find recurring patterns in a time series using the
-    sliding window matching algorithm
+def sliding_window_matching(x, Fs, L, G, max_iterations=500, T=1, window_starts_custom=None):
+    """Find recurring patterns in a time series using the sliding window matching algorithm.
 
     Parameters
     ----------
@@ -116,8 +112,7 @@ def sliding_window_matching(x, Fs, L, G,
 
 
 def _compute_J(x, window_starts, L_samp):
-    """Compute the cost, which is proportional to the
-    difference between pairs of windows"""
+    """Compute the cost, which is proportional to the difference between pairs of windows"""
 
     # Get all windows and zscore them
     N_windows = len(window_starts)
