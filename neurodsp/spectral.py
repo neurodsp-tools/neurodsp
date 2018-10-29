@@ -9,14 +9,14 @@ import matplotlib.pylab as plt
 from sklearn import linear_model
 
 
-def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtlen=1.):
+def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtlen=1., flim=None, spg_outlierpct=0.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
     Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
 
     Parameters
     -----------
-    x : array_like 1d
+    x : array_like 1d or 2d
         Time series of measurement values.
     Fs : float, Hz
         Sampling frequency of the x time series.
@@ -38,6 +38,11 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
         Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
     filten : float, Hz, optional
         (For medfilt method) Length of median filter in Hz.
+    flim : float, Hz, optional
+        Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.
+    spg_outlierpct : float, (between 0 to 100)
+        Percentage of spectrogram windows with the highest powers to discard prior to averaging.
+        Useful for quickly eliminating potential outliers to compute PSD.
 
     Returns
     -------
@@ -68,7 +73,25 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
             noverlap = int(noverlap)
 
         # call signal.spectrogram function in scipy to compute STFT
-        freq, _, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+        freq, t_axis, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
+
+        # pad data to 2D
+        if len(x.shape)==1:
+            x = x[None,:]
+
+        numchan=x.shape[0]
+        # throw out outliers if indicated
+        if spg_outlierpct>0.:
+            n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlierpct))
+            n_keep = int(len(t_axis)-n_discard)
+            spg_ = np.zeros((numchan,len(freq),n_keep))
+            outlier_inds = np.zeros((numchan,n_discard))
+            for chan in range(numchan):
+                # discard time windows with high total log powers, round up so it doesn't get a zero
+                outlier_inds[chan,:] = np.argsort(np.mean(np.log10(spg[chan,:,:]), axis=0))[-n_discard:]
+                spg_[chan,:,:] = np.delete(spg[chan], outlier_inds[chan,:], axis=-1)
+            spg = spg_
+
         if method is 'mean':
             Pxx = np.mean(spg, axis=-1)
         elif method is 'median':
@@ -87,7 +110,11 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
     else:
         raise ValueError('Unknown PSD method: %s' % method)
 
-    return freq, Pxx
+    if flim is not None:
+        flim_ind = np.where(freq>flim)[0][0]
+        return freq[:flim_ind], Pxx[...,:flim_ind]
+    else:
+        return freq, Pxx
 
 
 def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
@@ -439,36 +466,46 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(spectrum, f_axis, delta_f, f_rotation=30):
-    """Takes a PSD and changes its power law exponent about a given axis (frequency).
+def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
+    """Change the power law exponent of a PSD about an axis frequency.
 
     Parameters
     ----------
-    spectrum : array, 1-D
+    f_axis : 1d array, Hz
+        Frequency axis of input PSD. Must be same length as psd.
+    psd : 1d array
         Power spectrum to be rotated.
-    f_axis : array, 1-D, Hz
-        Frequency axis of input spectrum. Must be same dimension as spectrum.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
         rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, Hz
+    f_rotation : float, Hz, optional
         Axis of rotation frequency, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
+        If None, the transform normalizes to power at 1Hz by defaults.
 
     Returns
     -------
-    x : array, 1-D
-        Rotated spectrum.
+    1d array
+        Rotated psd.
 
     """
-
     # make the 1/f rotation mask
     f_mask = np.zeros_like(f_axis)
-    f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
-    f_mask[0] = 1.
+    if f_axis[0] == 0.:
+        # If starting freq is 0Hz, default power at 0Hz to old value because log
+        # will return inf. Use case occurs in simulating/manipulating time series.
+        f_mask[0] = 1.
+        f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
+    else:
+        # Otherwise, apply rotation to all frequencies.
+        f_mask = 10**(np.log10(np.abs(f_axis)) * (delta_f))
 
-    # normalize power at rotation frequency
-    f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
+    if f_rotation is not None:
+        # normalize power at rotation frequency
+        if f_rotation<np.abs(f_axis).min() or f_rotation>np.abs(f_axis).max():
+            raise ValueError('Rotation frequency not within frequency range.')
+
+        f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     # apply mask
-    return spectrum * f_mask
+    return f_mask * psd
