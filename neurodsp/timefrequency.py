@@ -4,7 +4,6 @@ Tools for estimating properties of a neural oscillation over time
 """
 
 import numpy as np
-import scipy as sp
 from scipy import signal
 import math
 import neurodsp
@@ -12,7 +11,8 @@ import neurodsp
 
 def phase_by_time(x, Fs, f_range,
                   filter_fn=None, filter_kwargs=None,
-                  hilbert_increase_N=False):
+                  hilbert_increase_N=False,
+                  remove_edge_artifacts=True):
     """
     Calculate the phase time series of a neural oscillation
 
@@ -32,6 +32,9 @@ def phase_by_time(x, Fs, f_range,
     hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
+    remove_edge_artifacts : bool, optional
+        if True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan
 
     Returns
     -------
@@ -44,16 +47,23 @@ def phase_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range,
-                       remove_edge_artifacts=False, **filter_kwargs)
+    x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
+                               remove_edge_artifacts=False, 
+                               return_kernel=True, **filter_kwargs)
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
+    # Remove edge artifacts
+    if remove_edge_artifacts:
+        N_rmv = int(np.ceil(len(kernel) / 2))
+        pha[:N_rmv] = np.nan
+        pha[-N_rmv:] = np.nan
     return pha
 
 
 def amp_by_time(x, Fs, f_range,
                 filter_fn=None, filter_kwargs=None,
-                hilbert_increase_N=False):
+                hilbert_increase_N=False,
+                remove_edge_artifacts=True):
     """
     Calculate the amplitude time series
 
@@ -73,6 +83,9 @@ def amp_by_time(x, Fs, f_range,
     hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
+    remove_edge_artifacts : bool, optional
+        if True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan
 
     Returns
     -------
@@ -85,16 +98,23 @@ def amp_by_time(x, Fs, f_range,
     if filter_kwargs is None:
         filter_kwargs = {}
     # Filter signal
-    x_filt = filter_fn(x, Fs, 'bandpass', fc=f_range,
-                       remove_edge_artifacts=False, **filter_kwargs)
+    x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
+                               remove_edge_artifacts=False, 
+                               return_kernel=True, **filter_kwargs)
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
+    # Remove edge artifacts
+    if remove_edge_artifacts:
+        N_rmv = int(np.ceil(len(kernel) / 2))
+        amp[:N_rmv] = np.nan
+        amp[-N_rmv:] = np.nan
     return amp
 
 
 def freq_by_time(x, Fs, f_range,
                  filter_fn=None, filter_kwargs=None,
-                 hilbert_increase_N=False):
+                 hilbert_increase_N=False,
+                 remove_edge_artifacts=True):
     '''
     Estimate the instantaneous frequency at each sample
 
@@ -114,6 +134,9 @@ def freq_by_time(x, Fs, f_range,
     hilbert_increase_N : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
+    remove_edge_artifacts : bool, optional
+        if True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan
 
     Returns
     -------
@@ -127,7 +150,8 @@ def freq_by_time(x, Fs, f_range,
     '''
     pha = phase_by_time(x, Fs, f_range, filter_fn=filter_fn,
                         filter_kwargs=filter_kwargs,
-                        hilbert_increase_N=hilbert_increase_N)
+                        hilbert_increase_N=hilbert_increase_N,
+                        remove_edge_artifacts=remove_edge_artifacts)
     phadiff = np.diff(pha)
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
     i_f = Fs * phadiff / (2 * np.pi)
