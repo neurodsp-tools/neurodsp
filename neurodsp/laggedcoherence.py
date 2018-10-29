@@ -1,15 +1,13 @@
-"""
-laggedcoherence.py
-Estimate the rhythmicity of a neural oscillation by calculating the lagged coherence metric
-"""
+"""Estimate the rhythmicity of a neural oscillation by calculating the lagged coherence metric."""
 
 import numpy as np
 from scipy import signal
 
+###################################################################################################
+###################################################################################################
 
 def lagged_coherence(x, f_range, Fs, N_cycles=3, f_step=1, return_spectrum=False):
-    """
-    Quantify the rhythmicity of an oscillator using the lagged coherence measure.
+    """Quantify the rhythmicity of an oscillator using the lagged coherence measure.
 
     Parameters
     ----------

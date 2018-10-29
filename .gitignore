@@ -107,3 +107,4 @@ venv.bak/
 .DS_Store
 neurodsp/*_sandbox.ipynb
 *_old
+_lint.txt

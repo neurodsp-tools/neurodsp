@@ -1,15 +1,14 @@
-"""
-spectral.py
-Frequency domain analysis of neural signals: creating PSD, fitting 1/f, spectral histograms.
-"""
+"""Frequency domain analysis of neural signals: creating PSD, fitting 1/f, spectral histograms."""
 
 import numpy as np
 from scipy import signal
 import matplotlib.pylab as plt
-from sklearn import linear_model
 
+###################################################################################################
+###################################################################################################
 
-def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtlen=1., flim=None, spg_outlierpct=0.):
+def psd(x, Fs, method='mean', window='hann', nperseg=None,
+        noverlap=None, filtlen=1., flim=None, spg_outlierpct=0.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
     Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
@@ -60,7 +59,7 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
     if method in ('mean', 'median'):
         # welch-style spectrum (mean/median of STFT)
         if nperseg is None:
-            if isinstance(window, str) or isinstance(window, tuple):
+            if isinstance(window, (str, tuple)):
                 # window is a string or tuple, defaults to 1 second of data
                 nperseg = int(Fs)
             else:
@@ -76,28 +75,28 @@ def psd(x, Fs, method='mean', window='hann', nperseg=None, noverlap=None, filtle
         freq, t_axis, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
         # pad data to 2D
-        if len(x.shape)==1:
-            x = x[None,:]
+        if len(x.shape) == 1:
+            x = x[None, :]
 
-        numchan=x.shape[0]
+        numchan = x.shape[0]
         # throw out outliers if indicated
-        if spg_outlierpct>0.:
+        if spg_outlierpct > 0.:
             n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlierpct))
             n_keep = int(len(t_axis)-n_discard)
-            spg_ = np.zeros((numchan,len(freq),n_keep))
-            outlier_inds = np.zeros((numchan,n_discard))
+            spg_ = np.zeros((numchan, len(freq), n_keep))
+            outlier_inds = np.zeros((numchan, n_discard))
             for chan in range(numchan):
                 # discard time windows with high total log powers, round up so it doesn't get a zero
-                outlier_inds[chan,:] = np.argsort(np.mean(np.log10(spg[chan,:,:]), axis=0))[-n_discard:]
-                spg_[chan,:,:] = np.delete(spg[chan], outlier_inds[chan,:], axis=-1)
+                outlier_inds[chan, :] = np.argsort(np.mean(np.log10(spg[chan, :, :]), axis=0))[-n_discard:]
+                spg_[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
             spg = spg_
 
-        if method is 'mean':
+        if method == 'mean':
             Pxx = np.mean(spg, axis=-1)
-        elif method is 'median':
+        elif method == 'median':
             Pxx = np.median(spg, axis=-1)
 
-    elif method is 'medfilt':
+    elif method == 'medfilt':
         # median filtered FFT spectrum
         # take the positive half of the spectrum since it's symmetrical
         FT = np.fft.fft(x)[:int(np.ceil(len(x) / 2.))]
@@ -148,6 +147,7 @@ def scv(x, Fs, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     SCV : ndarray
         Spectral coefficient of variation.
     """
+
     if nperseg is None:
         if isinstance(window, str) or isinstance(window, tuple):
             # window is a string or tuple, defaults to 1 second of data
@@ -214,8 +214,9 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     spectcv_rs : ndarray
         Resampled spectral coefficient of variation.
     """
+
     if nperseg is None:
-        if isinstance(window, str) or isinstance(window, tuple):
+        if isinstance(window, (str, tuple)):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -229,7 +230,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
     # compute spectrogram
     freq, ts, spg = signal.spectrogram(x, Fs, window, nperseg, noverlap)
 
-    if method is 'bootstrap':
+    if method == 'bootstrap':
         # params are number of slices of STFT to compute SCV over, and number
         # of draws
         if rs_params is None:
@@ -247,7 +248,7 @@ def scv_rs(x, Fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', r
 
         t_inds = None  # no time component, return nothing
 
-    elif method is 'rolling':
+    elif method == 'rolling':
         # params are number of slices of STFT to compute SCV over, and number
         # of slices to roll forward
         if rs_params is None:
@@ -308,8 +309,9 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
     spect_hist : ndarray (2D)
         Power distribution at every frequency, nbins x freqs 2D matrix
     """
+
     if nperseg is None:
-        if isinstance(window, str) or isinstance(window, tuple):
+        if isinstance(window, (str, tuple)):
             # window is a string or tuple, defaults to 1 second of data
             nperseg = int(Fs)
         else:
@@ -339,9 +341,9 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
 
     # Compute histogram of power for each frequency
     spect_hist = np.zeros((len(ps[0]), nbins))
-    for i in range(len(ps[0])):
-        spect_hist[i], _ = np.histogram(ps[:, i], power_bins)
-        spect_hist[i] = spect_hist[i] / sum(spect_hist[i])
+    for ind in range(len(ps[0])):
+        spect_hist[ind], _ = np.histogram(ps[:, ind], power_bins)
+        spect_hist[ind] = spect_hist[ind] / sum(spect_hist[ind])
 
     # flip them for sensible plotting direction
     spect_hist = np.transpose(spect_hist)
@@ -351,8 +353,7 @@ def spectral_hist(x, Fs, window='hann', nperseg=None, noverlap=None,
 
 
 def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
-    """
-    Plot the spectral histogram.
+    """Plot the spectral histogram.
 
     Parameters
     ----------
@@ -367,11 +368,11 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
     psd : array_like, 1d, optional
         PSD to be plotted over the histograms.
     """
+
     # automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freq)))
     # plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spect_hist, extent=[
-               freq[0], freq[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spect_hist, extent=[freq[0], freq[-1], power_bins[0], power_bins[-1]], aspect='auto')
     plt.xlabel('Frequency (Hz)', fontsize=15)
     plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
@@ -381,10 +382,10 @@ def plot_spectral_hist(freq, power_bins, spect_hist, psd_freq=None, psd=None):
         plt.plot(psd_freq[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])], np.log10(
             psd[np.logical_and(psd_freq >= freq[0], psd_freq <= freq[-1])]), color='w', alpha=0.8)
 
+
 def morlet_transform(x, f0s, Fs, w=7, s=.5):
-    """
-    Calculate the time-frequency representation of the signal 'x' over the
-    frequencies in 'f0s' using morlet wavelets
+    """Calculate the time-frequency representation using morlet wavelets.
+
     Parameters
     ----------
     x : array
@@ -398,11 +399,13 @@ def morlet_transform(x, f0s, Fs, w=7, s=.5):
         whose frequency is the center of the bandpass filter
     s : float
         Scaling factor
+
     Returns
     -------
     mwt : 2-D array
         time-frequency representation of signal x
     """
+
     if w <= 0:
         raise ValueError(
             'Number of cycles in a filter must be a positive number.')
@@ -422,6 +425,9 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
     The real part is the filtered signal
     Taking np.abs() of output gives the analytic amplitude
     Taking np.angle() of output gives the analytic phase
+
+    Parameters
+    ----------
     x : array
         Time series to filter
     f0 : float
@@ -439,14 +445,15 @@ def morlet_convolve(x, f0, Fs, w=7, s=.5, M=None, norm='sss'):
         Normalization method
         'sss' - divide by the sqrt of the sum of squares of points
         'amp' - divide by the sum of amplitudes divided by 2
+
     Returns
     -------
     x_trans : array
         Complex time series
     """
+
     if w <= 0:
-        raise ValueError(
-            'Number of cycles in a filter must be a positive number.')
+        raise ValueError('Number of cycles in a filter must be a positive number.')
 
     if M is None:
         M = w * Fs / f0
@@ -487,8 +494,8 @@ def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
     -------
     1d array
         Rotated psd.
-
     """
+
     # make the 1/f rotation mask
     f_mask = np.zeros_like(f_axis)
     if f_axis[0] == 0.:
@@ -502,7 +509,7 @@ def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
 
     if f_rotation is not None:
         # normalize power at rotation frequency
-        if f_rotation<np.abs(f_axis).min() or f_rotation>np.abs(f_axis).max():
+        if f_rotation < np.abs(f_axis).min() or f_rotation > np.abs(f_axis).max():
             raise ValueError('Rotation frequency not within frequency range.')
 
         f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]

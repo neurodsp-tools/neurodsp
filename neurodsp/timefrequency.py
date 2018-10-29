@@ -1,20 +1,17 @@
-"""
-timefrequency.py
-Tools for estimating properties of a neural oscillation over time
-"""
+"""Tools for estimating properties of a neural oscillation over time."""
+
+import math
 
 import numpy as np
 from scipy import signal
-import math
+
 import neurodsp
 
+###################################################################################################
+###################################################################################################
 
-def phase_by_time(x, Fs, f_range,
-                  filter_fn=None, filter_kwargs=None,
-                  hilbert_increase_N=False,
-                  remove_edge_artifacts=True):
-    """
-    Calculate the phase time series of a neural oscillation
+def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+    """Calculate the phase time series of a neural oscillation.
 
     Parameters
     ----------
@@ -41,15 +38,18 @@ def phase_by_time(x, Fs, f_range,
     pha : array-like, 1d
         Time series of phase
     """
+
     # Set default filtering parameters
     if filter_fn is None:
         filter_fn = neurodsp.filter
     if filter_kwargs is None:
         filter_kwargs = {}
+
     # Filter signal
     x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
                                remove_edge_artifacts=False, 
                                return_kernel=True, **filter_kwargs)
+
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     # Remove edge artifacts
@@ -60,12 +60,8 @@ def phase_by_time(x, Fs, f_range,
     return pha
 
 
-def amp_by_time(x, Fs, f_range,
-                filter_fn=None, filter_kwargs=None,
-                hilbert_increase_N=False,
-                remove_edge_artifacts=True):
-    """
-    Calculate the amplitude time series
+def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+    """Calculate the amplitude time series.
 
     Parameters
     ----------
@@ -92,15 +88,18 @@ def amp_by_time(x, Fs, f_range,
     amp : array-like, 1d
         Time series of amplitude
     """
+
     # Set default filtering parameters
     if filter_fn is None:
         filter_fn = neurodsp.filter
     if filter_kwargs is None:
         filter_kwargs = {}
+
     # Filter signal
     x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
                                remove_edge_artifacts=False, 
                                return_kernel=True, **filter_kwargs)
+
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
     # Remove edge artifacts
@@ -111,12 +110,8 @@ def amp_by_time(x, Fs, f_range,
     return amp
 
 
-def freq_by_time(x, Fs, f_range,
-                 filter_fn=None, filter_kwargs=None,
-                 hilbert_increase_N=False,
-                 remove_edge_artifacts=True):
-    '''
-    Estimate the instantaneous frequency at each sample
+def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+    """Estimate the instantaneous frequency at each sample.
 
     Parameters
     ----------
@@ -147,7 +142,8 @@ def freq_by_time(x, Fs, f_range,
     -----
     * This function assumes monotonic phase, so
     a phase slip will be processed as a very high frequency
-    '''
+    """
+
     pha = phase_by_time(x, Fs, f_range, filter_fn=filter_fn,
                         filter_kwargs=filter_kwargs,
                         hilbert_increase_N=hilbert_increase_N,
@@ -156,6 +152,7 @@ def freq_by_time(x, Fs, f_range,
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
     i_f = Fs * phadiff / (2 * np.pi)
     i_f = np.insert(i_f, 0, np.nan)
+
     return i_f
 
 
@@ -164,6 +161,7 @@ def _hilbert_ignore_nan(x, hilbert_increase_N=False):
     Compute the hilbert transform of x.
     Ignoring the boundaries of x that are filled with NaN
     """
+
     # Extract the signal that is not nan
     first_nonan = np.where(~np.isnan(x))[0][0]
     last_nonan = np.where(~np.isnan(x))[0][-1] + 1
@@ -180,4 +178,5 @@ def _hilbert_ignore_nan(x, hilbert_increase_N=False):
     # Fill in output hilbert with nans on edges
     x_hilb = np.ones(len(x), dtype=complex) * np.nan
     x_hilb[first_nonan:last_nonan] = x_hilb_nonan
+
     return x_hilb
