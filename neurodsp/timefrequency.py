@@ -10,7 +10,8 @@ import neurodsp
 ###################################################################################################
 ###################################################################################################
 
-def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+                  remove_edge_artifacts=True):
     """Calculate the phase time series of a neural oscillation.
 
     Parameters
@@ -60,7 +61,8 @@ def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_in
     return pha
 
 
-def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+                remove_edge_artifacts=True):
     """Calculate the amplitude time series.
 
     Parameters
@@ -110,7 +112,8 @@ def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_incr
     return amp
 
 
-def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False):
+def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+                 remove_edge_artifacts=True):
     """Estimate the instantaneous frequency at each sample.
 
     Parameters
