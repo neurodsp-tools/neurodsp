@@ -1,22 +1,20 @@
-"""
-filt.py
-Filter a neural signal using a bandpass, highpass, lowpass, or bandstop filter.
-"""
+"""Filter a neural signal using a bandpass, highpass, lowpass, or bandstop filter."""
 
 import warnings
+
 import numpy as np
 import scipy as sp
 from scipy import signal
 import matplotlib.pyplot as plt
 
+###################################################################################################
+###################################################################################################
 
 def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
            iir=False, butterworth_order=None,
            plot_frequency_response=False, return_kernel=False,
-           verbose=True, compute_transition_band=True, remove_edge_artifacts=True,
-           ):
-    """
-    Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal
+           verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
+    """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
     ----------
@@ -88,13 +86,13 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
     #   if a tuple is passed, it's assumed (0,f_hi) for LP; (f_lo,Nyq) for HP
     # i.e., highpass is a bandpass with second cutoff freq at Nyquist freq
     if pass_type == 'lowpass':
-        if (isinstance(fc, float) or isinstance(fc, int)):
+        if isinstance(fc, (int, float)):
             f_hi = fc
         elif isinstance(fc, tuple):
             f_hi = fc[1]
 
     if pass_type == 'highpass':
-        if (isinstance(fc, float) or isinstance(fc, int)):
+        if isinstance(fc, (int, float)):
             f_lo = fc
         elif isinstance(fc, tuple):
             f_lo = fc[0]
@@ -201,9 +199,11 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
                 transition_bw = max(transition_bw1, transition_bw2)
 
                 if cf_20db_1 == f_db[0]:
-                    warnings.warn('The low frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
+                    warnings.warn("The low frequency stopband never gets attenuated\
+                                  by more than 20dB. Increase filter length.")
                 if cf_20db_2 == f_db[-1]:
-                    warnings.warn('The high frequency stopband never gets attenuated by more than 20dB. Increase filter length.')
+                    warnings.warn("The high frequency stopband never gets attenuated\
+                                   by more than 20dB. Increase filter length.")
 
             elif pass_type == 'bandstop':
                 pass_bw = f_hi - f_lo
@@ -233,12 +233,17 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
                 # Compute transition bandwidth
                 transition_bw = cf_20db - cf_3db
 
-            print (('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. Pass/stop bandwidth is ' + str(np.round(pass_bw, 1)) + ' Hz'))
+            print('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + \
+                  ' Hz. Pass/stop bandwidth is ' + str(np.round(pass_bw, 1)) + ' Hz')
+
             # Raise warning if transition bandwidth is too high
             if transition_bw > pass_bw:
-                warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + ' Hz. This is greater than the desired pass/stop bandwidth of ' + str(np.round(pass_bw, 1)) + ' Hz')
+                warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + \
+                              ' Hz. This is greater than the desired pass/stop bandwidth of '\
+                               + str(np.round(pass_bw, 1)) + ' Hz')
         except StopIteration:
-            raise warnings.warn('Error computing transition bandwidth of the filter. Defined filter length may be too short.')
+            raise warnings.warn("Error computing transition bandwidth of the filter. \
+                                Defined filter length may be too short.")
 
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:
@@ -263,7 +268,9 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
 
 def _plot_frequency_response(Fs, b, a=1):
     """Compute frequency response of a filter kernel b with sampling rate Fs"""
+
     w, h = signal.freqz(b, a)
+
     # Plot frequency response
     plt.figure(figsize=(10, 5))
     plt.subplot(1, 2, 1)

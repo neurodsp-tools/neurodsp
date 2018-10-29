@@ -6,8 +6,11 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from scipy import signal
-import warnings
+
 from neurodsp import spectral
+
+###################################################################################################
+###################################################################################################
 
 def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     """Simulate a band-pass filtered signal with brown noise.
