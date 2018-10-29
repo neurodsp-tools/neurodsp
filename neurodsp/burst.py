@@ -12,7 +12,6 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                   dual_thresh=None,
                   deviation_type='median',
                   magnitude_type='amplitude',
-                  return_amplitude=False,
                   filter_fn=None, filter_kwargs=None):
     """Detect periods of oscillatory bursting in a neural signal.
 
@@ -51,11 +50,9 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
 
     Returns
     -------
-    isosc_noshort : ?
-        xx
-    x_magnitude : ?
-        xx
-            Only returned if requested.
+    is_burst : 1d array
+        Boolean indication of where bursts are present in the input signal.
+        True indicates that a burst was detected at that sample, otherwise False.
     """
 
     if algorithm in ['deviation', 'fixed_thresh']:
@@ -100,19 +97,15 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
                 "Invalid number of elements in 'dual_thresh' parameter")
 
         # Identify time periods of oscillation using the 2 thresholds
-        isosc = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
+        is_burst = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
 
     else:
         raise ValueError("Invalid 'algorithm' parameter")
 
     # Remove short time periods of oscillation
     min_period_length = int(np.ceil(min_osc_periods * Fs / f_range[0]))
-    isosc_noshort = _rmv_short_periods(isosc, min_period_length)
-
-    if return_amplitude:
-        return isosc_noshort, x_magnitude
-    else:
-        return isosc_noshort
+    is_burst = _rmv_short_periods(is_burst, min_period_length)
+    return is_burst
 
 
 def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
