@@ -117,12 +117,12 @@ def test_filter_length():
 
     # Specify filter length with number of seconds
     s_rate = 1000
-    N_seconds = .8
+    n_seconds = .8
     sig_filt, kernel = neurodsp.filter(x, s_rate, 'bandpass', fc=fc,
-                                     N_seconds=N_seconds, return_kernel=True)
+                                     n_seconds=n_seconds, return_kernel=True)
 
     # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(s_rate * N_seconds))
+    force_kernel_length = int(np.ceil(s_rate * n_seconds))
     if force_kernel_length % 2 == 0:
         force_kernel_length = force_kernel_length + 1
 

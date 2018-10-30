@@ -255,7 +255,7 @@ def filter(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
         sig_filt[-N_rmv:] = np.nan
 
     # Add NaN back on the edges of 'x', if there were any at the beginning
-    sig_filt_full = np.ones(len(x_old)) * np.nan
+    sig_filt_full = np.ones(len(sig_old)) * np.nan
     sig_filt_full[first_nonan:last_nonan] = sig_filt
     sig_filt = sig_filt_full
 

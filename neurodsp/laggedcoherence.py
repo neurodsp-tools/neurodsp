@@ -41,19 +41,19 @@ def lagged_coherence(x, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum=F
     """
 
     # Identify Fourier components of interest
-    s_rate = np.arange(f_range[0], f_range[1] + f_step, f_step)
+    freqs = np.arange(f_range[0], f_range[1] + f_step, f_step)
 
     # Calculate lagged coherence for each frequency
-    F = len(s_rate)
-    lcs = np.zeros(F)
-    for i, f in enumerate(s_rate):
-        lcs[i] = _lagged_coherence_1freq(
-            x, f, s_rate, n_cycles=n_cycles, f_step=f_step)
+    n_freqs = len(freqs)
+    lcs = np.zeros(n_freqs)
+    for ind, freq in enumerate(freqs):
+        lcs[ind] = _lagged_coherence_1freq(
+            x, freq, s_rate, n_cycles=n_cycles, f_step=f_step)
 
     # Return desired measure of lagged coherence
     if return_spectrum:
         lc = lcs
-        return lc, s_rate
+        return lc, freqs
     else:
         lc = np.mean(lcs)
         return lc
@@ -63,13 +63,13 @@ def _lagged_coherence_1freq(x, f, s_rate, n_cycles=3, f_step=1):
     """Calculate lagged coherence of x at frequency f using the hanning-taper FFT method"""
 
     # Determine number of samples to be used in each window to compute lagged coherence
-    Nsamp = int(np.ceil(n_cycles * s_rate / f))
+    n_samps = int(np.ceil(n_cycles * s_rate / f))
 
     # For each N-cycle chunk, calculate the fourier coefficient at the frequency of interest, f
-    chunks = _nonoverlapping_chunks(x, Nsamp)
+    chunks = _nonoverlapping_chunks(x, n_samps)
     C = len(chunks)
-    hann_window = signal.hanning(Nsamp)
-    fourier_f = np.fft.fftfreq(Nsamp, 1 / float(s_rate))
+    hann_window = signal.hanning(n_samps)
+    fourier_f = np.fft.fftfreq(n_samps, 1 / float(s_rate))
     fourier_f_idx = np.argmin(np.abs(fourier_f - f))
     fourier_coes_rateoi = np.zeros(C, dtype=complex)
     for i2, c in enumerate(chunks):
@@ -87,6 +87,8 @@ def _lagged_coherence_1freq(x, f, s_rate, n_cycles=3, f_step=1):
 
 def _nonoverlapping_chunks(x, N):
     """Split x into nonoverlapping chunks of length N"""
+
     Nchunks = int(np.floor(len(x) / float(N)))
     chunks = np.reshape(x[:int(Nchunks * N)], (Nchunks, int(N)))
+
     return chunks
