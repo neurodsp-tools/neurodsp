@@ -8,7 +8,7 @@ from neurodsp import amp_by_time, filt, spectral
 ###################################################################################################
 ###################################################################################################
 
-def detect_bursts_2threshold(x, Fs, f_range, dual_thresh,
+def detect_bursts_dualthreshold(x, Fs, f_range, dual_thresh,
                              min_cycles=3,
                              average_method='median',
                              magnitude_type='amplitude',
@@ -89,7 +89,7 @@ def compute_burst_stats(bursting, Fs):
     ----------
     bursting : array-like 1d
         Boolean indication of where bursts are present in the input signal.
-        Output of detect_bursts_2threshold()
+        Output of detect_bursts_dualthreshold()
     Fs : float
         The sampling rate in Hz
 
