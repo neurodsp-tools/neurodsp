@@ -4,6 +4,7 @@ import numpy as np
 from scipy import stats
 
 from neurodsp import amp_by_time, filt, spectral
+from neurodsp.plts import plot_slope_fit
 
 ###################################################################################################
 ###################################################################################################
@@ -358,12 +359,6 @@ def _fit_slope(freq, psd, fit_frange, fit_excl=None, plot_fit=False):
     slope, offset = np.polyfit(logf, logpsd, deg=1)
 
     if plot_fit:
-        plt.figure(figsize=(5, 5))
-        plt.plot(np.log10(freq), np.log10(psd), label='Whole PSD')
-        plt.plot(logf, logpsd, '-o', label='Fitted PSD', alpha=0.4)
-        plt.plot(logf, logf * slope + offset, '-k', label='Fit Line', lw=3)
-        plt.legend()
-        plt.xlabel('Log10 Frequency (Hz)', fontsize=15)
-        plt.ylabel('Log10 Power (V^2/Hz)', fontsize=15)
+        plot_slope_fit(freq, psd, logf, logpsd, slope, offset)
 
     return slope, offset
