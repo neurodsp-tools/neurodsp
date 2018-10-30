@@ -11,7 +11,7 @@ from neurodsp.plts import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
+def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
            iir=False, butterworth_order=None,
            plot_frequency_response=False, return_kernel=False,
            verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
@@ -19,9 +19,9 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
 
     Parameters
     ----------
-    x : array-like 1d
-        voltage time series
-    Fs : float
+    sig : array-like 1d
+        Voltage time series
+    freqs : float
         The sampling rate
     pass_type : str
         'bandpass' : apply a bandpass filter
@@ -34,10 +34,10 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
         Can be a tuple of 2 floats, or a single float, for low/highpass.
         If float, it's taken as the cutoff frequency. If tuple, it's assumed
             as (None,f_hi) for LP, and (f_lo,None) for HP.
-    N_cycles : float, optional
+    n_cycles : float, optional
         Length of filter in terms of number of cycles at 'f_lo' frequency
-        This parameter is overwritten by 'N_seconds'
-    N_seconds : float, optional
+        This parameter is overwritten by 'n_seconds'
+    n_seconds : float, optional
         Length of filter (seconds)
     iir : bool, optional
         if True, use an infinite-impulse response (IIR) filter
@@ -61,7 +61,7 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
 
     Returns
     -------
-    x_filt : array-like 1d
+    sig_filt : array-like 1d
         filtered time series
     kernel : length-2 tuple of arrays
         filter kernel
@@ -98,11 +98,11 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
         elif isinstance(fc, tuple):
             f_lo = fc[0]
 
-    # Remove any NaN on the edges of 'x'
-    first_nonan = np.where(~np.isnan(x))[0][0]
-    last_nonan = np.where(~np.isnan(x))[0][-1] + 1
-    x_old = np.copy(x)
-    x = x[first_nonan:last_nonan]
+    # Remove any NaN on the edges of 'sig'
+    first_nonan = np.where(~np.isnan(sig))[0][0]
+    last_nonan = np.where(~np.isnan(sig))[0][-1] + 1
+    sig_old = np.copy(sig)
+    sig = sig[first_nonan:last_nonan]
 
     # Process input for IIR filters
     if iir:
@@ -112,67 +112,67 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
         if pass_type != 'bandstop':
             if verbose:
                 warnings.warn('IIR filters are not recommended other than for notch filters.')
-        if N_seconds is not None:
-            raise TypeError('N_seconds should not be defined for an IIR filter.')
+        if n_seconds is not None:
+            raise TypeError('n_seconds should not be defined for an IIR filter.')
         if butterworth_order is None:
             raise TypeError('butterworth_order must be defined when using an IIR filter.')
 
     # Process input for FIR filters
     else:
         # Compute filter length if specified in seconds
-        if N_seconds is not None:
-            N = int(np.ceil(Fs * N_seconds))
+        if n_seconds is not None:
+            filt_len = int(np.ceil(freqs * n_seconds))
         else:
             if pass_type == 'lowpass':
-                N = int(np.ceil(Fs * N_cycles / f_hi))
+                filt_len = int(np.ceil(freqs * n_cycles / f_hi))
             else:
-                N = int(np.ceil(Fs * N_cycles / f_lo))
+                filt_len = int(np.ceil(freqs * n_cycles / f_lo))
 
         # Force filter length to be odd
-        if N % 2 == 0:
-            N = int(N + 1)
+        if filt_len % 2 == 0:
+            filt_len = int(filt_len + 1)
 
         # Raise an error if the filter is longer than the signal
-        if N >= len(x):
+        if filt_len >= len(sig):
             raise ValueError(
-                '''The designed filter (length: {:d}) is longer than the signal (length: {:d}).
-                The filter needs to be shortened by decreasing the N_cycles or N_seconds parameter.
-                However, this will decrease the frequency resolution of the filter.'''.format(N, len(x)))
+                """The designed filter (length: {:d}) is longer than the signal (length: {:d}).
+                The filter needs to be shortened by decreasing the n_cycles or n_seconds parameter.
+                However, this will decrease the frequency resolution of the filter.""".format(filt_len, len(sig)))
 
     # Compute nyquist frequency
-    f_nyq = Fs / 2.
+    f_nyq = freqs / 2.
 
     # Design filter
     if iir:
         if pass_type == 'bandpass' or pass_type == 'bandstop':
-            Wn = (f_lo / f_nyq, f_hi / f_nyq)
+            win = (f_lo / f_nyq, f_hi / f_nyq)
         elif pass_type == 'highpass':
-            Wn = f_lo / f_nyq
+            win = f_lo / f_nyq
         elif pass_type == 'lowpass':
-            Wn = f_hi / f_nyq
-        b, a = sp.signal.butter(butterworth_order, Wn, pass_type)
+            win = f_hi / f_nyq
+        b, a = sp.signal.butter(butterworth_order, win, pass_type)
     else:
         if pass_type == 'bandpass':
-            kernel = sp.signal.firwin(N, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
+            kernel = sp.signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
         elif pass_type == 'bandstop':
-            kernel = sp.signal.firwin(N, (f_lo, f_hi), nyq=f_nyq)
+            kernel = sp.signal.firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
         elif pass_type == 'highpass':
-            kernel = sp.signal.firwin(N, f_lo, pass_zero=False, nyq=f_nyq)
+            kernel = sp.signal.firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
         elif pass_type == 'lowpass':
-            kernel = sp.signal.firwin(N, f_hi, nyq=f_nyq)
+            kernel = sp.signal.firwin(filt_len, f_hi, nyq=f_nyq)
 
     # Apply filter
     if iir:
-        x_filt = sp.signal.filtfilt(b, a, x)
+        sig_filt = sp.signal.filtfilt(b, a, sig)
     else:
-        x_filt = np.convolve(kernel, x, 'same')
+        sig_filt = np.convolve(kernel, sig, 'same')
 
     # Plot frequency response, if desired
     if plot_frequency_response:
         if iir:
-            plot_frequency_response(Fs, b, a)
+            plot_frequency_response(freqs, b, a)
         else:
-            plot_frequency_response(Fs, kernel)
+            plot_frequency_response(freqs, kernel)
 
     # Compute transition bandwidth
     if compute_transition_band and verbose:
@@ -182,18 +182,20 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
             b = kernel
             a = 1
         w, h = signal.freqz(b, a)
-        f_db = w * Fs / (2. * np.pi)
+        f_db = w * freqs / (2. * np.pi)
         db = 20 * np.log10(abs(h))
 
         # Compute pass bandwidth and transition bandwidth
         try:
             if pass_type == 'bandpass':
                 pass_bw = f_hi - f_lo
+
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -20)
-                cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -3)
-                cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -20)
-                cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -3)
+                cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
+                cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
+                cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -20)
+                cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -3)
+
                 # Compute transition bandwidth
                 transition_bw1 = cf_3db_1 - cf_20db_1
                 transition_bw2 = cf_20db_2 - cf_3db_2
@@ -209,10 +211,10 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
             elif pass_type == 'bandstop':
                 pass_bw = f_hi - f_lo
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -20)
-                cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] < -3)
-                cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -20)
-                cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] < -3)
+                cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] < -20)
+                cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] < -3)
+                cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] < -20)
+                cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] < -3)
                 # Compute transition bandwidth
                 transition_bw1 = cf_20db_1 - cf_3db_1
                 transition_bw2 = cf_3db_2 - cf_20db_2
@@ -248,20 +250,20 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
 
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:
-        N_rmv = int(np.ceil(N / 2))
-        x_filt[:N_rmv] = np.nan
-        x_filt[-N_rmv:] = np.nan
+        N_rmv = int(np.ceil(filt_len / 2))
+        sig_filt[:N_rmv] = np.nan
+        sig_filt[-N_rmv:] = np.nan
 
     # Add NaN back on the edges of 'x', if there were any at the beginning
-    x_filt_full = np.ones(len(x_old)) * np.nan
-    x_filt_full[first_nonan:last_nonan] = x_filt
-    x_filt = x_filt_full
+    sig_filt_full = np.ones(len(x_old)) * np.nan
+    sig_filt_full[first_nonan:last_nonan] = sig_filt
+    sig_filt = sig_filt_full
 
     # Return kernel if desired
     if return_kernel:
         if iir:
-            return x_filt, (b, a)
+            return sig_filt, (b, a)
         else:
-            return x_filt, kernel
+            return sig_filt, kernel
     else:
-        return x_filt
+        return sig_filt
