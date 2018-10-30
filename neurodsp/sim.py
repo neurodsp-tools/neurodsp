@@ -357,6 +357,8 @@ def sim_bursty_oscillator(freq, T, s_rate, rdsym=None, prob_enter_burst=None,
     x = x[:n_samples]
 
     if return_cycle_df:
+        # Remove last row of df
+        df.drop(df.index[len(df)-1], inplace=True)
         return x, df
     else:
         return x

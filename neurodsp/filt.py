@@ -184,29 +184,32 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
         w, h = signal.freqz(b, a)
         f_db = w * s_rate / (2. * np.pi)
         db = 20 * np.log10(abs(h))
-
-        # Compute pass bandwidth and transition bandwidth
-        try:
+        
+        # Confirm frequency response goes below -20dB (significant attenuation)
+        if np.min(db) >= -20:
+            warnings.warn("The filter attenuation never goes below -20dB. "\
+                          "Increase filter length.")
+        else:
+            # Compute pass bandwidth and transition bandwidth
             if pass_type == 'bandpass':
-                pass_bw = f_hi - f_lo
 
-                # Identify edges of transition band (-3dB and -20dB)
-                cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
-                cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
-                cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -20)
-                cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -3)
-
-                # Compute transition bandwidth
-                transition_bw1 = cf_3db_1 - cf_20db_1
-                transition_bw2 = cf_20db_2 - cf_3db_2
-                transition_bw = max(transition_bw1, transition_bw2)
-
-                if cf_20db_1 == f_db[0]:
-                    warnings.warn("The low frequency stopband never gets attenuated\
-                                  by more than 20dB. Increase filter length.")
-                if cf_20db_2 == f_db[-1]:
-                    warnings.warn("The high frequency stopband never gets attenuated\
-                                   by more than 20dB. Increase filter length.")
+                if db[0] >= -20:
+                    warnings.warn("The low frequency stopband never gets attenuated"\
+                                  "by more than 20dB. Increase filter length.")
+                elif db[1] >= -20:
+                    warnings.warn("The high frequency stopband never gets attenuated"\
+                                  "by more than 20dB. Increase filter length.")
+                else:
+                    pass_bw = f_hi - f_lo
+                    # Identify edges of transition band (-3dB and -20dB)
+                    cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -20)
+                    cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -3)
+                    cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -20)
+                    cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -3)
+                    # Compute transition bandwidth
+                    transition_bw1 = cf_3db_1 - cf_20db_1
+                    transition_bw2 = cf_20db_2 - cf_3db_2
+                    transition_bw = max(transition_bw1, transition_bw2)
 
             elif pass_type == 'bandstop':
                 pass_bw = f_hi - f_lo
@@ -244,9 +247,6 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
                 warnings.warn('Transition bandwidth is ' + str(np.round(transition_bw, 1)) + \
                               ' Hz. This is greater than the desired pass/stop bandwidth of '\
                                + str(np.round(pass_bw, 1)) + ' Hz')
-        except StopIteration:
-            raise warnings.warn("Error computing transition bandwidth of the filter. \
-                                Defined filter length may be too short.")
 
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:

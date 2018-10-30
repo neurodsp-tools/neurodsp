@@ -198,4 +198,5 @@ def _rmv_short_periods(x, N):
     is_osc = np.zeros(len(x))
     for osc in range(len(osc_starts_long)):
         is_osc[osc_starts_long[osc]:osc_ends_long[osc]] = 1
+
     return is_osc
