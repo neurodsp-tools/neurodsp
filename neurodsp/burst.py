@@ -8,7 +8,7 @@ from neurodsp import amp_by_time, filt, spectral
 ###################################################################################################
 ###################################################################################################
 
-def detect_bursts_dualthreshold(x, Fs, f_range, dual_thresh,
+def detect_bursts_dual_threshold(x, Fs, f_range, dual_thresh,
                              min_cycles=3,
                              average_method='median',
                              magnitude_type='amplitude',
