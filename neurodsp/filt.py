@@ -226,16 +226,16 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
             elif pass_type == 'highpass':
                 pass_bw = f_nyq - f_lo
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[ind] for i in range(len(db)) if db[ind] > -20)
-                cf_3db = next(f_db[ind] for i in range(len(db)) if db[ind] > -3)
+                cf_20db = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
+                cf_3db = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
                 # Compute transition bandwidth
                 transition_bw = cf_3db - cf_20db
 
             elif pass_type == 'lowpass':
                 pass_bw = f_hi
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[ind] for i in range(len(db)) if db[ind] < -20)
-                cf_3db = next(f_db[ind] for i in range(len(db)) if db[ind] < -3)
+                cf_20db = next(f_db[ind] for ind in range(len(db)) if db[ind] < -20)
+                cf_3db = next(f_db[ind] for ind in range(len(db)) if db[ind] < -3)
                 # Compute transition bandwidth
                 transition_bw = cf_20db - cf_3db
 
