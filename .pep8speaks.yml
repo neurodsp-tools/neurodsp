@@ -14,4 +14,4 @@ message:  # Customize the comment made by the bot
 pycodestyle:
     max-line-length: 1000  # Default is 79 in PEP8
     ignore:  # Errors and warnings to ignore
-        - W391
+        - W391, E501
