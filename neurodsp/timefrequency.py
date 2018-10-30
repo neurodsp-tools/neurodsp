@@ -10,7 +10,7 @@ import neurodsp
 ###################################################################################################
 ###################################################################################################
 
-def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+def phase_by_time(x, s_rate, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_n=False,
                   remove_edge_artifacts=True):
     """Calculate the phase time series of a neural oscillation.
 
@@ -18,16 +18,16 @@ def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_in
     ----------
     x : array-like, 1d
         Time series
-    Fs : float, Hz
+    s_rate : float, Hz
         Sampling rate
     f_range : (low, high), Hz
         Frequency range
     filter_fn : function, optional
         The filtering function, with api:
-        `filterfn(x, Fs, pass_type, fc, remove_edge_artifacts=True)
+        `filterfn(x, s_rate, pass_type, fc, remove_edge_artifacts=True)
     filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool, optional
+    hilbert_increase_n : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
     remove_edge_artifacts : bool, optional
@@ -47,12 +47,12 @@ def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_in
         filter_kwargs = {}
 
     # Filter signal
-    x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
-                               remove_edge_artifacts=False, 
+    sig_filt, kernel = filter_fn(x, s_rate, 'bandpass', fc=f_range,
+                               remove_edge_artifacts=False,
                                return_kernel=True, **filter_kwargs)
 
     # Compute phase time series
-    pha = np.angle(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
+    pha = np.angle(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))
     # Remove edge artifacts
     if remove_edge_artifacts:
         N_rmv = int(np.ceil(len(kernel) / 2))
@@ -61,7 +61,7 @@ def phase_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_in
     return pha
 
 
-def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+def amp_by_time(x, s_rate, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_n=False,
                 remove_edge_artifacts=True):
     """Calculate the amplitude time series.
 
@@ -69,7 +69,7 @@ def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_incr
     ----------
     x : array-like, 1d
         Time series
-    Fs : float, Hz
+    s_rate : float, Hz
         Sampling rate
     f_range : (low, high), Hz
         The frequency filtering range
@@ -78,7 +78,7 @@ def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_incr
         Must have the same API as filt.bandpass
     filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool, optional
+    hilbert_increase_n : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
     remove_edge_artifacts : bool, optional
@@ -98,12 +98,12 @@ def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_incr
         filter_kwargs = {}
 
     # Filter signal
-    x_filt, kernel = filter_fn(x, Fs, 'bandpass', fc=f_range,
-                               remove_edge_artifacts=False, 
+    sig_filt, kernel = filter_fn(x, s_rate, 'bandpass', fc=f_range,
+                               remove_edge_artifacts=False,
                                return_kernel=True, **filter_kwargs)
 
     # Compute amplitude time series
-    amp = np.abs(_hilbert_ignore_nan(x_filt, hilbert_increase_N=hilbert_increase_N))
+    amp = np.abs(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))
     # Remove edge artifacts
     if remove_edge_artifacts:
         N_rmv = int(np.ceil(len(kernel) / 2))
@@ -112,7 +112,7 @@ def amp_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_incr
     return amp
 
 
-def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_N=False,
+def freq_by_time(x, s_rate, f_range, filter_fn=None, filter_kwargs=None, hilbert_increase_n=False,
                  remove_edge_artifacts=True):
     """Estimate the instantaneous frequency at each sample.
 
@@ -120,7 +120,7 @@ def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_inc
     ----------
     x : array-like 1d
         voltage time series
-    Fs : float
+    s_rate : float
         sampling rate
     f_range : (low, high), Hz
         frequency range for filtering
@@ -129,7 +129,7 @@ def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_inc
         Must have the same API as filt.bandpass
     filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
-    hilbert_increase_N : bool, optional
+    hilbert_increase_n : bool, optional
         if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x
     remove_edge_artifacts : bool, optional
@@ -147,19 +147,19 @@ def freq_by_time(x, Fs, f_range, filter_fn=None, filter_kwargs=None, hilbert_inc
     a phase slip will be processed as a very high frequency
     """
 
-    pha = phase_by_time(x, Fs, f_range, filter_fn=filter_fn,
+    pha = phase_by_time(x, s_rate, f_range, filter_fn=filter_fn,
                         filter_kwargs=filter_kwargs,
-                        hilbert_increase_N=hilbert_increase_N,
+                        hilbert_increase_n=hilbert_increase_n,
                         remove_edge_artifacts=remove_edge_artifacts)
     phadiff = np.diff(pha)
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
-    i_f = Fs * phadiff / (2 * np.pi)
+    i_f = s_rate * phadiff / (2 * np.pi)
     i_f = np.insert(i_f, 0, np.nan)
 
     return i_f
 
 
-def _hilbert_ignore_nan(x, hilbert_increase_N=False):
+def _hilbert_ignore_nan(x, hilbert_increase_n=False):
     """
     Compute the hilbert transform of x.
     Ignoring the boundaries of x that are filled with NaN
@@ -171,7 +171,7 @@ def _hilbert_ignore_nan(x, hilbert_increase_N=False):
     x_nonan = x[first_nonan:last_nonan]
 
     # Compute hilbert transform of signal without nans
-    if hilbert_increase_N:
+    if hilbert_increase_n:
         N = len(x_nonan)
         N2 = 2**(int(math.log(N, 2)) + 1)
         x_hilb_nonan = signal.hilbert(x_nonan, N2)[:N]

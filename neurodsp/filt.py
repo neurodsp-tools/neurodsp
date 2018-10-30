@@ -11,7 +11,7 @@ from neurodsp.plts import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
+def filter(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
            iir=False, butterworth_order=None,
            plot_frequency_response=False, return_kernel=False,
            verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
@@ -21,7 +21,7 @@ def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
     ----------
     sig : array-like 1d
         Voltage time series
-    freqs : float
+    s_rate : float
         The sampling rate
     pass_type : str
         'bandpass' : apply a bandpass filter
@@ -121,12 +121,12 @@ def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
     else:
         # Compute filter length if specified in seconds
         if n_seconds is not None:
-            filt_len = int(np.ceil(freqs * n_seconds))
+            filt_len = int(np.ceil(s_rate * n_seconds))
         else:
             if pass_type == 'lowpass':
-                filt_len = int(np.ceil(freqs * n_cycles / f_hi))
+                filt_len = int(np.ceil(s_rate * n_cycles / f_hi))
             else:
-                filt_len = int(np.ceil(freqs * n_cycles / f_lo))
+                filt_len = int(np.ceil(s_rate * n_cycles / f_lo))
 
         # Force filter length to be odd
         if filt_len % 2 == 0:
@@ -140,7 +140,7 @@ def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
                 However, this will decrease the frequency resolution of the filter.""".format(filt_len, len(sig)))
 
     # Compute nyquist frequency
-    f_nyq = freqs / 2.
+    f_nyq = s_rate / 2.
 
     # Design filter
     if iir:
@@ -170,9 +170,9 @@ def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
     # Plot frequency response, if desired
     if plot_frequency_response:
         if iir:
-            plot_frequency_response(freqs, b, a)
+            plot_frequency_response(s_rate, b, a)
         else:
-            plot_frequency_response(freqs, kernel)
+            plot_frequency_response(s_rate, kernel)
 
     # Compute transition bandwidth
     if compute_transition_band and verbose:
@@ -182,7 +182,7 @@ def filter(sig, freqs, pass_type, fc, n_cycles=3, n_seconds=None,
             b = kernel
             a = 1
         w, h = signal.freqz(b, a)
-        f_db = w * freqs / (2. * np.pi)
+        f_db = w * s_rate / (2. * np.pi)
         db = 20 * np.log10(abs(h))
 
         # Compute pass bandwidth and transition bandwidth

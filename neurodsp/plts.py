@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-def plot_slope_fit(freq, psd, logf, logpsd, slope, offset):
+def plot_slope_fit(freq, psd, logf, logpsd, slope, ofs_rateet):
     """Plot slope fit of a power spectrum."""
 
     plt.figure(figsize=(5, 5))
 
     plt.plot(np.log10(freq), np.log10(psd), label='Whole PSD')
     plt.plot(logf, logpsd, '-o', label='Fitted PSD', alpha=0.4)
-    plt.plot(logf, logf * slope + offset, '-k', label='Fit Line', lw=3)
+    plt.plot(logf, logf * slope + ofs_rateet, '-k', label='Fit Line', lw=3)
 
     plt.legend()
 
@@ -23,15 +23,15 @@ def plot_slope_fit(freq, psd, logf, logpsd, slope, offset):
     plt.ylabel('Log10 Power (V^2/Hz)', fontsize=15)
 
 
-def plot_frequency_response(Fs, b, a=1):
-    """Compute frequency response of a filter kernel b with sampling rate Fs"""
+def plot_frequency_response(s_rate, b, a=1):
+    """Compute frequency response of a filter kernel b with sampling rate s_rate"""
 
     w, h = signal.freqz(b, a)
 
     # Plot frequency response
     plt.figure(figsize=(10, 5))
     plt.subplot(1, 2, 1)
-    plt.plot(w * Fs / (2. * np.pi), 20 * np.log10(abs(h)), 'k')
+    plt.plot(w * s_rate / (2. * np.pi), 20 * np.log10(abs(h)), 'k')
     plt.title('Frequency response')
     plt.ylabel('Attenuation (dB)')
     plt.xlabel('Frequency (Hz)')

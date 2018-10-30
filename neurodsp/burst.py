@@ -9,7 +9,7 @@ from neurodsp.plts import plot_slope_fit
 ###################################################################################################
 ###################################################################################################
 
-def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
+def detect_bursts(x, s_rate, f_range, algorithm, min_osc_periods=3,
                   dual_thresh=None,
                   deviation_type='median',
                   magnitude_type='amplitude',
@@ -20,7 +20,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
     ----------
     x : array-like 1d
         voltage time series
-    Fs : float
+    s_rate : float
         The sampling rate in Hz
     f_range : (low, high), Hz
         NOTE: Not relevant in the 'bosc' method
@@ -42,7 +42,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
     magnitude_type : string in ('power', 'amplitude')
         NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         metric of magnitude used for thresholding
-    filter_fn : filter function with required inputs (x, f_range, Fs, rmv_edge)
+    filter_fn : filter function with required inputs (x, f_range, s_rate, rmv_edge)
         NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         function to use to filter original time series, x
     filter_kwargs : dict
@@ -74,7 +74,7 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
 
         # Compute amplitude time series
         x_amplitude = amp_by_time(
-            x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs,
+            x, s_rate, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs,
             remove_edge_artifacts=False)
 
         # Set magnitude as power or amplitude
@@ -105,12 +105,12 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
         raise ValueError("Invalid 'algorithm' parameter")
 
     # Remove short time periods of oscillation
-    min_period_length = int(np.ceil(min_osc_periods * Fs / f_range[0]))
+    min_period_length = int(np.ceil(min_osc_periods * s_rate / f_range[0]))
     is_burst = _rmv_short_periods(is_burst, min_period_length)
     return is_burst
 
 
-def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
+def detect_bursts_bosc(x, s_rate, f_oi, f_range_slope, f_slope_excl,
                        percentile_thresh=None, plot_slope_fit=None):
     """Detect bursts of oscillations using the Better OSCillation detection algorithm.
 
@@ -127,7 +127,7 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
     ----------
     x : 1d array-like
         Voltage time series
-    Fs : float
+    s_rate : float
         The sampling rate. Also used for the window size to get frequency spacing of 1Hz
     f_oi : int
         frequency of the oscillation of interest (Hz)
@@ -162,7 +162,7 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
     # Compute Morlet Transform with 6 cycles
     f0s = np.arange(f_range_slope[0], f_range_slope[1])
-    mwt = spectral.morlet_transform(x, f0s, Fs, w=6)
+    mwt = spectral.morlet_transform(x, f0s, s_rate, w=6)
     mwt_power = np.abs(mwt**2)
 
     if sum(f_oi == f0s) != 1:
@@ -171,12 +171,12 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
 
     # Compute average spectrum, and fit slope to it
     avg_spectrum = np.mean(mwt_power, axis=1)
-    slope, offset = _fit_slope(f0s, avg_spectrum, f_range_slope,
+    slope, ofs_rateet = _fit_slope(f0s, avg_spectrum, f_range_slope,
                                fit_excl=f_slope_excl, plot_fit=plot_slope_fit)
 
     # Compute background power at frequency of interest, and the power
     # threshold
-    f_oi_background_power = 10**(np.log10(f_oi) * slope + offset)
+    f_oi_background_power = 10**(np.log10(f_oi) * slope + ofs_rateet)
     power_thresh = stats.chi2.ppf(
         percentile_thresh, 2, scale=f_oi_background_power / 2)
 
@@ -185,19 +185,19 @@ def detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl,
     isosc = power_ts > power_thresh
 
     # Remove bursts less than 3 cycles in duration
-    min_period_length = int(3 * Fs / f_oi)
+    min_period_length = int(3 * s_rate / f_oi)
     isosc_noshort = _rmv_short_periods(isosc, min_period_length)
     return isosc_noshort
 
 
-def get_stats(bursting, Fs):
+def get_stats(bursting, s_rate):
     """Get statistics of bursts.
 
     Parameters
     ----------
     bursting : array-like 1d
         binary time series, output of detect_bursts()
-    Fs : float
+    s_rate : float
         The sampling rate in Hz
 
     Returns
@@ -210,7 +210,7 @@ def get_stats(bursting, Fs):
                                   'burst_rate' - bursts/sec
     """
 
-    tot_time = len(bursting) / Fs
+    tot_time = len(bursting) / s_rate
 
     # find burst starts and ends
     starts = np.array([])
@@ -223,7 +223,7 @@ def get_stats(bursting, Fs):
             ends = np.append(ends, index)
 
     # duration of each burst
-    durations = (ends - starts) / Fs
+    durations = (ends - starts) / s_rate
 
     ret_dict = {'N_bursts': len(starts),
                 'duration_mean': np.mean(durations),
@@ -326,15 +326,15 @@ def _fit_slope(freq, psd, fit_frange, fit_excl=None, plot_fit=False):
         Frequency ranges to be excluded from fit. Each element in list describes
         the start and end of an exclusion zone.
     plot_fit : bool, optional
-        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion freqs),
+        If True, the PSD is plotted, along with the actual fitted PSD (excluding exclusion s_rate),
         as well as the fitted line itself. Defaults to False.
 
     Returns
     -------
     slope : float
         Slope of loglog fitted line, m in y = mx+b
-    offset : float
-        Offset of loglog fitted line, b in y = mx+b
+    ofs_rateet : float
+        Ofs_rateet of loglog fitted line, b in y = mx+b
     """
 
     # make a mask for included and excluded frequency regions
@@ -351,14 +351,14 @@ def _fit_slope(freq, psd, fit_frange, fit_excl=None, plot_fit=False):
             fmask[np.logical_and(freq >= exc_frange[0],
                                  freq <= exc_frange[1])] = 0
 
-    # grab the psd and freqs to be fit over
+    # grab the psd and s_rate to be fit over
     logf = np.log10(freq[fmask == 1])
     logpsd = np.log10(psd[fmask == 1])
 
     # fit line
-    slope, offset = np.polyfit(logf, logpsd, deg=1)
+    slope, ofs_rateet = np.polyfit(logf, logpsd, deg=1)
 
     if plot_fit:
-        plot_slope_fit(freq, psd, logf, logpsd, slope, offset)
+        plot_slope_fit(freq, psd, logf, logpsd, slope, ofs_rateet)
 
-    return slope, offset
+    return slope, ofs_rateet

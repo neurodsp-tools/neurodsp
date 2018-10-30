@@ -16,7 +16,7 @@ def test_detect_bursts_consistent():
     """
     # Load data and ground-truth filtered signal
     x = _load_example_data(data_idx=1)
-    Fs = 1000
+    s_rate = 1000
     f_range = (13, 30)
     f_oi = np.floor(np.mean(f_range))
     f_range_slope = (3, 50)
@@ -29,9 +29,9 @@ def test_detect_bursts_consistent():
                                  '/tests/data/sample_data_1_burst_bosc.npy')
 
     # Detect bursts with different algorithms
-    bursting_deviation = neurodsp.detect_bursts(x, Fs, f_range, 'deviation',
+    bursting_deviation = neurodsp.detect_bursts(x, s_rate, f_range, 'deviation',
                                                 dual_thresh=(0.9, 2.0))
-    bursting_bosc = neurodsp.detect_bursts_bosc(x, Fs, f_oi, f_range_slope, f_slope_excl)
+    bursting_bosc = neurodsp.detect_bursts_bosc(x, s_rate, f_oi, f_range_slope, f_slope_excl)
 
     assert np.isclose(np.sum(bursting_deviation - bursting_true_deviation), 0)
     assert np.isclose(np.sum(bursting_bosc - bursting_true_bosc), 0)
