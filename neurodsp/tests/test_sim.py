@@ -111,6 +111,8 @@ def test_sim_consistent():
     noisy_osc = neurodsp.sim_noisy_oscillator(
         6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
     bursty_osc = neurodsp.sim_bursty_oscillator(6, 10, 1000)
+
+    np.random.seed(0)
     bursty_noisy_osc = neurodsp.sim_noisy_bursty_oscillator(
         6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
 

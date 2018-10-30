@@ -38,8 +38,8 @@ def test_timefreq_consistent():
     i_f = neurodsp.freq_by_time(x, Fs, f_range)
 
     # Compute difference between current and past signals
-    assert np.allclose(np.sum(np.abs(pha - pha_true)), 0, atol=10 ** -5)
-    assert np.allclose(np.sum(np.abs(amp - amp_true)), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(pha[~np.isnan(pha)] - pha_true[~np.isnan(pha)])), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(amp[~np.isnan(amp)] - amp_true[~np.isnan(amp)])), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(i_f[~np.isnan(i_f)] - i_f_true[~np.isnan(i_f_true)])),
                        0, atol=10 ** -5)
 

@@ -73,7 +73,8 @@ def detect_bursts(x, Fs, f_range, algorithm, min_osc_periods=3,
 
         # Compute amplitude time series
         x_amplitude = amp_by_time(
-            x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs)
+            x, Fs, f_range, filter_fn=filt.filter, filter_kwargs=filter_kwargs,
+            remove_edge_artifacts=False)
 
         # Set magnitude as power or amplitude
         if magnitude_type == 'power':
