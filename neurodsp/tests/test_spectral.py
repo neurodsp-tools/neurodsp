@@ -10,7 +10,7 @@ from neurodsp import spectral
 from neurodsp.tests import _load_example_data
 
 
-def test_psd():
+def test_compute_spectrum():
     """
     Confirm consistency in PSD computation
     """
@@ -24,9 +24,9 @@ def test_psd():
                      '/tests/data/sample_data_' + str(data_idx) + '_psd.npz')
 
     # try all 3 different methods
-    freq, Pmean = spectral.psd(x, s_rate, method='mean', nperseg=s_rate * 2)
-    freq, Pmed = spectral.psd(x, s_rate, method='median', nperseg=s_rate * 2)
-    freqmf, Pmedfilt = spectral.psd(x, s_rate, method='medfilt')
+    freq, Pmean = spectral.compute_spectrum(x, s_rate, method='mean', nperseg=s_rate * 2)
+    freq, Pmed = spectral.compute_spectrum(x, s_rate, method='median', nperseg=s_rate * 2)
+    freqmf, Pmedfilt = spectral.compute_spectrum(x, s_rate, method='medfilt')
 
     # compute the difference
     assert np.allclose(np.sum(np.abs(gt_psd['PSDmean'] - Pmean)), 0, atol=10 ** -5)

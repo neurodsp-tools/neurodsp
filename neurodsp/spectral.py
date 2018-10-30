@@ -6,7 +6,7 @@ from scipy import signal
 ###################################################################################################
 ###################################################################################################
 
-def psd(x, s_rate, method='mean', window='hann', nperseg=None,
+def compute_spectrum(x, s_rate, method='mean', window='hann', nperseg=None,
         noverlap=None, filt_len=1., f_lim=None, spg_outlierpct=0.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
@@ -19,7 +19,7 @@ def psd(x, s_rate, method='mean', window='hann', nperseg=None,
     s_rate : float, Hz
         Sampling frequency of the x time series.
     method : { 'mean', 'median', 'medfilt'}, optional
-        Methods to calculate the PSD. Defaults to 'mean'.
+        Methods to calculate the spectrum. Defaults to 'mean'.
             'mean' is the same as Welch's method (mean of STFT).
             'median' uses median of STFT instead of mean to minimize outlier effect.
             'medfilt' filters the entire signals raw FFT with a median filter to smooth.
@@ -40,7 +40,7 @@ def psd(x, s_rate, method='mean', window='hann', nperseg=None,
         Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.
     spg_outlierpct : float, (between 0 to 100)
         Percentage of spectrogram windows with the highest powers to discard prior to averaging.
-        Useful for quickly eliminating potential outliers to compute PSD.
+        Useful for quickly eliminating potential outliers to compute spectrum.
 
     Returns
     -------
@@ -108,7 +108,7 @@ def psd(x, s_rate, method='mean', window='hann', nperseg=None,
         Pxx = signal.medfilt(np.abs(FT)**2. / (s_rate * len(x)), filt_len_samp)
 
     else:
-        raise ValueError('Unknown PSD method: %s' % method)
+        raise ValueError('Unknown power spectrum method: %s' % method)
 
     if f_lim is not None:
         f_lim_ind = np.where(freq>f_lim)[0][0]
@@ -445,14 +445,14 @@ def morlet_convolve(x, f0, s_rate, w=7, s=.5, M=None, norm='sss'):
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
-    """Change the power law exponent of a PSD about an axis frequency.
+def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
+    """Change the power law exponent of a power spectrum about an axis frequency.
 
     Parameters
     ----------
     f_axis : 1d array, Hz
-        Frequency axis of input PSD. Must be same length as psd.
-    psd : 1d array
+        Frequency axis of input spectrum. Must be same length as spectrum.
+    spectrum : 1d array
         Power spectrum to be rotated.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
@@ -465,7 +465,7 @@ def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
     Returns
     -------
     1d array
-        Rotated psd.
+        Rotated spectrum.
     """
 
     # make the 1/f rotation mask
@@ -487,4 +487,4 @@ def rotate_powerlaw(f_axis, psd, delta_f, f_rotation=None):
         f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
 
     # apply mask
-    return f_mask * psd
+    return f_mask * spectrum

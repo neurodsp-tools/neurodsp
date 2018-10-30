@@ -11,10 +11,10 @@ from neurodsp.plts import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-def filter(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
-           iir=False, butterworth_order=None,
-           plot_frequency_response=False, return_kernel=False,
-           verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
+def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
+                  iir=False, butterworth_order=None,
+                  plot_frequency_response=False, return_kernel=False,
+                  verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters

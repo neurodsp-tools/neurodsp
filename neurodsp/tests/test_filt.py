@@ -20,7 +20,7 @@ def test_bandpass_filter_consistent():
     # filter data
     s_rate = 1000
     fc = (13, 30)
-    sig_filt = neurodsp.filter(x, s_rate, 'bandpass', fc=fc, n_cycles=3)
+    sig_filt = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc, n_cycles=3)
 
     # Compute difference between current and past filtered signals
     signal_diff = sig_filt[~np.isnan(sig_filt)] - sig_filt_true[~np.isnan(sig_filt_true)]
@@ -35,7 +35,7 @@ def test_edge_nan():
 
     # Apply a 4-8Hz bandpass filter to random noise
     x = _generate_random_x()
-    sig_filt, kernel = neurodsp.filter(x, 1000, 'bandpass', fc=(4, 8), return_kernel=True)
+    sig_filt, kernel = neurodsp.filter_signal(x, 1000, 'bandpass', fc=(4, 8), return_kernel=True)
 
     # Check if the correct edge artifacts have been removed
     N_rmv = int(np.ceil(len(kernel) / 2))
@@ -44,7 +44,7 @@ def test_edge_nan():
     assert all(~np.isnan(sig_filt[N_rmv:-N_rmv]))
 
     # Check that no edge artifacts are removed for IIR filters
-    sig_filt = neurodsp.filter(x, 1000, 'bandpass', fc=(4, 8), iir=True, butterworth_order=3)
+    sig_filt = neurodsp.filter_signal(x, 1000, 'bandpass', fc=(4, 8), iir=True, butterworth_order=3)
     assert all(~np.isnan(sig_filt))
 
 
@@ -57,7 +57,7 @@ def test_filter_length_error():
     s_rate = 1000
     x = np.random.randn(T * s_rate)
     with pytest.raises(ValueError) as excinfo:
-        sig_filt = neurodsp.filt.filter(x, s_rate, 'bandpass', fc=(1, 10))
+        sig_filt = neurodsp.filt.filter_signal(x, s_rate, 'bandpass', fc=(1, 10))
     assert 'The filter needs to be shortened by decreasing the n_cycles' in str(excinfo.value)
 
 
@@ -71,25 +71,25 @@ def test_frequency_input_errors():
 
     # Check that a bandpass filter cannot be completed without proper frequency limits
     with pytest.raises(ValueError):
-        sig_filt = neurodsp.filter(x, 1000, 'bandpass', fc=8)
+        sig_filt = neurodsp.filter_signal(x, 1000, 'bandpass', fc=8)
     with pytest.raises(ValueError):
-        sig_filt = neurodsp.filter(x, 1000, 'bandpass', fc=(8, 4))
+        sig_filt = neurodsp.filter_signal(x, 1000, 'bandpass', fc=(8, 4))
 
     # Check that a bandstop filter cannot be completed without proper frequency limits
     with pytest.raises(ValueError):
-        sig_filt = neurodsp.filter(x, 1000, 'bandstop', fc=58)
+        sig_filt = neurodsp.filter_signal(x, 1000, 'bandstop', fc=58)
     with pytest.raises(ValueError):
-        sig_filt = neurodsp.filter(x, 1000, 'bandstop', fc=(62, 58))
+        sig_filt = neurodsp.filter_signal(x, 1000, 'bandstop', fc=(62, 58))
 
     # Check that a float or partially filled tuple for fc is passable
-    sig_filt = neurodsp.filter(x, 1000, 'lowpass', fc=58)
-    sig_filt = neurodsp.filter(x, 1000, 'lowpass', fc=(0,58))
-    sig_filt = neurodsp.filter(x, 1000, 'highpass', fc=58)
-    sig_filt = neurodsp.filter(x, 1000, 'highpass', fc=(58,1000))
+    sig_filt = neurodsp.filter_signal(x, 1000, 'lowpass', fc=58)
+    sig_filt = neurodsp.filter_signal(x, 1000, 'lowpass', fc=(0,58))
+    sig_filt = neurodsp.filter_signal(x, 1000, 'highpass', fc=58)
+    sig_filt = neurodsp.filter_signal(x, 1000, 'highpass', fc=(58,1000))
 
     # Check that frequencies cannot be inverted
     with pytest.raises(ValueError):
-        sig_filt = neurodsp.filter(x, 1000, 'lowpass', fc=(100, 10))
+        sig_filt = neurodsp.filter_signal(x, 1000, 'lowpass', fc=(100, 10))
 
 
 def test_filter_length():
@@ -104,7 +104,7 @@ def test_filter_length():
     s_rate = 1000
     fc = (4, 8)
     n_cycles = 5
-    sig_filt, kernel = neurodsp.filter(x, s_rate, 'bandpass', fc=fc,
+    sig_filt, kernel = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc,
                                      n_cycles=n_cycles, return_kernel=True)
 
     # Compute how long the kernel should be
@@ -118,7 +118,7 @@ def test_filter_length():
     # Specify filter length with number of seconds
     s_rate = 1000
     n_seconds = .8
-    sig_filt, kernel = neurodsp.filter(x, s_rate, 'bandpass', fc=fc,
+    sig_filt, kernel = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc,
                                      n_seconds=n_seconds, return_kernel=True)
 
     # Compute how long the kernel should be

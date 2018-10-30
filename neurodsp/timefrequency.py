@@ -42,7 +42,7 @@ def phase_by_time(x, s_rate, f_range, filter_fn=None, filter_kwargs=None, hilber
 
     # Set default filtering parameters
     if filter_fn is None:
-        filter_fn = neurodsp.filter
+        filter_fn = neurodsp.filter_signal
     if filter_kwargs is None:
         filter_kwargs = {}
 
@@ -93,7 +93,7 @@ def amp_by_time(x, s_rate, f_range, filter_fn=None, filter_kwargs=None, hilbert_
 
     # Set default filtering parameters
     if filter_fn is None:
-        filter_fn = neurodsp.filter
+        filter_fn = neurodsp.filter_signal
     if filter_kwargs is None:
         filter_kwargs = {}
 
