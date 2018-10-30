@@ -184,7 +184,7 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
         w, h = signal.freqz(b, a)
         f_db = w * s_rate / (2. * np.pi)
         db = 20 * np.log10(abs(h))
-        
+
         # Confirm frequency response goes below -20dB (significant attenuation)
         if np.min(db) >= -20:
             warnings.warn("The filter attenuation never goes below -20dB. "\
@@ -202,10 +202,10 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
                 else:
                     pass_bw = f_hi - f_lo
                     # Identify edges of transition band (-3dB and -20dB)
-                    cf_20db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -20)
-                    cf_3db_1 = next(f_db[i] for i in range(len(db)) if db[i] > -3)
-                    cf_20db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -20)
-                    cf_3db_2 = next(f_db[i] for i in range(len(db))[::-1] if db[i] > -3)
+                    cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
+                    cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
+                    cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -20)
+                    cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -3)
                     # Compute transition bandwidth
                     transition_bw1 = cf_3db_1 - cf_20db_1
                     transition_bw2 = cf_20db_2 - cf_3db_2
@@ -226,16 +226,16 @@ def filter_signal(sig, s_rate, pass_type, fc, n_cycles=3, n_seconds=None,
             elif pass_type == 'highpass':
                 pass_bw = f_nyq - f_lo
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[i] for i in range(len(db)) if db[i] > -20)
-                cf_3db = next(f_db[i] for i in range(len(db)) if db[i] > -3)
+                cf_20db = next(f_db[ind] for i in range(len(db)) if db[ind] > -20)
+                cf_3db = next(f_db[ind] for i in range(len(db)) if db[ind] > -3)
                 # Compute transition bandwidth
                 transition_bw = cf_3db - cf_20db
 
             elif pass_type == 'lowpass':
                 pass_bw = f_hi
                 # Identify edges of transition band (-3dB and -20dB)
-                cf_20db = next(f_db[i] for i in range(len(db)) if db[i] < -20)
-                cf_3db = next(f_db[i] for i in range(len(db)) if db[i] < -3)
+                cf_20db = next(f_db[ind] for i in range(len(db)) if db[ind] < -20)
+                cf_3db = next(f_db[ind] for i in range(len(db)) if db[ind] < -3)
                 # Compute transition bandwidth
                 transition_bw = cf_20db - cf_3db
 
