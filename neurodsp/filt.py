@@ -5,7 +5,8 @@ import warnings
 import numpy as np
 import scipy as sp
 from scipy import signal
-import matplotlib.pyplot as plt
+
+from neurodsp.plts import plot_frequency_response
 
 ###################################################################################################
 ###################################################################################################
@@ -169,9 +170,9 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
     # Plot frequency response, if desired
     if plot_frequency_response:
         if iir:
-            _plot_frequency_response(Fs, b, a)
+            plot_frequency_response(Fs, b, a)
         else:
-            _plot_frequency_response(Fs, kernel)
+            plot_frequency_response(Fs, kernel)
 
     # Compute transition bandwidth
     if compute_transition_band and verbose:
@@ -265,23 +266,3 @@ def filter(x, Fs, pass_type, fc, N_cycles=3, N_seconds=None,
             return x_filt, kernel
     else:
         return x_filt
-
-
-def _plot_frequency_response(Fs, b, a=1):
-    """Compute frequency response of a filter kernel b with sampling rate Fs"""
-
-    w, h = signal.freqz(b, a)
-
-    # Plot frequency response
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(w * Fs / (2. * np.pi), 20 * np.log10(abs(h)), 'k')
-    plt.title('Frequency response')
-    plt.ylabel('Attenuation (dB)')
-    plt.xlabel('Frequency (Hz)')
-    if isinstance(a, int):
-        # Plot filter kernel
-        plt.subplot(1, 2, 2)
-        plt.plot(b, 'k')
-        plt.title('Kernel')
-    plt.show()
