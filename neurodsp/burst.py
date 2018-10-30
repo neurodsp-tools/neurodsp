@@ -82,7 +82,7 @@ def detect_bursts_2threshold(x, Fs, f_range, dual_thresh,
     return is_burst
 
 
-def get_stats(bursting, Fs):
+def compute_burst_stats(bursting, Fs):
     """Get statistics of bursts.
 
     Parameters
