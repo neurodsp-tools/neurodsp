@@ -143,7 +143,7 @@ def test_sim_consistent():
     jittered_osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy')
     OU_noise_true = np.load(os.path.dirname(
-        neurodsp.__file__) + '/tests/data/sim_ou_process.npy')
+        neurodsp.__file__) + '/tests/data/sim_OU_process.npy')
     powerlaw_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_variable_powerlaw.npy')
 
