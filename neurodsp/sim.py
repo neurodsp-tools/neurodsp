@@ -12,14 +12,14 @@ from neurodsp import spectral
 ###################################################################################################
 ###################################################################################################
 
-def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
+def sim_filtered_brown_noise(n_seconds, fs, f_range, filter_order):
     """Simulate a band-pass filtered signal with brown noise.
 
     Parameters
     ----------
-    T : float
+    n_seconds : float
         Length of time of simulated signal, in seconds
-    Fs : float
+    fs : float
         Sampling rate, in Hz
     f_range : 2-element array (lo,hi) or None
         Frequency range of simulated data
@@ -37,7 +37,7 @@ def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     if f_range is None:
 
         # No filtering, generate 1/f^2 noise
-        brown_n = sim_brown_noise(int(T * Fs))
+        brown_n = sim_brown_noise(int(n_seconds * fs))
 
         return brown_n
 
@@ -45,13 +45,13 @@ def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     elif f_range[1] is None:
 
         # Make filter order odd if necessary
-        nyq = Fs / 2.
+        nyq = fs / 2.
         if filter_order % 2 == 0:
             print('NOTE: Increased high-pass filter order by 1 in order to be odd')
             filter_order += 1
 
         # Generate 1/f^2 noise
-        brown_n = sim_brown_noise(int(T * Fs + filter_order * 2))
+        brown_n = sim_brown_noise(int(n_seconds * fs + filter_order * 2))
 
         # High pass filter
         taps = signal.firwin(filter_order, f_range[0] / nyq, pass_zero=False)
@@ -62,10 +62,10 @@ def sim_filtered_brown_noise(T, Fs, f_range, filter_order):
     # Band pass filtered
     else:
 
-        brown_n = sim_brown_noise(int(T * Fs + filter_order * 2))
+        brown_n = sim_brown_noise(int(n_seconds * fs + filter_order * 2))
 
         # Band pass filter
-        nyq = Fs / 2.
+        nyq = fs / 2.
         taps = signal.firwin(filter_order, np.array(f_range) / nyq, pass_zero=False)
         brown_nf = signal.filtfilt(taps, [1], brown_n)
 
@@ -127,20 +127,20 @@ def sim_oscillator(n_samples_cycle, n_cycles, rdsym=.5):
     return oscillator
 
 
-def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
+def sim_noisy_oscillator(freq, n_seconds, fs, rdsym=.5, f_hipass_brown=2, ratio_osc_power=1):
     """Simulate an oscillation embedded in background 1/f.
 
     Parameters
     ----------
     freq : float
         Oscillator frequency
-    T : float
+    n_seconds : float
         Signal duration, in seconds
-    Fs : float
+    fs : float
         Signal sampling rate, in Hz
     f_hipass_brown : float
         Frequency (Hz) at which to high-pass-filter brown noise
-    SNR : float
+    ratio_osc_power : float
         Ratio of oscillator power to brown noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
@@ -152,18 +152,18 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_brown)
-    filter_order = int(3 * Fs / f_hipass_brown)
+    filter_order = int(3 * fs / f_hipass_brown)
     if filter_order % 2 == 0:
         filter_order += 1
 
     # Determine length of signal in samples
-    n_samples = int(T * Fs)
+    n_samples = int(n_seconds * fs)
 
     # Generate filtered brown noise
-    brown = sim_filtered_brown_noise(T, Fs, (f_hipass_brown, None), filter_order)
+    brown = sim_filtered_brown_noise(n_seconds, fs, (f_hipass_brown, None), filter_order)
 
     # Generate oscillator
-    n_samples_cycle = int(Fs / freq)
+    n_samples_cycle = int(fs / freq)
     n_cycles = int(np.ceil(n_samples / n_samples_cycle))
     oscillator = sim_oscillator(n_samples_cycle, n_cycles, rdsym=rdsym)
     oscillator = oscillator[:n_samples]
@@ -171,8 +171,7 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
     # Normalize brown noise power
     oscillator_power = np.mean(oscillator**2)
     brown_power = np.mean(brown**2)
-    brown = np.sqrt(brown**2 * oscillator_power /
-                    (brown_power * SNR)) * np.sign(brown)
+    brown = np.sqrt(brown**2 * oscillator_power / (brown_power * ratio_osc_power)) * np.sign(brown)
 
     # Combine oscillator and noise
     output = oscillator + brown
@@ -180,7 +179,7 @@ def sim_noisy_oscillator(freq, T, Fs, rdsym=.5, f_hipass_brown=2, SNR=1):
     return output
 
 
-def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
+def sim_bursty_oscillator(freq, n_seconds, fs, rdsym=None, prob_enter_burst=None,
                           prob_leave_burst=None, cycle_features=None,
                           return_cycle_df=False):
     """Simulate a bursty oscillation.
@@ -189,9 +188,9 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     ----------
     freq : float
         Oscillator frequency, in Hz
-    T : float
+    n_seconds : float
         Signal duration, in seconds
-    Fs : float
+    fs : float
         Signal sampling rate, in Hz
     rdsym : float
         Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;
@@ -226,7 +225,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
     Returns
     -------
-    signal : 1d array
+    sig : 1d array
         bursty oscillator
     df : pd.DataFrame
         cycle-by-cycle properties of the simulated oscillator
@@ -243,7 +242,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
         rdsym = .5
 
     # Define default parameters for cycle features
-    mean_period_samples = int(Fs / freq)
+    mean_period_samples = int(fs / freq)
     cycle_features_use = {'amp_mean': 1, 'amp_burst_std': .1, 'amp_std': .2,
                           'period_mean': mean_period_samples,
                           'period_burst_std': .1 * mean_period_samples,
@@ -256,7 +255,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
             cycle_features_use[k] = cycle_features[k]
 
     # Determine number of cycles to generate
-    n_samples = T * Fs
+    n_samples = n_seconds * fs
     n_cycles_overestimate = int(np.ceil(n_samples / mean_period_samples * 2))
 
     # Simulate if a series of cycles are oscillating or not oscillating
@@ -311,22 +310,22 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
     # Shorten df to only cycles that are included in the data
 
     # Simulate time series for each cycle
-    x = np.array([])
+    sig = np.array([])
     last_cycle_oscillating = False
     for ind, row in df.iterrows():
         if row['is_cycle'] is False:
             # If last cycle was oscillating, add a decay to 0 then 0s
             if last_cycle_oscillating:
                 decay_pha = np.linspace(0, np.pi / 2, int(row['period'] / 4))
-                decay_t = np.cos(decay_pha) * x[-1]
-                x = np.append(x, decay_t)
+                decay_t = np.cos(decay_pha) * sig[-1]
+                sig = np.append(sig, decay_t)
 
                 cycle_t = np.zeros(row['period'] - int(row['period'] / 4))
-                x = np.append(x, cycle_t)
+                sig = np.append(sig, cycle_t)
             else:
                 # Add a blank cycle
                 cycle_t = np.zeros(row['period'])
-                x = np.append(x, cycle_t)
+                sig = np.append(sig, cycle_t)
             last_cycle_oscillating = False
         else:
             # If last cycle was oscillating, add a decay to 0
@@ -334,7 +333,7 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
                 rise_pha = np.linspace(-np.pi / 2, 0,
                                        int(row['period'] / 4))[1:]
                 rise_t = np.cos(rise_pha) * row['amp']
-                x[-len(rise_t):] = rise_t
+                sig[-len(rise_t):] = rise_t
 
             # Add a cycle with rdsym
             rise_samples = int(np.round(row['period'] * row['rdsym']))
@@ -345,26 +344,26 @@ def sim_bursty_oscillator(freq, T, Fs, rdsym=None, prob_enter_burst=None,
 
             # Adjust decay if the last cycle was oscillating
             if last_cycle_oscillating:
-                scaling = (row['amp'] + x[-1]) / 2
-                offset = (x[-1] - row['amp']) / 2
+                scaling = (row['amp'] + sig[-1]) / 2
+                offset = (sig[-1] - row['amp']) / 2
                 cycle_t[:decay_samples] = cycle_t[:decay_samples] * \
                     scaling + offset
                 cycle_t[decay_samples:] = cycle_t[decay_samples:] * row['amp']
             else:
                 cycle_t = cycle_t * row['amp']
-            x = np.append(x, cycle_t)
+            sig = np.append(sig, cycle_t)
             last_cycle_oscillating = True
-    x = x[:n_samples]
+    sig = sig[:n_samples]
 
     if return_cycle_df:
         # Remove last row of df
         df.drop(df.index[len(df)-1], inplace=True)
-        return x, df
+        return sig, df
     else:
-        return x
+        return sig
 
 
-def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1,
+def sim_noisy_bursty_oscillator(freq, n_seconds, fs, rdsym=None, f_hipass_brown=2, ratio_osc_power=1,
                                 prob_enter_burst=None, prob_leave_burst=None,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
@@ -374,9 +373,9 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     ----------
     freq : float
         Oscillator frequency, in Hz
-    T : float
+    n_seconds : float
         Signal duration, in seconds
-    Fs : float
+    fs : float
         Signal sampling rate, in Hz
     rdsym : float
         Rise-decay symmetry of the oscillator as fraction of the period in the rise time
@@ -385,7 +384,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
             >0.5 - longer rise, shorter decay
     f_hipass_brown : float
         Frequency, in Hz, at which to high-pass-filter brown noise
-    SNR : float
+    ratio_osc_power : float
         Ratio of oscillator power to brown noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
@@ -430,15 +429,15 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_brown)
-    filter_order = int(3 * Fs / f_hipass_brown)
+    filter_order = int(3 * fs / f_hipass_brown)
     if filter_order % 2 == 0:
         filter_order += 1
 
     # Generate filtered brown noise
-    brown = sim_filtered_brown_noise(T, Fs, (f_hipass_brown, None), filter_order)
+    brown = sim_filtered_brown_noise(n_seconds, fs, (f_hipass_brown, None), filter_order)
 
     # Generate oscillator
-    oscillator, df = sim_bursty_oscillator(freq, T, Fs, rdsym=rdsym,
+    oscillator, df = sim_bursty_oscillator(freq, n_seconds, fs, rdsym=rdsym,
                                            prob_enter_burst=prob_enter_burst,
                                            prob_leave_burst=prob_leave_burst,
                                            cycle_features=cycle_features,
@@ -454,7 +453,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
     oscillator_power = np.mean(oscillator[is_osc]**2)
     brown_power = np.mean(brown**2)
     brown = np.sqrt(brown**2 * oscillator_power /
-                    (brown_power * SNR)) * np.sign(brown)
+                    (brown_power * ratio_osc_power)) * np.sign(brown)
 
     # Combine oscillator and noise
     output = oscillator + brown
@@ -469,7 +468,7 @@ def sim_noisy_bursty_oscillator(freq, T, Fs, rdsym=None, f_hipass_brown=2, SNR=1
         return output
 
 
-def sim_poisson_pop(T, Fs, n_neurons, FR):
+def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     """Simulates a poisson population.
 
     It is essentially white noise, but satisfies the Poisson property, i.e. mean(X) = var(X).
@@ -483,36 +482,36 @@ def sim_poisson_pop(T, Fs, n_neurons, FR):
 
     Parameters
     ----------
-    T : float
+    n_seconds : float
         Length of simulated signal in seconds
-    Fs : float
+    fs : float
         Sampling rate in Hz
     n_neurons : int
         Number of neurons in the simulated population
-    FR : type
+    firing_rate : type
         Firing rate of individual neurons in the population
 
     Returns
     -------
-    x : 1d array
+    sig : 1d array
         Simulated population activity.
     """
 
-    n_samples = int(T * Fs)
+    n_samples = int(n_seconds * fs)
 
     # poisson population rate signal scales with # of neurons and individual rate
-    lam = n_neurons * FR
+    lam = n_neurons * firing_rate
 
     # variance is equal to the mean
-    x = np.random.normal(loc=lam, scale=lam**0.5, size=n_samples)
+    sig = np.random.normal(loc=lam, scale=lam**0.5, size=n_samples)
 
-    # enforce that X is non-negative in cases of low FR
-    x[np.where(x < 0.)] = 0.
+    # enforce that sig is non-negative in cases of low firing rate
+    sig[np.where(sig < 0.)] = 0.
 
-    return x
+    return sig
 
 
-def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
+def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
@@ -524,7 +523,7 @@ def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
     ----------
     t_ker : float
         Length of simulated signal in seconds.
-    Fs : float
+    fs : float
         Sampling rate, in Hz.
     tau_r : float
         Rise time of synaptic kernel, in seconds.
@@ -537,18 +536,18 @@ def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
         Computed synaptic kernel with length equal to t
     """
 
-    t = np.arange(0, t_ker, 1 / Fs)
+    times = np.arange(0, t_ker, 1 / fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
 
-        kernel = np.exp(-t / tau_d)
+        kernel = np.exp(-times / tau_d)
 
     # Kernel type: alpha
     elif tau_r == tau_d:
 
         # I(t) = t/tau * exp(-t/tau)
-        kernel = (t / tau_r) * np.exp(-t / tau_r)
+        kernel = (times / tau_r) * np.exp(-times / tau_r)
 
     # Kernel type: double exponential
     else:
@@ -557,7 +556,7 @@ def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
             warnings.warn('Rise time constant should be shorter than decay time constant.')
 
         # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
-        kernel = (np.exp(-t / tau_d) - np.exp(-t / tau_r))
+        kernel = (np.exp(-times / tau_d) - np.exp(-times / tau_r))
 
     # Normalize the integral to 1
     kernel = kernel / np.sum(kernel)
@@ -565,7 +564,7 @@ def make_synaptic_kernel(t_ker, Fs, tau_r, tau_d):
     return kernel
 
 
-def sim_synaptic_noise(T, Fs, n_neurons=1000, FR=2, t_ker=1., tau_r=0, tau_d=0.01):
+def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., tau_r=0, tau_d=0.01):
     """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
 
     The resulting signal is most similar to unsigned intracellular current or conductance change.
@@ -574,11 +573,11 @@ def sim_synaptic_noise(T, Fs, n_neurons=1000, FR=2, t_ker=1., tau_r=0, tau_d=0.0
     ----------
     T : float
         Length of simulated signal, in seconds
-    Fs : float
+    fs : float
         Sampling rate, in Hz
     n_neurons : int
         Number of neurons in the simulated population
-    FR : float
+    firing_rate : float
         Firing rate of individual neurons in the population
     t_ker : float
         Length of simulated kernel in seconds. Usually 1 second will suffice.
@@ -594,13 +593,13 @@ def sim_synaptic_noise(T, Fs, n_neurons=1000, FR=2, t_ker=1., tau_r=0, tau_d=0.0
     """
 
     # Simulate an extra bit because the convolution will snip it
-    x = sim_poisson_pop(T=(T + t_ker), Fs=Fs, n_neurons=n_neurons, FR=FR)
-    ker = make_synaptic_kernel(t_ker=t_ker, Fs=Fs, tau_r=tau_r, tau_d=tau_d)
+    sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker), fs=fs, n_neurons=n_neurons, firing_rate=firing_rate)
+    ker = make_synaptic_kernel(t_ker=t_ker, fs=fs, tau_r=tau_r, tau_d=tau_d)
 
-    return np.convolve(x, ker, 'valid')[:-1]
+    return np.convolve(sig, ker, 'valid')[:-1]
 
 
-def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
+def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)
 
     Discretized Ornstein-Uhlenbeck process:
@@ -610,14 +609,12 @@ def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
     mu      : mean
     sigma   : std
 
-    see: https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
-    for integral solution
 
     Parameters
     ----------
-    T : float
+    n_seconds : float
         Length of simulated signal, in seconds
-    Fs : float
+    fs : float
         Sampling rate, in Hz
     theta : float
         Memory scale - larger theta = faster fluctuation
@@ -628,21 +625,26 @@ def sim_OU_process(T, Fs, theta=1., mu=0., sigma=5.):
 
     Returns
     -------
-    x : 1d array
+    1d array
         Simulated signal
+
+    References
+    ----------
+    See for integral solution:
+        https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
     """
 
-    t = np.arange(0, T, 1 / Fs)
+    times = np.arange(0, n_seconds, 1 / fs)
     x0 = mu
-    dt = t[1] - t[0]
-    Ws = np.random.normal(size=len(t))
-    ex = np.exp(-theta * t)
-    Ws[0] = 0.
+    dt = times[1] - times[0]
+    ws = np.random.normal(size=len(times))
+    ex = np.exp(-theta * times)
+    ws[0] = 0.
 
-    return x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * t) * np.sqrt(dt) * Ws)
+    return x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
 
 
-def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01)):
+def sim_jittered_oscillator(n_seconds, fs, freq=10., jitter=0, cycle=('gaussian', 0.01)):
     """Simulate a jittered oscillator, as defined by the oscillator frequency,
     the oscillator cycle, and how much (in time) to jitter each period.
 
@@ -650,7 +652,7 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
     ----------
     T : float
         Simulation length, in seconds
-    Fs : float
+    fs : float
         Sampling frequency, in Hz
     freq : float
         Frequency of simulated oscillator, in Hz
@@ -667,7 +669,7 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
 
     Returns
     -------
-    x : 1d array
+    1d array
         Simulated oscillation with jitter.
     """
 
@@ -676,15 +678,15 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
 
         # defaults to 1 second window for a cycle, which is more than enough
         # if interested in longer period oscillations, just pass in premade cycle
-        osc_cycle = make_osc_cycle(1, Fs, cycle)
+        osc_cycle = make_osc_cycle(1, fs, cycle)
 
     # If cycle is an array, just use it to do the convolution
     else:
         osc_cycle = cycle
 
     # Binary "spike-train" of when each cycle should occur
-    spks = np.zeros(int(T * Fs + len(osc_cycle)) - 1)
-    osc_period = int(Fs / freq)
+    spks = np.zeros(int(n_seconds * fs + len(osc_cycle)) - 1)
+    osc_period = int(fs / freq)
 
     # Generate oscillation "event" indices
     spk_indices = np.arange(osc_period, len(spks), osc_period)
@@ -693,15 +695,15 @@ def sim_jittered_oscillator(T, Fs, freq=10., jitter=0, cycle=('gaussian', 0.01))
     if jitter != 0:
 
         spk_indices = spk_indices + \
-            np.random.randint(low=-int(Fs * jitter),
-                              high=int(Fs * jitter), size=len(spk_indices))
+            np.random.randint(low=-int(fs * jitter),
+                              high=int(fs * jitter), size=len(spk_indices))
 
     spks[spk_indices] = 1
 
     return np.convolve(spks, osc_cycle, 'valid')
 
 
-def make_osc_cycle(t_ker, Fs, cycle_params):
+def make_osc_cycle(t_ker, fs, cycle_params):
     """Make 1 cycle of oscillation.
 
     Parameters
@@ -711,7 +713,7 @@ def make_osc_cycle(t_ker, Fs, cycle_params):
         Note that this is NOT the period of the cycle, but the length of the
         returned array that contains the cycle, which can be (and usually is)
         much shorter.
-    Fs : float
+    fs : float
         Sampling frequency of the cycle simulation.
     cycle_params : tuple
         Defines the parameters for the oscillation cycle.
@@ -728,28 +730,28 @@ def make_osc_cycle(t_ker, Fs, cycle_params):
 
     if cycle_params[0] == 'gaussian':
         # cycle_params defines std in seconds
-        return signal.gaussian(t_ker * Fs, cycle_params[1] * Fs)
+        return signal.gaussian(t_ker * fs, cycle_params[1] * fs)
 
     elif cycle_params[0] == 'exp':
         # cycle_params defines decay time constant in seconds
-        return make_synaptic_kernel(t_ker, Fs, 0, cycle_params[1])
+        return make_synaptic_kernel(t_ker, fs, 0, cycle_params[1])
 
     elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
-        return make_synaptic_kernel(t_ker, Fs, cycle_params[1], cycle_params[2])
+        return make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
 
     else:
         raise ValueError('Did not recognize cycle type.')
 
 
-def sim_variable_powerlaw(T, Fs, exponent):
+def sim_variable_powerlaw(n_seconds, fs, exponent):
     """Generate a power law time series with specified exponent by spectrally rotating white noise.
 
     Parameters
     ----------
-    T : float
+    n_seconds : float
         Simulation time, in seconds
-    Fs : float
+    fs : float
         Sampling rate of simulated signal, in Hz
     exponent : float
         Desired power-law exponent - beta in P(f)=f^beta
@@ -759,13 +761,15 @@ def sim_variable_powerlaw(T, Fs, exponent):
     1d array
         Time-series with the desired power-law exponent
     """
-    sig_len = int(T * Fs)
-    x = np.random.randn(sig_len)
+
+    n_samps = int(n_seconds * fs)
+    sig = np.random.randn(n_samps)
 
     # compute FFT
-    FC = np.fft.fft(x)
-    f_axis = np.fft.fftfreq(len(x), 1. / Fs)
+    fc = np.fft.fft(sig)
+    f_axis = np.fft.fftfreq(len(sig), 1. / fs)
 
     # rotate spectrum and invert, zscore to normalize
-    FC_rot = spectral.rotate_powerlaw(f_axis, FC, exponent/2., f_rotation=None)
-    return sp.stats.zscore(np.real(np.fft.ifft(FC_rot)))
+    fc_rot = spectral.rotate_powerlaw(f_axis, fc, exponent/2., f_rotation=None)
+
+    return sp.stats.zscore(np.real(np.fft.ifft(fc_rot)))
