@@ -16,7 +16,7 @@ def test_swm_consistent():
     """
     # Load data
     data_idx = 1
-    x = _load_example_data(data_idx=data_idx)
+    sig = _load_example_data(data_idx=data_idx)
     fs = 1000
 
     # Load ground truth lagged coherence
@@ -24,10 +24,10 @@ def test_swm_consistent():
                               '/tests/data/sample_data_' + str(data_idx) + '_swm.npy')
 
     # Compute lagged coherence
-    L = .055
-    G = .2
+    win_len = .055
+    win_spacing = .2
     np.random.seed(1)
-    avg_window, _, _ = sliding_window_matching(x, fs, L, G, max_iterations=500)
+    avg_window, _, _ = sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500)
 
     # Compute difference between current and past signals
     signal_diff = avg_window - avg_window_true

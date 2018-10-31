@@ -8,7 +8,7 @@ import os
 import numpy as np
 
 
-def _generate_random_x(len_sig=2000, seed=0):
+def _generate_random_sig(len_sig=2000, seed=0):
     """Generate a random time series"""
 
     np.random.seed(seed)
