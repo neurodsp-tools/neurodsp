@@ -13,10 +13,11 @@ def test_laggedcoherence_consistent():
     """
     Confirm consistency in beta bandpass filter results on a neural signal
     """
+
     # Load data
     data_idx = 1
-    x = _load_example_data(data_idx=data_idx)
-    Fs = 1000
+    sig = _load_example_data(data_idx=data_idx)
+    fs = 1000
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
@@ -24,6 +25,6 @@ def test_laggedcoherence_consistent():
                       '/tests/data/sample_data_' + str(data_idx) + '_laggedcoherence.npy')
 
     # Compute lagged coherence
-    lag_coh_beta = neurodsp.lagged_coherence(x, f_range, Fs)
+    lag_coh_beta = neurodsp.lagged_coherence(sig, f_range, fs)
 
     assert np.allclose(lag_coh_beta, lc_true, atol=10 ** -5)
