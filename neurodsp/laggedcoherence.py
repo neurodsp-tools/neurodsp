@@ -47,7 +47,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     n_freqs = len(freqs)
     lcs = np.zeros(n_freqs)
     for ind, freq in enumerate(freqs):
-        lcs[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles, f_step=f_step)
+        lcs[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
 
     # Return desired measure of lagged coherence
     if return_spectrum:
@@ -58,7 +58,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
         return lc
 
 
-def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3, f_step=1):
+def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
     """Calculate lagged coherence of sig at frequency freq using the hanning-taper FFT method"""
 
     # Determine number of samples to be used in each window to compute lagged coherence

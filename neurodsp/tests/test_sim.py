@@ -74,7 +74,7 @@ def test_sim_consistent():
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_osc.npy', osc)
 
     # Simulate noisy oscillator
-    signal = neurodsp.sim_noisy_oscillator(6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
+    signal = neurodsp.sim_noisy_oscillator(6, 2, 1000, rdsym=.5, f_hipass_brown=2, ratio_osc_power=2)
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_osc.npy', signal)
 
     # Simulate bursty oscillator
@@ -82,7 +82,7 @@ def test_sim_consistent():
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_bursty_osc.npy', bursty_osc)
 
     # Simulate noisy bursty oscillator
-    bursty_signal = neurodsp.sim_noisy_bursty_oscillator(6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
+    bursty_signal = neurodsp.sim_noisy_bursty_oscillator(6, 2, 1000, rdsym=.5, f_hipass_brown=2, ratio_osc_power=2)
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_bursty_osc.npy', bursty_signal)
 
     # Simulate synaptic background noise and jittered oscillator
@@ -94,8 +94,8 @@ def test_sim_consistent():
     jittered_osc = sim.sim_jittered_oscillator(2, 1000, 20, 0.00, ('gaussian',0.01))
     np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy', jittered_osc)
 
-    OU_noise = sim.sim_OU_process(2, 1000, 1., 0., 5.)
-    np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_OU_process.npy', OU_noise)
+    OU_noise = sim.sim_ou_process(2, 1000, 1., 0., 5.)
+    np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_ou_process.npy', OU_noise)
 
     np.random.seed(0)
     powerlaw_sig = sim.sim_variable_powerlaw(60,1000,-2.25)
@@ -109,18 +109,18 @@ def test_sim_consistent():
     brown_filt = neurodsp.sim_filtered_brown_noise(10, 1000, (2, None), 1501)
     osc = neurodsp.sim_oscillator(100, 100, rdsym=.3)
     noisy_osc = neurodsp.sim_noisy_oscillator(
-        6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
+        6, 2, 1000, rdsym=.5, f_hipass_brown=2, ratio_osc_power=2)
     bursty_osc = neurodsp.sim_bursty_oscillator(6, 10, 1000)
 
     np.random.seed(0)
     bursty_noisy_osc = neurodsp.sim_noisy_bursty_oscillator(
-        6, 2, 1000, rdsym=.5, f_hipass_brown=2, SNR=2)
+        6, 2, 1000, rdsym=.5, f_hipass_brown=2, ratio_osc_power=2)
 
     np.random.seed(0)
     syn_noise = neurodsp.sim.sim_synaptic_noise(2, 1000, 1000, 2, 1., 0.002, 2)
     jittered_osc = neurodsp.sim.sim_jittered_oscillator(
         2, 1000, 20, 0.00, ('gaussian', 0.01))
-    OU_noise = neurodsp.sim.sim_OU_process(2, 1000, 1., 0., 5.)
+    OU_noise = neurodsp.sim.sim_ou_process(2, 1000, 1., 0., 5.)
 
     np.random.seed(0)
     powerlaw_sig = neurodsp.sim.sim_variable_powerlaw(60, 1000, -2.25)
@@ -143,7 +143,7 @@ def test_sim_consistent():
     jittered_osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy')
     OU_noise_true = np.load(os.path.dirname(
-        neurodsp.__file__) + '/tests/data/sim_OU_process.npy')
+        neurodsp.__file__) + '/tests/data/sim_ou_process.npy')
     powerlaw_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_variable_powerlaw.npy')
 

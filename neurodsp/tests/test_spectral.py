@@ -36,7 +36,7 @@ def test_compute_spectrum():
     assert np.allclose(np.sum(np.abs(gt_psd['freqmf'] - freqmf)), 0, atol=10 ** -5)
 
 
-def test_scv():
+def test_compute_scv():
     """
     Confirm SCV calculation
     """
@@ -50,12 +50,12 @@ def test_scv():
                      '/tests/data/sample_data_' + str(data_idx) + '_scv.npz')
 
     # compute SCV
-    freq, SCV = spectral.scv(x, fs)
+    freq, spect_cv = spectral.compute_scv(x, fs)
     assert np.allclose(np.sum(np.abs(gt_scv['freq'] - freq)), 0, atol=10 ** -5)
-    assert np.allclose(np.sum(np.abs(gt_scv['SCV'] - SCV)), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(gt_scv['SCV'] - spect_cv)), 0, atol=10 ** -5)
 
 
-def test_scvrs():
+def test_scv_rs():
     """
     Confirm SCV resampling calculation
     """
@@ -65,20 +65,20 @@ def test_scvrs():
     fs = 1000.
 
     # load ground truth scv
-    gt_scvrs = np.load(os.path.dirname(neurodsp.__file__) +
+    gt_scv_rs = np.load(os.path.dirname(neurodsp.__file__) +
                        '/tests/data/sample_data_' + str(data_idx) + '_scvrs.npz')
 
     # compute SCV and compare differences
     np.random.seed(99)
-    freqbs, Tbs, SCVrsbs = spectral.scv_rs(x, fs, method='bootstrap', rs_params=(5, 20))
-    assert np.allclose(np.sum(np.abs(gt_scvrs['freqbs'] - freqbs)), 0, atol=10 ** -5)
+    freqbs, Tbs, scv_rsbs = spectral.compute_scv_rs(x, fs, method='bootstrap', rs_params=(5, 20))
+    assert np.allclose(np.sum(np.abs(gt_scv_rs['freqbs'] - freqbs)), 0, atol=10 ** -5)
     assert Tbs is None
-    assert np.allclose(np.sum(np.abs(gt_scvrs['SCVrsbs'] - SCVrsbs)), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(gt_scv_rs['SCVrsbs'] - scv_rsbs)), 0, atol=10 ** -5)
 
-    freqro, Tro, SCVrsro = spectral.scv_rs(x, fs, method='rolling', rs_params=(4, 2))
-    assert np.allclose(np.sum(np.abs(gt_scvrs['freqro'] - freqro)), 0, atol=10 ** -5)
-    assert np.allclose(np.sum(np.abs(gt_scvrs['Tro'] - Tro)), 0, atol=10 ** -5)
-    assert np.allclose(np.sum(np.abs(gt_scvrs['SCVrsro'] - SCVrsro)), 0, atol=10 ** -5)
+    freqro, Tro, scv_rsro = spectral.compute_scv_rs(x, fs, method='rolling', rs_params=(4, 2))
+    assert np.allclose(np.sum(np.abs(gt_scv_rs['freqro'] - freqro)), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(gt_scv_rs['Tro'] - Tro)), 0, atol=10 ** -5)
+    assert np.allclose(np.sum(np.abs(gt_scv_rs['SCVrsro'] - scv_rsro)), 0, atol=10 ** -5)
 
 
 def test_spectralhist():

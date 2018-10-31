@@ -127,7 +127,7 @@ def sim_oscillator(n_samples_cycle, n_cycles, rdsym=.5):
     return oscillator
 
 
-def sim_noisy_oscillator(freq, n_seconds, fs, rdsym=.5, f_hipass_brown=2, SNR=1):
+def sim_noisy_oscillator(freq, n_seconds, fs, rdsym=.5, f_hipass_brown=2, ratio_osc_power=1):
     """Simulate an oscillation embedded in background 1/f.
 
     Parameters
@@ -140,7 +140,7 @@ def sim_noisy_oscillator(freq, n_seconds, fs, rdsym=.5, f_hipass_brown=2, SNR=1)
         Signal sampling rate, in Hz
     f_hipass_brown : float
         Frequency (Hz) at which to high-pass-filter brown noise
-    SNR : float
+    ratio_osc_power : float
         Ratio of oscillator power to brown noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
@@ -171,7 +171,7 @@ def sim_noisy_oscillator(freq, n_seconds, fs, rdsym=.5, f_hipass_brown=2, SNR=1)
     # Normalize brown noise power
     oscillator_power = np.mean(oscillator**2)
     brown_power = np.mean(brown**2)
-    brown = np.sqrt(brown**2 * oscillator_power / (brown_power * SNR)) * np.sign(brown)
+    brown = np.sqrt(brown**2 * oscillator_power / (brown_power * ratio_osc_power)) * np.sign(brown)
 
     # Combine oscillator and noise
     output = oscillator + brown
@@ -363,7 +363,7 @@ def sim_bursty_oscillator(freq, n_seconds, fs, rdsym=None, prob_enter_burst=None
         return sig
 
 
-def sim_noisy_bursty_oscillator(freq, n_seconds, fs, rdsym=None, f_hipass_brown=2, SNR=1,
+def sim_noisy_bursty_oscillator(freq, n_seconds, fs, rdsym=None, f_hipass_brown=2, ratio_osc_power=1,
                                 prob_enter_burst=None, prob_leave_burst=None,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
@@ -384,7 +384,7 @@ def sim_noisy_bursty_oscillator(freq, n_seconds, fs, rdsym=None, f_hipass_brown=
             >0.5 - longer rise, shorter decay
     f_hipass_brown : float
         Frequency, in Hz, at which to high-pass-filter brown noise
-    SNR : float
+    ratio_osc_power : float
         Ratio of oscillator power to brown noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
@@ -453,7 +453,7 @@ def sim_noisy_bursty_oscillator(freq, n_seconds, fs, rdsym=None, f_hipass_brown=
     oscillator_power = np.mean(oscillator[is_osc]**2)
     brown_power = np.mean(brown**2)
     brown = np.sqrt(brown**2 * oscillator_power /
-                    (brown_power * SNR)) * np.sign(brown)
+                    (brown_power * ratio_osc_power)) * np.sign(brown)
 
     # Combine oscillator and noise
     output = oscillator + brown
@@ -599,7 +599,7 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., t
     return np.convolve(sig, ker, 'valid')[:-1]
 
 
-def sim_OU_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
+def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)
 
     Discretized Ornstein-Uhlenbeck process:

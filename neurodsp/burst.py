@@ -1,9 +1,8 @@
 """Analyze periods of oscillatory bursting in a neural signal."""
 
 import numpy as np
-from scipy import stats
 
-from neurodsp import amp_by_time, filt, spectral
+from neurodsp import amp_by_time
 
 ###################################################################################################
 ###################################################################################################

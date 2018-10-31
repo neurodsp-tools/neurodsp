@@ -48,8 +48,8 @@ def phase_by_time(sig, fs, f_range, filter_fn=None, filter_kwargs=None,
 
     # Filter signal
     sig_filt, kernel = filter_fn(sig, fs, 'bandpass', fc=f_range,
-                               remove_edge_artifacts=False,
-                               return_kernel=True, **filter_kwargs)
+                                 remove_edge_artifacts=False,
+                                 return_kernel=True, **filter_kwargs)
 
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))
@@ -101,8 +101,8 @@ def amp_by_time(sig, fs, f_range, filter_fn=None, filter_kwargs=None,
 
     # Filter signal
     sig_filt, kernel = filter_fn(sig, fs, 'bandpass', fc=f_range,
-                               remove_edge_artifacts=False,
-                               return_kernel=True, **filter_kwargs)
+                                 remove_edge_artifacts=False,
+                                 return_kernel=True, **filter_kwargs)
 
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))

@@ -117,7 +117,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
         return freqs, spectrum
 
 
-def scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
+def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
     """
     Compute the spectral coefficient of variation (SCV) at each frequency.
     White noise should have a SCV of 1 at all frequencies.
@@ -145,7 +145,7 @@ def scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
     -------
     freq : ndarray
         Array of sample frequencies.
-    SCV : ndarray
+    spect_cv : ndarray
         Spectral coefficient of variation.
     """
 
@@ -170,12 +170,12 @@ def scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
         outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
         spg = spg[:, outlieridx]
 
-    spectcv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
+    spect_cv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
 
-    return freq, spectcv
+    return freq, spect_cv
 
 
-def scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
+def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
     """
     Resampled version of scv: instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
@@ -213,7 +213,7 @@ def scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap',
         Array of sample frequencies.
     t_inds : ndarray
         Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
-    spectcv_rs : ndarray
+    spect_cv_rs : ndarray
         Resampled spectral coefficient of variation.
     """
 
@@ -242,12 +242,12 @@ def scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap',
             rs_params = (int(spg.shape[1] / 10.), 100)
 
         nslices, ndraws = rs_params
-        spectcv_rs = np.zeros((len(freq), ndraws))
+        spect_cv_rs = np.zeros((len(freq), ndraws))
         for draw in range(ndraws):
             # repeated subsampling of spectrogram randomly, with replacement
             # between draws
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
-            spectcv_rs[:, draw] = np.std(
+            spect_cv_rs[:, draw] = np.std(
                 spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
         t_inds = None  # no time component, return nothing
@@ -262,10 +262,10 @@ def scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap',
 
         nslices, nsteps = rs_params
         outlen = int(np.ceil((spg.shape[1] - nslices) / float(nsteps))) + 1
-        spectcv_rs = np.zeros((len(freq), outlen))
+        spect_cv_rs = np.zeros((len(freq), outlen))
         for ind in range(outlen):
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
-            spectcv_rs[:, ind] = np.std(
+            spect_cv_rs[:, ind] = np.std(
                 curblock, axis=-1) / np.mean(curblock, axis=-1)
 
         t_inds = ts[0::nsteps]  # grab the time indices from the spectrogram
@@ -273,7 +273,7 @@ def scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap',
     else:
         raise ValueError('Unknown resampling method: %s' % method)
 
-    return freq, t_inds, spectcv_rs
+    return freq, t_inds, spect_cv_rs
 
 
 def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
@@ -388,7 +388,7 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=.5):
     mwt = np.zeros([sig_len, freqs_len], dtype=complex)
 
     for f_ind, freq in enumerate(freqs):
-        mwt[f_ind] = morlet_convolve(sig, freq, fs, w=n_cycles, s=scaling)
+        mwt[f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
 
     return mwt
 

@@ -79,7 +79,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         # Find a new allowed position for the window
         window_starts_temp = np.copy(window_starts)
         window_starts_temp[window_idx_replace] = _find_new_windowidx(
-            window_starts, spacing_n_samps, win_n_samps, len(sig) - win_n_samps)
+            window_starts, spacing_n_samps, len(sig) - win_n_samps)
 
         # Calculate the cost
         cost_temp = _compute_cost(sig, window_starts_temp, win_n_samps)
@@ -105,8 +105,8 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     # Calculate average window
     avg_window = np.zeros(win_n_samps)
-    for w in range(n_windows):
-        avg_window = avg_window + sig[window_starts[w]:window_starts[w] + win_n_samps]
+    for w_ind in range(n_windows):
+        avg_window = avg_window + sig[window_starts[w_ind]:window_starts[w_ind] + win_n_samps]
     avg_window = avg_window / float(n_windows)
 
     return avg_window, window_starts, costs
@@ -136,7 +136,7 @@ def _compute_cost(sig, window_starts, win_n_samps):
     return cost
 
 
-def _find_new_windowidx(window_starts, spacing_n_samps, win_n_samps, n_samp, tries_limit=1000):
+def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
     """Find a new sample for the starting window"""
 
     found = False

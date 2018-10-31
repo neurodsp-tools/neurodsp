@@ -13,7 +13,7 @@ from neurodsp.plts import plot_frequency_response
 
 def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                   iir=False, butterworth_order=None,
-                  plot_frequency_response=False, return_kernel=False,
+                  plot_freq_response=False, return_kernel=False,
                   verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
@@ -45,7 +45,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     butterworth_order : int, optional
         order of the butterworth filter
         see input 'N' in scipy.signal.butter
-    plot_frequency_response : bool, optional
+    plot_freq_response : bool, optional
         if True, plot the frequency response of the filter
     return_kernel : bool, optional
         if True, return the complex filter kernel
@@ -74,8 +74,8 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
             raise ValueError('Second cutoff frequency must be greater than first.')
 
     # Check that frequency cutoff inputs are appropriate
-    if pass_type == 'bandpass' or pass_type == 'bandstop':
-        if isinstance(fc, float) or isinstance(fc, int):
+    if pass_type in ('bandpass', 'bandstop'):
+        if isinstance(fc, (int, float)):
             raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
         if len(fc) != 2:
             raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
@@ -144,7 +144,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Design filter
     if iir:
-        if pass_type == 'bandpass' or pass_type == 'bandstop':
+        if pass_type in ('bandpass', 'bandstop'):
             win = (f_lo / f_nyq, f_hi / f_nyq)
         elif pass_type == 'highpass':
             win = f_lo / f_nyq
@@ -168,7 +168,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         sig_filt = np.convolve(kernel, sig, 'same')
 
     # Plot frequency response, if desired
-    if plot_frequency_response:
+    if plot_freq_response:
         if iir:
             plot_frequency_response(fs, b_vals, a_vals)
         else:
