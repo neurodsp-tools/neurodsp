@@ -150,7 +150,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
             win = f_lo / f_nyq
         elif pass_type == 'lowpass':
             win = f_hi / f_nyq
-        b, a = sp.signal.butter(butterworth_order, win, pass_type)
+        b_vals, a_vals = sp.signal.butter(butterworth_order, win, pass_type)
     else:
         if pass_type == 'bandpass':
             kernel = sp.signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
@@ -163,14 +163,14 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Apply filter
     if iir:
-        sig_filt = sp.signal.filtfilt(b, a, sig)
+        sig_filt = sp.signal.filtfilt(b_vals, a_vals, sig)
     else:
         sig_filt = np.convolve(kernel, sig, 'same')
 
     # Plot frequency response, if desired
     if plot_frequency_response:
         if iir:
-            plot_frequency_response(fs, b, a)
+            plot_frequency_response(fs, b_vals, a_vals)
         else:
             plot_frequency_response(fs, kernel)
 
@@ -179,11 +179,11 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
         # Compute the frequency response in terms of Hz and dB
         if not iir:
-            b = kernel
-            a = 1
-        w, h = signal.freqz(b, a)
-        f_db = w * fs / (2. * np.pi)
-        db = 20 * np.log10(abs(h))
+            b_vals = kernel
+            a_vals = 1
+        w_vals, h_vals = signal.freqz(b_vals, a_vals)
+        f_db = w_vals * fs / (2. * np.pi)
+        db = 20 * np.log10(abs(h_vals))
 
         # Confirm frequency response goes below -20dB (significant attenuation)
         if np.min(db) >= -20:
@@ -250,9 +250,9 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Remove edge artifacts
     if not iir and remove_edge_artifacts:
-        N_rmv = int(np.ceil(filt_len / 2))
-        sig_filt[:N_rmv] = np.nan
-        sig_filt[-N_rmv:] = np.nan
+        n_rmv = int(np.ceil(filt_len / 2))
+        sig_filt[:n_rmv] = np.nan
+        sig_filt[-n_rmv:] = np.nan
 
     # Add NaN back on the edges of 'x', if there were any at the beginning
     sig_filt_full = np.ones(len(sig_old)) * np.nan
@@ -262,7 +262,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     # Return kernel if desired
     if return_kernel:
         if iir:
-            return sig_filt, (b, a)
+            return sig_filt, (b_vals, a_vals)
         else:
             return sig_filt, kernel
     else:
