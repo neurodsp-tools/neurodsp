@@ -5,7 +5,7 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def sliding_window_matching(sig, s_rate, win_len, win_spacing, max_iterations=500,
+def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
                             temperature=1, window_starts_custom=None):
     """Find recurring patterns in a time series using the sliding window matching algorithm.
 
@@ -13,7 +13,7 @@ def sliding_window_matching(sig, s_rate, win_len, win_spacing, max_iterations=50
     ----------
     sig : array-like 1d
         voltage time series
-    s_rate : float
+    fs : float
         sampling rate (samples per second)
     win_len : float
         window length (seconds)
@@ -52,8 +52,8 @@ def sliding_window_matching(sig, s_rate, win_len, win_spacing, max_iterations=50
     """
 
     # Compute window length and spacing in samples
-    win_n_samps = int(win_len * s_rate)
-    spacing_n_samps = int(win_spacing * s_rate)
+    win_n_samps = int(win_len * fs)
+    spacing_n_samps = int(win_spacing * fs)
 
     # Initialize window positions, separated by 2*G
     if window_starts_custom is None:

@@ -8,15 +8,15 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-def plot_frequency_response(s_rate, b, a=1):
-    """Compute frequency response of a filter kernel b with sampling rate s_rate"""
+def plot_frequency_response(fs, b, a=1):
+    """Compute frequency response of a filter kernel b with sampling rate fs"""
 
     w, h = signal.freqz(b, a)
 
     # Plot frequency response
     plt.figure(figsize=(10, 5))
     plt.subplot(1, 2, 1)
-    plt.plot(w * s_rate / (2. * np.pi), 20 * np.log10(abs(h)), 'k')
+    plt.plot(w * fs / (2. * np.pi), 20 * np.log10(abs(h)), 'k')
     plt.title('Frequency response')
     plt.ylabel('Attenuation (dB)')
     plt.xlabel('Frequency (Hz)')

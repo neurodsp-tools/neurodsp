@@ -8,7 +8,7 @@ from neurodsp import amp_by_time, filt, spectral
 ###################################################################################################
 ###################################################################################################
 
-def detect_bursts_dual_threshold(sig, s_rate, f_range, dual_thresh, min_cycles=3,
+def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
                                  filter_kwargs=None):
     """Detect periods of oscillatory bursting in a neural signal.
@@ -17,7 +17,7 @@ def detect_bursts_dual_threshold(sig, s_rate, f_range, dual_thresh, min_cycles=3
     ----------
     sig : array-like 1d
         voltage time series
-    s_rate : float
+    fs : float
         The sampling rate in Hz
     f_range : tuple of (float, float)
         frequency range (Hz) for narrowband signal of interest
@@ -52,7 +52,7 @@ def detect_bursts_dual_threshold(sig, s_rate, f_range, dual_thresh, min_cycles=3
             "Invalid number of elements in 'dual_thresh' parameter")
 
     # Compute amplitude time series
-    sig_magnitude = amp_by_time(sig, s_rate, f_range, filter_kwargs=filter_kwargs,
+    sig_magnitude = amp_by_time(sig, fs, f_range, filter_kwargs=filter_kwargs,
                                 remove_edge_artifacts=False)
 
     # Set magnitude as power or amplitude
@@ -75,13 +75,13 @@ def detect_bursts_dual_threshold(sig, s_rate, f_range, dual_thresh, min_cycles=3
     is_burst = _dual_threshold_split(sig_magnitude, dual_thresh[1], dual_thresh[0])
 
     # Remove bursts detected that are too short
-    min_period_length = int(np.ceil(min_cycles * s_rate / f_range[0]))
+    min_period_length = int(np.ceil(min_cycles * fs / f_range[0]))
     is_burst = _rmv_short_periods(is_burst, min_period_length)
 
     return is_burst
 
 
-def compute_burst_stats(bursting, s_rate):
+def compute_burst_stats(bursting, fs):
     """Get statistics of bursts.
 
     Parameters
@@ -89,7 +89,7 @@ def compute_burst_stats(bursting, s_rate):
     bursting : array-like 1d
         Boolean indication of where bursts are present in the input signal.
         Output of detect_bursts_dualthreshold()
-    s_rate : float
+    fs : float
         The sampling rate in Hz
 
     Returns
@@ -102,7 +102,7 @@ def compute_burst_stats(bursting, s_rate):
                                   'burst_rate' - bursts/sec
     """
 
-    tot_time = len(bursting) / s_rate
+    tot_time = len(bursting) / fs
 
     # find burst starts and ends
     starts = np.array([])
@@ -116,7 +116,7 @@ def compute_burst_stats(bursting, s_rate):
             ends = np.append(ends, index)
 
     # duration of each burst
-    durations = (ends - starts) / s_rate
+    durations = (ends - starts) / fs
 
     stats_dict = {'N_bursts': len(starts),
                   'duration_mean': np.mean(durations),

@@ -18,9 +18,9 @@ def test_bandpass_filter_consistent():
     x, sig_filt_true = _load_example_data(data_idx=1, filtered=True)
 
     # filter data
-    s_rate = 1000
+    fs = 1000
     fc = (13, 30)
-    sig_filt = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc, n_cycles=3)
+    sig_filt = neurodsp.filter_signal(x, fs, 'bandpass', fc=fc, n_cycles=3)
 
     # Compute difference between current and past filtered signals
     signal_diff = sig_filt[~np.isnan(sig_filt)] - sig_filt_true[~np.isnan(sig_filt_true)]
@@ -54,10 +54,10 @@ def test_filter_length_error():
     the signal
     """
     T = 2
-    s_rate = 1000
-    x = np.random.randn(T * s_rate)
+    fs = 1000
+    x = np.random.randn(T * fs)
     with pytest.raises(ValueError) as excinfo:
-        sig_filt = neurodsp.filt.filter_signal(x, s_rate, 'bandpass', fc=(1, 10))
+        sig_filt = neurodsp.filt.filter_signal(x, fs, 'bandpass', fc=(1, 10))
     assert 'The filter needs to be shortened by decreasing the n_cycles' in str(excinfo.value)
 
 
@@ -101,14 +101,14 @@ def test_filter_length():
     x = _generate_random_x()
 
     # Specify filter length with number of cycles
-    s_rate = 1000
+    fs = 1000
     fc = (4, 8)
     n_cycles = 5
-    sig_filt, kernel = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc,
+    sig_filt, kernel = neurodsp.filter_signal(x, fs, 'bandpass', fc=fc,
                                      n_cycles=n_cycles, return_kernel=True)
 
     # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(s_rate * n_cycles / fc[0]))
+    force_kernel_length = int(np.ceil(fs * n_cycles / fc[0]))
     if force_kernel_length % 2 == 0:
         force_kernel_length = force_kernel_length + 1
 
@@ -116,13 +116,13 @@ def test_filter_length():
     assert np.allclose(len(kernel), force_kernel_length, atol=.1)
 
     # Specify filter length with number of seconds
-    s_rate = 1000
+    fs = 1000
     n_seconds = .8
-    sig_filt, kernel = neurodsp.filter_signal(x, s_rate, 'bandpass', fc=fc,
+    sig_filt, kernel = neurodsp.filter_signal(x, fs, 'bandpass', fc=fc,
                                      n_seconds=n_seconds, return_kernel=True)
 
     # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(s_rate * n_seconds))
+    force_kernel_length = int(np.ceil(fs * n_seconds))
     if force_kernel_length % 2 == 0:
         force_kernel_length = force_kernel_length + 1
 

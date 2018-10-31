@@ -10,7 +10,7 @@ import neurodsp
 ###################################################################################################
 ###################################################################################################
 
-def phase_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
+def phase_by_time(sig, fs, f_range, filter_fn=None, filter_kwargs=None,
                   hilbert_increase_n=False, remove_edge_artifacts=True):
     """Calculate the phase time series of a neural oscillation.
 
@@ -18,13 +18,13 @@ def phase_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     ----------
     sig : array-like, 1d
         Time series
-    s_rate : float, Hz
+    fs : float, Hz
         Sampling rate
     f_range : (low, high), Hz
         Frequency range
     filter_fn : function, optional
         The filtering function, with api:
-        `filterfn(x, s_rate, pass_type, fc, remove_edge_artifacts=True)
+        `filterfn(x, fs, pass_type, fc, remove_edge_artifacts=True)
     filter_kwargs : dict, optional
         Keyword parameters to pass to `filterfn(.)`
     hilbert_increase_n : bool, optional
@@ -47,7 +47,7 @@ def phase_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
         filter_kwargs = {}
 
     # Filter signal
-    sig_filt, kernel = filter_fn(sig, s_rate, 'bandpass', fc=f_range,
+    sig_filt, kernel = filter_fn(sig, fs, 'bandpass', fc=f_range,
                                remove_edge_artifacts=False,
                                return_kernel=True, **filter_kwargs)
 
@@ -63,7 +63,7 @@ def phase_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     return pha
 
 
-def amp_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
+def amp_by_time(sig, fs, f_range, filter_fn=None, filter_kwargs=None,
                 hilbert_increase_n=False, remove_edge_artifacts=True):
     """Calculate the amplitude time series.
 
@@ -71,7 +71,7 @@ def amp_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     ----------
     sig : array-like, 1d
         Time series
-    s_rate : float, Hz
+    fs : float, Hz
         Sampling rate
     f_range : (low, high), Hz
         The frequency filtering range
@@ -100,7 +100,7 @@ def amp_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
         filter_kwargs = {}
 
     # Filter signal
-    sig_filt, kernel = filter_fn(sig, s_rate, 'bandpass', fc=f_range,
+    sig_filt, kernel = filter_fn(sig, fs, 'bandpass', fc=f_range,
                                remove_edge_artifacts=False,
                                return_kernel=True, **filter_kwargs)
 
@@ -115,7 +115,7 @@ def amp_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     return amp
 
 
-def freq_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
+def freq_by_time(sig, fs, f_range, filter_fn=None, filter_kwargs=None,
                  hilbert_increase_n=False, remove_edge_artifacts=True):
     """Estimate the instantaneous frequency at each sample.
 
@@ -123,7 +123,7 @@ def freq_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     ----------
     sig : array-like 1d
         voltage time series
-    s_rate : float
+    fs : float
         sampling rate
     f_range : (low, high), Hz
         frequency range for filtering
@@ -149,7 +149,7 @@ def freq_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     * This function assumes monotonic phase, so a phase slip will be processed as a very high frequency
     """
 
-    pha = phase_by_time(sig, s_rate, f_range, filter_fn=filter_fn,
+    pha = phase_by_time(sig, fs, f_range, filter_fn=filter_fn,
                         filter_kwargs=filter_kwargs,
                         hilbert_increase_n=hilbert_increase_n,
                         remove_edge_artifacts=remove_edge_artifacts)
@@ -157,7 +157,7 @@ def freq_by_time(sig, s_rate, f_range, filter_fn=None, filter_kwargs=None,
     phadiff = np.diff(pha)
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
 
-    i_f = s_rate * phadiff / (2 * np.pi)
+    i_f = fs * phadiff / (2 * np.pi)
     i_f = np.insert(i_f, 0, np.nan)
 
     return i_f

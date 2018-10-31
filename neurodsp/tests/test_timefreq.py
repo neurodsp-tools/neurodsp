@@ -17,7 +17,7 @@ def test_timefreq_consistent():
     # Load data
     data_idx = 1
     x = _load_example_data(data_idx=data_idx)
-    s_rate = 1000
+    fs = 1000
     f_range = (13, 30)
 
     # Load ground truth phase time series
@@ -31,11 +31,11 @@ def test_timefreq_consistent():
                        '/tests/data/sample_data_' + str(data_idx) + '_i_f.npy')
 
     # Compute phase time series
-    pha = neurodsp.phase_by_time(x, s_rate, f_range)
+    pha = neurodsp.phase_by_time(x, fs, f_range)
     # Compute amplitude time series
-    amp = neurodsp.amp_by_time(x, s_rate, f_range)
+    amp = neurodsp.amp_by_time(x, fs, f_range)
     # Compute frequency time series
-    i_f = neurodsp.freq_by_time(x, s_rate, f_range)
+    i_f = neurodsp.freq_by_time(x, fs, f_range)
 
     # Compute difference between current and past signals
     assert np.allclose(np.sum(np.abs(pha[~np.isnan(pha)] - pha_true[~np.isnan(pha)])), 0, atol=10 ** -5)
@@ -53,14 +53,14 @@ def test_NaN_in_x():
 
     # Generate a low-pass filtered signal with NaNs
     x = np.random.randn(10000)
-    s_rate = 1000
-    x = neurodsp.filter_signal(x, s_rate, 'lowpass', fc=50)
+    fs = 1000
+    x = neurodsp.filter_signal(x, fs, 'lowpass', fc=50)
 
     # Compute phase, amp, and freq time series
     f_range = (4, 8)
-    pha = neurodsp.phase_by_time(x, s_rate, f_range)
-    amp = neurodsp.amp_by_time(x, s_rate, f_range)
-    i_f = neurodsp.freq_by_time(x, s_rate, f_range)
+    pha = neurodsp.phase_by_time(x, fs, f_range)
+    amp = neurodsp.amp_by_time(x, fs, f_range)
+    i_f = neurodsp.freq_by_time(x, fs, f_range)
 
     assert len(pha[~np.isnan(pha)]) > 0
     assert len(amp[~np.isnan(amp)]) > 0

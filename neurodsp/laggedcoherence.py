@@ -6,7 +6,7 @@ from scipy import signal
 ###################################################################################################
 ###################################################################################################
 
-def lagged_coherence(sig, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum=False):
+def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False):
     """Quantify the rhythmicity of an oscillator using the lagged coherence measure.
 
     Parameters
@@ -15,7 +15,7 @@ def lagged_coherence(sig, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum
         voltage time series
     f_range : (low, high), Hz
         frequency range of the oscillator
-    s_rate : float
+    fs : float
         sampling rate
     n_cycles : float
         Number of cycles of the frequency of interest used to compute lagged coherence
@@ -29,7 +29,7 @@ def lagged_coherence(sig, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum
     lc : float (or numpy.array 1d)
         if return_spectrum is False: mean lagged coherence value in the frequency range of interest
         if return_spectrum is True: lagged coherence value for each frequency in the frequency range
-    s_rate : numpy.array 1d
+    fs : numpy.array 1d
         Only returned if return_spectrum is True
         Frequencies (Hz) corresponding to the lagged coherence values in lc
 
@@ -47,7 +47,7 @@ def lagged_coherence(sig, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum
     n_freqs = len(freqs)
     lcs = np.zeros(n_freqs)
     for ind, freq in enumerate(freqs):
-        lcs[ind] = _lagged_coherence_1freq(sig, freq, s_rate, n_cycles=n_cycles, f_step=f_step)
+        lcs[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles, f_step=f_step)
 
     # Return desired measure of lagged coherence
     if return_spectrum:
@@ -58,31 +58,31 @@ def lagged_coherence(sig, f_range, s_rate, n_cycles=3, f_step=1, return_spectrum
         return lc
 
 
-def _lagged_coherence_1freq(sig, freq, s_rate, n_cycles=3, f_step=1):
+def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3, f_step=1):
     """Calculate lagged coherence of sig at frequency freq using the hanning-taper FFT method"""
 
     # Determine number of samples to be used in each window to compute lagged coherence
-    n_samps = int(np.ceil(n_cycles * s_rate / freq))
+    n_samps = int(np.ceil(n_cycles * fs / freq))
 
     # For each N-cycle chunk, calculate the fourier coefficient at the frequency of interest, freq
     chunks = _nonoverlapping_chunks(sig, n_samps)
     chunks_len = len(chunks)
 
     hann_window = signal.hanning(n_samps)
-    fourier_f = np.fft.fftfreq(n_samps, 1 / float(s_rate))
+    fourier_f = np.fft.fftfreq(n_samps, 1 / float(fs))
     fourier_f_idx = np.argmin(np.abs(fourier_f - freq))
-    fourier_coes_rateoi = np.zeros(chunks_len, dtype=complex)
+    fourier_coefsoi = np.zeros(chunks_len, dtype=complex)
 
     for ind, chunk in enumerate(chunks):
         fourier_coef = np.fft.fft(chunk * hann_window)
-        fourier_coes_rateoi[ind] = fourier_coef[fourier_f_idx]
+        fourier_coefsoi[ind] = fourier_coef[fourier_f_idx]
 
     # Compute the lagged coherence value
     lcs_num = 0
     for ind in range(chunks_len - 1):
-        lcs_num += fourier_coes_rateoi[ind] * np.conj(fourier_coes_rateoi[ind + 1])
+        lcs_num += fourier_coefsoi[ind] * np.conj(fourier_coefsoi[ind + 1])
     lcs_denom = np.sqrt(np.sum(
-        np.abs(fourier_coes_rateoi[:-1])**2) * np.sum(np.abs(fourier_coes_rateoi[1:])**2))
+        np.abs(fourier_coefsoi[:-1])**2) * np.sum(np.abs(fourier_coefsoi[1:])**2))
 
     return np.abs(lcs_num / lcs_denom)
 

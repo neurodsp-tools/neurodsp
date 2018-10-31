@@ -17,7 +17,7 @@ def test_swm_consistent():
     # Load data
     data_idx = 1
     x = _load_example_data(data_idx=data_idx)
-    s_rate = 1000
+    fs = 1000
 
     # Load ground truth lagged coherence
     avg_window_true = np.load(os.path.dirname(neurodsp.__file__) +
@@ -27,7 +27,7 @@ def test_swm_consistent():
     L = .055
     G = .2
     np.random.seed(1)
-    avg_window, _, _ = sliding_window_matching(x, s_rate, L, G, max_iterations=500)
+    avg_window, _, _ = sliding_window_matching(x, fs, L, G, max_iterations=500)
 
     # Compute difference between current and past signals
     signal_diff = avg_window - avg_window_true

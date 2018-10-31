@@ -17,7 +17,7 @@ def test_laggedcoherence_consistent():
     # Load data
     data_idx = 1
     sig = _load_example_data(data_idx=data_idx)
-    s_rate = 1000
+    fs = 1000
     f_range = (13, 30)
 
     # Load ground truth lagged coherence
@@ -25,6 +25,6 @@ def test_laggedcoherence_consistent():
                       '/tests/data/sample_data_' + str(data_idx) + '_laggedcoherence.npy')
 
     # Compute lagged coherence
-    lag_coh_beta = neurodsp.lagged_coherence(sig, f_range, s_rate)
+    lag_coh_beta = neurodsp.lagged_coherence(sig, f_range, fs)
 
     assert np.allclose(lag_coh_beta, lc_true, atol=10 ** -5)
