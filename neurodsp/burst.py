@@ -1,25 +1,22 @@
 """Analyze periods of oscillatory bursting in a neural signal."""
 
 import numpy as np
-from scipy import stats
 
-from neurodsp import amp_by_time, filt, spectral
+from neurodsp import amp_by_time
 
 ###################################################################################################
 ###################################################################################################
 
-def detect_bursts_dual_threshold(x, Fs, f_range, dual_thresh,
-                             min_cycles=3,
-                             average_method='median',
-                             magnitude_type='amplitude',
-                             filter_kwargs=None):
+def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
+                                 average_method='median', magnitude_type='amplitude',
+                                 filter_kwargs=None):
     """Detect periods of oscillatory bursting in a neural signal.
 
     Parameters
     ----------
-    x : array-like 1d
+    sig : array-like 1d
         voltage time series
-    Fs : float
+    fs : float
         The sampling rate in Hz
     f_range : tuple of (float, float)
         frequency range (Hz) for narrowband signal of interest
@@ -54,12 +51,12 @@ def detect_bursts_dual_threshold(x, Fs, f_range, dual_thresh,
             "Invalid number of elements in 'dual_thresh' parameter")
 
     # Compute amplitude time series
-    x_magnitude = amp_by_time(x, Fs, f_range, filter_kwargs=filter_kwargs,
-                              remove_edge_artifacts=False)
+    sig_magnitude = amp_by_time(sig, fs, f_range, filter_kwargs=filter_kwargs,
+                                remove_edge_artifacts=False)
 
     # Set magnitude as power or amplitude
     if magnitude_type == 'power':
-        x_magnitude = x_magnitude**2
+        sig_magnitude = sig_magnitude**2
     elif magnitude_type == 'amplitude':
         pass
     else:
@@ -67,22 +64,23 @@ def detect_bursts_dual_threshold(x, Fs, f_range, dual_thresh,
 
     # Calculate normalized magnitude
     if average_method == 'median':
-        x_magnitude = x_magnitude / np.median(x_magnitude)
+        sig_magnitude = sig_magnitude / np.median(sig_magnitude)
     elif average_method == 'mean':
-        x_magnitude = x_magnitude / np.mean(x_magnitude)
+        sig_magnitude = sig_magnitude / np.mean(sig_magnitude)
     else:
         raise ValueError("Invalid input for 'average_method'")
 
     # Identify time periods of bursting using the 2 thresholds
-    is_burst = _2threshold_split(x_magnitude, dual_thresh[1], dual_thresh[0])
+    is_burst = _dual_threshold_split(sig_magnitude, dual_thresh[1], dual_thresh[0])
 
     # Remove bursts detected that are too short
-    min_period_length = int(np.ceil(min_cycles * Fs / f_range[0]))
+    min_period_length = int(np.ceil(min_cycles * fs / f_range[0]))
     is_burst = _rmv_short_periods(is_burst, min_period_length)
+
     return is_burst
 
 
-def compute_burst_stats(bursting, Fs):
+def compute_burst_stats(bursting, fs):
     """Get statistics of bursts.
 
     Parameters
@@ -90,7 +88,7 @@ def compute_burst_stats(bursting, Fs):
     bursting : array-like 1d
         Boolean indication of where bursts are present in the input signal.
         Output of detect_bursts_dualthreshold()
-    Fs : float
+    fs : float
         The sampling rate in Hz
 
     Returns
@@ -103,20 +101,21 @@ def compute_burst_stats(bursting, Fs):
                                   'burst_rate' - bursts/sec
     """
 
-    tot_time = len(bursting) / Fs
+    tot_time = len(bursting) / fs
 
     # find burst starts and ends
     starts = np.array([])
     ends = np.array([])
 
-    for i, index in enumerate(np.where(np.diff(bursting) != 0)[0]):
-        if (i % 2) == 0:
+    for ii, index in enumerate(np.where(np.diff(bursting) != 0)[0]):
+
+        if (ii % 2) == 0:
             starts = np.append(starts, index)
         else:
             ends = np.append(ends, index)
 
     # duration of each burst
-    durations = (ends - starts) / Fs
+    durations = (ends - starts) / fs
 
     stats_dict = {'N_bursts': len(starts),
                   'duration_mean': np.mean(durations),
@@ -127,7 +126,7 @@ def compute_burst_stats(bursting, Fs):
     return stats_dict
 
 
-def _2threshold_split(x, thresh_hi, thresh_lo):
+def _dual_threshold_split(sig, thresh_hi, thresh_lo):
     """
     Identify periods of a time series that are above thresh_lo and have at
     least one value above thresh_hi
@@ -136,22 +135,22 @@ def _2threshold_split(x, thresh_hi, thresh_lo):
     # Find all values above thresh_hi
     # To avoid bug in later loop, do not allow first or last index to start
     # off as 1
-    x[[0, -1]] = 0
-    idx_over_hi = np.where(x >= thresh_hi)[0]
+    sig[[0, -1]] = 0
+    idx_over_hi = np.where(sig >= thresh_hi)[0]
 
     # Initialize values in identified period
-    positive = np.zeros(len(x))
+    positive = np.zeros(len(sig))
     positive[idx_over_hi] = 1
 
-    # Iteratively test if a value is above thresh_lo if it is not currently in
-    # an identified period
-    lenx = len(x)
-    for i in idx_over_hi:
-        j_down = i - 1
+    # Iteratively test if a value is above thresh_lo if it is not currently in an identified period
+    sig_len = len(sig)
+
+    for ind in idx_over_hi:
+        j_down = ind - 1
         if positive[j_down] == 0:
             j_down_done = False
             while j_down_done is False:
-                if x[j_down] >= thresh_lo:
+                if sig[j_down] >= thresh_lo:
                     positive[j_down] = 1
                     j_down -= 1
                     if j_down < 0:
@@ -159,14 +158,14 @@ def _2threshold_split(x, thresh_hi, thresh_lo):
                 else:
                     j_down_done = True
 
-        j_up = i + 1
+        j_up = ind + 1
         if positive[j_up] == 0:
             j_up_done = False
             while j_up_done is False:
-                if x[j_up] >= thresh_lo:
+                if sig[j_up] >= thresh_lo:
                     positive[j_up] = 1
                     j_up += 1
-                    if j_up >= lenx:
+                    if j_up >= sig_len:
                         j_up_done = True
                 else:
                     j_up_done = True
@@ -174,13 +173,13 @@ def _2threshold_split(x, thresh_hi, thresh_lo):
     return positive
 
 
-def _rmv_short_periods(x, N):
-    """Remove periods that ==1 for less than N samples"""
+def _rmv_short_periods(sig, n_samples):
+    """Remove periods that ==1 for less than n_samples."""
 
-    if np.sum(x) == 0:
-        return x
+    if np.sum(sig) == 0:
+        return sig
 
-    osc_changes = np.diff(1 * x)
+    osc_changes = np.diff(1 * sig)
     osc_starts = np.where(osc_changes == 1)[0]
     osc_ends = np.where(osc_changes == -1)[0]
 
@@ -195,10 +194,11 @@ def _rmv_short_periods(x, N):
         osc_ends = np.append(osc_ends, len(osc_changes))
 
     osc_length = osc_ends - osc_starts
-    osc_starts_long = osc_starts[osc_length >= N]
-    osc_ends_long = osc_ends[osc_length >= N]
+    osc_starts_long = osc_starts[osc_length >= n_samples]
+    osc_ends_long = osc_ends[osc_length >= n_samples]
 
-    is_osc = np.zeros(len(x))
+    is_osc = np.zeros(len(sig))
     for osc in range(len(osc_starts_long)):
         is_osc[osc_starts_long[osc]:osc_ends_long[osc]] = 1
+
     return is_osc
