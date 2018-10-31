@@ -6,18 +6,18 @@ from scipy import signal
 ###################################################################################################
 ###################################################################################################
 
-def compute_spectrum(x, s_rate, method='mean', window='hann', nperseg=None,
-        noverlap=None, filt_len=1., f_lim=None, spg_outlierpct=0.):
+def compute_spectrum(sig, s_rate, method='mean', window='hann', nperseg=None,
+                     noverlap=None, filt_len=1., f_lim=None, spg_outlier_pct=0.):
     """
     Estimating the power spectral density (PSD) of a time series from short-time Fourier
     Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
 
     Parameters
     -----------
-    x : array_like 1d or 2d
+    sig : array_like 1d or 2d
         Time series of measurement values.
     s_rate : float, Hz
-        Sampling frequency of the x time series.
+        Sampling frequency of the sig time series.
     method : { 'mean', 'median', 'medfilt'}, optional
         Methods to calculate the spectrum. Defaults to 'mean'.
             'mean' is the same as Welch's method (mean of STFT).
@@ -38,15 +38,15 @@ def compute_spectrum(x, s_rate, method='mean', window='hann', nperseg=None,
         (For medfilt method) Length of median filter in Hz.
     f_lim : float, Hz, optional
         Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.
-    spg_outlierpct : float, (between 0 to 100)
+    spg_outlier_pct : float, (between 0 to 100)
         Percentage of spectrogram windows with the highest powers to discard prior to averaging.
         Useful for quickly eliminating potential outliers to compute spectrum.
 
     Returns
     -------
-    freq : ndarray
+    freqs : ndarray
         Array of sample frequencies.
-    Pxx : ndarray
+    spectrum : ndarray
         Power spectral density of x.
 
     References
@@ -72,62 +72,62 @@ def compute_spectrum(x, s_rate, method='mean', window='hann', nperseg=None,
             noverlap = int(noverlap)
 
         # call signal.spectrogram function in scipy to compute STFT
-        freq, t_axis, spg = signal.spectrogram(x, s_rate, window, nperseg, noverlap)
+        freqs, t_axis, spg = signal.spectrogram(sig, s_rate, window, nperseg, noverlap)
 
         # pad data to 2D
-        if len(x.shape) == 1:
-            x = x[None, :]
+        if len(sig.shape) == 1:
+            sig = sig[None, :]
 
-        numchan = x.shape[0]
+        numchan = sig.shape[0]
         # throw out outliers if indicated
-        if spg_outlierpct > 0.:
-            n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlierpct))
+        if spg_outlier_pct > 0.:
+            n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlier_pct))
             n_keep = int(len(t_axis)-n_discard)
-            spg_ = np.zeros((numchan, len(freq), n_keep))
+            spg_temp = np.zeros((numchan, len(freqs), n_keep))
             outlier_inds = np.zeros((numchan, n_discard))
             for chan in range(numchan):
                 # discard time windows with high total log powers, round up so it doesn't get a zero
                 outlier_inds[chan, :] = np.argsort(np.mean(np.log10(spg[chan, :, :]), axis=0))[-n_discard:]
                 spg_[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
-            spg = spg_
+            spg = spg_temp
 
         if method == 'mean':
-            Pxx = np.mean(spg, axis=-1)
+            spectrum = np.mean(spg, axis=-1)
         elif method == 'median':
-            Pxx = np.median(spg, axis=-1)
+            spectrum = np.median(spg, axis=-1)
 
     elif method == 'medfilt':
 
         # median filtered FFT spectrum
         # take the positive half of the spectrum since it's symmetrical
-        FT = np.fft.fft(x)[:int(np.ceil(len(x) / 2.))]
-        freq = np.fft.fftfreq(
-            len(x), 1. / s_rate)[:int(np.ceil(len(x) / 2.))]  # get freq axis
+        FT = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
+        freqs = np.fft.fftfreq(len(sig), 1. / s_rate)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
+
         # convert median filter length from Hz to samples
-        filt_len_samp = int(int(filt_len / (freq[1] - freq[0])) / 2 * 2 + 1)
-        Pxx = signal.medfilt(np.abs(FT)**2. / (s_rate * len(x)), filt_len_samp)
+        filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
+        spectrum = signal.medfilt(np.abs(FT)**2. / (s_rate * len(sig)), filt_len_samp)
 
     else:
         raise ValueError('Unknown power spectrum method: %s' % method)
 
     if f_lim is not None:
-        f_lim_ind = np.where(freq>f_lim)[0][0]
-        return freq[:f_lim_ind], Pxx[...,:f_lim_ind]
+        f_lim_ind = np.where(freqs > f_lim)[0][0]
+        return freqs[:f_lim_ind], spectrum[..., :f_lim_ind]
     else:
-        return freq, Pxx
+        return freqs, spectrum
 
 
-def scv(x, s_rate, window='hann', nperseg=None, noverlap=0, outlierpct=None):
+def scv(sig, s_rate, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
     """
     Compute the spectral coefficient of variation (SCV) at each frequency.
     White noise should have a SCV of 1 at all frequencies.
 
     Parameters
     -----------
-    x : array_like 1d
+    sig : array_like 1d
         Time series of measurement values
     s_rate : float, Hz
-        Sampling frequency of the x time series.
+        Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
             See scipy.signal.get_window for a list of windows and required parameters.
@@ -138,7 +138,7 @@ def scv(x, s_rate, window='hann', nperseg=None, noverlap=0, outlierpct=None):
             If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
         Number of points to overlap between segments. Defaults to 0 for independence.
-    outlierpct : float, percent, optional
+    outlier_pct : float, percent, optional
         Discarding a percentage of the windows with the lowest and highest total log power.
 
     Returns
@@ -162,29 +162,30 @@ def scv(x, s_rate, window='hann', nperseg=None, noverlap=0, outlierpct=None):
     if noverlap is not None:
         noverlap = int(noverlap)
 
-    freq, _, spg = signal.spectrogram(x, s_rate, window, nperseg, noverlap)
-    if outlierpct is not None:
+    freq, _, spg = signal.spectrogram(sig, s_rate, window, nperseg, noverlap)
+    if outlier_pct is not None:
         # discard time windows with high powers
         # round up so it doesn't get a zero
-        discard = int(np.ceil(spg.shape[1] / 100. * outlierpct))
+        discard = int(np.ceil(spg.shape[1] / 100. * outlier_pct))
         outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
         spg = spg[:, outlieridx]
 
     spectcv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
+
     return freq, spectcv
 
 
-def scv_rs(x, s_rate, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
+def scv_rs(sig, s_rate, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
     """
     Resampled version of scv: instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
 
     Parameters
     -----------
-    x : array_like 1d
+    sig : array_like 1d
         Time series of measurement values
     s_rate : float, Hz
-        Sampling frequency of the x time series.
+        Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
             See scipy.signal.get_window for a list of windows and required parameters.
@@ -228,8 +229,9 @@ def scv_rs(x, s_rate, window='hann', nperseg=None, noverlap=0, method='bootstrap
 
     if noverlap is not None:
         noverlap = int(noverlap)
+
     # compute spectrogram
-    freq, ts, spg = signal.spectrogram(x, s_rate, window, nperseg, noverlap)
+    freq, ts, spg = signal.spectrogram(sig, s_rate, window, nperseg, noverlap)
 
     if method == 'bootstrap':
 
@@ -274,7 +276,7 @@ def scv_rs(x, s_rate, window='hann', nperseg=None, noverlap=0, method='bootstrap
     return freq, t_inds, spectcv_rs
 
 
-def spectral_hist(x, s_rate, window='hann', nperseg=None, noverlap=None,
+def spectral_hist(sig, s_rate, window='hann', nperseg=None, noverlap=None,
                   nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
     """
     Compute the distribution of log10 power at each frequency from the signal spectrogram.
@@ -282,10 +284,10 @@ def spectral_hist(x, s_rate, window='hann', nperseg=None, noverlap=None,
 
     Parameters
     -----------
-    x : array_like 1d
+    sig : array_like 1d
         Time series of measurement values
     s_rate : float, Hz
-        Sampling frequency of the x time series.
+        Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
             See scipy.signal.get_window for a list of windows and required parameters.
@@ -305,7 +307,7 @@ def spectral_hist(x, s_rate, window='hann', nperseg=None, noverlap=None,
 
     Returns
     -------
-    freq : ndarray
+    freqs : ndarray
         Array of frequencies.
     power_bins : ndarray
         Histogram bins used to compute the distribution.
@@ -327,15 +329,14 @@ def spectral_hist(x, s_rate, window='hann', nperseg=None, noverlap=None,
         noverlap = int(noverlap)
 
     # compute spectrogram of data
-    freq, _, spg = signal.spectrogram(
-        x, s_rate, window, nperseg, noverlap, return_onesided=True)
+    freqs, _, spg = signal.spectrogram(sig, s_rate, window, nperseg, noverlap, return_onesided=True)
 
     # get log10 power before binning
     ps = np.transpose(np.log10(spg))
 
     # Limit spectrogram to freq range of interest
-    ps = ps[:, np.logical_and(freq >= f_lim[0], freq < f_lim[1])]
-    freq = freq[np.logical_and(freq >= f_lim[0], freq < f_lim[1])]
+    ps = ps[:, np.logical_and(freqs >= f_lim[0], freqs < f_lim[1])]
+    freqs = freqs[np.logical_and(freqs >= f_lim[0], freqs < f_lim[1])]
 
     # Prepare bins for power. Min and max of bins determined by power cutoff
     # percentage
@@ -352,67 +353,67 @@ def spectral_hist(x, s_rate, window='hann', nperseg=None, noverlap=None,
     spect_hist = np.transpose(spect_hist)
     spect_hist = np.flipud(spect_hist)
 
-    return freq, power_bins, spect_hist
+    return freqs, power_bins, spect_hist
 
 
-def morlet_transform(x, f0s, s_rate, w=7, s=.5):
+def morlet_transform(sig, freqs, s_rate, n_cycles=7, scaling=.5):
     """Calculate the time-frequency representation using morlet wavelets.
 
     Parameters
     ----------
-    x : array
-        time series
-    f0s : array
-        frequency axis
+    sig : array
+        Time series
+    freqs : array
+        Frequency axis
     s_rate : float
         Sampling rate
-    w : float
+    n_cycles : float
         Length of the filter in terms of the number of cycles of the oscillation
         whose frequency is the center of the bandpass filter
-    s : float
+    scaling : float
         Scaling factor
 
     Returns
     -------
     mwt : 2-D array
-        time-frequency representation of signal x
+        time-frequency representation of signal sig
     """
 
-    if w <= 0:
+    if n_cycles <= 0:
         raise ValueError(
             'Number of cycles in a filter must be a positive number.')
 
-    T = len(x)
-    F = len(f0s)
-    mwt = np.zeros([F, T], dtype=complex)
-    for f in range(F):
-        mwt[f] = morlet_convolve(x, f0s[f], s_rate, w=w, s=s)
+    sig_len = len(sig)
+    freqs_len = len(freqs)
+    mwt = np.zeros([sig_len, freqs_len], dtype=complex)
+
+    for f_ind, freq in enumerate(freqs):
+        mwt[f_ind] = morlet_convolve(sig, freq, s_rate, w=n_cycles, s=scaling)
 
     return mwt
 
 
-def morlet_convolve(x, f0, s_rate, w=7, s=.5, M=None, norm='sss'):
-    """
-    Convolve a signal with a complex wavelet
+def morlet_convolve(sig, freq, s_rate, n_cycles=7, scaling=.5, filt_len=None, norm='sss'):
+    """Convolve a signal with a complex wavelet.
+
     The real part is the filtered signal
     Taking np.abs() of output gives the analytic amplitude
     Taking np.angle() of output gives the analytic phase
 
     Parameters
     ----------
-    x : array
+    sig : array
         Time series to filter
-    f0 : float
+    freq : float
         Center frequency of bandpass filter
     s_rate : float
         Sampling rate
-    w : float
-        Length of the filter in terms of the number of cycles of the oscillation
-        with frequency f0
-    s : float
+    n_cycles : float
+        Length of the filter in terms of the number of cycles of the oscillation with frequency freq
+    scaling : float
         Scaling factor for the morlet wavelet
-    M : integer
-        Length of the filter. Overrides the f0 and w inputs
+    filt_len : integer
+        Length of the filter. If not None, overrides the freq and w inputs
     norm : string
         Normalization method
         'sss' - divide by the sqrt of the sum of squares of points
@@ -420,17 +421,17 @@ def morlet_convolve(x, f0, s_rate, w=7, s=.5, M=None, norm='sss'):
 
     Returns
     -------
-    x_trans : array
+    array
         Complex time series
     """
 
-    if w <= 0:
+    if n_cycles <= 0:
         raise ValueError('Number of cycles in a filter must be a positive number.')
 
-    if M is None:
-        M = w * s_rate / f0
+    if filt_len is None:
+        filt_len = n_cycles * s_rate / freq
 
-    morlet_f = signal.morlet(M, w=w, s=s)
+    morlet_f = signal.morlet(filt_len, w=n_cycles, s=scaling)
 
     if norm == 'sss':
         morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
@@ -439,8 +440,8 @@ def morlet_convolve(x, f0, s_rate, w=7, s=.5, M=None, norm='sss'):
     else:
         raise ValueError('Not a valid wavelet normalization method.')
 
-    mwt_real = np.convolve(x, np.real(morlet_f), mode='same')
-    mwt_imag = np.convolve(x, np.imag(morlet_f), mode='same')
+    mwt_real = np.convolve(sig, np.real(morlet_f), mode='same')
+    mwt_imag = np.convolve(sig, np.imag(morlet_f), mode='same')
 
     return mwt_real + 1j * mwt_imag
 
