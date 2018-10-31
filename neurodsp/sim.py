@@ -500,13 +500,13 @@ def sim_poisson_pop(n_seconds, s_rate, n_neurons, firing_rate):
     n_samples = int(n_seconds * s_rate)
 
     # poisson population rate signal scales with # of neurons and individual rate
-    lam = n_neurons * FR
+    lam = n_neurons * firing_rate
 
     # variance is equal to the mean
     sig = np.random.normal(loc=lam, scale=lam**0.5, size=n_samples)
 
     # enforce that sig is non-negative in cases of low firing rate
-    sig[np.where(x < 0.)] = 0.
+    sig[np.where(sig < 0.)] = 0.
 
     return sig
 
