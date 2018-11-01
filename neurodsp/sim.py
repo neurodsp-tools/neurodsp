@@ -82,7 +82,7 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
 
     Returns
     -------
-    oscillator : 1d array
+    osc : 1d array
         Oscillating time series
     """
 
@@ -102,9 +102,9 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     phase_t = phase_t[:n_samples]
 
     # Transform phase into an oscillator
-    oscillator = np.cos(phase_t)
+    osc = np.cos(phase_t)
 
-    return oscillator
+    return osc
 
 
 def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, ratio_osc_power=1,
@@ -138,7 +138,7 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, ratio_osc_po
 
     Returns
     -------
-    1d array
+    osc: 1d array
         Oscillator with noise
     """
 
@@ -164,9 +164,9 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, ratio_osc_po
     noise = np.sqrt(noise**2 * oscillator_power / (noise_power * ratio_osc_power)) * np.sign(noise)
 
     # Combine oscillator and noise
-    output = oscillator + noise
+    osc = oscillator + noise
 
-    return output
+    return osc
 
 
 def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
@@ -363,15 +363,15 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
             >0.5 - longer rise, shorter decay
     exponent : float
         Desired power-law exponent - beta in P(f)=f^beta
+    ratio_osc_power : float
+        Ratio of oscillator power to noise power
+            >1 - oscillator is stronger
+            <1 - noise is stronger
     f_range_filter : 2-element array (lo,hi) or None
         Frequency range of simulated noise
             if None: do not filter
     filter_order : int
         Order of filter for noise process
-    ratio_osc_power : float
-        Ratio of oscillator power to noise power
-            >1 - oscillator is stronger
-            <1 - noise is stronger
     prob_enter_burst : float
         Probability of a cycle being oscillating given the last cycle is not oscillating
     prob_leave_burst : float
@@ -442,16 +442,16 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
                     (noise_power * ratio_osc_power)) * np.sign(noise)
 
     # Combine oscillator and noise
-    output = oscillator + noise
+    signal = oscillator + noise
 
     if return_components:
         if return_cycle_df:
-            return output, oscillator, noise, df
-        return output, oscillator, noise
+            return signal, oscillator, noise, df
+        return signal, oscillator, noise
     else:
         if return_cycle_df:
-            return output, df
-        return output
+            return signal, df
+        return signal
 
 
 def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
@@ -574,15 +574,16 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., t
 
     Returns
     -------
-    x : array_like (1D)
+    sig : array_like (1D)
         Simulated signal.
     """
 
     # Simulate an extra bit because the convolution will snip it
     sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker), fs=fs, n_neurons=n_neurons, firing_rate=firing_rate)
     ker = make_synaptic_kernel(t_ker=t_ker, fs=fs, tau_r=tau_r, tau_d=tau_d)
+    sig = np.convolve(sig, ker, 'valid')[:-1]
 
-    return np.convolve(sig, ker, 'valid')[:-1]
+    return sig
 
 
 def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
@@ -611,7 +612,7 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
     Returns
     -------
-    1d array
+    sig: 1d array
         Simulated signal
 
     References
@@ -626,8 +627,9 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     ws = np.random.normal(size=len(times))
     ex = np.exp(-theta * times)
     ws[0] = 0.
+    sig = x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
 
-    return x0 * ex + mu * (1. - ex) + sigma * ex * np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
+    return sig
 
 
 def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
@@ -655,7 +657,7 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
 
     Returns
     -------
-    1d array
+    sig: 1d array
         Simulated oscillation with jitter.
     """
 
@@ -685,8 +687,9 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
                               high=int(fs * jitter), size=len(spk_indices))
 
     spks[spk_indices] = 1
+    sig = np.convolve(spks, osc_cycle, 'valid')
 
-    return np.convolve(spks, osc_cycle, 'valid')
+    return sig
 
 
 def make_osc_cycle(t_ker, fs, cycle_params):
@@ -710,24 +713,25 @@ def make_osc_cycle(t_ker, fs, cycle_params):
 
     Returns
     -------
-    1d array
+    cycle: 1d array
         Simulated oscillation cycle
     """
 
     if cycle_params[0] == 'gaussian':
         # cycle_params defines std in seconds
-        return signal.gaussian(t_ker * fs, cycle_params[1] * fs)
+        cycle = signal.gaussian(t_ker * fs, cycle_params[1] * fs)
 
     elif cycle_params[0] == 'exp':
         # cycle_params defines decay time constant in seconds
-        return make_synaptic_kernel(t_ker, fs, 0, cycle_params[1])
+        cycle = make_synaptic_kernel(t_ker, fs, 0, cycle_params[1])
 
     elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
-        return make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
+        cycle = make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
 
     else:
         raise ValueError('Did not recognize cycle type.')
+    return cycle
 
 
 def sim_variable_powerlaw(n_seconds, fs, exponent):
@@ -744,7 +748,7 @@ def sim_variable_powerlaw(n_seconds, fs, exponent):
 
     Returns
     -------
-    1d array
+    sig: 1d array
         Time-series with the desired power-law exponent
     """
 
@@ -757,5 +761,6 @@ def sim_variable_powerlaw(n_seconds, fs, exponent):
 
     # rotate spectrum and invert, zscore to normalize
     fc_rot = spectral.rotate_powerlaw(f_axis, fc, exponent/2., f_rotation=None)
+    sig = sp.stats.zscore(np.real(np.fft.ifft(fc_rot)))
 
-    return sp.stats.zscore(np.real(np.fft.ifft(fc_rot)))
+    return sig
