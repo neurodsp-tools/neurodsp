@@ -87,7 +87,7 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     """
 
     # Compute number of samples per cycle and number of cycles
-    n_samples_cycle = int(fs / freq)
+    n_samples_cycle = int(np.ceil(fs / freq))
     n_samples = int(fs * n_seconds)
     n_cycles = int(np.ceil(n_seconds * freq))
 
@@ -107,8 +107,8 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     return oscillator
 
 
-def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5,
-                         f_range_filter=(2, None), ratio_osc_power=1, filter_order=None):
+def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, ratio_osc_power=1,
+                         f_range_filter=(2, None), filter_order=None):
     """Simulate an oscillation embedded in background 1/f.
 
     Parameters
@@ -126,13 +126,15 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5,
             =0.5 - symmetric (sine wave)
             <0.5 - shorter rise, longer decay
             >0.5 - longer rise, shorter decay
-    f_range_filter : 2-element array (lo,hi) or None
-        Frequency range of simulated noise
-            if None: do not filter
     ratio_osc_power : float
         Ratio of oscillator power to noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
+    f_range_filter : 2-element array (lo,hi) or None
+        Frequency range of simulated noise
+            if None: do not filter
+    filter_order : int
+        Order of filter for noise process
 
     Returns
     -------
@@ -140,10 +142,10 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5,
         Oscillator with noise
     """
 
-    # Determine order of highpass filter (3 cycles of f_hipass_noise)
+    # Determine order of highpass filter (3 cycles of f_hipass)
     if f_range_filter is not None:
         if filter_order is None:
-            filter_order = int(3 * fs / f_hipass_noise)
+            filter_order = int(3 * fs / f_range_filter[0])
         if filter_order % 2 == 0:
             filter_order += 1
 
@@ -339,7 +341,8 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
-def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, f_range_filter=(2, None), ratio_osc_power=1,
+def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio_osc_power=1,
+                                f_range_filter=(2, None), filter_order=None,
                                 prob_enter_burst=.2, prob_leave_burst=.2,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
@@ -363,6 +366,8 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, f_ran
     f_range_filter : 2-element array (lo,hi) or None
         Frequency range of simulated noise
             if None: do not filter
+    filter_order : int
+        Order of filter for noise process
     ratio_osc_power : float
         Ratio of oscillator power to noise power
             >1 - oscillator is stronger
@@ -407,10 +412,10 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, f_ran
         cycle-by-cycle properties of the simulated oscillator
     """
 
-    # Determine order of highpass filter (3 cycles of f_hipass_noise)
+    # Determine order of highpass filter (3 cycles of f_hipass)
     if f_range_filter is not None:
         if filter_order is None:
-            filter_order = int(3 * fs / f_hipass_noise)
+            filter_order = int(3 * fs / f_range_filter[0])
         if filter_order % 2 == 0:
             filter_order += 1
 
