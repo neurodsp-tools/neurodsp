@@ -107,7 +107,8 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     return oscillator
 
 
-def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, f_hipass_noise=2, ratio_osc_power=1):
+def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5,
+                         f_range_filter=(2, None), ratio_osc_power=1, filter_order=None):
     """Simulate an oscillation embedded in background 1/f.
 
     Parameters
@@ -125,8 +126,9 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, f_hipass_noi
             =0.5 - symmetric (sine wave)
             <0.5 - shorter rise, longer decay
             >0.5 - longer rise, shorter decay
-    f_hipass_noise : float
-        Frequency (Hz) at which to high-pass-filter noise
+    f_range_filter : 2-element array (lo,hi) or None
+        Frequency range of simulated noise
+            if None: do not filter
     ratio_osc_power : float
         Ratio of oscillator power to noise power
             >1 - oscillator is stronger
@@ -139,15 +141,17 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, f_hipass_noi
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_noise)
-    filter_order = int(3 * fs / f_hipass_noise)
-    if filter_order % 2 == 0:
-        filter_order += 1
+    if f_range_filter is not None:
+        if filter_order is None:
+            filter_order = int(3 * fs / f_hipass_noise)
+        if filter_order % 2 == 0:
+            filter_order += 1
 
     # Determine length of signal in samples
     n_samples = int(n_seconds * fs)
 
     # Generate filtered noise
-    noise = sim_filtered_noise(n_seconds, fs, (f_hipass_noise, None), filter_order, exponent=exponent)
+    noise = sim_filtered_noise(n_seconds, fs, f_range_filter, filter_order, exponent=exponent)
 
     # Generate oscillator
     oscillator = sim_oscillator(n_seconds, fs, freq, rdsym=rdsym)
@@ -163,8 +167,8 @@ def sim_noisy_oscillator(n_seconds, fs, freq, exponent=2, rdsym=.5, f_hipass_noi
     return output
 
 
-def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=None, prob_enter_burst=None,
-                          prob_leave_burst=None, cycle_features=None,
+def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
+                          prob_leave_burst=.2, cycle_features=None,
                           return_cycle_df=False):
     """Simulate a bursty oscillation.
 
@@ -215,23 +219,11 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=None, prob_enter_burst=None
         cycle-by-cycle properties of the simulated oscillator
     """
 
-    # Set default prob_enter_burst and prob_leave_burst and rdsym
-    if prob_enter_burst is None:
-        prob_enter_burst = .2
-
-    if prob_leave_burst is None:
-        prob_leave_burst = .2
-
-    if rdsym is None:
-        rdsym = .5
-
     # Define default parameters for cycle features
     mean_period_samples = int(fs / freq)
-    cycle_features_use = {'amp_mean': 1, 'amp_burst_std': .1, 'amp_std': .2,
-                          'period_mean': mean_period_samples,
-                          'period_burst_std': .1 * mean_period_samples,
-                          'period_std': .1 * mean_period_samples,
-                          'rdsym_mean': rdsym, 'rdsym_burst_std': .05, 'rdsym_std': .05}
+    cycle_features_use = {'amp_mean': 1, 'amp_burst_std': 0, 'amp_std': 0,
+                          'period_mean': mean_period_samples, 'period_burst_std': 0, 'period_std': 0,
+                          'rdsym_mean': rdsym, 'rdsym_burst_std': 0, 'rdsym_std': 0}
 
     # Overwrite default cycle features with those specified
     if cycle_features is not None:
@@ -341,14 +333,14 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=None, prob_enter_burst=None
 
     if return_cycle_df:
         # Remove last row of df
-        df.drop(df.index[len(df)-1], inplace=True)
+        df.drop(df.index[len(df) - 1], inplace=True)
         return sig, df
     else:
         return sig
 
 
-def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=None, f_hipass_noise=2, ratio_osc_power=1,
-                                prob_enter_burst=None, prob_leave_burst=None,
+def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, f_range_filter=(2, None), ratio_osc_power=1,
+                                prob_enter_burst=.2, prob_leave_burst=.2,
                                 cycle_features=None, return_components=False,
                                 return_cycle_df=False):
     """Simulate a bursty oscillation embedded in background 1/f.
@@ -366,10 +358,13 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=None, f_hipass_noise=
             =0.5 - symmetric (sine wave)
             <0.5 - shorter rise, longer decay
             >0.5 - longer rise, shorter decay
-    f_hipass_noise : float
-        Frequency, in Hz, at which to high-pass-filter brown noise
+    exponent : float
+        Desired power-law exponent - beta in P(f)=f^beta
+    f_range_filter : 2-element array (lo,hi) or None
+        Frequency range of simulated noise
+            if None: do not filter
     ratio_osc_power : float
-        Ratio of oscillator power to brown noise power
+        Ratio of oscillator power to noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
     prob_enter_burst : float
@@ -403,25 +398,27 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=None, f_hipass_noise=
     Returns
     -------
     signal : np.array
-        bursty oscillator with brown noise time series
+        bursty oscillator with noise time series
     oscillator : np.array
         bursty oscillator component of signal
-    brown : np.array
-        brown noise component of signal
+    noise : np.array
+        noise component of signal
     df : pd.DataFrame
         cycle-by-cycle properties of the simulated oscillator
     """
 
     # Determine order of highpass filter (3 cycles of f_hipass_noise)
-    filter_order = int(3 * fs / f_hipass_noise)
-    if filter_order % 2 == 0:
-        filter_order += 1
+    if f_range_filter is not None:
+        if filter_order is None:
+            filter_order = int(3 * fs / f_hipass_noise)
+        if filter_order % 2 == 0:
+            filter_order += 1
 
-    # Generate filtered brown noise
-    brown = sim_filtered_brown_noise(n_seconds, fs, (f_hipass_noise, None), filter_order)
+    # Generate filtered noise
+    noise = sim_filtered_noise(n_seconds, fs, f_range_filter, filter_order, exponent=exponent)
 
     # Generate oscillator
-    oscillator, df = sim_bursty_oscillator(freq, n_seconds, fs, rdsym=rdsym,
+    oscillator, df = sim_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym,
                                            prob_enter_burst=prob_enter_burst,
                                            prob_leave_burst=prob_leave_burst,
                                            cycle_features=cycle_features,
@@ -433,19 +430,19 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=None, f_hipass_noise=
         if row['is_cycle']:
             is_osc[row['start_sample']:row['start_sample'] + row['period']] = True
 
-    # Normalize brown noise power
+    # Normalize noise power
     oscillator_power = np.mean(oscillator[is_osc]**2)
-    brown_power = np.mean(brown**2)
-    brown = np.sqrt(brown**2 * oscillator_power /
-                    (brown_power * ratio_osc_power)) * np.sign(brown)
+    noise_power = np.mean(noise**2)
+    noise = np.sqrt(noise**2 * oscillator_power /
+                    (noise_power * ratio_osc_power)) * np.sign(noise)
 
     # Combine oscillator and noise
-    output = oscillator + brown
+    output = oscillator + noise
 
     if return_components:
         if return_cycle_df:
-            return output, oscillator, brown, df
-        return output, oscillator, brown
+            return output, oscillator, noise, df
+        return output, oscillator, noise
     else:
         if return_cycle_df:
             return output, df
