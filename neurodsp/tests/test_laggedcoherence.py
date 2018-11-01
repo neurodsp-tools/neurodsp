@@ -6,6 +6,7 @@ Test function to compute lagged coherence
 import numpy as np
 import os
 import neurodsp
+from neurodsp.laggedcoherence import lagged_coherence
 from neurodsp.tests import _load_example_data
 
 
@@ -25,6 +26,6 @@ def test_laggedcoherence_consistent():
                       '/tests/data/sample_data_' + str(data_idx) + '_laggedcoherence.npy')
 
     # Compute lagged coherence
-    lag_coh_beta = neurodsp.lagged_coherence(sig, f_range, fs)
+    lag_coh_beta = lagged_coherence(sig, f_range, fs)
 
     assert np.allclose(lag_coh_beta, lc_true, atol=10 ** -5)

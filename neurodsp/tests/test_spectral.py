@@ -112,7 +112,7 @@ def test_rotatepsd():
     rot_exp = -2
     spectrum = np.ones(500)
     f_axis = np.arange(0,500.)
-    spectrum_rot = neurodsp.spectral.rotate_powerlaw(f_axis, spectrum, rot_exp)
+    spectrum_rot = spectral.rotate_powerlaw(f_axis, spectrum, rot_exp)
 
     # load test data PSDs for testing
     spectrum_test = np.load(os.path.dirname(neurodsp.__file__) +

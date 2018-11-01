@@ -6,6 +6,8 @@ Test functions in the time-frequency analysis module
 import numpy as np
 import os
 import neurodsp
+from neurodsp.filt import filter_signal
+from neurodsp.timefrequency import amp_by_time, phase_by_time, freq_by_time
 from neurodsp.tests import _load_example_data
 
 
@@ -31,11 +33,11 @@ def test_timefreq_consistent():
                        '/tests/data/sample_data_' + str(data_idx) + '_i_f.npy')
 
     # Compute phase time series
-    pha = neurodsp.phase_by_time(sig, fs, f_range)
+    pha = phase_by_time(sig, fs, f_range)
     # Compute amplitude time series
-    amp = neurodsp.amp_by_time(sig, fs, f_range)
+    amp = amp_by_time(sig, fs, f_range)
     # Compute frequency time series
-    i_f = neurodsp.freq_by_time(sig, fs, f_range)
+    i_f = freq_by_time(sig, fs, f_range)
 
     # Compute difference between current and past signals
     assert np.allclose(np.sum(np.abs(pha[~np.isnan(pha)] - pha_true[~np.isnan(pha)])), 0, atol=10 ** -5)
@@ -54,13 +56,13 @@ def test_nan_in_x():
     # Generate a low-pass filtered signal with NaNs
     sig = np.random.randn(10000)
     fs = 1000
-    sig = neurodsp.filter_signal(sig, fs, 'lowpass', fc=50)
+    sig = filter_signal(sig, fs, 'lowpass', fc=50)
 
     # Compute phase, amp, and freq time series
     f_range = (4, 8)
-    pha = neurodsp.phase_by_time(sig, fs, f_range)
-    amp = neurodsp.amp_by_time(sig, fs, f_range)
-    i_f = neurodsp.freq_by_time(sig, fs, f_range)
+    pha = phase_by_time(sig, fs, f_range)
+    amp = amp_by_time(sig, fs, f_range)
+    i_f = freq_by_time(sig, fs, f_range)
 
     assert len(pha[~np.isnan(pha)]) > 0
     assert len(amp[~np.isnan(amp)]) > 0
