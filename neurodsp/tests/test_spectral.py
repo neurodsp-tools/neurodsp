@@ -7,7 +7,7 @@ import numpy as np
 import os
 import neurodsp
 from neurodsp import spectral
-from neurodsp.tests import _load_example_data
+from .util import _load_example_data
 
 
 def test_compute_spectrum():

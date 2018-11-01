@@ -7,7 +7,7 @@ import os
 import numpy as np
 import neurodsp
 from neurodsp.burst import detect_bursts_dual_threshold
-from neurodsp.tests import _load_example_data
+from .util import _load_example_data
 
 
 def test_detect_bursts_dual_threshold():

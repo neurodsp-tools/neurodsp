@@ -5,10 +5,11 @@ Test functions in the time-frequency analysis module
 
 import numpy as np
 import os
+
 import neurodsp
 from neurodsp.filt import filter_signal
 from neurodsp.timefrequency import amp_by_time, phase_by_time, freq_by_time
-from neurodsp.tests import _load_example_data
+from .util import _load_example_data
 
 
 def test_timefreq_consistent():

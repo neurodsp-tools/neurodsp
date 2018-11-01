@@ -2,14 +2,15 @@
 
 import numpy as np
 
-from neurodsp import amp_by_time
+from neurodsp.timefrequency import amp_by_time
 
 ###################################################################################################
 ###################################################################################################
+
 
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
-                                 filter_kwargs=None):
+                                 filter_kwargs=None, verbose=True):
     """Detect periods of oscillatory bursting in a neural signal.
 
     Parameters
@@ -26,14 +27,13 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
     min_cycles : float
         minimum burst duration in terms of number of cycles of f_range[0]
     average_method : string in ('median', 'mean')
-        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         metric to normalize magnitude used for thresholding
     magnitude_type : string in ('power', 'amplitude')
-        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
         metric of magnitude used for thresholding
     filter_kwargs : dict
-        NOTE: Only used when algorithm = 'deviation' or 'fixed_thresh'
-        keyword arguments to the filter_fn
+        keyword arguments to the neurodsp.filt.filter_signal()
+    verbose : bool
+        if True, print filter transition band and any other prints
 
     Returns
     -------
@@ -52,7 +52,7 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
 
     # Compute amplitude time series
     sig_magnitude = amp_by_time(sig, fs, f_range, filter_kwargs=filter_kwargs,
-                                remove_edge_artifacts=False)
+                                remove_edge_artifacts=False, verbose=verbose)
 
     # Set magnitude as power or amplitude
     if magnitude_type == 'power':

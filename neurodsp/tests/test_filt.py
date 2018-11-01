@@ -5,8 +5,9 @@ Test filtering functions
 
 import pytest
 import numpy as np
+
 from neurodsp.filt import filter_signal
-from neurodsp.tests import _load_example_data, _generate_random_sig
+from .util import _load_example_data, _generate_random_sig
 
 
 def test_bandpass_filter_consistent():
