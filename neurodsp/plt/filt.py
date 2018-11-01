@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 
 
-def frequency_response(fs, b_vals, a_vals=1):
+def plot_frequency_response(fs, b_vals, a_vals=1):
     """Compute frequency response of a filter kernel b with sampling rate fs"""
 
     w_vals, h_vals = signal.freqz(b_vals, a_vals)

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 
 
-def spectral_hist(freq, power_bins, spect_hist, spectrum_freqs=None, spectrum=None):
+def plot_spectral_hist(freq, power_bins, spect_hist, spectrum_freqs=None, spectrum=None):
     """Plot the spectral histogram.
 
     Parameters
