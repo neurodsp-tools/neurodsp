@@ -1,28 +1,25 @@
 """
-test_burst.py
-Test burst detection functions
+test_plts_spectral.py
+Test spectral plots
 """
 
-import os
 import numpy as np
-import neurodsp
-from .util import _load_example_data
+from neurodsp.spectral import spectral_hist
+from neurodsp.plts.spectral import plot_spectral_hist
 
 
-def test_detect_bursts_dual_threshold():
+def test_plot_spectral_hist():
     """
-    Confirm consistency in burst detection results on a generated neural signal
+    Confirm spectral hist function works as expected
     """
-    # Load data and ground-truth filtered signal
-    sig = _load_example_data(data_idx=1)
+
+    # Generate random signal
+    sig = np.random.randn(2000)
     fs = 1000
-    f_range = (13, 30)
 
-    # Load past burst findings
-    bursting_true = np.load(os.path.dirname(neurodsp.__file__) +
-                            '/tests/data/sample_data_1_burst_deviation.npy')
+    # Compute spectral histogram
+    freqs, power_bins, spect_hist = spectral_hist(sig, fs)
 
-    # Detect bursts with different algorithms
-    bursting = neurodsp.detect_bursts_dual_threshold(sig, fs, f_range, (0.9, 2))
-
-    assert np.isclose(np.sum(bursting - bursting_true), 0)
+    # Test plotting function runs without error
+    plot_spectral_hist(freqs, power_bins, spect_hist)
+    assert True
