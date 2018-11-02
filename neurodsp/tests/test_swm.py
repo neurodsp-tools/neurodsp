@@ -5,8 +5,9 @@ Test the sliding window matching function
 
 import numpy as np
 import os
+
 import neurodsp
-from neurodsp import sliding_window_matching
+from neurodsp.swm import sliding_window_matching
 from .util import _load_example_data
 
 
