@@ -6,7 +6,7 @@ import numpy as np
 import scipy as sp
 from scipy import signal
 
-from neurodsp.plts import plot_frequency_response
+from neurodsp.plts.filt import plot_frequency_response
 
 ###################################################################################################
 ###################################################################################################
