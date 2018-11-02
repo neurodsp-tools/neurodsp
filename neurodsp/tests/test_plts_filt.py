@@ -1,28 +1,24 @@
 """
-test_burst.py
-Test burst detection functions
+test_plts_filt.py
+Test filtering plots
 """
 
-import os
 import numpy as np
-import neurodsp
-from .util import _load_example_data
+from neurodsp.filt import filter_signal
+from neurodsp.plts.filt import plot_frequency_response
 
 
-def test_detect_bursts_dual_threshold():
+def test_plot_frequency_response():
     """
-    Confirm consistency in burst detection results on a generated neural signal
+    Confirm frequency response plotting function works
     """
-    # Load data and ground-truth filtered signal
-    sig = _load_example_data(data_idx=1)
+
+    # Test plotting through the filter function
+    sig = np.random.randn(2000)
     fs = 1000
-    f_range = (13, 30)
+    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', (8, 12),
+        plot_freq_response=True, return_kernel=True, verbose=False)
 
-    # Load past burst findings
-    bursting_true = np.load(os.path.dirname(neurodsp.__file__) +
-                            '/tests/data/sample_data_1_burst_deviation.npy')
-
-    # Detect bursts with different algorithms
-    bursting = neurodsp.detect_bursts_dual_threshold(sig, fs, f_range, (0.9, 2))
-
-    assert np.isclose(np.sum(bursting - bursting_true), 0)
+    # Test calling frequency response plot directly
+    plot_frequency_response(fs, kernel)
+    assert True
