@@ -59,8 +59,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx_gallery.gen_gallery',
     'sphinx.ext.napoleon',
-    'm2r'
-]
+    'sphinx.ext.intersphinx',
+    'm2r']
 
 # generate autosummary even if no references
 autosummary_generate = True
@@ -107,15 +107,37 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # documentation.
 #
 html_theme_options = {
-    'navbar_sidebarrel': False,
+
+    # A list of tuples containing pages or urls to link to.
     'navbar_links': [
         ("API", "api"),
-        ("FAQ", "faq"),
         ("Tutorial", "auto_tutorials/index"),
         ("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/voytekresearch/neurodsp", True)
     ],
-    'bootswatch_theme': "flatly"
+
+    # Bootswatch (http://bootswatch.com/) theme.
+    #
+    # Options are nothing (default) or the name of a valid theme
+    # such as "cosmo" or "sandstone".
+    #
+    # The set of valid themes depend on the version of Bootstrap
+    # that's used (the next config option).
+    #
+    # Currently, the supported themes are:
+    # - Bootstrap 2: https://bootswatch.com/2
+    # - Bootstrap 3: https://bootswatch.com/3
+    'bootswatch_theme': "united",
+
+    # Render the current pages TOC in the navbar. (Default: true)
+    'navbar_pagenav': False,
+
+    # Render the next and previous page links in navbar. (Default: true)
+    'navbar_sidebarrel': False,
+
+    # Location of link to source.
+    # Options are "nav" (default), "footer" or anything else to exclude.
+    'source_link_position': False
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
