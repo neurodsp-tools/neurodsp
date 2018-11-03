@@ -74,7 +74,7 @@ freq = 6
 rdsym = .5
 f_range_filter = (2, None)
 filter_order = 1501
-exponent = 2
+exponent = -2
 ratio_osc_power = 1
 
 
@@ -131,12 +131,26 @@ def test_sim_noisy_bursty_oscillator():
 
 def test_sim_poisson_pop():
     np.random.seed(0)
+    poisson_noise = sim_poisson_pop(2., 1000., 100., 4.)
+    # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_poisson_pop.npy', poisson_noise)
+    poisson_noise_true = np.load(os.path.dirname(
+        neurodsp.__file__) + '/tests/data/sim_poisson_pop.npy')
+    assert np.allclose(np.sum(np.abs(poisson_noise - poisson_noise_true)), 0, atol=10 ** -5)
     pass
 
 
 def test_sim_make_synaptic_kernel():
     np.random.seed(0)
-    pass
+
+    # smoke test that valid parameter configurations do not return negative values
+    t_ker, fs, tau_r, tau_d = 1., 1000., 0., 0.02
+    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d)>=0.)
+
+    t_ker, fs, tau_r, tau_d = 2., 2000., 0.005, 0.02
+    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d)>=0.)
+
+    t_ker, fs, tau_r, tau_d = 1., 1000., 0.02, 0.02
+    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d)>=0.)
 
 
 def test_sim_synaptic_noise():
@@ -168,6 +182,11 @@ def test_sim_jittered_oscillator():
 
 def test_make_osc_cycle():
     np.random.seed(0)
+    gaus_cycle = make_osc_cycle(0.05, 1000., ('gaussian', 0.01))
+    # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/make_osc_cycle.npy', gaus_cycle)
+    gaus_cycle_true = np.load(os.path.dirname(
+        neurodsp.__file__) + '/tests/data/make_osc_cycle.npy')
+    assert np.allclose(np.sum(np.abs(gaus_cycle - gaus_cycle_true)), 0, atol=10 ** -5)
     pass
 
 

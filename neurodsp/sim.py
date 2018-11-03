@@ -12,7 +12,7 @@ from neurodsp import spectral
 ###################################################################################################
 ###################################################################################################
 
-def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=2):
+def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=-2.):
     """Simulate colored noise that is highpass or bandpass filtered
 
     Parameters
@@ -27,7 +27,8 @@ def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=2):
     filter_order : int
         Order of filter
     exponent : float
-        Desired power-law exponent - beta in P(f)=f^beta
+        Desired power-law exponent - beta in P(f)=f^beta. Negative exponent
+        denotes decay (i.e., negative slope in log-log spectrum).
 
     Returns
     -------
@@ -501,14 +502,14 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
-        tau_r == tau_d  : alpha (function) synapse
-        tau_r = 0       : instantaneous rise, (single) exponential decay
-        tau_r!=tau_d!=0 : double-exponential (rise and decay)
+    - tau_r == tau_d  : alpha (function) synapse
+    - tau_r = 0       : instantaneous rise, (single) exponential decay
+    - tau_r!=tau_d!=0 : double-exponential (rise and decay)
 
     Parameters
     ----------
     t_ker : float
-        Length of simulated signal in seconds.
+        Length of simulated kernel in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz
     tau_r : float
