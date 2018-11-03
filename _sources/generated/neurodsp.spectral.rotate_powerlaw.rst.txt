@@ -1,0 +1,6 @@
+neurodsp.spectral.rotate\_powerlaw
+==================================
+
+.. currentmodule:: neurodsp.spectral
+
+.. autofunction:: rotate_powerlaw

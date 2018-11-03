@@ -1,0 +1,6 @@
+neurodsp.sim.sim\_filtered\_noise
+=================================
+
+.. currentmodule:: neurodsp.sim
+
+.. autofunction:: sim_filtered_noise

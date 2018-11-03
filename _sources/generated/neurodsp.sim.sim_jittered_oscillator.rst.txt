@@ -1,0 +1,6 @@
+neurodsp.sim.sim\_jittered\_oscillator
+======================================
+
+.. currentmodule:: neurodsp.sim
+
+.. autofunction:: sim_jittered_oscillator

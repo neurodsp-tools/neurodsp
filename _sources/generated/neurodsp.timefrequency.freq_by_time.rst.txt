@@ -1,0 +1,6 @@
+neurodsp.timefrequency.freq\_by\_time
+=====================================
+
+.. currentmodule:: neurodsp.timefrequency
+
+.. autofunction:: freq_by_time

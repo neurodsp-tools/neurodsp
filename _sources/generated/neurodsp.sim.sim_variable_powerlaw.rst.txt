@@ -1,0 +1,6 @@
+neurodsp.sim.sim\_variable\_powerlaw
+====================================
+
+.. currentmodule:: neurodsp.sim
+
+.. autofunction:: sim_variable_powerlaw

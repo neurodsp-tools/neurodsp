@@ -1,0 +1,6 @@
+neurodsp.spectral.morlet\_transform
+===================================
+
+.. currentmodule:: neurodsp.spectral
+
+.. autofunction:: morlet_transform

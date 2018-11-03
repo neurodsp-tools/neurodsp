@@ -1,0 +1,6 @@
+neurodsp.burst.detect\_bursts\_dual\_threshold
+==============================================
+
+.. currentmodule:: neurodsp.burst
+
+.. autofunction:: detect_bursts_dual_threshold
