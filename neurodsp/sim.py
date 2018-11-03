@@ -501,14 +501,14 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     3 types of kernels are available, based on combinations of time constants:
-        tau_r == tau_d  : alpha (function) synapse
-        tau_r = 0       : instantaneous rise, (single) exponential decay
-        tau_r!=tau_d!=0 : double-exponential (rise and decay)
+    - tau_r == tau_d  : alpha (function) synapse
+    - tau_r = 0       : instantaneous rise, (single) exponential decay
+    - tau_r!=tau_d!=0 : double-exponential (rise and decay)
 
     Parameters
     ----------
     t_ker : float
-        Length of simulated signal in seconds.
+        Length of simulated kernel in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz
     tau_r : float
