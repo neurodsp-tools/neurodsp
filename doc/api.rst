@@ -6,39 +6,53 @@ API Documentation
 
 .. currentmodule:: neurodsp
 
+Filtering, Time-Frequency and Lagged Coherence
+==============================================
 
-Cycle-by-cycle features
-=======================
+.. autosummary::
+  :toctree: generated/
+
+  filt.filter_signal
+  timefrequency.phase_by_time
+  timefrequency.amp_by_time
+  timefrequency.freq_by_time
+  laggedcoherence.lagged_coherence
+
+Spectral Analysis
+=================
 
 .. autosummary::
    :toctree: generated/
 
-   features.compute_features
+   spectral.compute_spectrum
+   spectral.compute_scv
+   spectral.spectral_hist
+   spectral.morlet_transform
+   spectral.rotate_powerlaw
 
-Cycle-by-cycle segmentation
-===========================
-
-.. autosummary::
-   :toctree: generated/
-
-   cyclepoints.find_extrema
-   cyclepoints.find_zerox
-
-Waveform phase estimation
-=========================
+Burst Detection & Sliding Window Template Matching
+==================================================
 
 .. autosummary::
-    :toctree: generated/
+  :toctree: generated/
 
-    cyclepoints.extrema_interpolated_phase
+  burst.detect_bursts_dual_threshold
+  burst.compute_burst_stats
+  swm.sliding_window_matching
 
-Burst detection
-===============
+
+Simulating 1/f Embedded Oscillations
+====================================
 
 .. autosummary::
-    :toctree: generated/
+  :toctree: generated/
 
-    burst.detect_bursts_cycles
-    burst.detect_bursts_df_amp
-    burst.twothresh_amp
-    burst.plot_burst_detect_params
+  sim.sim_filtered_noise
+  sim.sim_synaptic_noise
+  sim.sim_ou_process
+  sim.sim_variable_powerlaw
+  sim.sim_oscillator
+  sim.sim_noisy_oscillator
+  sim.sim_bursty_oscillator
+  sim.sim_noisy_bursty_oscillator
+  sim.sim_jittered_oscillator

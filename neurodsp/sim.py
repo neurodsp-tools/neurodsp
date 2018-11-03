@@ -23,7 +23,7 @@ def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=2):
         Sampling rate of simulated signal, in Hz
     f_range : 2-element array (lo,hi) or None
         Frequency range of simulated data
-            if None: do not filter
+        if None: do not filter
     filter_order : int
         Order of filter
     exponent : float
@@ -590,11 +590,11 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)
 
     Discretized Ornstein-Uhlenbeck process:
-        dx = theta*(x-mu)*dt + sigma*dWt, where
-    dWt     : increments of Wiener process, i.e. white noise
-    theta   : memory scale (higher = faster fluc)
-    mu      : mean
-    sigma   : std
+    dx = theta*(x-mu)*dt + sigma*dWt
+    dWt : increments of Wiener process, i.e. white noise
+    theta : memory scale (higher = faster fluc)
+    mu : mean
+    sigma : std
 
 
     Parameters

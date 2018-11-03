@@ -20,18 +20,18 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
         Sampling frequency of the sig time series.
     method : { 'mean', 'median', 'medfilt'}, optional
         Methods to calculate the spectrum. Defaults to 'mean'.
-            'mean' is the same as Welch's method (mean of STFT).
-            'median' uses median of STFT instead of mean to minimize outlier effect.
-            'medfilt' filters the entire signals raw FFT with a median filter to smooth.
+        'mean' is the same as Welch's method (mean of STFT).
+        'median' uses median of STFT instead of mean to minimize outlier effect.
+        'medfilt' filters the entire signals raw FFT with a median filter to smooth.
     The next 3 parameters are only relevant for method = {'mean', 'median'}
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
         Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
     filten : float, Hz, optional
@@ -130,12 +130,12 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
         Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
         Number of points to overlap between segments. Defaults to 0 for independence.
     outlier_pct : float, percent, optional
