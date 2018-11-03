@@ -6,8 +6,8 @@ API Documentation
 
 .. currentmodule:: neurodsp
 
-Filtering, Time-Frequency and Lagged Coherence
-==============================================
+Time-Frequency analysis
+=======================
 
 .. autosummary::
   :toctree: generated/
@@ -16,9 +16,8 @@ Filtering, Time-Frequency and Lagged Coherence
   timefrequency.phase_by_time
   timefrequency.amp_by_time
   timefrequency.freq_by_time
-  laggedcoherence.lagged_coherence
 
-Spectral Analysis
+Spectral analysis
 =================
 
 .. autosummary::
@@ -30,8 +29,8 @@ Spectral Analysis
    spectral.morlet_transform
    spectral.rotate_powerlaw
 
-Burst Detection & Sliding Window Template Matching
-==================================================
+Rhythmic analysis
+=================
 
 .. autosummary::
   :toctree: generated/
@@ -39,10 +38,10 @@ Burst Detection & Sliding Window Template Matching
   burst.detect_bursts_dual_threshold
   burst.compute_burst_stats
   swm.sliding_window_matching
+  laggedcoherence.lagged_coherence
 
-
-Simulating 1/f Embedded Oscillations
-====================================
+Signal simulation
+=================
 
 .. autosummary::
   :toctree: generated/
