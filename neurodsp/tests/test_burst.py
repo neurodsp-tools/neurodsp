@@ -6,6 +6,7 @@ Test burst detection functions
 import os
 import numpy as np
 import neurodsp
+from neurodsp.burst import detect_bursts_dual_threshold
 from .util import _load_example_data
 
 
@@ -23,6 +24,6 @@ def test_detect_bursts_dual_threshold():
                             '/tests/data/sample_data_1_burst_deviation.npy')
 
     # Detect bursts with different algorithms
-    bursting = neurodsp.detect_bursts_dual_threshold(sig, fs, f_range, (0.9, 2))
+    bursting = detect_bursts_dual_threshold(sig, fs, f_range, (0.9, 2))
 
     assert np.isclose(np.sum(bursting - bursting_true), 0)
