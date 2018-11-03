@@ -112,7 +112,7 @@ html_theme_options = {
     'navbar_links': [
         ("API", "api"),
         ("Tutorial", "auto_tutorials/index"),
-        ("Examples", "auto_examples/index"),
+        #("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/voytekresearch/neurodsp", True)
     ],
 
@@ -127,7 +127,7 @@ html_theme_options = {
     # Currently, the supported themes are:
     # - Bootstrap 2: https://bootswatch.com/2
     # - Bootstrap 3: https://bootswatch.com/3
-    'bootswatch_theme': "united",
+    'bootswatch_theme': "sandstone", #darkly, journal
 
     # Render the current pages TOC in the navbar. (Default: true)
     'navbar_pagenav': False,
