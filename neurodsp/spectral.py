@@ -23,7 +23,6 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
             'mean' is the same as Welch's method (mean of STFT).
             'median' uses median of STFT instead of mean to minimize outlier effect.
             'medfilt' filters the entire signals raw FFT with a median filter to smooth.
-    The next 3 parameters are only relevant for method = {'mean', 'median'}
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
             See scipy.signal.get_window for a list of windows and required parameters.
@@ -34,7 +33,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
             If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
         Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
-    filten : float, Hz, optional
+    filt_len : float, Hz, optional
         (For medfilt method) Length of median filter in Hz.
     f_lim : float, Hz, optional
         Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.
