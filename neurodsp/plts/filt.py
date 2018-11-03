@@ -28,5 +28,3 @@ def plot_frequency_response(fs, b_vals, a_vals=1):
         plt.subplot(1, 2, 2)
         plt.plot(b_vals, 'k')
         plt.title('Kernel')
-
-    plt.show()
