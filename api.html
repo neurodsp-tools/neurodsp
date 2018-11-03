@@ -86,8 +86,8 @@
       
   <div class="section" id="api-documentation">
 <span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="filtering-time-frequency-and-lagged-coherence">
-<h2>Filtering, Time-Frequency and Lagged Coherence<a class="headerlink" href="#filtering-time-frequency-and-lagged-coherence" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="time-frequency-analysis">
+<h2>Time-Frequency analysis<a class="headerlink" href="#time-frequency-analysis" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -106,14 +106,11 @@
 <tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.timefrequency.freq_by_time.html#neurodsp.timefrequency.freq_by_time" title="neurodsp.timefrequency.freq_by_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timefrequency.freq_by_time</span></code></a>(sig,&nbsp;fs,&nbsp;f_range)</td>
 <td>Estimate the instantaneous frequency at each sample.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="neurodsp.laggedcoherence.lagged_coherence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">laggedcoherence.lagged_coherence</span></code></a>(sig,&nbsp;…[,&nbsp;…])</td>
-<td>Quantify the rhythmicity of an oscillator using the lagged coherence measure.</td>
-</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="spectral-analysis">
-<h2>Spectral Analysis<a class="headerlink" href="#spectral-analysis" title="Permalink to this headline">¶</a></h2>
+<h2>Spectral analysis<a class="headerlink" href="#spectral-analysis" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -138,8 +135,8 @@
 </tbody>
 </table>
 </div>
-<div class="section" id="burst-detection-sliding-window-template-matching">
-<h2>Burst Detection &amp; Sliding Window Template Matching<a class="headerlink" href="#burst-detection-sliding-window-template-matching" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rhythmic-analysis">
+<h2>Rhythmic analysis<a class="headerlink" href="#rhythmic-analysis" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -155,11 +152,14 @@
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.swm.sliding_window_matching.html#neurodsp.swm.sliding_window_matching" title="neurodsp.swm.sliding_window_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">swm.sliding_window_matching</span></code></a>(sig,&nbsp;fs,&nbsp;…[,&nbsp;…])</td>
 <td>Find recurring patterns in a time series using the sliding window matching algorithm.</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="neurodsp.laggedcoherence.lagged_coherence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">laggedcoherence.lagged_coherence</span></code></a>(sig,&nbsp;…[,&nbsp;…])</td>
+<td>Quantify the rhythmicity of an oscillator using the lagged coherence measure.</td>
+</tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="simulating-1-f-embedded-oscillations">
-<h2>Simulating 1/f Embedded Oscillations<a class="headerlink" href="#simulating-1-f-embedded-oscillations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="signal-simulation">
+<h2>Signal simulation<a class="headerlink" href="#signal-simulation" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
