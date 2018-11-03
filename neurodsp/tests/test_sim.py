@@ -74,7 +74,7 @@ freq = 6
 rdsym = .5
 f_range_filter = (2, None)
 filter_order = 1501
-exponent = 2
+exponent = -2
 ratio_osc_power = 1
 
 

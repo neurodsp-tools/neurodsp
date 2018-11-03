@@ -12,7 +12,7 @@ from neurodsp import spectral
 ###################################################################################################
 ###################################################################################################
 
-def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=2):
+def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=-2.):
     """Simulate colored noise that is highpass or bandpass filtered
 
     Parameters
@@ -27,7 +27,8 @@ def sim_filtered_noise(n_seconds, fs, f_range, filter_order, exponent=2):
     filter_order : int
         Order of filter
     exponent : float
-        Desired power-law exponent - beta in P(f)=f^beta
+        Desired power-law exponent - beta in P(f)=f^beta. Negative exponent
+        denotes decay (i.e., negative slope in log-log spectrum).
 
     Returns
     -------
