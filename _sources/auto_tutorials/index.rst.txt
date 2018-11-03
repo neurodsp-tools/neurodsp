@@ -11,6 +11,26 @@ Below is a series of notebooks that provide an introduction to the tools in neur
    :local:
    :depth: 3
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Detailed explanations for each of the above concept are provided below as we come across them. ">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_4-SpectralAnalysis_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_4-SpectralAnalysis.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_4-SpectralAnalysis
 .. raw:: html
 
     <div style='clear:both'></div>

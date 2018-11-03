@@ -45,7 +45,6 @@
             
                 <li><a href="api.html">API</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorial</a></li>
-                <li><a href="auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/voytekresearch/neurodsp">GitHub</a></li>
             
             
@@ -93,7 +92,7 @@
 <a class="reference external image-reference" href="LICENSE.md"><img alt="License" src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Supported Python Versions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a>
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/voytekresearch/neurodsp/master"><img alt="Binder" src="https://mybinder.org/badge.svg" /></a>
-<p>A package of modules to process and analyze neural recordings as individual voltage time series. The primary purpose of this library is to serve as the shared codebase for the <a class="reference external" href="http://voyteklab.com/">Voytek Lab</a>, but we welcome anyone’s use and contributions.</p>
+<p>A package of tools to process, analyze, and simulate neural recordings as individual voltage time series, with specific focus on time and frequency domain analyses. The primary purpose of this library is to serve as the shared codebase of common analyses for the <a class="reference external" href="http://voyteklab.com/">Voytek Lab</a>, but we welcome anyone’s use and contributions.</p>
 <div class="section" id="python-version-support">
 <h2>Python version support<a class="headerlink" href="#python-version-support" title="Permalink to this headline">¶</a></h2>
 <p>This package has been tested on python 3.5, and 3.6 with the latest <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> distribution. Support for python 2 and earlier versions of python 3 is not guaranteed.</p>
@@ -110,13 +109,13 @@
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>burst : Detect bursting oscillators in neural signals (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb">Tutorial</a>)</li>
-<li>filt : Filter data with bandpass, highpass, lowpass, or notch filters (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Filtering.ipynb">Tutorial</a>)</li>
-<li>laggedcoherence : Estimate rhythmicity using the lagged coherence measure (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb">Tutorial</a>)</li>
-<li>sim : Simulate bursting or stationary oscillators with brown noise (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Simulating%20oscillators%20and%20noise.ipynb">Tutorial</a>)</li>
-<li>spectral : Compute spectral domain features (PSD and 1/f slope, etc) (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Spectral%20domain%20analysis.ipynb">Tutorial</a>)</li>
-<li>swm : Identify recurrent patterns in a signal using sliding window matching (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Sliding%20Window%20Matching.ipynb">Tutorial</a>)</li>
-<li>timefrequency : Estimate instantaneous measures of oscillatory activity (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillators in neural signals (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Filtering.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">laggedcoherence</span></code> : Estimate rhythmicity using the lagged coherence measure (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate bursting or stationary oscillators with brown noise (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Simulating%20oscillators%20and%20noise.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features (PSD and 1/f slope, etc) (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Spectral%20domain%20analysis.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">swm</span></code> : Identify recurrent patterns in a signal using sliding window matching (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Sliding%20Window%20Matching.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb">Tutorial</a>)</li>
 </ul>
 </div>
 <div class="section" id="dependencies">
