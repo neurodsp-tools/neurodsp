@@ -80,7 +80,7 @@ ratio_osc_power = 1
 
 def test_sim_filtered_noise():
     np.random.seed(0)
-    noise = sim_filtered_noise(n_seconds, fs, f_range_filter, filter_order, exponent=exponent)
+    noise = sim_filtered_noise(n_seconds, fs, exponent, f_range_filter, filter_order)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/noise_filt.npy', noise)
     noise_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/noise_filt.npy')
