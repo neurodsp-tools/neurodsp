@@ -58,7 +58,7 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
 
 
 def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym=.5, ratio_osc_var=1):
-    """Simulate an oscillation embedded in background 1/f.
+    """Simulate an oscillation embedded in background 1/f noise.
 
     Parameters
     ----------
@@ -289,12 +289,11 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
-def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio_osc_var=1,
-                                f_range_filter=(2, None), filter_order=None,
-                                prob_enter_burst=.2, prob_leave_burst=.2,
-                                cycle_features=None, return_components=False,
-                                return_cycle_df=False):
-    """Simulate a bursty oscillation embedded in background 1/f.
+def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym=.5,
+    ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2, cycle_features=None,
+        return_components=False, return_cycle_df=False):
+
+    """Simulate a bursty oscillation embedded in background 1/f noise.
 
     Parameters
     ----------
@@ -304,22 +303,26 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
         Sampling rate of simulated signal, in Hz
     freq : float
         Oscillator frequency, in Hz
+    noise_generator: str or numpy.ndarray
+        Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
+        numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
+        Possible models (see respective documentation):
+            - 'filtered_powerlaw': sim.sim_filtered_noise()
+            - 'powerlaw': sim.sim_variable_powerlaw()
+            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
+            - 'ou_process': sim.sim_ou_process()
+    noise_args: dict('argname':argval, ...)
+        Function arguments for the neurodsp.sim noise generaters. See API for arg names.
+        NOTE: all args, including optional ones, are required, EXCEPT n_seconds and fs.
     rdsym : float
         Rise-decay symmetry of the oscillator as fraction of the period in the rise time
             =0.5 - symmetric (sine wave)
             <0.5 - shorter rise, longer decay
             >0.5 - longer rise, shorter decay
-    exponent : float
-        Desired power-law exponent - beta in P(f)=f^beta
     ratio_osc_var : float
         Ratio of oscillator power to noise power
             >1 - oscillator is stronger
             <1 - noise is stronger
-    f_range_filter : 2-element array (lo,hi) or None
-        Frequency range of simulated noise
-            if None: do not filter
-    filter_order : int
-        Order of filter for noise process
     prob_enter_burst : float
         Probability of a cycle being oscillating given the last cycle is not oscillating
     prob_leave_burst : float
@@ -360,16 +363,8 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
         cycle-by-cycle properties of the simulated oscillator
     """
 
-    # Determine order of highpass filter (3 cycles of f_hipass)
-    if f_range_filter is not None:
-        if filter_order is None:
-            filter_order = int(3 * fs / f_range_filter[0])
-        if filter_order % 2 == 0:
-            filter_order += 1
-
-    # Generate filtered noise
-    noise = sim_filtered_noise(
-        n_seconds, fs, exponent, f_range_filter, filter_order)
+    # Generate noise
+    noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
 
     # Generate oscillator
     oscillator, df = sim_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym,
@@ -385,8 +380,8 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
             is_osc[row['start_sample']:row['start_sample'] + row['period']] = True
 
     # Normalize noise power
-    oscillator_var = np.mean(oscillator[is_osc]**2)
-    noise_var = np.mean(noise**2)
+    oscillator_var = np.var(oscillator[is_osc])
+    noise_var = np.var(noise)
     noise = np.sqrt(noise**2 * oscillator_var /
                     (noise_var * ratio_osc_var)) * np.sign(noise)
 
@@ -401,6 +396,7 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, exponent=2, ratio
         if return_cycle_df:
             return signal, df
         return signal
+
 
 def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
     # Generate noise
@@ -418,13 +414,15 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
                 n_seconds, fs, noise_args['n_neurons'], noise_args['firing_rate'], noise_args['t_ker'], noise_args['tau_r'], noise_args['tau_d'])
 
         elif noise_generator == 'ou_process':
-            noise = sim_ou_process(n_seconds, fs, noise_args['theta'], noise_args['mu'], noise_args['sigma'])
+            noise = sim_ou_process(
+                n_seconds, fs, noise_args['theta'], noise_args['mu'], noise_args['sigma'])
 
         else:
-            raise ValueError('Did not recognize noise type. Please check doc for acceptable function names.')
+            raise ValueError(
+                'Did not recognize noise type. Please check doc for acceptable function names.')
 
     elif type(noise_generator) is np.ndarray:
-        if len(noise_generator) != int(n_seconds*fs):
+        if len(noise_generator) != int(n_seconds * fs):
             raise ValueError('Custom noise is not of same length as required oscillation length.')
         else:
             noise = noise_generator
@@ -433,6 +431,7 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
         raise ValueError('Unsupported noise type: must be np.ndarray or str.')
 
     return noise
+
 
 def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
     """Simulate a jittered oscillator, as defined by the oscillator frequency,
@@ -536,7 +535,8 @@ def make_osc_cycle(t_ker, fs, cycle_params):
         raise ValueError('Did not recognize cycle type.')
     return cycle
 
-### Noise (or, aperiodic background) simulators
+# Noise (or, aperiodic background) simulators
+
 
 def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     """Simulates a poisson population.
@@ -750,7 +750,8 @@ def sim_variable_powerlaw(n_seconds, fs, exponent):
 
     return sig
 
-def sim_filtered_noise(n_seconds, fs, exponent, f_range=(0.5,None), filter_order=None):
+
+def sim_filtered_noise(n_seconds, fs, exponent, f_range=(0.5, None), filter_order=None):
     """Simulate colored noise that is highpass or bandpass filtered
 
     Parameters
