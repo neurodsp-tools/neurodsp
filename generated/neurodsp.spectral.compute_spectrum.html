@@ -98,19 +98,27 @@ Transform (mean, median), or the entire signal’s FFT smoothed (medfilt).</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sig</strong> (<em>array_like 1d</em><em> or </em><em>2d</em>) – Time series of measurement values.</li>
 <li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em>) – Sampling frequency of the sig time series.</li>
-<li><strong>method</strong> (<em>{ 'mean'</em><em>, </em><em>'median'</em><em>, </em><em>'medfilt'}</em><em>, </em><em>optional</em>) – Methods to calculate the spectrum. Defaults to ‘mean’.
-‘mean’ is the same as Welch’s method (mean of STFT).
+<li><strong>method</strong> (<em>{ 'mean'</em><em>, </em><em>'median'</em><em>, </em><em>'medfilt'}</em><em>, </em><em>optional</em>) – <dl class="docutils">
+<dt>Methods to calculate the spectrum. Defaults to ‘mean’.</dt>
+<dd>’mean’ is the same as Welch’s method (mean of STFT).
 ‘median’ uses median of STFT instead of mean to minimize outlier effect.
-‘medfilt’ filters the entire signals raw FFT with a median filter to smooth.</li>
-<li><strong>next 3 parameters are only relevant for method = {'mean'</strong><strong>, </strong><strong>'median'}</strong> (<em>The</em>) – </li>
-<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – Desired window to use. Defaults to a Hann window.
-See scipy.signal.get_window for a list of windows and required parameters.
-If window is array_like, this array will be used as the window and its length must be nperseg.</li>
-<li><strong>nperseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – Length of each segment, in number of samples. Defaults to None.
-If None, and window is str or tuple, is set to 1 second of data.
-If None, and window is array_like, is set to the length of the window.</li>
+‘medfilt’ filters the entire signals raw FFT with a median filter to smooth.</dd>
+</dl>
+</li>
+<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – <dl class="docutils">
+<dt>Desired window to use. Defaults to a Hann window.</dt>
+<dd>See scipy.signal.get_window for a list of windows and required parameters.
+If window is array_like, this array will be used as the window and its length must be nperseg.</dd>
+</dl>
+</li>
+<li><strong>nperseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – <dl class="docutils">
+<dt>Length of each segment, in number of samples. Defaults to None.</dt>
+<dd>If None, and window is str or tuple, is set to 1 second of data.
+If None, and window is array_like, is set to the length of the window.</dd>
+</dl>
+</li>
 <li><strong>noverlap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.</li>
-<li><strong>filten</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em><em>, </em><em>optional</em>) – (For medfilt method) Length of median filter in Hz.</li>
+<li><strong>filt_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em><em>, </em><em>optional</em>) – (For medfilt method) Length of median filter in Hz.</li>
 <li><strong>f_lim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em><em>, </em><em>optional</em>) – Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.</li>
 <li><strong>spg_outlier_pct</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>(</em><em>between 0 to 100</em><em>)</em>) – Percentage of spectrogram windows with the highest powers to discard prior to averaging.
 Useful for quickly eliminating potential outliers to compute spectrum.</li>

@@ -98,12 +98,18 @@ White noise should have a SCV of 1 at all frequencies.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>sig</strong> (<em>array_like 1d</em>) – Time series of measurement values</li>
 <li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em>) – Sampling frequency of the sig time series.</li>
-<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – Desired window to use. Defaults to a Hann window.
-See scipy.signal.get_window for a list of windows and required parameters.
-If window is array_like, this array will be used as the window and its length must be nperseg.</li>
-<li><strong>nperseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – Length of each segment, in number of samples. Defaults to None.
-If None, and window is str or tuple, is set to 1 second of data.
-If None, and window is array_like, is set to the length of the window.</li>
+<li><strong>window</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – <dl class="docutils">
+<dt>Desired window to use. Defaults to a Hann window.</dt>
+<dd>See scipy.signal.get_window for a list of windows and required parameters.
+If window is array_like, this array will be used as the window and its length must be nperseg.</dd>
+</dl>
+</li>
+<li><strong>nperseg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – <dl class="docutils">
+<dt>Length of each segment, in number of samples. Defaults to None.</dt>
+<dd>If None, and window is str or tuple, is set to 1 second of data.
+If None, and window is array_like, is set to the length of the window.</dd>
+</dl>
+</li>
 <li><strong>noverlap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – Number of points to overlap between segments. Defaults to 0 for independence.</li>
 <li><strong>outlier_pct</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>percent</em><em>, </em><em>optional</em>) – Discarding a percentage of the windows with the lowest and highest total log power.</li>
 </ul>

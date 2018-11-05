@@ -88,8 +88,8 @@
 <h1>neurodsp.sim.sim_noisy_oscillator<a class="headerlink" href="#neurodsp-sim-sim-noisy-oscillator" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="neurodsp.sim.sim_noisy_oscillator">
-<code class="descclassname">neurodsp.sim.</code><code class="descname">sim_noisy_oscillator</code><span class="sig-paren">(</span><em>n_seconds</em>, <em>fs</em>, <em>freq</em>, <em>exponent=2</em>, <em>rdsym=0.5</em>, <em>ratio_osc_power=1</em>, <em>f_range_filter=(2</em>, <em>None)</em>, <em>filter_order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.sim.sim_noisy_oscillator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simulate an oscillation embedded in background 1/f.</p>
+<code class="descclassname">neurodsp.sim.</code><code class="descname">sim_noisy_oscillator</code><span class="sig-paren">(</span><em>n_seconds</em>, <em>fs</em>, <em>freq</em>, <em>noise_generator</em>, <em>noise_args</em>, <em>rdsym=0.5</em>, <em>ratio_osc_var=1</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.sim.sim_noisy_oscillator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate an oscillation embedded in background 1/f noise.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -98,26 +98,34 @@
 <li><strong>n_seconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Signal duration, in seconds</li>
 <li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Signal sampling rate, in Hz</li>
 <li><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Oscillator frequency</li>
-<li><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Desired power-law exponent - beta in P(f)=f^beta</li>
+<li><strong>noise_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>numpy.ndarray</em>) – <p>Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
+numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
+Possible models (see respective documentation):</p>
+<blockquote>
+<div><ul>
+<li>’filtered_powerlaw’: sim.sim_filtered_noise()</li>
+<li>’powerlaw’: sim.sim_variable_powerlaw()</li>
+<li>’synaptic’ or ‘lorentzian’: sim.sim_synaptic_noise()</li>
+<li>’ou_process’: sim.sim_ou_process()</li>
+</ul>
+</div></blockquote>
+</li>
+<li><strong>noise_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a><em>(</em><em>'argname':argval</em><em>, </em><em>..</em><em>)</em>) – Function arguments for the neurodsp.sim noise generaters. See API for arg names.
+NOTE: all args, including optional ones, are required, EXCEPT n_seconds and fs.</li>
 <li><strong>rdsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – <dl class="docutils">
 <dt>Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;</dt>
-<dd>=0.5 - symmetric (sine wave)
+<dd>=0.5 - symmetric (i.e., sine wave, default)
 &lt;0.5 - shorter rise, longer decay
 &gt;0.5 - longer rise, shorter decay</dd>
 </dl>
 </li>
-<li><strong>ratio_osc_power</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – <dl class="docutils">
-<dt>Ratio of oscillator power to noise power</dt>
+<li><strong>ratio_osc_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – <dl class="docutils">
+<dt>Ratio of oscillator variance to noise variance</dt>
 <dd>&gt;1 - oscillator is stronger
-&lt;1 - noise is stronger</dd>
+&lt;1 - noise is stronger
+Defaults to 1.</dd>
 </dl>
 </li>
-<li><strong>f_range_filter</strong> (<em>2-element array</em><em> (</em><em>lo</em><em>,</em><em>hi</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – <dl class="docutils">
-<dt>Frequency range of simulated noise</dt>
-<dd>if None: do not filter</dd>
-</dl>
-</li>
-<li><strong>filter_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Order of filter for noise process</li>
 </ul>
 </td>
 </tr>

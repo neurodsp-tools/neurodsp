@@ -88,7 +88,7 @@
 <h1>neurodsp.sim.sim_filtered_noise<a class="headerlink" href="#neurodsp-sim-sim-filtered-noise" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="neurodsp.sim.sim_filtered_noise">
-<code class="descclassname">neurodsp.sim.</code><code class="descname">sim_filtered_noise</code><span class="sig-paren">(</span><em>n_seconds</em>, <em>fs</em>, <em>f_range</em>, <em>filter_order</em>, <em>exponent=2</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.sim.sim_filtered_noise" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">neurodsp.sim.</code><code class="descname">sim_filtered_noise</code><span class="sig-paren">(</span><em>n_seconds</em>, <em>fs</em>, <em>exponent</em>, <em>f_range=(0.5</em>, <em>None)</em>, <em>filter_order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.sim.sim_filtered_noise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate colored noise that is highpass or bandpass filtered</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -97,10 +97,12 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>n_seconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Simulation time, in seconds</li>
 <li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Sampling rate of simulated signal, in Hz</li>
+<li><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Desired power-law exponent - beta in P(f)=f^beta. Negative exponent
+denotes decay (i.e., negative slope in log-log spectrum).</li>
 <li><strong>f_range</strong> (<em>2-element array</em><em> (</em><em>lo</em><em>,</em><em>hi</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.7)"><em>None</em></a>) – Frequency range of simulated data
-if None: do not filter</li>
-<li><strong>filter_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Order of filter</li>
-<li><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Desired power-law exponent - beta in P(f)=f^beta</li>
+Defaults to (0.5, None), i.e., highpass at 0.5Hz</li>
+<li><strong>filter_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Order of filter
+Defaults to 3 times the highpass filter cycle length</li>
 </ul>
 </td>
 </tr>
