@@ -181,7 +181,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         if not iir:
             b_vals = kernel
             a_vals = 1
-            
+
         w_vals, h_vals = signal.freqz(b_vals, a_vals)
         f_db = w_vals * fs / (2. * np.pi)
         db = 20 * np.log10(abs(h_vals))
@@ -197,20 +197,20 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                 if db[0] >= -20:
                     warnings.warn("The low frequency stopband never gets attenuated"\
                                   "by more than 20dB. Increase filter length.")
-                elif db[1] >= -20:
+                if db[1] >= -20:
                     warnings.warn("The high frequency stopband never gets attenuated"\
                                   "by more than 20dB. Increase filter length.")
-                else:
-                    pass_bw = f_hi - f_lo
-                    # Identify edges of transition band (-3dB and -20dB)
-                    cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
-                    cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
-                    cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -20)
-                    cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -3)
-                    # Compute transition bandwidth
-                    transition_bw1 = cf_3db_1 - cf_20db_1
-                    transition_bw2 = cf_20db_2 - cf_3db_2
-                    transition_bw = max(transition_bw1, transition_bw2)
+                
+                pass_bw = f_hi - f_lo
+                # Identify edges of transition band (-3dB and -20dB)
+                cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
+                cf_3db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -3)
+                cf_20db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -20)
+                cf_3db_2 = next(f_db[ind] for ind in range(len(db))[::-1] if db[ind] > -3)
+                # Compute transition bandwidth
+                transition_bw1 = cf_3db_1 - cf_20db_1
+                transition_bw2 = cf_20db_2 - cf_3db_2
+                transition_bw = max(transition_bw1, transition_bw2)
 
             elif pass_type == 'bandstop':
                 pass_bw = f_hi - f_lo
