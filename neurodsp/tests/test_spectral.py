@@ -128,9 +128,10 @@ def test_morlet_transform():
     sig = _load_example_data(data_idx=data_idx)
     fs = 1000.
 
-    morlet_freqs = np.logspace(0,7,29, base=2)
+    morlet_freqs = np.logspace(0,7,15, base=2)
     mwt = spectral.morlet_transform(sig, morlet_freqs ,fs)
 
+    #np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/mwt.npy', mwt)
     # load "ground truth" MWT
     gt_mwt = np.load(os.path.dirname(neurodsp.__file__) +
                      '/tests/data/mwt.npy')
