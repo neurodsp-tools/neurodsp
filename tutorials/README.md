@@ -12,7 +12,7 @@ The neurodsp tutorials are spread out across a series of notebooks, which demons
     - Our implementation of the lagged coherence algorithm for quantifying the presence of rhythms, see [Fransen et al., 2015, Neuroimage](http://www.sciencedirect.com/science/article/pii/S1053811915004796) for more details.
 
 - [Spectral Analysis](4-SpectralAnalysis.ipynb)
-    - Computing and visualizing power spectral density with various methods, Morlet Wavelet Transform, and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see our spectral parametrization toolbox, [FOOOF](https://voytekresearch.github.io/fooof/).
+    - Computing and visualizing power spectral density with various methods, Morlet Wavelet Transform, and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see our spectral parametrization toolbox, [FOOOF](https://fooof-tools.github.io/fooof/).
 
 - [Burst Detection](5-BurstDetection.ipynb)
     - Burst detection using the dual threshold algorithm. For a more extensive and time-domain toolbox for detecting contiguous rhythmic cycles, please check out [bycycle](https://voytekresearch.github.io/bycycle/).
