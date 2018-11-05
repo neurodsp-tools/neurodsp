@@ -67,14 +67,14 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         filter kernel
         returned only if 'return_kernel' == True
     """
-
-    # Check, if fc is a tuple, that the second cutoff frequency is greater than the first
-    if isinstance(fc, tuple):
-        if fc[0] >= fc[1]:
-            raise ValueError('Second cutoff frequency must be greater than first.')
-
     # Check that frequency cutoff inputs are appropriate
     if pass_type in ('bandpass', 'bandstop'):
+        # Check, if fc is a tuple and performing bandpass/stop, that
+        #   the second cutoff frequency is greater than the first
+        if isinstance(fc, tuple):
+            if fc[0] >= fc[1]:
+                raise ValueError('Second cutoff frequency must be greater than first.')
+
         if isinstance(fc, (int, float)):
             raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
         if len(fc) != 2:
@@ -181,6 +181,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         if not iir:
             b_vals = kernel
             a_vals = 1
+            
         w_vals, h_vals = signal.freqz(b_vals, a_vals)
         f_db = w_vals * fs / (2. * np.pi)
         db = 20 * np.log10(abs(h_vals))
