@@ -77,7 +77,7 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
     min_period_length = int(np.ceil(min_cycles * fs / f_range[0]))
     is_burst = _rmv_short_periods(is_burst, min_period_length)
 
-    return is_burst
+    return is_burst.astype(bool)
 
 
 def compute_burst_stats(bursting, fs):

@@ -7,6 +7,9 @@ import neurodsp
 import os
 import numpy as np
 
+from functools import wraps
+import matplotlib.pyplot as plt
+
 
 def _generate_random_sig(len_sig=2000, seed=0):
     """Generate a random time series"""
@@ -29,3 +32,25 @@ def _load_example_data(data_idx=1, filtered=False):
         return sig, sig_filt_true
     else:
         return sig
+
+
+def plot_test(func):
+    """Decorator for simple testing of plotting functions.
+    Notes
+    -----
+    This decorator closes all plots prior to the test.
+    After running the test function, it checks an axis was created with data.
+    It therefore performs a minimal test - asserting the plots exists, with no accuracy checking.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        plt.close('all')
+
+        func(*args, **kwargs)
+
+        ax = plt.gca()
+        assert ax.has_data()
+
+    return wrapper
