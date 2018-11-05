@@ -200,7 +200,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                 if db[1] >= -20:
                     warnings.warn("The high frequency stopband never gets attenuated"\
                                   "by more than 20dB. Increase filter length.")
-                
+
                 pass_bw = f_hi - f_lo
                 # Identify edges of transition band (-3dB and -20dB)
                 cf_20db_1 = next(f_db[ind] for ind in range(len(db)) if db[ind] > -20)
