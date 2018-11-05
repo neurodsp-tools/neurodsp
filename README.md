@@ -28,13 +28,13 @@ To install this cloned copy of neurodsp, move into the directory you just cloned
 
 ## Modules
 
-- ```burst``` : Detect bursting oscillators in neural signals ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb))
-- ```filt``` : Filter data with bandpass, highpass, lowpass, or notch filters ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Filtering.ipynb))
-- ```laggedcoherence``` : Estimate rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Lagged%20coherence.ipynb))
-- ```sim``` : Simulate bursting or stationary oscillators with brown noise ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Simulating%20oscillators%20and%20noise.ipynb))
-- ```spectral``` : Compute spectral domain features (PSD and 1/f slope, etc) ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Spectral%20domain%20analysis.ipynb))
-- ```swm``` : Identify recurrent patterns in a signal using sliding window matching ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Sliding%20Window%20Matching.ipynb))
-- ```timefrequency``` : Estimate instantaneous measures of oscillatory activity ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/Instantaneous%20measures%20of%20phase%20amplitude%20and%20frequency.ipynb))
+- ```burst``` : Detect bursting oscillators in neural signals ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/5-BurstDetection.ipynb))
+- ```filt``` : Filter data with bandpass, highpass, lowpass, or notch filters ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/1-Filtering.ipynb))
+- ```laggedcoherence``` : Estimate rhythmicity using the lagged coherence measure ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/3-LaggedCoherence.ipynb))
+- ```sim``` : Simulate bursting or stationary oscillators with brown noise ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/7-SimulatingSignals.ipynb))
+- ```spectral``` : Compute spectral domain features (PSD and 1/f slope, etc) ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/4-SpectralAnalysis.ipynb))
+- ```swm``` : Identify recurrent patterns in a signal using sliding window matching ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/6-SlidingWindowMatching.ipynb))
+- ```timefrequency``` : Estimate instantaneous measures of oscillatory activity ([Tutorial](https://github.com/voytekresearch/neurodsp/blob/master/tutorials/2-InstantaneousMeasures.ipynb))
 
 ## Dependencies
 

@@ -387,7 +387,7 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=.5):
     mwt = np.zeros([sig_len, freqs_len], dtype=complex)
 
     for f_ind, freq in enumerate(freqs):
-        mwt[f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
+        mwt[:,f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
 
     return mwt
 

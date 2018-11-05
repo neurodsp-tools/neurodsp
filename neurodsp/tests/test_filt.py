@@ -90,7 +90,7 @@ def test_frequency_input_errors():
 
     # Check that frequencies cannot be inverted
     with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'lowpass', fc=(100, 10))
+        sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(100, 10))
 
 
 def test_filter_length():
