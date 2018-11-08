@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_synaptic\_noise
-=================================
+neurodsp.sim.sim_synaptic_noise
+===============================
 
 .. currentmodule:: neurodsp.sim
 

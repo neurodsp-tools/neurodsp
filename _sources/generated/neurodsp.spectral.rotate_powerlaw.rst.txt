@@ -1,5 +1,5 @@
-neurodsp.spectral.rotate\_powerlaw
-==================================
+neurodsp.spectral.rotate_powerlaw
+=================================
 
 .. currentmodule:: neurodsp.spectral
 

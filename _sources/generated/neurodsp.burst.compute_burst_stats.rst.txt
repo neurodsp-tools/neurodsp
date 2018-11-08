@@ -1,5 +1,5 @@
-neurodsp.burst.compute\_burst\_stats
-====================================
+neurodsp.burst.compute_burst_stats
+==================================
 
 .. currentmodule:: neurodsp.burst
 

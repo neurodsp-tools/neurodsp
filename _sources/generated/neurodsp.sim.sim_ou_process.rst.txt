@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_ou\_process
-=============================
+neurodsp.sim.sim_ou_process
+===========================
 
 .. currentmodule:: neurodsp.sim
 

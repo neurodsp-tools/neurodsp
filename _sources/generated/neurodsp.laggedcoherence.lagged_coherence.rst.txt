@@ -1,5 +1,5 @@
-neurodsp.laggedcoherence.lagged\_coherence
-==========================================
+neurodsp.laggedcoherence.lagged_coherence
+=========================================
 
 .. currentmodule:: neurodsp.laggedcoherence
 

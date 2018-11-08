@@ -1,5 +1,5 @@
-neurodsp.burst.detect\_bursts\_dual\_threshold
-==============================================
+neurodsp.burst.detect_bursts_dual_threshold
+===========================================
 
 .. currentmodule:: neurodsp.burst
 

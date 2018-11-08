@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>neurodsp.sim.sim_noisy_oscillator &#8212; neurodsp 1.0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +36,8 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head><body>
+  </head>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -95,31 +108,31 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>n_seconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Signal duration, in seconds</li>
-<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Signal sampling rate, in Hz</li>
-<li><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Oscillator frequency</li>
-<li><strong>noise_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>numpy.ndarray</em>) – <p>Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
+<li><strong>n_seconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Signal duration, in seconds</li>
+<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Signal sampling rate, in Hz</li>
+<li><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Oscillator frequency</li>
+<li><strong>noise_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>numpy.ndarray</em>) &#8211; <p>Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
 numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
 Possible models (see respective documentation):</p>
 <blockquote>
 <div><ul>
-<li>’filtered_powerlaw’: sim.sim_filtered_noise()</li>
-<li>’powerlaw’: sim.sim_variable_powerlaw()</li>
-<li>’synaptic’ or ‘lorentzian’: sim.sim_synaptic_noise()</li>
-<li>’ou_process’: sim.sim_ou_process()</li>
+<li>&#8216;filtered_powerlaw&#8217;: sim.sim_filtered_noise()</li>
+<li>&#8216;powerlaw&#8217;: sim.sim_variable_powerlaw()</li>
+<li>&#8216;synaptic&#8217; or &#8216;lorentzian&#8217;: sim.sim_synaptic_noise()</li>
+<li>&#8216;ou_process&#8217;: sim.sim_ou_process()</li>
 </ul>
 </div></blockquote>
 </li>
-<li><strong>noise_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a><em>(</em><em>'argname':argval</em><em>, </em><em>..</em><em>)</em>) – Function arguments for the neurodsp.sim noise generaters. See API for arg names.
+<li><strong>noise_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a><em>(</em><em>'argname':argval</em><em>, </em><em>..</em><em>)</em><em></em>) &#8211; Function arguments for the neurodsp.sim noise generaters. See API for arg names.
 NOTE: all args, including optional ones, are required, EXCEPT n_seconds and fs.</li>
-<li><strong>rdsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – <dl class="docutils">
+<li><strong>rdsym</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; <dl class="docutils">
 <dt>Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;</dt>
 <dd>=0.5 - symmetric (i.e., sine wave, default)
 &lt;0.5 - shorter rise, longer decay
 &gt;0.5 - longer rise, shorter decay</dd>
 </dl>
 </li>
-<li><strong>ratio_osc_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – <dl class="docutils">
+<li><strong>ratio_osc_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; <dl class="docutils">
 <dt>Ratio of oscillator variance to noise variance</dt>
 <dd>&gt;1 - oscillator is stronger
 &lt;1 - noise is stronger
@@ -129,7 +142,7 @@ Defaults to 1.</dd>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>osc</strong> – Oscillator with noise</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>osc</strong> &#8211; Oscillator with noise</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1d array</p>
@@ -154,7 +167,7 @@ Defaults to 1.</dd>
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
     </p>
   </div>
 </footer>

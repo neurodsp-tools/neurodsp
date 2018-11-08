@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_filtered\_noise
-=================================
+neurodsp.sim.sim_filtered_noise
+===============================
 
 .. currentmodule:: neurodsp.sim
 

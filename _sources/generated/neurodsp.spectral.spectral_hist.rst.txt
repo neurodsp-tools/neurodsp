@@ -1,5 +1,5 @@
-neurodsp.spectral.spectral\_hist
-================================
+neurodsp.spectral.spectral_hist
+===============================
 
 .. currentmodule:: neurodsp.spectral
 

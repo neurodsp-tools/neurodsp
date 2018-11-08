@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_variable\_powerlaw
-====================================
+neurodsp.sim.sim_variable_powerlaw
+==================================
 
 .. currentmodule:: neurodsp.sim
 

@@ -1,5 +1,5 @@
-neurodsp.spectral.compute\_spectrum
-===================================
+neurodsp.spectral.compute_spectrum
+==================================
 
 .. currentmodule:: neurodsp.spectral
 

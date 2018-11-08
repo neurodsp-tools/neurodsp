@@ -1,5 +1,5 @@
-neurodsp.filt.filter\_signal
-============================
+neurodsp.filt.filter_signal
+===========================
 
 .. currentmodule:: neurodsp.filt
 

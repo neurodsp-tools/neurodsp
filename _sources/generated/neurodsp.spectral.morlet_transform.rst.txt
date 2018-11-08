@@ -1,5 +1,5 @@
-neurodsp.spectral.morlet\_transform
-===================================
+neurodsp.spectral.morlet_transform
+==================================
 
 .. currentmodule:: neurodsp.spectral
 

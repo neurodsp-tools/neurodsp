@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_jittered\_oscillator
-======================================
+neurodsp.sim.sim_jittered_oscillator
+====================================
 
 .. currentmodule:: neurodsp.sim
 

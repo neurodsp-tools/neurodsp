@@ -1,5 +1,5 @@
-neurodsp.sim.sim\_bursty\_oscillator
-====================================
+neurodsp.sim.sim_bursty_oscillator
+==================================
 
 .. currentmodule:: neurodsp.sim
 

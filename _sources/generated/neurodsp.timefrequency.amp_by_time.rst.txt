@@ -1,5 +1,5 @@
-neurodsp.timefrequency.amp\_by\_time
-====================================
+neurodsp.timefrequency.amp_by_time
+==================================
 
 .. currentmodule:: neurodsp.timefrequency
 

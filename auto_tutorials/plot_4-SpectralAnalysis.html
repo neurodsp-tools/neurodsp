@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Spectral domain analysis &#8212; neurodsp 1.0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +36,8 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head><body>
+  </head>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -101,7 +114,7 @@
 </dd>
 </dl>
 <p>Detailed explanations for each of the above concept are provided below as we come across them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># importing libraries</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># importing libraries</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
@@ -110,7 +123,7 @@
 <span class="kn">from</span> <span class="nn">neurodsp</span> <span class="kn">import</span> <span class="n">spectral</span><span class="p">,</span> <span class="n">plts</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, we load the sample data, which is a segment of rat hippocampal LFP taken from the</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># First, we load the sample data, which is a segment of rat hippocampal LFP taken from the</span>
 <span class="c1"># publicly available neuro database CRCNS (hc2). Relevant publication: Mizuseki et al, 2012, Nature Neuro</span>
 <span class="n">data</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.io.html#scipy.io.loadmat" title="View documentation for scipy.io.loadmat"><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_2.mat&#39;</span><span class="p">,</span> <span class="n">squeeze_me</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
@@ -132,13 +145,13 @@
 <dl class="docutils">
 <dt>PSD is the frequency domain representation of time series. Through the Fourier transform, the signal is split into orthogonal components of different frequency. In this toolbox, there are a few ways of estimating the PSD:</dt>
 <dd><ul class="first last simple">
-<li>‘mean’ : same as Welch’s method; mean over spectrogram of data. This is the most straightforward and “standard” way of computing the PSD.</li>
-<li>‘median’ : similar to Welch’s method; median (instead of mean) over spectrogram of data. This diminishes the effect of outlier power values from signal artifacts.</li>
-<li>‘medfilt’ : median filtered of FFT magnitude squared.</li>
+<li>&#8216;mean&#8217; : same as Welch&#8217;s method; mean over spectrogram of data. This is the most straightforward and &#8220;standard&#8221; way of computing the PSD.</li>
+<li>&#8216;median&#8217; : similar to Welch&#8217;s method; median (instead of mean) over spectrogram of data. This diminishes the effect of outlier power values from signal artifacts.</li>
+<li>&#8216;medfilt&#8217; : median filtered of FFT magnitude squared.</li>
 </ul>
 </dd>
 </dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">freq_mean</span><span class="p">,</span> <span class="n">P_mean</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># mean of spectrogram (Welch)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">freq_mean</span><span class="p">,</span> <span class="n">P_mean</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># mean of spectrogram (Welch)</span>
 <span class="n">freq_med</span><span class="p">,</span> <span class="n">P_med</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># median of spectrogram (&quot;median Welch&quot;)</span>
 <span class="n">freq_mf</span><span class="p">,</span> <span class="n">P_mf</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;medfilt&#39;</span><span class="p">)</span>
 
@@ -155,7 +168,7 @@
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_002.png" />
 <div class="section" id="fitting-1-f-noise-of-psd-with-a-straight-line-in-loglog-scale">
 <h2>Fitting 1/f noise of PSD with a straight line in loglog scale<a class="headerlink" href="#fitting-1-f-noise-of-psd-with-a-straight-line-in-loglog-scale" title="Permalink to this headline">¶</a></h2>
-<p>Notice in the above PSDs that there is a region of linear decrease when plotted in double log-scale, between 30-100Hz. This “1/f slope” has been found to correlate with aging, memory, and cognitive control in several previous publications, and has been proposed to reflect the physiological balance between excitation and inhibition.</p>
+<p>Notice in the above PSDs that there is a region of linear decrease when plotted in double log-scale, between 30-100Hz. This &#8220;1/f slope&#8221; has been found to correlate with aging, memory, and cognitive control in several previous publications, and has been proposed to reflect the physiological balance between excitation and inhibition.</p>
 <p>See for example: Voytek et al., JNeuro, 2015; Podvalny et al., JNeurophysiol, 2015; Gao et al., NeuroImage, 2017; Lombardi et al., Chaos, 2017</p>
 <p>Here, we can fit the 1/f slope between any two frequencies while excluding a number of frequency ranges within that fit region, and we can plot the PSD and line to visually evaluate goodness of fit.</p>
 <p>NOTE:
@@ -164,9 +177,9 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 </div>
 <div class="section" id="spectral-histogram">
 <h2>Spectral histogram<a class="headerlink" href="#spectral-histogram" title="Permalink to this headline">¶</a></h2>
-<p>The PSD is an estimate of the central tendency (mean/median) of the signal’s power at each frequency, with the assumption that the signal is relatively stationary and that the variance around the mean comes from various forms of noise.</p>
+<p>The PSD is an estimate of the central tendency (mean/median) of the signal&#8217;s power at each frequency, with the assumption that the signal is relatively stationary and that the variance around the mean comes from various forms of noise.</p>
 <p>However, in physiological data, we may be interested in visualizing the distribution of power values around the mean at each frequency, as estimated in sequential slices of short-time Fourier transform (STFT), since it may reveal non-stationarities in the data or particular frequencies that are not like the rest. Here, we simply bin the log-power values across time, in a histogram, to observe the noise distribution at each frequency.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.spectral_hist.html#neurodsp.spectral.spectral_hist" title="View documentation for neurodsp.spectral.spectral_hist"><span class="n">spectral</span><span class="o">.</span><span class="n">spectral_hist</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_lim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">80</span><span class="p">),</span> <span class="n">cutpct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">99.9</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.spectral_hist.html#neurodsp.spectral.spectral_hist" title="View documentation for neurodsp.spectral.spectral_hist"><span class="n">spectral</span><span class="o">.</span><span class="n">spectral_hist</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_lim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">80</span><span class="p">),</span> <span class="n">cutpct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">99.9</span><span class="p">))</span>
 <span class="c1">#plts.spectral.plot_spectral_hist(f, bins, spect_hist, freq_med, P_med)</span>
 
 <span class="c1"># Notice in the below plot that not only is theta power higher overall (shifted up),</span>
@@ -178,7 +191,7 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 <div class="section" id="spectral-coefficient-of-variation">
 <h1>Spectral Coefficient of Variation<a class="headerlink" href="#spectral-coefficient-of-variation" title="Permalink to this headline">¶</a></h1>
 <p>As noted above, the range of log-power values in the theta frequency range is lower compared to other frequencies, while that of 30-100Hz appear to be quite constant across the entire frequency axis (homoscedasticity). To quantify that, we compute the coefficient of variation (standard deviation/mean) as a normalized estimate of variance.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="View documentation for neurodsp.spectral.compute_scv"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span><span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="View documentation for neurodsp.spectral.compute_scv"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span><span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">scv</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
@@ -189,7 +202,7 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_003.png" />
 <p>As shown above, SCV calculated from the entire segment of data is quite noise due to the single estimate of mean and standard deviation. To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing slices from the non-overlapping spectrogram and taking their average.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SCVrs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span><span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SCVrs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span><span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">SCVrs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">SCVrs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -202,7 +215,7 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_004.png" />
 <p>Another way to compute the resampled SCV is via a sliding window approach, essentially smoothing over consecutive slices of the spectrogram to compute the mean and std estimates.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SCVrs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SCVrs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.log10" title="View documentation for numpy.log10"><span class="n">np</span><span class="o">.</span><span class="n">log10</span></a><span class="p">(</span><span class="n">SCVrs</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;SCV&#39;</span><span class="p">)</span>
@@ -220,7 +233,7 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 <p>Another included utility function is spectral rotation, which rotates the power spectrum about a given axis frequency, by an amount indicated by the exponent (negative is clockwise, positive is counterclockwise).</p>
 <p>This function is mostly useful for investigating the effect of rotating the spectrum in frequency domain on the time domain signal. Effectively, this performs a very specific type of filtering with an ultra long filter kernel.</p>
 <p>For complete details, see the <strong>Simulation</strong> tutorial.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">P_rot</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.rotate_powerlaw.html#neurodsp.spectral.rotate_powerlaw" title="View documentation for neurodsp.spectral.rotate_powerlaw"><span class="n">spectral</span><span class="o">.</span><span class="n">rotate_powerlaw</span></a><span class="p">(</span><span class="n">freq_med</span><span class="p">,</span><span class="n">P_med</span><span class="p">,</span><span class="n">delta_f</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">f_rotation</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">P_rot</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.rotate_powerlaw.html#neurodsp.spectral.rotate_powerlaw" title="View documentation for neurodsp.spectral.rotate_powerlaw"><span class="n">spectral</span><span class="o">.</span><span class="n">rotate_powerlaw</span></a><span class="p">(</span><span class="n">freq_med</span><span class="p">,</span><span class="n">P_med</span><span class="p">,</span><span class="n">delta_f</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">f_rotation</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">P_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">P_rot</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Rotated&#39;</span><span class="p">)</span>
@@ -228,12 +241,12 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_006.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.130 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  1.189 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-4-spectralanalysis-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/60fbdb7cfedc1ce95551c3099bbf3bb8/plot_4-SpectralAnalysis.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_4-SpectralAnalysis.py</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_4-SpectralAnalysis.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_4-SpectralAnalysis.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/5b8e79c45f9e1dedbaa384b3f2795448/plot_4-SpectralAnalysis.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_4-SpectralAnalysis.ipynb</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_4-SpectralAnalysis.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_4-SpectralAnalysis.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -251,7 +264,7 @@ Please refer to [FOOOF](<a class="reference external" href="https://github.com/v
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
     </p>
   </div>
 </footer>

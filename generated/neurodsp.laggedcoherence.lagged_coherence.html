@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>neurodsp.laggedcoherence.lagged_coherence &#8212; neurodsp 1.0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +36,8 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head><body>
+  </head>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -95,19 +108,19 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sig</strong> (<em>array-like 1d</em>) – voltage time series</li>
-<li><strong>f_range</strong> (<em>(</em><em>low</em><em>, </em><em>high</em><em>)</em><em>, </em><em>Hz</em>) – frequency range of the oscillator</li>
-<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – sampling rate</li>
-<li><strong>n_cycles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Number of cycles of the frequency of interest used to compute lagged coherence</li>
-<li><strong>f_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em>) – step size to calculate lagged coherence in the frequency range.</li>
-<li><strong>return_spectrum</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if True, return the lagged coherence for all frequency values. otherwise, only return mean</li>
+<li><strong>sig</strong> (<em>array-like 1d</em>) &#8211; voltage time series</li>
+<li><strong>f_range</strong> (<em></em><em>(</em><em>low</em><em>, </em><em>high</em><em>)</em><em></em><em>, </em><em>Hz</em>) &#8211; frequency range of the oscillator</li>
+<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; sampling rate</li>
+<li><strong>n_cycles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Number of cycles of the frequency of interest used to compute lagged coherence</li>
+<li><strong>f_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>Hz</em>) &#8211; step size to calculate lagged coherence in the frequency range.</li>
+<li><strong>return_spectrum</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; if True, return the lagged coherence for all frequency values. otherwise, only return mean</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>lc</strong> (<em>float (or numpy.array 1d)</em>) – if return_spectrum is False: mean lagged coherence value in the frequency range of interest
+<li><strong>lc</strong> (<em>float (or numpy.array 1d)</em>) &#8211; if return_spectrum is False: mean lagged coherence value in the frequency range of interest
 if return_spectrum is True: lagged coherence value for each frequency in the frequency range</li>
-<li><strong>fs</strong> (<em>numpy.array 1d</em>) – Only returned if return_spectrum is True
+<li><strong>fs</strong> (<em>numpy.array 1d</em>) &#8211; Only returned if return_spectrum is True
 Frequencies (Hz) corresponding to the lagged coherence values in lc</li>
 </ul>
 </p>
@@ -136,7 +149,7 @@ Neuroimage, 118, 256-267.</p>
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
     </p>
   </div>
 </footer>

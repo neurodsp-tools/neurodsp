@@ -1,5 +1,5 @@
-neurodsp.timefrequency.phase\_by\_time
-======================================
+neurodsp.timefrequency.phase_by_time
+====================================
 
 .. currentmodule:: neurodsp.timefrequency
 

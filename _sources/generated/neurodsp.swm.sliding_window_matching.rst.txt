@@ -1,5 +1,5 @@
-neurodsp.swm.sliding\_window\_matching
-======================================
+neurodsp.swm.sliding_window_matching
+====================================
 
 .. currentmodule:: neurodsp.swm
 

@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>neurodsp.swm.sliding_window_matching &#8212; neurodsp 1.0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +36,8 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head><body>
+  </head>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -95,20 +108,20 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sig</strong> (<em>array-like 1d</em>) – voltage time series</li>
-<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – sampling rate (samples per second)</li>
-<li><strong>win_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – window length (seconds)</li>
-<li><strong>win_spacing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – minimum window spacing (seconds)</li>
-<li><strong>max_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Maximum number of iterations of potential changes in window placement</li>
-<li><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – temperature parameter. Controls probability of accepting a new window</li>
-<li><strong>window_starts_custom</strong> (<em>np.ndarray</em><em> (</em><em>1d</em><em>)</em><em>, </em><em>optional</em>) – Pre-set locations of initial windows (instead of evenly spaced by 2G)</li>
+<li><strong>sig</strong> (<em>array-like 1d</em>) &#8211; voltage time series</li>
+<li><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; sampling rate (samples per second)</li>
+<li><strong>win_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; window length (seconds)</li>
+<li><strong>win_spacing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; minimum window spacing (seconds)</li>
+<li><strong>max_iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Maximum number of iterations of potential changes in window placement</li>
+<li><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; temperature parameter. Controls probability of accepting a new window</li>
+<li><strong>window_starts_custom</strong> (<em>np.ndarray</em><em> (</em><em>1d</em><em>)</em><em></em><em>, </em><em>optional</em>) &#8211; Pre-set locations of initial windows (instead of evenly spaced by 2G)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>avg_window</strong> (<em>np.ndarray (1d)</em>) – the average waveform in ‘sig’ in the frequency ‘f_range’ triggered on ‘trigger’</li>
-<li><strong>window_starts</strong> (<em>np.ndarray (1d)</em>) – indices at which each window begins for the final set of windows</li>
-<li><strong>costs</strong> (<em>np.ndarray (1d)</em>) – Cost function value at each iteration</li>
+<li><strong>avg_window</strong> (<em>np.ndarray (1d)</em>) &#8211; the average waveform in &#8216;sig&#8217; in the frequency &#8216;f_range&#8217; triggered on &#8216;trigger&#8217;</li>
+<li><strong>window_starts</strong> (<em>np.ndarray (1d)</em>) &#8211; indices at which each window begins for the final set of windows</li>
+<li><strong>costs</strong> (<em>np.ndarray (1d)</em>) &#8211; Cost function value at each iteration</li>
 </ul>
 </p>
 </td>
@@ -148,7 +161,7 @@ so that it does not converge on a low frequency motif</li>
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
     </p>
   </div>
 </footer>
