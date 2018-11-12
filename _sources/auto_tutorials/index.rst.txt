@@ -14,6 +14,46 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Time">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_2-InstantaneousMeasures_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_2-InstantaneousMeasures.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_2-InstantaneousMeasures
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Lagged Coherence">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_3-LaggedCoherence_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_3-LaggedCoherence.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_3-LaggedCoherence
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Detailed explanations for each of the above concept are provided below as we come across them. ">
 
 .. only:: html
@@ -31,6 +71,46 @@ Below is a series of notebooks that provide an introduction to the tools in neur
    :hidden:
 
    /auto_tutorials/plot_4-SpectralAnalysis
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Burst Detection">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_5-BurstDetection_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_5-BurstDetection.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_5-BurstDetection
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to implement sliding window matching (SWM) for identifying recurring pa...">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_6-SlidingWindowMatching_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_6-SlidingWindowMatching.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_6-SlidingWindowMatching
 .. raw:: html
 
     <div style='clear:both'></div>
