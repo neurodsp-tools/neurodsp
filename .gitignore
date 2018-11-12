@@ -103,6 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# sphinx html
+_build/
+auto_examples/
+auto_tutorials/
+generated/
+
 # custom
 .DS_Store
 neurodsp/*_sandbox.ipynb
