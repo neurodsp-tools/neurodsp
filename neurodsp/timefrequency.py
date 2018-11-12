@@ -45,8 +45,10 @@ def phase_by_time(sig, fs, f_range, filter_kwargs=None,
     if filter_kwargs is None:
         filter_kwargs = {}
 
+    pass_type = _get_filt_passtype(f_range)
+
     # Filter signal
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', fc=f_range,
+    sig_filt, kernel = filter_signal(sig, fs, pass_type, fc=f_range,
                                      remove_edge_artifacts=False,
                                      return_kernel=True,
                                      verbose=verbose, **filter_kwargs)
@@ -97,8 +99,10 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None,
     if filter_kwargs is None:
         filter_kwargs = {}
 
+    pass_type = _get_filt_passtype(f_range)
+
     # Filter signal
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', fc=f_range,
+    sig_filt, kernel = filter_signal(sig, fs, pass_type, fc=f_range,
                                      remove_edge_artifacts=False,
                                      return_kernel=True,
                                      verbose=verbose, **filter_kwargs)
@@ -187,3 +191,19 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
     sig_hilb[first_nonan:last_nonan] = sig_hilb_nonan
 
     return sig_hilb
+
+def _get_filt_passtype(f_range):
+    """
+    Given frequency range of filter, check for Nones to return appropriate
+        filter pass_type to filt.filter_signal.
+    """
+    if f_range[0] is None:
+        pass_type = 'lowpass'
+    elif f_range[1] is None:
+        pass_type = 'highpass'
+    else:
+        if f_range[0]>=f_range[1]:
+            raise ValueError('Second cutoff frequency must be greater than first.')
+        else:
+            pass_type = 'bandpass'
+    return pass_type
