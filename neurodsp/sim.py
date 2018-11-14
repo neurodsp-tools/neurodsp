@@ -259,7 +259,8 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                 rise_pha = np.linspace(-np.pi / 2, 0,
                                        int(row['period'] / 4))[1:]
                 rise_t = np.cos(rise_pha) * row['amp']
-                sig[-len(rise_t):] = rise_t
+                if len(rise_pha) > 0:
+                    sig[-len(rise_t):] = rise_t
 
             # Add a cycle with rdsym
             rise_samples = int(np.round(row['period'] * row['rdsym']))
