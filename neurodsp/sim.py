@@ -181,7 +181,7 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
             cycle_features_use[k] = cycle_features[k]
 
     # Determine number of cycles to generate
-    n_samples = n_seconds * fs
+    n_samples = int(n_seconds * fs)
     n_cycles_overestimate = int(np.ceil(n_samples / mean_period_samples * 2))
 
     # Simulate if a series of cycles are oscillating or not oscillating
