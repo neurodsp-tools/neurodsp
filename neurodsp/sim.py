@@ -218,12 +218,31 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                     np.random.randn() * cycle_features_use['amp_burst_std']
                 current_burst_rdsym_mean = cycle_features_use['rdsym_mean'] + \
                     np.random.randn() * cycle_features_use['rdsym_burst_std']
-            period = current_burst_period_mean + \
-                np.random.randn() * cycle_features_use['period_std']
-            amp = current_burst_amp_mean + \
-                np.random.randn() * cycle_features_use['amp_std']
-            rdsym = current_burst_rdsym_mean + \
-                np.random.randn() * cycle_features_use['rdsym_std']
+
+            features_valid = False
+            while features_valid is False:
+                period = current_burst_period_mean + \
+                    np.random.randn() * cycle_features_use['period_std']
+                amp = current_burst_amp_mean + \
+                    np.random.randn() * cycle_features_use['amp_std']
+                rdsym = current_burst_rdsym_mean + \
+                    np.random.randn() * cycle_features_use['rdsym_std']
+
+                if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
+                    features_valid = True
+                else:
+                    features_invalid = ''
+                    if period <= 0:
+                        features_invalid += 'period '
+                    if amp <= 0:
+                        features_invalid += 'amp '
+                    if rdsym <= 0 or rdsym >= 1:
+                        features_invalid += 'rdsym '
+                    warnings.warn('''A cycle was simulated with invalid feature(s) for:
+                        **{:s}** (e.g. less than 0). A new cycle was
+                        simulated to replace it. If this warning appears often, you should
+                        change your simulation parameters.'''.format(features_invalid))
+
             periods.append(int(period))
             amps.append(amp)
             rdsyms.append(rdsym)
