@@ -124,7 +124,7 @@ def test_sim_noisy_bursty_oscillator():
             rdsym=.5, ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2,
             cycle_features=None, return_components=False, return_cycle_df=False)
 
-    #np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_bursty_osc.npy', osc)
+    # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_bursty_osc.npy', osc)
     osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_noisy_bursty_osc.npy')
     assert np.allclose(np.sum(np.abs(osc - osc_true)), 0, atol=10 ** -5)

@@ -101,6 +101,8 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym
 
     # Generate noise
     noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
+    # demean noise
+    noise = noise - noise.mean()
 
     # Generate oscillator
     oscillator = sim_oscillator(n_seconds, fs, freq, rdsym=rdsym)
@@ -291,9 +293,8 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
 
 
 def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym=.5,
-    ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2, cycle_features=None,
-        return_components=False, return_cycle_df=False):
-
+                                ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2, cycle_features=None,
+                                return_components=False, return_cycle_df=False):
     """Simulate a bursty oscillation embedded in background 1/f noise.
 
     Parameters
@@ -366,6 +367,8 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args
 
     # Generate noise
     noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
+    # demean noise
+    noise = noise - noise.mean()
 
     # Generate oscillator
     oscillator, df = sim_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym,
