@@ -11,6 +11,7 @@ from neurodsp.filt import filter_signal
 ###################################################################################################
 ###################################################################################################
 
+
 def phase_by_time(sig, fs, f_range, filter_kwargs=None,
                   hilbert_increase_n=False, remove_edge_artifacts=True,
                   verbose=True):
@@ -192,6 +193,7 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
 
     return sig_hilb
 
+
 def _get_filt_passtype(f_range):
     """
     Given frequency range of filter, check for Nones to return appropriate
@@ -202,7 +204,7 @@ def _get_filt_passtype(f_range):
     elif f_range[1] is None:
         pass_type = 'highpass'
     else:
-        if f_range[0]>=f_range[1]:
+        if f_range[0] >= f_range[1]:
             raise ValueError('Second cutoff frequency must be greater than first.')
         else:
             pass_type = 'bandpass'
