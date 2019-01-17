@@ -415,7 +415,7 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
 
         elif noise_generator == 'synaptic' or noise_generator == 'lorentzian':
             noise = sim_synaptic_noise(
-                n_seconds, fs, noise_args['n_neurons'], noise_args['firing_rate'], noise_args['t_ker'], noise_args['tau_r'], noise_args['tau_d'])
+                n_seconds, fs, noise_args['n_neurons'], noise_args['firing_rate'], noise_args['tau_r'], noise_args['tau_d'])
 
         elif noise_generator == 'ou_process':
             noise = sim_ou_process(
@@ -639,7 +639,7 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     return kernel
 
 
-def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., tau_r=0, tau_d=0.01):
+def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01, t_ker=None):
     """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
 
     The resulting signal is most similar to unsigned intracellular current or conductance change.
@@ -654,8 +654,6 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., t
         Number of neurons in the simulated population
     firing_rate : float
         Firing rate of individual neurons in the population
-    t_ker : float
-        Length of simulated kernel in seconds. Usually 1 second will suffice.
     tau_r : float
         Rise time of synaptic kernel, in seconds.
     tau_d : fload
@@ -666,6 +664,9 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, t_ker=1., t
     sig : array_like (1D)
         Simulated signal.
     """
+    if t_ker is None:
+        # Automatically compute t_ker as a function of decay time constant
+        t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will snip it
     sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker),

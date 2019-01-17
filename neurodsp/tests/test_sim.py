@@ -158,7 +158,7 @@ def test_sim_make_synaptic_kernel():
 
 def test_sim_synaptic_noise():
     np.random.seed(0)
-    syn_noise = sim_synaptic_noise(2, 1000, 1000, 2, 1., 0.002, 2)
+    syn_noise = sim_synaptic_noise(2, 1000, 1000, 2, 0.002, 2, 1.)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_synaptic_noise.npy', syn_noise)
     syn_noise_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_synaptic_noise.npy')
