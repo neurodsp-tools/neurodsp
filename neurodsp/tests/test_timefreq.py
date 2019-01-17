@@ -46,6 +46,24 @@ def test_timefreq_consistent():
     assert np.allclose(np.sum(np.abs(i_f[~np.isnan(i_f)] - i_f_true[~np.isnan(i_f_true)])),
                        0, atol=10 ** -5)
 
+def test_none_input():
+    """
+    Tests that passing (float, None) or (None, float) for highpass and lowpass
+    respectively will not result in error.
+    """
+    # Load data
+    data_idx = 1
+    sig = _load_example_data(data_idx=data_idx)
+    fs = 1000
+    fc = 20.5
+
+    # test that these run without error
+    phase_by_time(sig, fs, (None, fc))
+    phase_by_time(sig, fs, (fc, None))
+    amp_by_time(sig, fs, (None, fc))
+    amp_by_time(sig, fs, (fc ,None))
+    assert True
+
 
 def test_nan_in_x():
     """
