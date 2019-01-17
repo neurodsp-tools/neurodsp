@@ -57,7 +57,7 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     return osc
 
 
-def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym=.5, ratio_osc_var=1):
+def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args={}, rdsym=.5, ratio_osc_var=1):
     """Simulate an oscillation embedded in background 1/f noise.
 
     Parameters
@@ -73,12 +73,16 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
         Possible models (see respective documentation):
             - 'filtered_powerlaw': sim.sim_filtered_noise()
+                    Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
             - 'powerlaw': sim.sim_variable_powerlaw()
+                    Defaults: exponent=-2.0
             - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
+                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'ou_process': sim.sim_ou_process()
+                    Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
         Function arguments for the neurodsp.sim noise generaters. See API for arg names.
-        NOTE: all args, including optional ones, are required, EXCEPT n_seconds and fs.
+        All args are optional, defaults for each noise generator are listed above.
     rdsym : float
         Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;
             =0.5 - symmetric (i.e., sine wave, default)
@@ -292,7 +296,7 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
-def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args, rdsym=.5,
+def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args={}, rdsym=.5,
                                 ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2, cycle_features=None,
                                 return_components=False, return_cycle_df=False):
     """Simulate a bursty oscillation embedded in background 1/f noise.
@@ -305,17 +309,22 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args
         Sampling rate of simulated signal, in Hz
     freq : float
         Oscillator frequency, in Hz
+
     noise_generator: str or numpy.ndarray
         Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
         Possible models (see respective documentation):
             - 'filtered_powerlaw': sim.sim_filtered_noise()
+                    Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
             - 'powerlaw': sim.sim_variable_powerlaw()
+                    Defaults: exponent=-2.0
             - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
+                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'ou_process': sim.sim_ou_process()
+                    Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
         Function arguments for the neurodsp.sim noise generaters. See API for arg names.
-        NOTE: all args, including optional ones, are required, EXCEPT n_seconds and fs.
+        All args are optional, defaults for each noise generator are listed above.
     rdsym : float
         Rise-decay symmetry of the oscillator as fraction of the period in the rise time
             =0.5 - symmetric (sine wave)
@@ -407,19 +416,16 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
     if type(noise_generator) is str:
         # use neurodsp defined noise generators
         if noise_generator == 'filtered_powerlaw':
-            noise = sim_filtered_noise(
-                n_seconds, fs, noise_args['exponent'], noise_args['f_range'], noise_args['filter_order'])
+            noise = sim_filtered_noise(n_seconds, fs, **noise_args)
 
         elif noise_generator == 'powerlaw':
-            noise = sim_variable_powerlaw(n_seconds, fs, noise_args['exponent'])
+            noise = sim_variable_powerlaw(n_seconds, fs, **noise_args)
 
         elif noise_generator == 'synaptic' or noise_generator == 'lorentzian':
-            noise = sim_synaptic_noise(
-                n_seconds, fs, noise_args['n_neurons'], noise_args['firing_rate'], noise_args['tau_r'], noise_args['tau_d'])
+            noise = sim_synaptic_noise(n_seconds, fs, **noise_args)
 
         elif noise_generator == 'ou_process':
-            noise = sim_ou_process(
-                n_seconds, fs, noise_args['theta'], noise_args['mu'], noise_args['sigma'])
+            noise = sim_ou_process(n_seconds, fs, **noise_args)
 
         else:
             raise ValueError(
@@ -724,7 +730,7 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     return sig
 
 
-def sim_variable_powerlaw(n_seconds, fs, exponent):
+def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     """Generate a power law time series with specified exponent by spectrally rotating white noise.
 
     Parameters
@@ -756,7 +762,7 @@ def sim_variable_powerlaw(n_seconds, fs, exponent):
     return sig
 
 
-def sim_filtered_noise(n_seconds, fs, exponent, f_range=(0.5, None), filter_order=None):
+def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_order=None):
     """Simulate colored noise that is highpass or bandpass filtered
 
     Parameters
@@ -768,6 +774,7 @@ def sim_filtered_noise(n_seconds, fs, exponent, f_range=(0.5, None), filter_orde
     exponent : float
         Desired power-law exponent - beta in P(f)=f^beta. Negative exponent
         denotes decay (i.e., negative slope in log-log spectrum).
+        Defaults to -2.0
     f_range : 2-element array (lo,hi) or None
         Frequency range of simulated data
         Defaults to (0.5, None), i.e., highpass at 0.5Hz
