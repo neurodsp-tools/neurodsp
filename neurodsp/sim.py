@@ -57,7 +57,7 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     return osc
 
 
-def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args={}, rdsym=.5, ratio_osc_var=1):
+def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator='synaptic', noise_args={}, rdsym=.5, ratio_osc_var=1):
     """Simulate an oscillation embedded in background 1/f noise.
 
     Parameters
@@ -72,12 +72,12 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator, noise_args={}, rd
         Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
         Possible models (see respective documentation):
+            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise() (DEFAULT)
+                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'filtered_powerlaw': sim.sim_filtered_noise()
                     Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
             - 'powerlaw': sim.sim_variable_powerlaw()
                     Defaults: exponent=-2.0
-            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
-                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'ou_process': sim.sim_ou_process()
                     Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
@@ -296,7 +296,7 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
-def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args={}, rdsym=.5,
+def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator='synaptic', noise_args={}, rdsym=.5,
                                 ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2, cycle_features=None,
                                 return_components=False, return_cycle_df=False):
     """Simulate a bursty oscillation embedded in background 1/f noise.
@@ -314,12 +314,12 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator, noise_args
         Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
         Possible models (see respective documentation):
+            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise() (DEFAULT)
+                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'filtered_powerlaw': sim.sim_filtered_noise()
                     Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
             - 'powerlaw': sim.sim_variable_powerlaw()
                     Defaults: exponent=-2.0
-            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
-                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
             - 'ou_process': sim.sim_ou_process()
                     Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
