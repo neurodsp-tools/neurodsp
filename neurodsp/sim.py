@@ -122,6 +122,7 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator='synaptic', noise_
 
     return osc
 
+
 def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                           prob_leave_burst=.2, cycle_features=None,
                           return_cycle_df=False, n_tries=5):
