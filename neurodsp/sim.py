@@ -125,9 +125,8 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator='synaptic', noise_
 
 def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                           prob_leave_burst=.2, cycle_features=None,
-                          return_cycle_df=False):
+                          return_cycle_df=False, n_tries=5):
     """Simulate a bursty oscillation.
-
     Parameters
     ----------
     n_seconds : float
@@ -166,7 +165,10 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         power, for example. Because the power of the oscillator
         should only be considered over the times where there's
         bursts, not when there's nothing.
-
+    n_tries : int
+        Number of times to try to resimulate cycle features when an
+        invalid value is returned before raising an user error.
+        Defaults to 5.
     Returns
     -------
     sig : 1d array
@@ -224,15 +226,41 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                     np.random.randn() * cycle_features_use['amp_burst_std']
                 current_burst_rdsym_mean = cycle_features_use['rdsym_mean'] + \
                     np.random.randn() * cycle_features_use['rdsym_burst_std']
-            period = current_burst_period_mean + \
-                np.random.randn() * cycle_features_use['period_std']
-            amp = current_burst_amp_mean + \
-                np.random.randn() * cycle_features_use['amp_std']
-            rdsym = current_burst_rdsym_mean + \
-                np.random.randn() * cycle_features_use['rdsym_std']
-            periods.append(int(period))
-            amps.append(amp)
-            rdsyms.append(rdsym)
+
+            # simulate for n_tries, if any params are still negative, raise error
+            tries_left = n_tries
+            features_valid = False
+            while features_valid is False and tries_left >= 0:
+                tries_left = tries_left - 1
+                period = current_burst_period_mean + \
+                    np.random.randn() * cycle_features_use['period_std']
+                amp = current_burst_amp_mean + \
+                    np.random.randn() * cycle_features_use['amp_std']
+                rdsym = current_burst_rdsym_mean + \
+                    np.random.randn() * cycle_features_use['rdsym_std']
+
+                if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
+                    features_valid = True
+
+            if features_valid is False:
+                # features are still invalid after n_tries, give up.
+                features_invalid = ''
+                if period <= 0:
+                    features_invalid += 'period '
+                if amp <= 0:
+                    features_invalid += 'amp '
+                if rdsym <= 0 or rdsym >= 1:
+                    features_invalid += 'rdsym '
+
+                error_str = '''A cycle was repeatedly simulated with
+invalid feature(s) for: **{:s}** (e.g. less than 0).
+Please change per-cycle distribution parameters (mean &
+std) and restart simulation.'''.format(features_invalid)
+                raise ValueError(error_str)
+            else:
+                periods.append(int(period))
+                amps.append(amp)
+                rdsyms.append(rdsym)
 
     df = pd.DataFrame({'is_cycle': is_oscillating, 'period': periods,
                        'amp': amps, 'rdsym': rdsyms})
