@@ -42,7 +42,7 @@ before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 # command to run tests
 script: 
-  - py.test --cov=./
+  - py.test --cov neurodsp/tests
 
 after_success:
   - codecov
