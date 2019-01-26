@@ -1,7 +1,8 @@
 """Estimate the rhythmicity of a neural oscillation by calculating the lagged coherence metric."""
 
 import numpy as np
-from scipy import signal
+
+from scipy.signal.windows import hann
 
 ###################################################################################################
 ###################################################################################################
@@ -68,7 +69,7 @@ def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
     chunks = _nonoverlapping_chunks(sig, n_samps)
     chunks_len = len(chunks)
 
-    hann_window = signal.hanning(n_samps)
+    hann_window = hann(n_samps)
     fourier_f = np.fft.fftfreq(n_samps, 1 / float(fs))
     fourier_f_idx = np.argmin(np.abs(fourier_f - freq))
     fourier_coefsoi = np.zeros(chunks_len, dtype=complex)
