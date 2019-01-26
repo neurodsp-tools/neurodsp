@@ -1,24 +1,21 @@
-"""
-test_laggedcoherence.py
-Test function to compute lagged coherence
-"""
+"""Test function to compute lagged coherence."""
+
+import os
 
 import numpy as np
-import os
+
 import neurodsp
-
 from neurodsp.laggedcoherence import lagged_coherence
-from .util import _load_example_data
+from .util import load_example_data
 
+###################################################################################################
+###################################################################################################
 
 def test_laggedcoherence_consistent():
-    """
-    Confirm consistency in beta bandpass filter results on a neural signal
-    """
 
     # Load data
     data_idx = 1
-    sig = _load_example_data(data_idx=data_idx)
+    sig = load_example_data(data_idx=data_idx)
     fs = 1000
     f_range = (13, 30)
 

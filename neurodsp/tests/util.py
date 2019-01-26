@@ -1,17 +1,17 @@
-"""
-util.py
-Utility functions for testing neurodsp functions.
-"""
+"""Utility functions for testing neurodsp functions."""
 
-import neurodsp
 import os
-import numpy as np
-
 from functools import wraps
+
+import numpy as np
 import matplotlib.pyplot as plt
 
+import neurodsp
 
-def _generate_random_sig(len_sig=2000, seed=0):
+###################################################################################################
+###################################################################################################
+
+def generate_random_signal(len_sig=2000, seed=0):
     """Generate a random time series"""
 
     np.random.seed(seed)
@@ -20,7 +20,7 @@ def _generate_random_sig(len_sig=2000, seed=0):
     return sig
 
 
-def _load_example_data(data_idx=1, filtered=False):
+def load_example_data(data_idx=1, filtered=False):
     """Load an example voltage time series collected experimentally"""
 
     # Load time series
@@ -36,6 +36,7 @@ def _load_example_data(data_idx=1, filtered=False):
 
 def plot_test(func):
     """Decorator for simple testing of plotting functions.
+
     Notes
     -----
     This decorator closes all plots prior to the test.

@@ -1,22 +1,19 @@
-"""
-test_filt.py
-Test filtering functions
-"""
+"""Test filtering functions."""
 
-import pytest
+from pytest import raises
+
 import numpy as np
 
 from neurodsp.filt import filter_signal
-from .util import _load_example_data, _generate_random_sig
+from .util import load_example_data, generate_random_signal
 
+###################################################################################################
+###################################################################################################
 
 def test_bandpass_filter_consistent():
-    """
-    Confirm consistency in beta bandpass filter results on a neural signal
-    """
 
     # Load data and ground-truth filtered signal
-    sig, sig_filt_true = _load_example_data(data_idx=1, filtered=True)
+    sig, sig_filt_true = load_example_data(data_idx=1, filtered=True)
 
     # filter data
     fs = 1000
@@ -35,7 +32,7 @@ def test_edge_nan():
     """
 
     # Apply a 4-8Hz bandpass filter to random noise
-    sig = _generate_random_sig()
+    sig = generate_random_signal()
     sig_filt, kernel = filter_signal(sig, 1000, 'bandpass', fc=(4, 8), return_kernel=True)
 
     # Check if the correct edge artifacts have been removed
@@ -50,56 +47,50 @@ def test_edge_nan():
 
 
 def test_filter_length_error():
-    """
-    Confirm that the proper error is raised when the filter designed is longer than
-    the signal
-    """
+    """Check error is raised if the filter designed is longer than the signal."""
+
     n_seconds = 2
     fs = 1000
     sig = np.random.randn(n_seconds * fs)
-    with pytest.raises(ValueError) as excinfo:
+    with raises(ValueError) as excinfo:
         sig_filt = filter_signal(sig, fs, 'bandpass', fc=(1, 10))
     assert 'The filter needs to be shortened by decreasing the n_cycles' in str(excinfo.value)
 
 
 def test_frequency_input_errors():
-    """
-    Check that errors are properly raised when incorrectly enter frequency information
-    """
+    """Check that errors are properly raised when incorrectly enter frequency information."""
 
     # Generate a random signal
-    sig = _generate_random_sig()
+    sig = generate_random_signal()
 
     # Check that a bandpass filter cannot be completed without proper frequency limits
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         sig_filt = filter_signal(sig, 1000, 'bandpass', fc=8)
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(8, 4))
 
     # Check that a bandstop filter cannot be completed without proper frequency limits
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         sig_filt = filter_signal(sig, 1000, 'bandstop', fc=58)
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         sig_filt = filter_signal(sig, 1000, 'bandstop', fc=(62, 58))
 
     # Check that a float or partially filled tuple for fc is passable
     sig_filt = filter_signal(sig, 1000, 'lowpass', fc=58)
-    sig_filt = filter_signal(sig, 1000, 'lowpass', fc=(0,58))
+    sig_filt = filter_signal(sig, 1000, 'lowpass', fc=(0, 58))
     sig_filt = filter_signal(sig, 1000, 'highpass', fc=58)
-    sig_filt = filter_signal(sig, 1000, 'highpass', fc=(58,1000))
+    sig_filt = filter_signal(sig, 1000, 'highpass', fc=(58, 1000))
 
     # Check that frequencies cannot be inverted
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(100, 10))
 
 
 def test_filter_length():
-    """
-    Check that the output kernel is of the correct length
-    """
+    """Check that the output kernel is of the correct length."""
 
     # Generate a random signal
-    sig = _generate_random_sig()
+    sig = generate_random_signal()
 
     # Specify filter length with number of cycles
     fs = 1000

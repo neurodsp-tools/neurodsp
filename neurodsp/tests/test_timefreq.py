@@ -1,25 +1,26 @@
-"""
-test_timefreq.py
-Test functions in the time-frequency analysis module
-"""
+"""Test functions in the time-frequency analysis module."""
+
+import os
 
 import numpy as np
-import os
 
 import neurodsp
 from neurodsp.filt import filter_signal
 from neurodsp.timefrequency import amp_by_time, phase_by_time, freq_by_time
-from .util import _load_example_data
+from .util import load_example_data
 
+###################################################################################################
+###################################################################################################
 
 def test_timefreq_consistent():
     """
     Confirm consistency in estimation of instantaneous phase, amp, and frequency
     with computations in previous versions
     """
+
     # Load data
     data_idx = 1
-    sig = _load_example_data(data_idx=data_idx)
+    sig = load_example_data(data_idx=data_idx)
     fs = 1000
     f_range = (13, 30)
 
@@ -54,9 +55,10 @@ def test_none_input():
     Tests that passing (float, None) or (None, float) for highpass and lowpass
     respectively will not result in error.
     """
+
     # Load data
     data_idx = 1
-    sig = _load_example_data(data_idx=data_idx)
+    sig = load_example_data(data_idx=data_idx)
     fs = 1000
     fc = 20.5
 
