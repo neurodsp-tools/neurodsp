@@ -9,7 +9,7 @@ tags:
 authors:
   - name: Scott Cole
     orcid: 0000-0002-6168-9951
-    affiliation: 1,2
+    affiliation: 2
   - name: Thomas Donoghue
     orcid: 0000-0001-5911-0472
     affiliation: 1
@@ -41,7 +41,7 @@ Populations of neurons exhibit time-varying fluctuations in their aggregate acti
 * burst : Detect bursting oscillators in neural signals.
 * filt : Filter data with bandpass, highpass, lowpass, or notch filters.
 * laggedcoherence : Estimate rhythmicity using the lagged coherence measure.
-* sim : Simulate bursting or stationary oscillators with brown noise.
+* sim : Simulate bursting or stationary oscillators along with aperiodic signals.
 * spectral : Compute spectral domain features (PSD and 1/f slope, etc).
 * swm : Identify recurrent patterns in a signal using sliding window matching.
 * timefrequency : Estimate instantaneous measures of oscillatory activity.
@@ -60,7 +60,7 @@ Populations of neurons exhibit time-varying fluctuations in their aggregate acti
 
 * Sliding Window Matching: The ``NeuroDSP`` implementation of the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
 
-* Simulating Oscillations and Noise: Simulating 1/f-like signals with various stochastic models, as well as stationary/bursty and non-sinusoidal oscillations.
+* Simulating Oscillations and Noise: Simulating 1/f-like signals with various stochastic models, as well as oscillations that can vary in their waveform shape and stationarity.
 
 #### Mentions (if applicable) of any ongoing research projects using the software or recent scholarly publications enabled by it
 
