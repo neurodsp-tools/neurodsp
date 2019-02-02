@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>neurodsp &#8212; neurodsp 1.0.0 documentation</title>
+    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -12,7 +12,6 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -35,9 +34,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html"><span><img src="_static/logo.png"></span>
+        <a class="navbar-brand" href="index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -45,7 +44,7 @@
             
                 <li><a href="api.html">API</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorial</a></li>
-                <li><a href="https://github.com/voytekresearch/neurodsp">GitHub</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -84,48 +83,49 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="neurodsp">
-<h1>neurodsp<a class="headerlink" href="#neurodsp" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="neuro-digital-signal-processing-toolbox">
+<h1>Neuro Digital Signal Processing Toolbox<a class="headerlink" href="#neuro-digital-signal-processing-toolbox" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="http://www.repostatus.org/#active"><img alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." src="http://www.repostatus.org/badges/latest/active.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Latest Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.org/voytekresearch/neurodsp"><img alt="Build Status" src="https://travis-ci.org/voytekresearch/neurodsp.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.org/neurodsp-tools/neurodsp"><img alt="Build Status" src="https://travis-ci.org/neurodsp-tools/neurodsp.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="codecov" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="LICENSE.md"><img alt="License" src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Supported Python Versions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/voytekresearch/neurodsp/master"><img alt="Binder" src="https://mybinder.org/badge.svg" /></a>
-<p>A package of tools to process, analyze, and simulate neural recordings as individual voltage time series, with specific focus on time and frequency domain analyses. The primary purpose of this library is to serve as the shared codebase of common analyses for the <a class="reference external" href="http://voyteklab.com/">Voytek Lab</a>, but we welcome anyone’s use and contributions.</p>
-<div class="section" id="python-version-support">
-<h2>Python version support<a class="headerlink" href="#python-version-support" title="Permalink to this headline">¶</a></h2>
-<p>This package has been tested on python 3.5, and 3.6 with the latest <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> distribution. Support for python 2 and earlier versions of python 3 is not guaranteed.</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/neurodsp-tools/neurodsp/master"><img alt="Binder" src="https://mybinder.org/badge.svg" /></a>
+<p>A package of tools to process, analyze, and simulate neural recordings as individual voltage time series, with specific focus on time and frequency domain analyses.</p>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>NeuroDSP is written in Python, and requires Python &gt;= 3.5 to run.</p>
+<p>It has the following dependencies:</p>
+<ul class="simple">
+<li>numpy</li>
+<li>scipy</li>
+<li>matplotlib</li>
+<li>scikit-learn</li>
+<li>pandas</li>
+<li>pytest (optional)</li>
+</ul>
+<p>We recommend using the <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> distribution to manage these requirements.</p>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
 <p>To install the latest release of neurodsp, you can install from pip:</p>
 <p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">neurodsp</span></code></p>
 <p>To get the development version (updates that are not yet published to pip), you can clone this repo.</p>
-<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/voytekresearch/neurodsp.git</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/neurodsp-tools/neurodsp</span></code></p>
 <p>To install this cloned copy of neurodsp, move into the directory you just cloned, and run:</p>
 <p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p>
 </div>
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillators in neural signals (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/5-BurstDetection.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/1-Filtering.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">laggedcoherence</span></code> : Estimate rhythmicity using the lagged coherence measure (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/3-LaggedCoherence.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate bursting or stationary oscillators with brown noise (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/7-SimulatingSignals.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features (PSD and 1/f slope, etc) (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/4-SpectralAnalysis.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">swm</span></code> : Identify recurrent patterns in a signal using sliding window matching (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/6-SlidingWindowMatching.ipynb">Tutorial</a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity (<a class="reference external" href="https://github.com/voytekresearch/neurodsp/blob/master/tutorials/2-InstantaneousMeasures.ipynb">Tutorial</a>)</li>
-</ul>
-</div>
-<div class="section" id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>numpy</li>
-<li>scipy</li>
-<li>matplotlib</li>
-<li>scikit-learn</li>
-<li>pytest (optional)</li>
+<li><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillators in neural signals (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/5-BurstDetection.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/1-Filtering.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">laggedcoherence</span></code> : Estimate rhythmicity using the lagged coherence measure (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/3-LaggedCoherence.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate bursting or stationary oscillators with brown noise (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/7-SimulatingSignals.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features (PSD and 1/f slope, etc) (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/4-SpectralAnalysis.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">swm</span></code> : Identify recurrent patterns in a signal using sliding window matching (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/6-SlidingWindowMatching.ipynb">Tutorial</a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity (<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/tutorials/2-InstantaneousMeasures.ipynb">Tutorial</a>)</li>
 </ul>
 </div>
 </div>
@@ -143,7 +143,7 @@
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>

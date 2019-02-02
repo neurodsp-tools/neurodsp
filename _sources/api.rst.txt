@@ -4,54 +4,101 @@
 API Documentation
 =================
 
-.. currentmodule:: neurodsp
+This is the API reference for the neurodsp module.
 
-Time-Frequency analysis
-=======================
+Table of Contents
+=================
+
+.. contents::
+   :local:
+   :depth: 2
+
+Filtering
+---------
+
+.. currentmodule:: neurodsp.filt
 
 .. autosummary::
   :toctree: generated/
 
-  filt.filter_signal
-  timefrequency.phase_by_time
-  timefrequency.amp_by_time
-  timefrequency.freq_by_time
+  filter_signal
+
+Time-Frequency analysis
+-----------------------
+
+.. currentmodule:: neurodsp.timefrequency
+
+.. autosummary::
+  :toctree: generated/
+
+  phase_by_time
+  amp_by_time
+  freq_by_time
 
 Spectral analysis
-=================
+-----------------
+
+.. currentmodule:: neurodsp.spectral
 
 .. autosummary::
    :toctree: generated/
 
-   spectral.compute_spectrum
-   spectral.compute_scv
-   spectral.spectral_hist
-   spectral.morlet_transform
-   spectral.rotate_powerlaw
+   compute_spectrum
+   compute_scv
+   compute_scv_rs
+   spectral_hist
+   morlet_transform
+   morlet_convolve
+   rotate_powerlaw
 
 Rhythmic analysis
-=================
+-----------------
+
+Burst Detection
+~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.burst
 
 .. autosummary::
   :toctree: generated/
 
-  burst.detect_bursts_dual_threshold
-  burst.compute_burst_stats
-  swm.sliding_window_matching
-  laggedcoherence.lagged_coherence
+  detect_bursts_dual_threshold
+  compute_burst_stats
+
+Sliding Window Matching
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.swm
+
+.. autosummary::
+  :toctree: generated/
+
+  sliding_window_matching
+
+Lagged Coherence
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.laggedcoherence
+
+.. autosummary::
+  :toctree: generated/
+
+  lagged_coherence
 
 Signal simulation
-=================
+-----------------
+
+.. currentmodule:: neurodsp.sim
 
 .. autosummary::
   :toctree: generated/
 
-  sim.sim_filtered_noise
-  sim.sim_synaptic_noise
-  sim.sim_ou_process
-  sim.sim_variable_powerlaw
-  sim.sim_oscillator
-  sim.sim_noisy_oscillator
-  sim.sim_bursty_oscillator
-  sim.sim_noisy_bursty_oscillator
-  sim.sim_jittered_oscillator
+  sim_filtered_noise
+  sim_synaptic_noise
+  sim_ou_process
+  sim_variable_powerlaw
+  sim_oscillator
+  sim_noisy_oscillator
+  sim_bursty_oscillator
+  sim_noisy_bursty_oscillator
+  sim_jittered_oscillator

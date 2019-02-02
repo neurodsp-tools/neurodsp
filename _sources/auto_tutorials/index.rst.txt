@@ -14,6 +14,26 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Filtering">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_1-Filtering_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_1-Filtering.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_1-Filtering
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Time">
 
 .. only:: html
@@ -54,7 +74,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Detailed explanations for each of the above concept are provided below as we come across them. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will demonstrate how to use the spectral (or, frequency) domain analysis f...">
 
 .. only:: html
 
@@ -111,6 +131,26 @@ Below is a series of notebooks that provide an introduction to the tools in neur
    :hidden:
 
    /auto_tutorials/plot_6-SlidingWindowMatching
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Simulating Signals">
+
+.. only:: html
+
+    .. figure:: /auto_tutorials/images/thumb/sphx_glr_plot_7-SimulatingSignals_thumb.png
+
+        :ref:`sphx_glr_auto_tutorials_plot_7-SimulatingSignals.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_tutorials/plot_7-SimulatingSignals
 .. raw:: html
 
     <div style='clear:both'></div>
@@ -125,13 +165,13 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Python source code: auto_tutorials_python.zip <//Users/rdgao/Documents/code/research/neurodsp/doc/auto_tutorials/auto_tutorials_python.zip>`
+    :download:`Download all examples in Python source code: auto_tutorials_python.zip <//Users/tom/Documents/GitCode/neurodsp/doc/auto_tutorials/auto_tutorials_python.zip>`
 
 
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Jupyter notebooks: auto_tutorials_jupyter.zip <//Users/rdgao/Documents/code/research/neurodsp/doc/auto_tutorials/auto_tutorials_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: auto_tutorials_jupyter.zip <//Users/tom/Documents/GitCode/neurodsp/doc/auto_tutorials/auto_tutorials_jupyter.zip>`
 
 
 .. only:: html

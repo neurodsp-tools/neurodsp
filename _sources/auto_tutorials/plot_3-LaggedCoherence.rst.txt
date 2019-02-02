@@ -9,7 +9,7 @@
 
 Lagged Coherence
 ================
-his notebook shows how to use the neurodsp module to compute lagged coherence.
+This notebook shows how to use the neurodsp module to compute lagged coherence.
 For more details, see Fransen et al., 2015, Neuroimage.
 
 
@@ -29,6 +29,7 @@ For more details, see Fransen et al., 2015, Neuroimage.
 
 Simulate signal with oscillatory bursts
 ---------------------------------------
+
 
 
 
@@ -124,7 +125,9 @@ oscillator), but it is not very specific to that frequency.
 Compute lagged coherence for time segments with and without burst
 -----------------------------------------------------------------
 
-Note that lagged coherence is greater when analyzing a neural signal that has a burst in the frequency range of interest, compared to a signal that does not have an oscillator.
+Note that lagged coherence is greater when analyzing a neural signal that
+has a burst in the frequency range of interest, compared to a signal that
+does not have an oscillator.
 
 
 
@@ -195,7 +198,7 @@ Compute lagged coherence of an example neural signal
     Lagged coherence =  0.24582055225422916
 
 
-**Total running time of the script:** ( 0 minutes  0.156 seconds)
+**Total running time of the script:** ( 0 minutes  0.141 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_3-LaggedCoherence.py:

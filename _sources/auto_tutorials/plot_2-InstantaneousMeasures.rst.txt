@@ -188,7 +188,7 @@ estimate in order to make it smoother (see e.g. Samaha & Postle, 2015)
     Transition bandwidth is 5.9 Hz. Pass/stop bandwidth is 17 Hz
 
 
-**Total running time of the script:** ( 0 minutes  0.273 seconds)
+**Total running time of the script:** ( 0 minutes  0.135 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_2-InstantaneousMeasures.py:
