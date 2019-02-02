@@ -4,6 +4,7 @@ Time-frequency analysis
 In this tutorial, we will show how to estimate instantaneous measures of phase,
 amplitude, and frequency.
 """
+
 ###############################################################################
 
 import numpy as np

@@ -1,7 +1,7 @@
 """
 Lagged Coherence
 ================
-his notebook shows how to use the neurodsp module to compute lagged coherence.
+This notebook shows how to use the neurodsp module to compute lagged coherence.
 For more details, see Fransen et al., 2015, Neuroimage.
 """
 ###############################################################################
@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 #
 # Simulate signal with oscillatory bursts
 # ---------------------------------------
+#
 
 # Parameters for simulated signal
 N = 5000
@@ -69,7 +70,9 @@ plt.tight_layout()
 # Compute lagged coherence for time segments with and without burst
 # -----------------------------------------------------------------
 #
-# Note that lagged coherence is greater when analyzing a neural signal that has a burst in the frequency range of interest, compared to a signal that does not have an oscillator.
+# Note that lagged coherence is greater when analyzing a neural signal that
+# has a burst in the frequency range of interest, compared to a signal that
+# does not have an oscillator.
 
 samp_burst = np.arange(1000)
 samp_noburst = np.arange(1000, 2000)
