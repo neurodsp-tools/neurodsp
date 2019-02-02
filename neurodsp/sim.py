@@ -12,28 +12,27 @@ from neurodsp import spectral
 ###################################################################################################
 ###################################################################################################
 
-
 def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     """Simulate an oscillation.
 
     Parameters
     ----------
     n_seconds : float
-        Signal duration, in seconds
+        Signal duration, in seconds.
     fs : float
-        Signal sampling rate, in Hz
+        Signal sampling rate, in Hz.
     freq : float
-        Oscillator frequency
+        Oscillator frequency.
     rdsym : float
-        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time
-            =0.5 - symmetric (sine wave)
-            <0.5 - shorter rise, longer decay
-            >0.5 - longer rise, shorter decay
+        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time, where:
+        = 0.5 - symmetric (sine wave)
+        < 0.5 - shorter rise, longer decay
+        > 0.5 - longer rise, shorter decay
 
     Returns
     -------
     osc : 1d array
-        Oscillating time series
+        Oscillating time series.
     """
 
     # Compute number of samples per cycle and number of cycles
@@ -63,41 +62,42 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator='synaptic', noise_
     Parameters
     ----------
     n_seconds : float
-        Signal duration, in seconds
+        Signal duration, in seconds.
     fs : float
-        Signal sampling rate, in Hz
+        Signal sampling rate, in Hz.
     freq : float
-        Oscillator frequency
-    noise_generator: str or numpy.ndarray
+        Oscillator frequency.
+    noise_generator: str or numpy.ndarray, optional, default='synaptic'
         Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
+
         Possible models (see respective documentation):
-            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise() (DEFAULT)
-                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
-            - 'filtered_powerlaw': sim.sim_filtered_noise()
-                    Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
-            - 'powerlaw': sim.sim_variable_powerlaw()
-                    Defaults: exponent=-2.0
-            - 'ou_process': sim.sim_ou_process()
-                    Defaults: theta=1., mu=0., sigma=5.
+
+        - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
+          Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
+        - 'filtered_powerlaw': sim.sim_filtered_noise()
+          Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
+        - 'powerlaw': sim.sim_variable_powerlaw()
+          Defaults: exponent=-2.0
+        - 'ou_process': sim.sim_ou_process()
+          Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
         Function arguments for the neurodsp.sim noise generaters. See API for arg names.
         All args are optional, defaults for each noise generator are listed above.
     rdsym : float
-        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;
-            =0.5 - symmetric (i.e., sine wave, default)
-            <0.5 - shorter rise, longer decay
-            >0.5 - longer rise, shorter decay
-    ratio_osc_var : float
-        Ratio of oscillator variance to noise variance
-            >1 - oscillator is stronger
-            <1 - noise is stronger
-            Defaults to 1.
+        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time:
+
+        - = 0.5 - symmetric (i.e., sine wave, default)
+        - < 0.5 - shorter rise, longer decay
+        - > 0.5 - longer rise, shorter decay
+    ratio_osc_var : float, optional, default=1
+        Ratio of oscillator variance to noise variance.
+        If >1 - oscillator is stronger, if <1 - noise is stronger.
 
     Returns
     -------
     osc: 1d array
-        Oscillator with noise
+        Oscillator with noise.
     """
 
     # Determine length of signal in samples
@@ -127,54 +127,53 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                           prob_leave_burst=.2, cycle_features=None,
                           return_cycle_df=False, n_tries=5):
     """Simulate a bursty oscillation.
+
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz
     freq : float
-        Oscillator frequency, in Hz
+        Oscillator frequency, in Hz.
     rdsym : float
-        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time;
-            =0.5 - symmetric (sine wave)
-            <0.5 - shorter rise, longer decay
-            >0.5 - longer rise, shorter decay
+        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time:
+
+        - = 0.5: symmetric (sine wave)
+        - < 0.5: shorter rise, longer decay
+        - > 0.5: longer rise, shorter decay
     prob_enter_burst : float
-        Rrobability of a cycle being oscillating given the last cycle is not oscillating
+        Probability of a cycle being oscillating given the last cycle is not oscillating.
     prob_leave_burst : float
-        Probability of a cycle not being oscillating given the last cycle is oscillating
+        Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle_features : dict
-        specify the mean and standard deviations
-        (within and across bursts) of each cycle's
-        amplitude, period, and rise-decay symmetry.
-        This can include a complete or incomplete set
-        (using defaults) of the following keys:
-        amp_mean - mean cycle amplitude
-        amp_std - standard deviation of cycle amplitude
-        amp_burst_std - std. of mean amplitude for each burst
-        period_mean - mean period (computed from `freq`)
-        period_std - standard deviation of period (samples)
-        period_burst_std - std. of mean period for each burst
-        rdsym_mean - mean rise-decay symmetry
-        rdsym_std - standard deviation of rdsym
-        rdsym_burst_std - std. of mean rdsym for each burst
+        Specifies the mean and standard deviations (within and across bursts) of each cycle's
+        amplitude, period, and rise-decay symmetry. This can include a complete or incomplete
+        set (using defaults) of the following keys:
+
+        * amp_mean: mean cycle amplitude
+        * amp_std: standard deviation of cycle amplitude
+        * amp_burst_std: standard deviation of mean amplitude for each burst
+        * period_mean: mean period (computed from `freq`)
+        * period_std: standard deviation of period (samples)
+        * period_burst_std: standard deviation of mean period for each burst
+        * rdsym_mean: mean rise-decay symmetry
+        * rdsym_std: standard deviation of rdsym
+        * rdsym_burst_std: standard deviation of mean rdsym for each burst
     return_cycle_df : bool
-        if True, return the dataframe that contains the simulation
-        parameters for each cycle. This may be useful for computing
-        power, for example. Because the power of the oscillator
-        should only be considered over the times where there's
-        bursts, not when there's nothing.
-    n_tries : int
+        If True, return the dataframe that contains the simulation parameters for each cycle.
+        This may be useful for computing power, for example, as the power of the oscillator
+        should only be considered over the times where there are bursts.
+    n_tries : int, optional, default=5
         Number of times to try to resimulate cycle features when an
         invalid value is returned before raising an user error.
-        Defaults to 5.
+
     Returns
     -------
     sig : 1d array
-        bursty oscillator
+        Bursty oscillator.
     df : pd.DataFrame
-        cycle-by-cycle properties of the simulated oscillator
+        Cycle-by-cycle properties of the simulated oscillator.
     """
 
     # Define default parameters for cycle features
@@ -337,74 +336,71 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator='synaptic',
         Sampling rate of simulated signal, in Hz
     freq : float
         Oscillator frequency, in Hz
-
-    noise_generator: str or numpy.ndarray
+    noise_generator: str or numpy.ndarray, optional, default: 'synaptic'
         Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
         numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
+
         Possible models (see respective documentation):
-            - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise() (DEFAULT)
-                    Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
-            - 'filtered_powerlaw': sim.sim_filtered_noise()
-                    Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
-            - 'powerlaw': sim.sim_variable_powerlaw()
-                    Defaults: exponent=-2.0
-            - 'ou_process': sim.sim_ou_process()
-                    Defaults: theta=1., mu=0., sigma=5.
+
+        - 'synaptic' or 'lorentzian': sim.sim_synaptic_noise()
+          Defaults: n_neurons=1000, firing_rate=2, tau_r=0, tau_d=0.01
+        - 'filtered_powerlaw': sim.sim_filtered_noise()
+          Defaults: exponent=-2., f_range=(0.5, None), filter_order=None
+        - 'powerlaw': sim.sim_variable_powerlaw()
+          Defaults: exponent=-2.0
+        - 'ou_process': sim.sim_ou_process()
+          Defaults: theta=1., mu=0., sigma=5.
     noise_args: dict('argname':argval, ...)
         Function arguments for the neurodsp.sim noise generaters. See API for arg names.
         All args are optional, defaults for each noise generator are listed above.
     rdsym : float
         Rise-decay symmetry of the oscillator as fraction of the period in the rise time
-            =0.5 - symmetric (sine wave)
-            <0.5 - shorter rise, longer decay
-            >0.5 - longer rise, shorter decay
+
+        - = 0.5: symmetric (sine wave)
+        - < 0.5: shorter rise, longer decay
+        - > 0.5: longer rise, shorter decay
     ratio_osc_var : float
-        Ratio of oscillator power to noise power
-            >1 - oscillator is stronger
-            <1 - noise is stronger
+        Ratio of oscillator power to noise power.
+        If >1 - oscillator is stronger, if <1 - noise is stronger.
     prob_enter_burst : float
-        Probability of a cycle being oscillating given the last cycle is not oscillating
+        Probability of a cycle being oscillating given the last cycle is not oscillating.
     prob_leave_burst : float
-        Probability of a cycle not being oscillating given the last cycle is oscillating
+        Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle_features : dict
-        specify the mean and standard deviations
-        (within and across bursts) of each cycle's
+        Specifies the mean and standard deviations (within and across bursts) of each cycle's
         amplitude, period, and rise-decay symmetry.
-        This can include a complete or incomplete set
-        (using defaults) of the following keys:
-        amp_mean - mean cycle amplitude
-        amp_std - standard deviation of cycle amplitude
-        amp_burst_std - std. of mean amplitude for each burst
-        period_mean - mean period (computed from `freq`)
-        period_std - standard deviation of period (samples)
-        period_burst_std - std. of mean period for each burst
-        rdsym_mean - mean rise-decay symmetry
-        rdsym_std - standard deviation of rdsym
-        rdsym_burst_std - std. of mean rdsym for each burst
+        This can include a complete or incomplete set (using defaults) of the following keys:
+
+        * amp_mean: mean cycle amplitude
+        * amp_std: standard deviation of cycle amplitude
+        * amp_burst_std: standard deviation of mean amplitude for each burst
+        * period_mean: mean period (computed from `freq`)
+        * period_std: standard deviation of period (samples)
+        * period_burst_std: standard deviation of mean period for each burst
+        * rdsym_mean: mean rise-decay symmetry
+        * rdsym_std: standard deviation of rdsym
+        * rdsym_burst_std: standard deviation of mean rdsym for each burst
     return_components: bool
-        Whether to return the oscillator and noise separately, in addition to the signal
+        Whether to return the oscillator and noise separately, in addition to the signal.
     return_cycle_df : bool
-        if True, return the dataframe that contains the simulation
-        parameters for each cycle. This may be useful for computing
-        power, for example. Because the power of the oscillator
-        should only be considered over the times where there's
-        bursts, not when there's nothing.
+        If True, return the dataframe that contains the simulation parameters for each cycle.
+        This may be useful for computing power, for example, as the power of the oscillator
+        should only be considered over the times where there are bursts.
 
     Returns
     -------
     signal : np.array
-        bursty oscillator with noise time series
+        Bursty oscillator with noise time series.
     oscillator : np.array
-        bursty oscillator component of signal
+        Bursty oscillator component of signal.
     noise : np.array
-        noise component of signal
+        Noise component of signal.
     df : pd.DataFrame
-        cycle-by-cycle properties of the simulated oscillator
+        Cycle-by-cycle properties of the simulated oscillator.
     """
 
-    # Generate noise
+    # Generate & then demaen noise
     noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
-    # demean noise
     noise = noise - noise.mean()
 
     # Generate oscillator
@@ -440,6 +436,7 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator='synaptic',
 
 
 def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
+
     # Generate noise
     if type(noise_generator) is str:
         # use neurodsp defined noise generators
@@ -478,21 +475,21 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     freq : float
-        Frequency of simulated oscillator, in Hz
+        Frequency of simulated oscillator, in Hz.
     jitter : float
-        Maximum jitter of oscillation period, in seconds
+        Maximum jitter of oscillation period, in seconds.
     cycle : tuple or 1d array
         Oscillation cycle used in the simulation.
-        If array, it's used directly.
-        If tuple, it is generated based on given parameters.
+        If array, it's used directly. If tuple, it is generated based on given parameters.
         Possible values:
-        ('gaussian', std): gaussian cycle, standard deviation in seconds
-        ('exp', decay time): exponential decay, decay time constant in seconds
-        ('2exp', rise time, decay time): exponential rise and decay
+
+        - ('gaussian', std): gaussian cycle, standard deviation in seconds
+        - ('exp', decay time): exponential decay, decay time constant in seconds
+        - ('2exp', rise time, decay time): exponential rise and decay
 
     Returns
     -------
@@ -544,16 +541,16 @@ def make_osc_cycle(t_ker, fs, cycle_params):
     fs : float
         Sampling frequency of the cycle simulation.
     cycle_params : tuple
-        Defines the parameters for the oscillation cycle.
-        Possible values:
-            ('gaussian', std): gaussian cycle, standard deviation in seconds
-            ('exp', decay time): exponential decay, decay time constant in seconds
-            ('2exp', rise time, decay time): exponential rise and decay
+        Defines the parameters for the oscillation cycle. Possible values:
+
+        - ('gaussian', std): gaussian cycle, standard deviation in seconds
+        - ('exp', decay time): exponential decay, decay time constant in seconds
+        - ('2exp', rise time, decay time): exponential rise and decay
 
     Returns
     -------
     cycle: 1d array
-        Simulated oscillation cycle
+        Simulated oscillation cycle.
     """
 
     if cycle_params[0] == 'gaussian':
@@ -591,13 +588,13 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     n_neurons : int
-        Number of neurons in the simulated population
+        Number of neurons in the simulated population.
     firing_rate : type
-        Firing rate of individual neurons in the population
+        Firing rate of individual neurons in the population.
 
     Returns
     -------
@@ -681,13 +678,13 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     n_neurons : int
-        Number of neurons in the simulated population
+        Number of neurons in the simulated population.
     firing_rate : float
-        Firing rate of individual neurons in the population
+        Firing rate of individual neurons in the population.
     tau_r : float
         Rise time of synaptic kernel, in seconds.
     tau_d : fload
@@ -695,7 +692,7 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
 
     Returns
     -------
-    sig : array_like (1D)
+    sig : 1d array
         Simulated signal.
     """
     if t_ker is None:
@@ -721,24 +718,23 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     mu : mean
     sigma : std
 
-
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     theta : float
-        Memory scale - larger theta = faster fluctuation
+        Memory scale - larger theta = faster fluctuation.
     mu : float
-        Mean
+        Mean.
     sigma : float
-        Standard deviation
+        Standard deviation.
 
     Returns
     -------
     sig: 1d array
-        Simulated signal
+        Simulated signal.
 
     References
     ----------
@@ -764,16 +760,16 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     exponent : float
-        Desired power-law exponent - beta in P(f)=f^beta
+        Desired power-law exponent: beta in P(f)=f^beta.
 
     Returns
     -------
     sig: 1d array
-        Time-series with the desired power-law exponent
+        Time-series with the desired power-law exponent.
     """
 
     n_samps = int(n_seconds * fs)
@@ -782,6 +778,7 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     # compute FFT
     fc = np.fft.fft(sig)
     f_axis = np.fft.fftfreq(len(sig), 1. / fs)
+
     # rotate spectrum and invert, zscore to normalize
     fc_rot = spectral.rotate_powerlaw(
         f_axis, fc, exponent / 2., f_rotation=None)
@@ -791,29 +788,26 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
 
 
 def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_order=None):
-    """Simulate colored noise that is highpass or bandpass filtered
+    """Simulate colored noise that is highpass or bandpass filtered.
 
     Parameters
     ----------
     n_seconds : float
-        Simulation time, in seconds
+        Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
-    exponent : float
-        Desired power-law exponent - beta in P(f)=f^beta. Negative exponent
+        Sampling rate of simulated signal, in Hz.
+    exponent : float, optional, default=-2
+        Desired power-law exponent: beta in P(f)=f^beta. Negative exponent
         denotes decay (i.e., negative slope in log-log spectrum).
-        Defaults to -2.0
-    f_range : 2-element array (lo,hi) or None
-        Frequency range of simulated data
-        Defaults to (0.5, None), i.e., highpass at 0.5Hz
-    filter_order : int
-        Order of filter
-        Defaults to 3 times the highpass filter cycle length
+    f_range : 2-element array (lo,hi) or None, optional
+        Frequency range of simulated data. If not provided, default to a highpass at 0.5 Hz.
+    filter_order : int, optional
+        Order of filter. If not provided, defaults to 3 times the highpass filter cycle length.
 
     Returns
     -------
     noise : np.array
-        Filtered noise
+        Filtered noise.
     """
 
     # Simulate colored noise

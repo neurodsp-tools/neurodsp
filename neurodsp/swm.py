@@ -12,28 +12,28 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     Parameters
     ----------
     sig : array-like 1d
-        voltage time series
+        Voltage time series.
     fs : float
-        sampling rate (samples per second)
+        Sampling rate, in Hz.
     win_len : float
-        window length (seconds)
+        Window length, in seconds.
     win_spacing : float
-        minimum window spacing (seconds)
+        Minimum window spacing, in seconds.
     max_iterations : int
-        Maximum number of iterations of potential changes in window placement
+        Maximum number of iterations of potential changes in window placement.
     temperature : float
-        temperature parameter. Controls probability of accepting a new window
+        Temperature parameter. Controls probability of accepting a new window.
     window_starts_custom : np.ndarray (1d), optional
-        Pre-set locations of initial windows (instead of evenly spaced by 2G)
+        Pre-set locations of initial windows (instead of evenly spaced by 2G).
 
     Returns
     -------
-    avg_window : np.ndarray (1d)
-        the average waveform in 'sig' in the frequency 'f_range' triggered on 'trigger'
-    window_starts : np.ndarray (1d)
-        indices at which each window begins for the final set of windows
-    costs : np.ndarray (1d)
-        Cost function value at each iteration
+    avg_window : 1d array
+        The average waveform in 'sig' in the frequency 'f_range' triggered on 'trigger'.
+    window_starts : 1d array
+        Indices at which each window begins for the final set of windows.
+    costs : 1d array
+        Cost function value at each iteration.
 
     References
     ----------
@@ -46,9 +46,9 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     Notes
     -----
     * Apply a highpass filter if looking at high frequency activity,
-      so that it does not converge on a low frequency motif
-    * win_len and win_spacing should be chosen to be about the size of the motif of interest,
-       and the N derived should be about the number of occurrences
+      so that it does not converge on a low frequency motif.
+    * win_len and win_spacing should be chosen to be about the size of the motif of
+      interest, and the N derived should be about the number of occurrences.
     """
 
     # Compute window length and spacing in samples

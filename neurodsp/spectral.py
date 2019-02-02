@@ -8,38 +8,42 @@ from scipy import signal
 
 def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
                      noverlap=None, filt_len=1., f_lim=None, spg_outlier_pct=0.):
-    """
-    Estimating the power spectral density (PSD) of a time series from short-time Fourier
+    """Estimate the power spectral density (PSD) of a time series from short-time Fourier
     Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
 
     Parameters
     -----------
     sig : array_like 1d or 2d
         Time series of measurement values.
-    fs : float, Hz
-        Sampling frequency of the sig time series.
-    method : { 'mean', 'median', 'medfilt'}, optional
-        Methods to calculate the spectrum. Defaults to 'mean'.
-            'mean' is the same as Welch's method (mean of STFT).
-            'median' uses median of STFT instead of mean to minimize outlier effect.
-            'medfilt' filters the entire signals raw FFT with a median filter to smooth.
-    window : str or tuple or array_like, optional
+    fs : float
+        Sampling frequency, in Hz, of the sig time series.
+    method : {'mean', 'median', 'medfilt'}
+        Method to calculate the spectrum:
+
+        * 'mean' is the same as Welch's method (mean of STFT).
+        * 'median' uses median of STFT instead of mean to minimize outlier effect.
+        * 'medfilt' filters the entire signals raw FFT with a median filter to smooth.
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-        Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-        Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
-    filt_len : float, Hz, optional
-        (For medfilt method) Length of median filter in Hz.
-    f_lim : float, Hz, optional
-        Maximum frequency to keep. Defaults to None, which keeps up to Nyquist.
-    spg_outlier_pct : float, (between 0 to 100)
+        Number of points to overlap between segments.
+        If None, noverlap = nperseg // 2.
+    filt_len : float, optional
+        Length of the median filter, in Hz.
+        Only used with the 'medfilt' method.
+    f_lim : float, optional
+        Maximum frequency to keep, in Hz.
+        If None, keeps up to Nyquist.
+    spg_outlier_pct : float, optional, default: 0.
         Percentage of spectrogram windows with the highest powers to discard prior to averaging.
         Useful for quickly eliminating potential outliers to compute spectrum.
+        Must be between 0 and 100.
 
     Returns
     -------
@@ -117,28 +121,27 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
 
 
 def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
-    """
-    Compute the spectral coefficient of variation (SCV) at each frequency.
-    White noise should have a SCV of 1 at all frequencies.
+    """Compute the spectral coefficient of variation (SCV) at each frequency.
 
     Parameters
     -----------
     sig : array_like 1d
-        Time series of measurement values
+        Time series of measurement values.
     fs : float, Hz
         Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-        Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
-    noverlap : int, optional
-        Number of points to overlap between segments. Defaults to 0 for independence.
-    outlier_pct : float, percent, optional
-        Discarding a percentage of the windows with the lowest and highest total log power.
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional, default: 0
+        Number of points to overlap between segments.
+    outlier_pct : float, optional
+        Percentage of the windows with the lowest and highest total log power to discard.
+        Must be between 0 and 100.
 
     Returns
     -------
@@ -146,6 +149,10 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
         Array of sample frequencies.
     spect_cv : ndarray
         Spectral coefficient of variation.
+
+    Notes
+    -----
+    White noise should have a SCV of 1 at all frequencies.
     """
 
     if nperseg is None:
@@ -175,36 +182,35 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 
 
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
-    """
-    Resampled version of scv: instead of a single estimate of mean and standard deviation,
+    """Resampled version of scv: instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
 
     Parameters
     -----------
     sig : array_like 1d
-        Time series of measurement values
+        Time series of measurement values.
     fs : float, Hz
         Sampling frequency of the sig time series.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-        Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
-    noverlap : int, optional
-        Number of points to overlap between segments. Defaults to 0 for independence.
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional, default: 0
+        Number of points to overlap between segments.
     method : {'bootstrap', 'rolling'}, optional
-        Method of resampling. Defaults to 'bootstrap'.
-            'bootstrap' randomly samples a subset of the spectrogram repeatedly.
-            'rolling' takes the rolling window scv.
+        Method of resampling.
+        'bootstrap' randomly samples a subset of the spectrogram repeatedly.
+        'rolling' takes the rolling window scv.
     rs_params : tuple, (int, int), optional
         Parameters for resampling algorithm.
         If method is 'bootstrap', rs_params = (nslices, ndraws), defaults to (10% of slices, 100 draws).
-            This specifies the number of slices per draw, and number of random draws,
+        This specifies the number of slices per draw, and number of random draws.
         If method is 'rolling', rs_params = (nslices, nsteps), defaults to (10, 5).
-            This specifies the number of slices per draw, and number of slices to step forward,
+        This specifies the number of slices per draw, and number of slices to step forward.
 
     Returns
     -------
@@ -277,32 +283,30 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
 
 def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
                   nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
-    """
-    Compute the distribution of log10 power at each frequency from the signal spectrogram.
-    The histogram bins are the same for every frequency, thus evenly spacing the global min and max power
+    """Compute the distribution of log10 power at each frequency from the signal spectrogram.
 
     Parameters
     -----------
     sig : array_like 1d
-        Time series of measurement values
-    fs : float, Hz
-        Sampling frequency of the sig time series.
+        Time series of measurement values.
+    fs : float
+        Sampling frequency of the time series, in Hz.
     window : str or tuple or array_like, optional
         Desired window to use. Defaults to a Hann window.
-            See scipy.signal.get_window for a list of windows and required parameters.
-            If window is array_like, this array will be used as the window and its length must be nperseg.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
     nperseg : int, optional
-        Length of each segment, in number of samples. Defaults to None.
-            If None, and window is str or tuple, is set to 1 second of data.
-            If None, and window is array_like, is set to the length of the window.
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-        Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
-    nbins : int, optional
-        Number of histogram bins to use, defaults to 50
-    f_lim : tuple, (start, end) in Hz, optional
-        Frequency range of the spectrogram across which to compute the histograms. Default to (0., 100.)
-    cutpct : tuple, (low, high), in percentage, optional
-        Power percentile at which to draw the lower and upper bin limits. Default to (0., 100.)
+        Number of points to overlap between segments. If None, noverlap = nperseg // 2.
+    nbins : int, optional, default: 50
+        Number of histogram bins to use.
+    f_lim : tuple, optional, default: (0, 100)
+        Frequency range of the spectrogram across which to compute the histograms, as (start, end), in Hz.
+    cutpct : tuple, optional, default: (0, 100)
+        Power percentile at which to draw the lower and upper bin limits, as (low, high).
 
     Returns
     -------
@@ -311,7 +315,11 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     power_bins : ndarray
         Histogram bins used to compute the distribution.
     spect_hist : ndarray (2D)
-        Power distribution at every frequency, nbins x fs 2D matrix
+        Power distribution at every frequency, nbins x fs 2D matrix/
+
+    Notes
+    -----
+    The histogram bins are the same for every frequency, thus evenly spacing the global min and max power.
     """
 
     if nperseg is None:
@@ -361,21 +369,21 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=.5):
     Parameters
     ----------
     sig : array
-        Time series
+        Time series.
     freqs : array
-        Frequency axis
+        Frequency axis.
     fs : float
-        Sampling rate
+        Sampling rate.
     n_cycles : float
         Length of the filter in terms of the number of cycles of the oscillation
-        whose frequency is the center of the bandpass filter
+        whose frequency is the center of the bandpass filter.
     scaling : float
-        Scaling factor
+        Scaling factor.
 
     Returns
     -------
-    mwt : 2-D array
-        time-frequency representation of signal sig
+    mwt : 2d array
+        Time-frequency representation of signal sig.
     """
 
     if n_cycles <= 0:
@@ -402,17 +410,17 @@ def morlet_convolve(sig, freq, fs, n_cycles=7, scaling=.5, filt_len=None, norm='
     Parameters
     ----------
     sig : array
-        Time series to filter
+        Time series to filter.
     freq : float
-        Center frequency of bandpass filter
+        Center frequency of bandpass filter.
     fs : float
-        Sampling rate
+        Sampling rate.
     n_cycles : float
-        Length of the filter in terms of the number of cycles of the oscillation with frequency freq
+        Length of the filter in terms of the number of cycles of the oscillation with frequency freq.
     scaling : float
-        Scaling factor for the morlet wavelet
+        Scaling factor for the morlet wavelet.
     filt_len : integer
-        Length of the filter. If not None, overrides the freq and w inputs
+        Length of the filter. If not None, overrides the freq and w inputs.
     norm : string
         Normalization method
         'sss' - divide by the sqrt of the sum of squares of points
@@ -421,7 +429,7 @@ def morlet_convolve(sig, freq, fs, n_cycles=7, scaling=.5, filt_len=None, norm='
     Returns
     -------
     array
-        Complex time series
+        Complex time series.
     """
 
     if n_cycles <= 0:
@@ -450,15 +458,15 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
 
     Parameters
     ----------
-    f_axis : 1d array, Hz
-        Frequency axis of input spectrum. Must be same length as spectrum.
+    f_axis : 1d array
+        Frequency axis of input spectrum, in Hz. Must be same length as spectrum.
     spectrum : 1d array
         Power spectrum to be rotated.
     delta_f : float
         Change in power law exponent to be applied. Positive is counterclockwise
         rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, Hz, optional
-        Axis of rotation frequency, such that power at that frequency is unchanged
+    f_rotation : float, optional
+        Axis of rotation frequency, in Hz, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
         If None, the transform normalizes to power at 1Hz by defaults.
 

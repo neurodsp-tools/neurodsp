@@ -12,34 +12,33 @@ from neurodsp.filt import filter_signal
 ###################################################################################################
 
 
-def phase_by_time(sig, fs, f_range, filter_kwargs=None,
-                  hilbert_increase_n=False, remove_edge_artifacts=True,
-                  verbose=True):
+def phase_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
+                  remove_edge_artifacts=True, verbose=True):
     """Calculate the phase time series of a neural oscillation.
 
     Parameters
     ----------
     sig : array-like, 1d
-        Time series
-    fs : float, Hz
-        Sampling rate
-    f_range : (low, high), Hz
-        Frequency range
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    f_range : tuple of float
+        Frequency range, in Hz, as (low, high).
     filter_kwargs : dict, optional
-        Keyword parameters to pass to `neurodsp.filt.filter_signal()`
-    hilbert_increase_n : bool, optional
-        if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of x
-    remove_edge_artifacts : bool, optional
-        if True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan
-    verbose : bool
-        if True, print filter transition band and any other prints
+        Keyword parameters to pass to `neurodsp.filt.filter_signal()`.
+    hilbert_increase_n : bool, optional, default: False
+        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
+        This is because scipy.signal.hilbert can be very slow for some lengths of x.
+    remove_edge_artifacts : bool, optional, default: True
+        If True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan.
+    verbose : bool, optional, default:True
+        If True, print filter transition band and any other prints.
 
     Returns
     -------
-    pha : array-like, 1d
-        Time series of phase
+    pha : 1d array
+        Time series of phase.
     """
 
     # Set default filtering parameters
@@ -66,34 +65,33 @@ def phase_by_time(sig, fs, f_range, filter_kwargs=None,
     return pha
 
 
-def amp_by_time(sig, fs, f_range, filter_kwargs=None,
-                hilbert_increase_n=False, remove_edge_artifacts=True,
-                verbose=True):
+def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
+                remove_edge_artifacts=True, verbose=True):
     """Calculate the amplitude time series.
 
     Parameters
     ----------
     sig : array-like, 1d
-        Time series
-    fs : float, Hz
-        Sampling rate
-    f_range : (low, high), Hz
-        The frequency filtering range
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    f_range : tuple of float
+        The frequency filtering range, in Hz, as (low, high).
     filter_kwargs : dict, optional
-        Keyword parameters to pass to `neurodsp.filt.filter_signal()`
-    hilbert_increase_n : bool, optional
-        if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of sig
-    remove_edge_artifacts : bool, optional
-        if True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan
-    verbose : bool
-        if True, print filter transition band and any other prints
+        Keyword parameters to pass to `neurodsp.filt.filter_signal()`.
+    hilbert_increase_n : bool, optional, default: False
+        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
+        This is because scipy.signal.hilbert can be very slow for some lengths of sig.
+    remove_edge_artifacts : bool, optional, default: True
+        If True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan.
+    verbose : bool, optional, default: True
+        If True, print filter transition band and any other prints.
 
     Returns
     -------
-    amp : array-like, 1d
-        Time series of amplitude
+    amp : 1d array
+        Time series of amplitude.
     """
 
     # Set default filtering parameters
@@ -119,38 +117,37 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None,
     return amp
 
 
-def freq_by_time(sig, fs, f_range, filter_kwargs=None,
-                 hilbert_increase_n=False, remove_edge_artifacts=True,
-                 verbose=True):
+def freq_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
+                 remove_edge_artifacts=True, verbose=True):
     """Estimate the instantaneous frequency at each sample.
 
     Parameters
     ----------
     sig : array-like 1d
-        voltage time series
+        Voltage time series.
     fs : float
-        sampling rate
-    f_range : (low, high), Hz
-        frequency range for filtering
+        Sampling rate, in Hz.
+    f_range : tuple of float
+        Frequency range for filtering, in Hz, as (low, high).
     filter_kwargs : dict, optional
-        Keyword parameters to pass to `neurodsp.filt.filter_signal()`
-    hilbert_increase_n : bool, optional
-        if True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of sig
-    remove_edge_artifacts : bool, optional
-        if True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan
-    verbose : bool
-        if True, print filter transition band and any other prints
+        Keyword parameters to pass to `neurodsp.filt.filter_signal()`.
+    hilbert_increase_n : bool, optional, default: False
+        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
+        This is because scipy.signal.hilbert can be very slow for some lengths of sig.
+    remove_edge_artifacts : bool, optional, default: True
+        If True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan.
+    verbose : bool, optional, default: True
+        If True, print filter transition band and any other prints.
 
     Returns
     -------
     i_f : float
-        estimate instantaneous frequency for each sample in 'sig'
+        Estimated instantaneous frequency for each sample in 'sig'.
 
     Notes
     -----
-    * This function assumes monotonic phase, so a phase slip will be processed as a very high frequency
+    This function assumes monotonic phase, so a phase slip will be processed as a very high frequency.
     """
 
     pha = phase_by_time(sig, fs, f_range,
@@ -169,10 +166,7 @@ def freq_by_time(sig, fs, f_range, filter_kwargs=None,
 
 
 def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
-    """
-    Compute the hilbert transform of sig.
-    Ignoring the boundaries of sig that are filled with NaN
-    """
+    """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN."""
 
     # Extract the signal that is not nan
     first_nonan = np.where(~np.isnan(sig))[0][0]
@@ -195,10 +189,10 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
 
 
 def _get_filt_passtype(f_range):
+    """Given frequency range of filter, check for Nones to return
+    appropriate filter pass_type to filt.filter_signal.
     """
-    Given frequency range of filter, check for Nones to return appropriate
-        filter pass_type to filt.filter_signal.
-    """
+
     if f_range[0] is None:
         pass_type = 'lowpass'
     elif f_range[1] is None:
