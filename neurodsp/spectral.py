@@ -87,7 +87,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
             for chan in range(numchan):
                 # discard time windows with high total log powers, round up so it doesn't get a zero
                 outlier_inds[chan, :] = np.argsort(np.mean(np.log10(spg[chan, :, :]), axis=0))[-n_discard:]
-                spg_[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
+                spg_temp[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
             spg = spg_temp
 
         if method == 'mean':
