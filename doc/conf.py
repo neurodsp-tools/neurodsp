@@ -113,7 +113,7 @@ html_theme_options = {
         ("API", "api"),
         ("Tutorial", "auto_tutorials/index"),
         #("Examples", "auto_examples/index"),
-        ("GitHub", "https://github.com/voytekresearch/neurodsp", True)
+        ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
 
     # Bootswatch (http://bootswatch.com/) theme.

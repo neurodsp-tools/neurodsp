@@ -2,36 +2,29 @@ language: python
 python:
   - "3.5"
   - "3.6"
+
+# Current workaround to test on Python 3.7
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
 notifications:
     email: false
 
 # Install packages
 install:
   - pip install -r requirements.txt
-
-
-# Setup anaconda to get scipy, and others
-before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes
-  - conda update -q conda
-  # The next couple lines fix a crash with multiprocessing on Travis and are not specific to using Miniconda
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
-
-# Install packages
-install:
-  - conda create -n testenv pip python=$TRAVIS_PYTHON_VERSION
-  - conda update conda
-  - source activate testenv
-  - conda install --file requirements.txt
+  - pip install pytest-cov
+  - pip install codecov
   - pip install .
 
-# Add the current directory to the pythonpath so that tests can load neurodsp
+# Add the current directory to the pythonpath so that tests can load saved files
 before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
 
-# command to run tests
-script: pytest neurodsp/tests
+script:
+  - py.test --cov=./
+
+after_success:
+  - codecov
