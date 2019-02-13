@@ -41,41 +41,24 @@ bibliography: paper.bib
 
 # Summary
 
-Populations of neurons exhibit time-varying fluctuations in their aggregate electrical electrophysiological methods, such as magneto or electroencephalography (M/EEG), intracranial EEG (iEEG) or electrocorticography (ECoG), and local field potential (LFP) recordings [@buzsaki_origin_2012]. While there are existing Python tools for digital signal processing (DSP), such as [scipy.signal](https://docs.scipy.org/doc/scipy/reference/signal.html), neural data exhibit specific properties that warrant specialized analysis tools focused on idiosyncrasies of neural data. Features of interest in neural data include periodic properties—-such as band-limited oscillations [@buzsaki_neural_2004] and transient or 'bursty' events--as well as an aperiodic signal that is variously referred to as the 1/f-like background [@freeman_simulated_2009, @miller_power-law_2009], or noise [@voytek_age-related_2015], or scale-free activity [@he_scale-free_2014], and that may carry information about the current generators, such as the ratio of excitation and inhibition [@gao_interpreting_2016].
+Populations of neurons exhibit time-varying fluctuations in their aggregate electrical electrophysiological methods, such as magneto or electroencephalography (M/EEG), intracranial EEG (iEEG) or electrocorticography (ECoG), and local field potential (LFP) recordings [@buzsaki_origin_2012]. While there are existing Python tools for digital signal processing (DSP), such as [scipy.signal](https://docs.scipy.org/doc/scipy/reference/signal.html), neural data exhibit specific properties that warrant specialized analysis tools focused on idiosyncrasies of neural data. Features of interest in neural data include periodic properties—-such as band-limited oscillations [@buzsaki_neural_2004] and transient or 'bursty' events--as well as an aperiodic signal that is variously referred to as the 1/f-like background [@freeman_simulated_2009, @miller_power-law_2009], or noise [@voytek_age-related_2015], or scale-free activity [@he_scale-free_2014], and that may carry information about the current generators, such as the ratio of excitation and inhibition [@gao_inferring_2017]. ``NeuroDSP`` is a package specifically designed to be used by neuroscientists for analyzing neural time series data, in particular for examing their time-varying properties related to oscillatory and 1/f life components.
 
-``NeuroDSP`` is an open-source Python package for time-series analyses of neural data, including implementations of relevant DSP utilities as well as implementations of a collection of algorithms and approaches that have been developed specifically for neural data analysis. ``NeuroDSP`` complements, and can be used in conjunction with, related toolboxes such as MNE [@gramfort_mne_2014], as it offers implementations of a distinct set of methods. By design, ``NeuroDSP`` offers a lightweight design in which functions take in time-series directly so can be easily integrated with tools such as MNE and with custom workflows. ``NeuroDSP`` also offers a developed module for simulating realistic neural data, which be used for testing the properties of methods against synthetic data for which ground truth parameters are known.
+``NeuroDSP`` is accompanied by a [documentation site](https://neurodsp-tools.github.io/neurodsp/) that includes detailed [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html#) for each of the modules, which are described below, as well as suggested workflows for combining them.
 
-# Features
+The modules included in ``NeuroDSP`` are:
 
-``NeuroDSP`` is a package specifically designed to be used by neuroscientists analyzing neural time series data. The modules include:
-
-* burst : Detect bursting oscillators in neural signals.
 * filt : Filter data with bandpass, highpass, lowpass, or notch filters.
-* laggedcoherence : Estimate rhythmicity using the lagged coherence measure.
-* sim : Simulate bursting or stationary oscillators along with aperiodic signals.
-* spectral : Compute spectral domain features (power spectra and aperiodic slope, etc).
-* swm : Identify recurrent patterns in a signal using sliding window matching.
-* timefrequency : Estimate instantaneous measures of oscillatory activity.
+* burst : Detect bursting oscillations in neural signals. Burst detection is done using the dual threshold algorithm. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
+* laggedcoherence : Estimate rhythmicity using the lagged coherence measure for quantifying the presence of rhythms [@fransen_identifying_2015].
+* spectral : Compute spectral domain features, including power spectral estimation, mortlet wavelet transforms and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see the companion spectral parametrization toolbox, fitting oscillations and one-over-f (FOOOF) [@haller_parameterizing_2018].
+* swm : Identify recurrent patterns in a signal using the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
+* timefrequency : Estimate instantaneous measures of oscillatory activity, including instantaneous measures for calculating the amplitude, frequency, and phase from narrowband-filtered, putative oscillations.
+* sim : Simulate oscillations, that can vary in their waveform shape and stationarity, as well as aperiodic signals, simulated with various stochastic models.
+* plts : Plotting functions.
 
-# Documentation
+# Statement of Need
 
-``NeuroDSP`` is accompanied by a [documentation site](https://neurodsp-tools.github.io/neurodsp/) that includes detailed [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html#) that demonstrate how the use the included analysis approaches, and that also demonstrates the sequence of analyses one might adopt using each of the modules.
-
-The tutorials include:
-
-* Filtering : A general tutorial on filtering, filter parameters, and the ``NeuroDSP`` specific implementation.
-
-* Instantaneous Amplitude, Frequency, and Phase : Computing instantaneous features, such as amplitude, phase, and frequency, from narrowband-filtered, putative oscillations.
-
-* Lagged Coherence : The ``NeuroDSP`` implementation of the lagged coherence algorithm for quantifying the presence of rhythms [@fransen_identifying_2015].
-
-* Spectral Analysis : Computing and visualizing power spectral density with various methods, Morlet Wavelet Transform, and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see the companion spectral parametrization toolbox, fitting oscillations and one-over-f (FOOOF) [@haller_parameterizing_2018].
-
-* Burst Detection : Burst detection using the dual threshold algorithm. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
-
-* Sliding Window Matching : The ``NeuroDSP`` implementation of the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
-
-* Simulating Oscillations and Noise : Simulating aperiodic (1/f-like) signals with various stochastic models, as well as oscillations that can vary in their waveform shape and stationarity.
+``NeuroDSP`` is an open-source Python package for time-series analyses of neural data, including implementations of relevant DSP utilities as well as implementations of a collection of algorithms and approaches that have been developed specifically for neural data analysis. By design, ``NeuroDSP`` offers a lightweight design in which functions take in time-series directly, thus offering a flexible toolbox for custom analysis of a broad range of neural data. This approach complements, and can be used in conjunction with, related toolboxes such as MNE [@gramfort_mne_2014] that are more focused on data management and multi-channel analyses. ``NeuroDSP`` offers implementations of a distinct set of methods, with different use cases, as these larger tools, and can easily be integrated with tools such as MNE and with other custom workflows. ``NeuroDSP`` also offers a developed module for simulating realistic neural data, which be used for testing the properties of methods against synthetic data for which ground truth parameters are known.
 
 # Acknowledgements
 
