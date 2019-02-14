@@ -16,13 +16,13 @@ tags:
 authors:
   - name: Scott Cole
     orcid: 0000-0002-6168-9951
-    affiliation: 1
+    affiliation: "1"
   - name: Thomas Donoghue
     orcid: 0000-0001-5911-0472
-    affiliation: 2
+    affiliation: "2"
   - name: Richard Gao
     orcid: 0000-0001-5916-6433
-    affiliation: 2
+    affiliation: "2"
   - name: Bradley Voytek
     orcid: 0000-0003-1640-2525
     affiliation: "1, 2, 3, 4"
