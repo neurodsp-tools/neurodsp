@@ -25,7 +25,7 @@ authors:
     affiliation: 2
   - name: Bradley Voytek
     orcid: 0000-0003-1640-2525
-    affiliation: 1-4
+    affiliation: "1, 2, 3, 4"
 affiliations:
  - name: Neurosciences Graduate Program, UC San Diego
    index: 1
