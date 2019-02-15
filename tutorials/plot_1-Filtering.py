@@ -34,22 +34,22 @@ np.random.seed(0)
 ###################################################################################################
 
 # Generate an oscillation with noise
-t = np.arange(0,4,.001)
-x = np.random.randn(len(t)) + 5*np.sin(t*2*np.pi*6)
+times = np.arange(0, 4, .001)
+sig = np.random.randn(len(times)) + 5*np.sin(times*2*np.pi*6)
 fs = 1000
 
 ###################################################################################################
 
 # Filter the data, across a frequency band of interest
 fc = (4, 8)
-x_filt = filt.filter_signal(x, fs, 'bandpass', fc)
+sig_filt = filt.filter_signal(sig, fs, 'bandpass', fc)
 
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15,3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.figure(figsize=(15, 3))
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.legend(loc='best')
 
 ###################################################################################################
@@ -76,21 +76,21 @@ plt.legend(loc='best')
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-t = np.arange(0, 6, .001)
-x = np.random.randn(len(t)) + 5 * np.sin(t*2*np.pi*3) + 4 * np.sin(t*2*np.pi*.5)
+times = np.arange(0, 6, .001)
+sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
 
 ###################################################################################################
 
 # Filter the data
 fc = 2
-x_filt = filt.filter_signal(x, fs, 'highpass', (fc, None))
+sig_filt = filt.filter_signal(sig, fs, 'highpass', (fc, None))
 
 ###################################################################################################
 
 # Plot filtered signal
 plt.figure(figsize=(15, 3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.legend(loc='best')
 
 ###################################################################################################
@@ -104,21 +104,21 @@ plt.legend(loc='best')
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-t = np.arange(0, 6, .001)
-x = np.random.randn(len(t)) + 5 * np.sin(t*2*np.pi*3) + 4 * np.sin(t*2*np.pi*.5)
+times = np.arange(0, 6, .001)
+sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
 
 ###################################################################################################
 
 # Filter the data
 fc = 20
-x_filt = filt.filter_signal(x, fs, 'lowpass', (None, fc))
+sig_filt = filt.filter_signal(sig, fs, 'lowpass', (None, fc))
 
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15,3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.figure(figsize=(15, 3))
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.legend(loc='best')
 
 ###################################################################################################
@@ -136,21 +136,21 @@ plt.legend(loc='best')
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-t = np.arange(0, 8, .001)
-x = 5 * np.sin(t*2*np.pi*5) + 2 * np.sin(t*2*np.pi*60)
+times = np.arange(0, 8, .001)
+sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
 ###################################################################################################
 
 # Filter the data
 fc = (58, 62)
-x_filt = filt.filter_signal(x, fs, 'bandstop', fc=fc, n_seconds=0.5)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=0.5)
 
 ###################################################################################################
 
 # Plot filtered signal
 plt.figure(figsize=(15, 3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.legend(loc='best')
 
 ###################################################################################################
@@ -158,14 +158,14 @@ plt.legend(loc='best')
 # Note the user warning above.
 # This is because in the computed frequency response (below),
 # the attenuation in the stopband does not go below 20dB.
-x_filt = filt.filter_signal(x, fs, 'bandstop', fc=fc, n_seconds=0.25,
-                            plot_freq_response=True)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=0.25,
+                              plot_freq_response=True)
 
 ###################################################################################################v
 
 # This user warning disappears if we elongate the filter
-x_filt = filt.filter_signal(x, fs, 'bandstop', fc=fc, n_seconds=1,
-                            plot_freq_response=True)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=1,
+                              plot_freq_response=True)
 
 ###################################################################################################
 #
@@ -188,14 +188,14 @@ x_filt = filt.filter_signal(x, fs, 'bandstop', fc=fc, n_seconds=1,
 ###################################################################################################
 
 # Generate an oscillation with noise
-t = np.arange(0, 3, .01)
-x = np.random.randn(len(t)) * .3 + 5 * np.sin(t*2*np.pi*6) + 4 * np.sin(t*2*np.pi*1)
+times = np.arange(0, 3, .01)
+sig = np.random.randn(len(times)) * .3 + 5 * np.sin(times*2*np.pi*6) + 4 * np.sin(times*2*np.pi*1)
 fs = 100
 
 ###################################################################################################
 
 # Set the first second to 0
-x[:fs] = 0
+sig[:fs] = 0
 
 # Define the frequency band of interest
 fc = (4, 8)
@@ -203,27 +203,27 @@ fc = (4, 8)
 ###################################################################################################
 
 # Filter the data
-x_filt_short = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_seconds=.1)
-x_filt_long = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_seconds=1)
+sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=.1)
+sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=1)
 
 ###################################################################################################
 
 # Plot filtered signal
 plt.figure(figsize=(15, 3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt_short, 'r', label='short filter')
-plt.plot(t, x_filt_long, 'b', label='long filter')
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt_short, 'r', label='short filter')
+plt.plot(times, sig_filt_long, 'b', label='long filter')
 plt.legend(loc='best')
 
 ###################################################################################################
 
 # Visualize the kernels and frequency responses
 print('Short filter')
-x_filt_short = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_seconds=.1,
-                                  plot_freq_response=True)
+sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=.1,
+                                    plot_freq_response=True)
 print('\n\nLong filter')
-x_filt_long = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_seconds=1,
-                                 plot_freq_response=True)
+sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=1,
+                                   plot_freq_response=True)
 
 ###################################################################################################
 #
@@ -246,27 +246,27 @@ x_filt_long = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_seconds=1,
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-t = np.arange(0, 2, .001)
-x = 5 * np.sin(t*2*np.pi*5) + 2 * np.sin(t*2*np.pi*60)
+times = np.arange(0, 2, .001)
+sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 fs = 1000
 
 ###################################################################################################
 
 # Low-pass filter the signal at 100Hz, just for fun.
-x = filt.filter_signal(x, fs, 'lowpass', fc=100)
+sig = filt.filter_signal(sig, fs, 'lowpass', fc=100)
 
 ###################################################################################################
 
 # Filter the data
 fc = (58, 62)
-x_filt = filt.filter_signal(x, fs, 'bandstop', fc=fc, iir=True, butterworth_order=3)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, iir=True, butterworth_order=3)
 
 ###################################################################################################
 
 # Plot filtered signal
 plt.figure(figsize=(15, 3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.legend(loc='best')
 plt.xlim((0, .2))
 
@@ -278,25 +278,25 @@ plt.xlim((0, .2))
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-x = np.load('./data/sample_data_1.npy')
+sig = np.load('./data/sample_data_1.npy')
 fs = 1000
-t = np.arange(0, len(x)/fs, 1/fs)
+times = np.arange(0, len(sig)/fs, 1/fs)
 
 ###################################################################################################
 
 # Filter the data
 # If you want to get rid of the transition band printouts, set verbose=False
 fc = (13, 30)
-x_filt, kernel = filt.filter_signal(x, fs, 'bandpass', fc=fc, n_cycles=3,
-                                    plot_freq_response=True, return_kernel=True,
-                                    verbose=False)
+sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_cycles=3,
+                                      plot_freq_response=True, return_kernel=True,
+                                      verbose=False)
 
 ###################################################################################################
 
 # Plot filtered signal
 plt.figure(figsize=(15, 3))
-plt.plot(t, x, 'k', label='raw')
-plt.plot(t, x_filt, 'r', label='filtered')
+plt.plot(times, sig, 'k', label='raw')
+plt.plot(times, sig_filt, 'r', label='filtered')
 plt.xlim((2, 5))
 plt.legend(loc='best')
 

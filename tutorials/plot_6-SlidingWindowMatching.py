@@ -27,16 +27,20 @@ np.random.seed(0)
 #
 # Load neural signal
 # ------------------
+#
 
+###################################################################################################
+
+# Load example data
 sig = np.load('./data/sample_data_1.npy')
-Fs = 1000
-t = np.arange(0, len(sig)/Fs, 1/Fs)
-f_range = (13,30)
+fs = 1000
+times = np.arange(0, len(sig)/fs, 1/fs)
+f_range = (13, 30)
 
 # Plot example signal
-plt.figure(figsize=(12,3))
-plt.plot(t, sig, 'k')
-plt.xlim((4,5))
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k')
+plt.xlim((4, 5))
 plt.xlabel('Time (s)')
 plt.ylabel('Voltage (uV)')
 plt.tight_layout()
@@ -58,15 +62,18 @@ plt.tight_layout()
 
 ###################################################################################################
 
-# Define window length, in seconds
-L = .055
+# Define window length & minimum window spacing, both in seconds
+win_len = .055
+win_spacing = .2
 
-# Define minimum window spacing, in seconds
-G = .2
+# Apply the sliding window matching algorithm to the time series
+avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spacing,
+                                                       max_iterations=500)
 
-avg_window, window_starts, J = sliding_window_matching(sig, Fs, L, G, max_iterations=500)
+###################################################################################################
 
-plt.figure(figsize=(4,4))
+# Plot the discovered pattern
+plt.figure(figsize=(4, 4))
 plt.plot(avg_window, 'k')
 plt.xlabel('Time (samples)')
 plt.ylabel('Voltage (a.u.)')

@@ -41,17 +41,18 @@ noise_args = {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'ta
 
 sig = sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_model, noise_args,
                                   ratio_osc_var=2., prob_enter_burst=.2, prob_leave_burst=.2,)
-t = np.arange(0, n_seconds, 1/fs)
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
-plt.figure(figsize=(16,3))
-plt.plot(t, sig, 'k', label='Simulated EEG')
+plt.figure(figsize=(16, 3))
+plt.plot(times, sig, 'k', label='Simulated EEG')
 plt.xlim((0, n_seconds))
 
 ###################################################################################################
 #
 # We can see that 10Hz oscillations present 1.5-2.1 seconds and after 4.2 seconds.
+#
 
 ###################################################################################################
 #
@@ -77,10 +78,10 @@ amp_dual_thresh = (1, 2)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12,3));
-plt.plot(t, sig, 'k', label='simulated EEG');
-plt.plot(t[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best');
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -98,16 +99,16 @@ sig = np.load('./data/sample_data_1.npy')
 fs = 1000
 
 # Same code as earlier
-t = np.arange(0, len(sig)/fs, 1/fs)
+times = np.arange(0, len(sig)/fs, 1/fs)
 
 # Detect bursts using 'deviation' algorithm
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12,3));
-plt.plot(t, sig, 'k', label='simulated EEG');
-plt.plot(t[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best');
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -122,10 +123,10 @@ plt.legend(loc='best');
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12,3));
-plt.plot(t, sig, 'k', label='simulated EEG');
-plt.plot(t[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best');
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -141,10 +142,10 @@ plt.legend(loc='best');
 bursting = detect_bursts_dual_threshold(sig, fs, (13, 30), dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12,3));
-plt.plot(t, sig, 'k', label='simulated EEG');
-plt.plot(t[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best');
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #

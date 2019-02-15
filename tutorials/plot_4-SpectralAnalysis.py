@@ -19,7 +19,7 @@ import numpy as np
 from scipy import io
 import matplotlib.pylab as plt
 
-from neurodsp import spectral, plts
+from neurodsp import spectral
 from neurodsp.plts.spectral import plot_spectral_hist
 
 ###################################################################################################
@@ -28,14 +28,13 @@ from neurodsp.plts.spectral import plot_spectral_hist
 # taken from the publicly available neuro database CRCNS (hc2).
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
 data = io.loadmat('./data/sample_data_2.mat', squeeze_me=True)
-x = data['x']
+sig = data['x']
 fs = data['fs']
-t = np.arange(len(x))/fs
-plt.plot(t, x)
-plt.xlim((0,3))
+times = np.arange(len(sig))/fs
+plt.plot(times, sig)
+plt.xlim((0, 3))
 plt.xlabel('Time (s)')
 plt.ylabel('Voltage')
-plt.show()
 
 # Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
 
@@ -61,22 +60,24 @@ plt.show()
 ###################################################################################################
 
 # Mean of spectrogram (Welch)
-freq_mean, P_mean = spectral.compute_spectrum(x, fs, method='mean', nperseg=fs*2)
+freq_mean, psd_mean = spectral.compute_spectrum(sig, fs, method='mean', nperseg=fs*2)
+
 # Median of spectrogram ("median Welch")
-freq_med, P_med = spectral.compute_spectrum(x, fs, method='median', nperseg=fs*2)
+freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='median', nperseg=fs*2)
+
 # Median filtered spectrum
-freq_mf, P_mf = spectral.compute_spectrum(x, fs, method='medfilt')
+freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
 
 ###################################################################################################
 
-plt.figure(figsize=(8,8))
-plt.loglog(freq_mean[:200],P_mean[:200], label='Welch')
-plt.loglog(freq_med[:200],P_med[:200], label='Median Welch')
-plt.loglog(freq_mf[100:10000],P_mf[100:10000], label='Median Filter FFT')
+# Plot the power spectra
+plt.figure(figsize=(8, 8))
+plt.loglog(freq_mean[:200], psd_mean[:200], label='Welch')
+plt.loglog(freq_med[:200], psd_med[:200], label='Median Welch')
+plt.loglog(freq_mf[100:10000], psd_mf[100:10000], label='Median Filter FFT')
 plt.legend()
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('Power (V^2/Hz)')
-plt.show()
 
 ###################################################################################################
 # Aside: Fitting 1/f and oscillations in power spectra
@@ -114,8 +115,14 @@ plt.show()
 # in a histogram, to observe the noise distribution at each frequency.
 #
 
-f, bins, spect_hist = spectral.spectral_hist(x, fs, nbins=50, f_lim=(0,80), cutpct=(0.1,99.9))
-plot_spectral_hist(f, bins, spect_hist, freq_med, P_med)
+###################################################################################################
+
+# Calculate the spectral histogram
+freqs, bins, spect_hist = spectral.spectral_hist(sig, fs, nbins=50, f_lim=(0, 80),
+                                                 cutpct=(0.1, 99.9))
+
+# Plot the spectral histogram
+plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 
 ###################################################################################################
 #
@@ -134,13 +141,17 @@ plot_spectral_hist(f, bins, spect_hist, freq_med, P_med)
 # normalized estimate of variance.
 #
 
-f, scv = spectral.compute_scv(x, fs, nperseg=int(fs),noverlap=0)
-plt.figure(figsize=(5,5))
-plt.loglog(f,scv)
+###################################################################################################
+
+# Calculate SCV
+freqs, scv = spectral.compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
+
+# Plot the SCV
+plt.figure(figsize=(5, 5))
+plt.loglog(freqs, scv)
 plt.xlim([1, 200])
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('SCV')
-plt.show()
 
 ###################################################################################################
 #
@@ -152,15 +163,18 @@ plt.show()
 
 ###################################################################################################
 
-f, T, SCVrs = spectral.compute_scv_rs(x, fs,nperseg=fs, method='bootstrap', rs_params=(20, 200))
-plt.figure(figsize=(8,8))
-plt.loglog(f, SCVrs, 'k', alpha=0.1);
-plt.loglog(f, np.mean(SCVrs, axis=1), lw=2)
-plt.loglog(f, len(f)*[1.])
-plt.xlim((1,200))
+# Calculate SCV with the resampling method
+freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
+                                                rs_params=(20, 200))
+
+# Plot the SCV, from the resampling method
+plt.figure(figsize=(8, 8))
+plt.loglog(freqs, scv_rs, 'k', alpha=0.1)
+plt.loglog(freqs, np.mean(scv_rs, axis=1), lw=2)
+plt.loglog(freqs, len(freqs)*[1.])
+plt.xlim((1, 200))
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('SCV')
-plt.show()
 
 ###################################################################################################
 #
@@ -171,14 +185,16 @@ plt.show()
 
 ###################################################################################################
 
-f, T, SCVrs = spectral.compute_scv_rs(x, fs, method='rolling', rs_params=(10,2))
-plt.figure(figsize=(10,5))
-plt.imshow(np.log10(SCVrs), aspect='auto', extent=(T[0],T[-1],f[-1],f[0]))
+# Calculate SCV with the resampling method
+freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
+
+# Plot the SCV, from the resampling method
+plt.figure(figsize=(10, 5))
+plt.imshow(np.log10(scv_rs), aspect='auto', extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
 plt.colorbar(label='SCV')
-plt.ylim((100,0))
+plt.ylim((100, 0))
 plt.ylabel('Frequency (Hz)')
 plt.xlabel('Time (s)')
-plt.show()
 
 ###################################################################################################
 #
@@ -203,8 +219,8 @@ plt.show()
 
 ###################################################################################################
 
-P_rot = spectral.rotate_powerlaw(freq_med,P_med,delta_f=-1,f_rotation=35)
-plt.figure(figsize=(5,5))
-plt.loglog(freq_med[:200], P_med[:200], label='Original')
-plt.loglog(freq_med[:200], P_rot[:200], label='Rotated')
+psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_f=-1, f_rotation=35)
+plt.figure(figsize=(5, 5))
+plt.loglog(freq_med[:200], psd_med[:200], label='Original')
+plt.loglog(freq_med[:200], psd_rot[:200], label='Rotated')
 plt.legend()
