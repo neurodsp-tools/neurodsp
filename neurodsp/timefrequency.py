@@ -17,7 +17,7 @@ def phase_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False
 
     Parameters
     ----------
-    sig : array-like, 1d
+    sig : 1d array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -70,7 +70,7 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
 
     Parameters
     ----------
-    sig : array-like, 1d
+    sig : 1d array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -123,7 +123,7 @@ def freq_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
 
     Parameters
     ----------
-    sig : array-like 1d
+    sig : 1d array
         Voltage time series.
     fs : float
         Sampling rate, in Hz.

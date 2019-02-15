@@ -11,12 +11,12 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
 
     Parameters
     ----------
-    sig : array-like 1d
+    sig : 1d array
         Voltage time series.
     f_range : list of float
         Frequency range of the oscillator, as [low, high], in Hz.
     fs : float
-        Sampling rate.
+        Sampling rate, in Hz.
     n_cycles : float, optional, default: 3
         Number of cycles of the frequency of interest used to compute lagged coherence.
     f_step : float, optional, default: 1
@@ -26,10 +26,10 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
 
     Returns
     -------
-    lc : float (or numpy.array 1d)
+    lc : float or 1d array
         If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
         If return_spectrum is True: lagged coherence value for each frequency in the frequency range.
-    fs : numpy.array 1d
+    freqs : 1d array
         Frequencies, in Hz, corresponding to the lagged coherence values in lc.
         Only returned if return_spectrum is True.
 

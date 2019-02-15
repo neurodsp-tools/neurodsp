@@ -389,17 +389,17 @@ def sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_generator='synaptic',
 
     Returns
     -------
-    signal : np.array
+    signal : 1d array
         Bursty oscillator with noise time series.
-    oscillator : np.array
+    oscillator : 1d array
         Bursty oscillator component of signal.
-    noise : np.array
+    noise : 1d array
         Noise component of signal.
     df : pd.DataFrame
         Cycle-by-cycle properties of the simulated oscillator.
     """
 
-    # Generate & then demaen noise
+    # Generate & then demean noise
     noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
     noise = noise - noise.mean()
 
@@ -637,7 +637,7 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
 
     Returns
     -------
-    kernel : array_like
+    kernel : 1d array
         Computed synaptic kernel with length equal to t
     """
 
@@ -645,18 +645,15 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
 
     # Kernel type: single exponential
     if tau_r == 0:
-
         kernel = np.exp(-times / tau_d)
 
     # Kernel type: alpha
     elif tau_r == tau_d:
-
         # I(t) = t/tau * exp(-t/tau)
         kernel = (times / tau_r) * np.exp(-times / tau_r)
 
     # Kernel type: double exponential
     else:
-
         if tau_r > tau_d:
             warnings.warn(
                 'Rise time constant should be shorter than decay time constant.')
@@ -695,8 +692,9 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
     sig : 1d array
         Simulated signal.
     """
+
+    # If not provided, compute t_ker as a function of decay time constant
     if t_ker is None:
-        # Automatically compute t_ker as a function of decay time constant
         t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will snip it
@@ -709,7 +707,7 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
 
 
 def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
-    """Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)
+    """Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Discretized Ornstein-Uhlenbeck process:
     dx = theta*(x-mu)*dt + sigma*dWt
@@ -799,14 +797,14 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
     exponent : float, optional, default=-2
         Desired power-law exponent: beta in P(f)=f^beta. Negative exponent
         denotes decay (i.e., negative slope in log-log spectrum).
-    f_range : 2-element array (lo,hi) or None, optional
+    f_range : 2-element array (lo, hi) or None, optional
         Frequency range of simulated data. If not provided, default to a highpass at 0.5 Hz.
     filter_order : int, optional
         Order of filter. If not provided, defaults to 3 times the highpass filter cycle length.
 
     Returns
     -------
-    noise : np.array
+    noise : 1d array
         Filtered noise.
     """
 

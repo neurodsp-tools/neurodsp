@@ -13,11 +13,11 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
 
     Parameters
     -----------
-    sig : array_like 1d or 2d
+    sig : 1d or 2d array
         Time series of measurement values.
     fs : float
-        Sampling frequency, in Hz, of the sig time series.
-    method : {'mean', 'median', 'medfilt'}
+        Sampling rate, in Hz.
+    method : {'mean', 'median', 'medfilt'}, optional
         Method to calculate the spectrum:
 
         * 'mean' is the same as Welch's method (mean of STFT).
@@ -47,9 +47,9 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
 
     Returns
     -------
-    freqs : ndarray
+    freqs : 1d array
         Array of sample frequencies.
-    spectrum : ndarray
+    spectrum : 1d or 2d array
         Power spectral density.
 
     References
@@ -128,11 +128,11 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 
     Parameters
     -----------
-    sig : array_like 1d
+    sig : 1d array
         Time series of measurement values.
-    fs : float, Hz
-        Sampling frequency of the sig time series.
-    window : str or tuple or array_like, optional
+    fs : float
+        Sampling rate, in Hz.
+    window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
         If window is array_like, this array will be used as the window and its length must be nperseg.
@@ -148,9 +148,9 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 
     Returns
     -------
-    freqs : ndarray
+    freqs : 1d array
         Array of sample frequencies.
-    spect_cv : ndarray
+    spect_cv : 1d array
         Spectral coefficient of variation.
 
     Notes
@@ -191,11 +191,11 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
 
     Parameters
     -----------
-    sig : array_like 1d
+    sig : 1d array
         Time series of measurement values.
     fs : float
-        Sampling frequency of the sig time series, in Hz.
-    window : str or tuple or array_like, optional
+        Sampling rate, in Hz.
+    window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
         If window is array_like, this array will be used as the window and its length must be nperseg.
@@ -218,11 +218,11 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
 
     Returns
     -------
-    freqs : ndarray
+    freqs : 1d array
         Array of sample frequencies.
-    t_inds : ndarray
+    t_inds : 1d array
         Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
-    spect_cv_rs : ndarray
+    spect_cv_rs : 1d array
         Resampled spectral coefficient of variation.
     """
 
@@ -290,11 +290,11 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Parameters
     -----------
-    sig : array_like 1d
+    sig : 1d array
         Time series of measurement values.
     fs : float
-        Sampling frequency of the time series, in Hz.
-    window : str or tuple or array_like, optional
+        Sampling rate, in Hz.
+    window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
         If window is array_like, this array will be used as the window and its length must be nperseg.
@@ -313,12 +313,12 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Returns
     -------
-    freqs : ndarray
+    freqs : 1d array
         Array of frequencies.
-    power_bins : ndarray
+    power_bins : 1d array
         Histogram bins used to compute the distribution.
-    spect_hist : ndarray (2D)
-        Power distribution at every frequency, nbins x fs 2D matrix/
+    spect_hist : 2d array
+        Power distribution at every frequency, nbins x fs 2D matrix.
 
     Notes
     -----
@@ -371,12 +371,12 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=0.5):
 
     Parameters
     ----------
-    sig : array
+    sig : 1d array
         Time series.
-    freqs : array
+    freqs : 1d array
         Frequency axis.
     fs : float
-        Sampling rate.
+        Sampling rate, in Hz.
     n_cycles : float
         Length of the filter, as the number of cycles of the oscillation
         whose frequency is the center of the bandpass filter.
@@ -407,12 +407,12 @@ def morlet_convolve(sig, freq, fs, n_cycles=7, scaling=0.5, filt_len=None, norm=
 
     Parameters
     ----------
-    sig : array
+    sig : 1d array
         Time series to filter.
     freq : float
         Center frequency of bandpass filter.
     fs : float
-        Sampling rate.
+        Sampling rate, in Hz.
     n_cycles : float, optional, default=7
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
     scaling : float, optional, default=0.5

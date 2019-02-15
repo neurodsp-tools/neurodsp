@@ -19,11 +19,11 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     Parameters
     ----------
-    sig : array-like 1d
-        Voltage time series.
+    sig : 1d array
+        Time series.
     fs : float
         The sampling rate, in Hz.
-    pass_type : str
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply:
 
         * 'bandpass': apply a bandpass filter

@@ -14,7 +14,7 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
 
     Parameters
     ----------
-    sig : array-like 1d
+    sig : 1d array
         Voltage time series.
     fs : float
         Sampling rate, in Hz.
@@ -25,9 +25,9 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
         Units are normalized by the average signal magnitude.
     min_cycles : float
         Minimum burst duration in terms of number of cycles of f_range[0].
-    average_method : 'median' or 'mean'
+    average_method : {'median', 'mean'}, optional
         Metric to normalize magnitude used for thresholding.
-    magnitude_type : 'power' or 'amplitude'
+    magnitude_type : {'power', 'amplitude'}, optional
         Metric of magnitude used for thresholding.
     filter_kwargs : dict, optional
         Keyword arguments to the neurodsp.filt.filter_signal().
@@ -84,7 +84,7 @@ def compute_burst_stats(bursting, fs):
 
     Parameters
     ----------
-    bursting : array-like 1d
+    bursting : 1d array
         Boolean indication of where bursts are present in the input signal.
         Output of detect_bursts_dualthreshold().
     fs : float
