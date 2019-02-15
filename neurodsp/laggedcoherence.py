@@ -22,7 +22,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     f_step : float, optional, default: 1
         Step size to calculate lagged coherence in the frequency range, in Hz.
     return_spectrum : bool, optional, default: False
-        If True, return the lagged coherence for all frequency values. otherwise, only return mean.
+        If True, return the lagged coherence for all frequency values. Otherwise, only return mean.
 
     Returns
     -------
@@ -30,7 +30,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
         If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
         If return_spectrum is True: lagged coherence value for each frequency in the frequency range.
     fs : numpy.array 1d
-        Frequencies (Hz) corresponding to the lagged coherence values in lc.
+        Frequencies, in Hz, corresponding to the lagged coherence values in lc.
         Only returned if return_spectrum is True.
 
     References

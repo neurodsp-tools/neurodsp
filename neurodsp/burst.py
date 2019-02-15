@@ -7,7 +7,6 @@ from neurodsp.timefrequency import amp_by_time
 ###################################################################################################
 ###################################################################################################
 
-
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
                                  filter_kwargs=None, verbose=True):
@@ -105,7 +104,7 @@ def compute_burst_stats(bursting, fs):
 
     tot_time = len(bursting) / fs
 
-    # find burst starts and ends
+    # Find burst starts and ends
     starts = np.array([])
     ends = np.array([])
 
@@ -116,7 +115,7 @@ def compute_burst_stats(bursting, fs):
         else:
             ends = np.append(ends, index)
 
-    # duration of each burst
+    # Duration of each burst
     durations = (ends - starts) / fs
 
     stats_dict = {'N_bursts': len(starts),
@@ -129,9 +128,8 @@ def compute_burst_stats(bursting, fs):
 
 
 def _dual_threshold_split(sig, thresh_hi, thresh_lo):
-    """
-    Identify periods of a time series that are above thresh_lo and have at
-    least one value above thresh_hi
+    """Identify periods of a time series that are above thresh_lo and
+    have at least one value above thresh_hi.
     """
 
     # Find all values above thresh_hi

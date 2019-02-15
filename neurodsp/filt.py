@@ -66,8 +66,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     sig_filt : 1d array
         Filtered time series.
     kernel : length-2 tuple of arrays
-        Filter kernel.
-        Returned only if 'return_kernel' is True.
+        Filter kernel. Only returned if 'return_kernel' is True.
     """
 
     # Check that frequency cutoff inputs are appropriate

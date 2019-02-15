@@ -11,7 +11,6 @@ from neurodsp.filt import filter_signal
 ###################################################################################################
 ###################################################################################################
 
-
 def phase_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
                   remove_edge_artifacts=True, verbose=True):
     """Calculate the phase time series of a neural oscillation.
@@ -114,6 +113,7 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
         N_rmv = int(np.ceil(len(kernel) / 2))
         amp[:N_rmv] = np.nan
         amp[-N_rmv:] = np.nan
+
     return amp
 
 
@@ -202,4 +202,5 @@ def _get_filt_passtype(f_range):
             raise ValueError('Second cutoff frequency must be greater than first.')
         else:
             pass_type = 'bandpass'
+
     return pass_type
