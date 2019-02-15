@@ -2,29 +2,27 @@
 Spectral domain analysis
 ========================
 
-In this tutorial, we will demonstrate how to use the spectral (or, frequency)
-domain analysis functions in neurodsp.spectral. We will cover:
-- computing the power spectral density (PSD)
-- fitting the 1/f noise in the PSD with a line in loglog domain
-- computing and displaying the spectral histogram
-- computing the spectral coefficient of variation (SCV) and the resampled estimates
+In this tutorial, we will demonstrate how to use spectral domain analysis functions.
+
+This tutorial covers:
+
+- Computing the power spectral density (PSD)
+- Computing and displaying the spectral histogram
+- Computing the spectral coefficient of variation (SCV) and the resampled estimates
 
 Detailed explanations for each of the above concept are provided below as we come across them.
 """
-###############################################################################
 
+###################################################################################################
 
-# importing libraries
-from scipy import signal
 import numpy as np
-import scipy as sp
 from scipy import io
 import matplotlib.pylab as plt
+
 from neurodsp import spectral, plts
+from neurodsp.plts.spectral import plot_spectral_hist
 
-
-###############################################################################
-
+###################################################################################################
 
 # First, we load the sample data, which is a segment of rat hippocampal LFP
 # taken from the publicly available neuro database CRCNS (hc2).
@@ -41,28 +39,35 @@ plt.show()
 
 # Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
 
-###############################################################################
+###################################################################################################
 # Computing the power spectral density (PSD)
 # ==========================================
 #
-# PSD is the frequency domain representation of time series.
-# Through the Fourier transform, the signal is split into orthogonal
-# components of different frequency. In this toolbox, there are a few
-# ways of estimating the PSD:
+# A PSD is a frequency domain representation of a time series.
+#
+# Using the Fourier transform, the signal is split into orthogonal
+# components of different frequency.
+#
+# In this toolbox, there are a few ways of estimating the PSD:
+#
 # - 'mean' : same as Welch's method; mean over spectrogram of data.
 #   This is the most straightforward and "standard" way of computing the PSD.
 # - 'median' : similar to Welch's method; median (instead of mean) over
 #   spectrogram of data. This diminishes the effect of outlier power values
 #   from signal artifacts.
 # - 'medfilt' : median filtered of FFT magnitude squared.
+#
 
-###############################################################################
+###################################################################################################
 
-# mean of spectrogram (Welch)
+# Mean of spectrogram (Welch)
 freq_mean, P_mean = spectral.compute_spectrum(x, fs, method='mean', nperseg=fs*2)
-# median of spectrogram ("median Welch")
+# Median of spectrogram ("median Welch")
 freq_med, P_med = spectral.compute_spectrum(x, fs, method='median', nperseg=fs*2)
+# Median filtered spectrum
 freq_mf, P_mf = spectral.compute_spectrum(x, fs, method='medfilt')
+
+###################################################################################################
 
 plt.figure(figsize=(8,8))
 plt.loglog(freq_mean[:200],P_mean[:200], label='Welch')
@@ -73,33 +78,29 @@ plt.xlabel('Frequency (Hz)')
 plt.ylabel('Power (V^2/Hz)')
 plt.show()
 
-###############################################################################
-# Fitting 1/f noise of PSD with a straight line in loglog scale
-# -------------------------------------------------------------
+###################################################################################################
+# Aside: Fitting 1/f and oscillations in power spectra
+# ----------------------------------------------------
 #
-# Notice in the above PSDs that there is a region of linear decrease when
-# plotted in double log-scale, between 30-100Hz. This "1/f slope" has been
-# found to correlate with aging, memory, and cognitive control in several
-# previous publications, and has been proposed to reflect the physiological
-# balance between excitation and inhibition.
+# You might notice in the above power spectra that there are regions of band-specific power,
+# reflecting oscillations, as well as regions that show linear decrease when plotted in
+# log-log scale, in particular the frequency region between 30-100Hz. As well as a large body of
+# work investigating oscillations, this "1/f-like" aperiodic components has been found to
+# correlate with aging, memory, and cognitive control in several previous publications,
+# and has been proposed to reflect the physiological  balance between excitation and inhibition.
 #
 # See for example: Voytek et al., JNeuro, 2015; Podvalny et al.,
 # JNeurophysiol, 2015; Gao et al., NeuroImage, 2017; Lombardi et al., Chaos, 2017
 #
-# Here, we can fit the 1/f slope between any two frequencies while excluding
-# a number of frequency ranges within that fit region, and we can plot the
-# PSD and line to visually evaluate goodness of fit.
-#
-# NOTE:
-# Spectral parameterization (in particular, the 1/f aperiodic component)
-# has been discontinued from neurodsp.
-# Please refer to [FOOOF](https://github.com/voytekresearch/fooof)
-# for a complete and up-to-date spectral parameterizaton.
+# If you are interesting in measuring these periodic (oscillatory) and aperiodic
+# (1/f like) components from power spectra, check out the 'fitting oscillations &
+# one-over f' `toolbox <https://fooof-tools.github.io/fooof/>`_.
 #
 
-###############################################################################
+###################################################################################################
 # Spectral histogram
 # ------------------
+#
 # The PSD is an estimate of the central tendency (mean/median) of the
 # signal's power at each frequency, with the assumption that the signal
 # is relatively stationary and that the variance around the mean comes
@@ -114,12 +115,15 @@ plt.show()
 #
 
 f, bins, spect_hist = spectral.spectral_hist(x, fs, nbins=50, f_lim=(0,80), cutpct=(0.1,99.9))
-#plts.spectral.plot_spectral_hist(f, bins, spect_hist, freq_med, P_med)
+plot_spectral_hist(f, bins, spect_hist, freq_med, P_med)
 
+###################################################################################################
+#
 # Notice in the below plot that not only is theta power higher overall (shifted up),
-#    it also has lower variance around its mean.
+# it also has lower variance around its mean.
+#
 
-###############################################################################
+###################################################################################################
 # Spectral Coefficient of Variation
 # =================================
 #
@@ -138,14 +142,15 @@ plt.xlabel('Frequency (Hz)')
 plt.ylabel('SCV')
 plt.show()
 
-###############################################################################
+###################################################################################################
 #
 # As shown above, SCV calculated from the entire segment of data is quite
 # noise due to the single estimate of mean and standard deviation. To overcome
 # this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 # slices from the non-overlapping spectrogram and taking their average.
+#
 
-###############################################################################
+###################################################################################################
 
 f, T, SCVrs = spectral.compute_scv_rs(x, fs,nperseg=fs, method='bootstrap', rs_params=(20, 200))
 plt.figure(figsize=(8,8))
@@ -157,13 +162,14 @@ plt.xlabel('Frequency (Hz)')
 plt.ylabel('SCV')
 plt.show()
 
-###############################################################################
+###################################################################################################
 #
 # Another way to compute the resampled SCV is via a sliding window approach,
 # essentially smoothing over consecutive slices of the spectrogram to compute
 # the mean and std estimates.
+#
 
-###############################################################################
+###################################################################################################
 
 f, T, SCVrs = spectral.compute_scv_rs(x, fs, method='rolling', rs_params=(10,2))
 plt.figure(figsize=(10,5))
@@ -174,11 +180,13 @@ plt.ylabel('Frequency (Hz)')
 plt.xlabel('Time (s)')
 plt.show()
 
-###############################################################################
+###################################################################################################
+#
+# In the plot below, we see that the theta band (~7Hz) consistently has CV
+# of less than 1 (negative in log10).
+#
 
-# In the plot below, we see that the theta band (~7Hz) consistently has CV of less than 1 (negative in log10)
-
-###############################################################################
+###################################################################################################
 # Spectral Rotation
 # =================
 #
@@ -191,8 +199,9 @@ plt.show()
 # this performs a very specific type of filtering with an ultra long filter kernel.
 #
 # For complete details, see the **Simulation** tutorial.
+#
 
-###############################################################################
+###################################################################################################
 
 P_rot = spectral.rotate_powerlaw(freq_med,P_med,delta_f=-1,f_rotation=35)
 plt.figure(figsize=(5,5))

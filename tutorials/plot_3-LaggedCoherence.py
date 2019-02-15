@@ -1,20 +1,30 @@
 """
 Lagged Coherence
 ================
+
 This notebook shows how to use the neurodsp module to compute lagged coherence.
 For more details, see Fransen et al., 2015, Neuroimage.
 """
-###############################################################################
+
+###################################################################################################
 
 import numpy as np
-from neurodsp.laggedcoherence import lagged_coherence
 import matplotlib.pyplot as plt
 
-###############################################################################
+from neurodsp.laggedcoherence import lagged_coherence
+
+###################################################################################################
+
+# Set the random seed, for consistency simulating data
+np.random.seed(0)
+
+###################################################################################################
 #
 # Simulate signal with oscillatory bursts
 # ---------------------------------------
 #
+
+###################################################################################################
 
 # Parameters for simulated signal
 N = 5000
@@ -24,22 +34,25 @@ burst_starts = [0, 3000]
 burst_seconds = 1
 burst_samples = burst_seconds*Fs
 
+###################################################################################################
+
 # Design burst kernel
 burst_kernel_t = np.arange(0, burst_seconds, 1/Fs)
 burst_kernel = 2*np.sin(burst_kernel_t*2*np.pi*burst_freq)
 
 # Generate random signal with bursts
 t = np.arange(0, N/Fs, 1/Fs)
-np.random.seed(0)
 x = np.random.randn(N)
 for i in burst_starts:
     x[i:i+burst_samples] += burst_kernel
+
+###################################################################################################
 
 # Plot example signal
 plt.figure(figsize=(12,3))
 plt.plot(t, x, 'k')
 
-###############################################################################
+###################################################################################################
 #
 # Compute lagged coherence for an alpha oscillation
 # -------------------------------------------------
@@ -48,7 +61,7 @@ f_range = (8, 12)
 lag_coh_alpha = lagged_coherence(x, f_range, Fs)
 print('Lagged coherence = ', lag_coh_alpha)
 
-###############################################################################
+###################################################################################################
 #
 # Compute lagged coherence across the frequency spectrum
 # ------------------------------------------------------
@@ -65,7 +78,7 @@ plt.xlabel('Frequency (Hz)')
 plt.ylabel('Lagged coherence')
 plt.tight_layout()
 
-###############################################################################
+###################################################################################################
 #
 # Compute lagged coherence for time segments with and without burst
 # -----------------------------------------------------------------
@@ -82,7 +95,7 @@ lag_coh_noburst = lagged_coherence(x[samp_noburst], f_range, Fs)
 print('Lagged coherence, bursting = ', lag_coh_burst)
 print('Lagged coherence, not bursting = ', lag_coh_noburst)
 
-###############################################################################
+###################################################################################################
 #
 # Compute lagged coherence of an example neural signal
 # ----------------------------------------------------
@@ -94,6 +107,8 @@ Fs = 1000
 t = np.arange(0, len(x)/Fs, 1/Fs)
 f_range = (13,30)
 
+###################################################################################################
+
 # Plot example signal
 plt.figure(figsize=(12,3))
 plt.plot(t, x, 'k')
@@ -101,6 +116,8 @@ plt.xlim((0,5))
 plt.xlabel('Time (s)')
 plt.ylabel('Voltage (uV)')
 plt.tight_layout()
+
+###################################################################################################
 
 f_range = (13, 30)
 lag_coh_beta = lagged_coherence(x, f_range, Fs)

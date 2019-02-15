@@ -1,6 +1,7 @@
 """
 Sliding Window Matching
 =======================
+
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
 This notebook shows how to implement sliding window matching (SWM) for
@@ -10,13 +11,19 @@ oscillatory waveform.
 For more details, see Gips et al., 2017, J Neuro Methods.
 """
 
-###############################################################################
+###################################################################################################
 
 import numpy as np
-from neurodsp.swm import sliding_window_matching
 import matplotlib.pyplot as plt
 
-###############################################################################
+from neurodsp.swm import sliding_window_matching
+
+###################################################################################################
+
+# Set the random seed, for consistency simulating data
+np.random.seed(0)
+
+###################################################################################################
 #
 # Load neural signal
 # ------------------
@@ -34,7 +41,7 @@ plt.xlabel('Time (s)')
 plt.ylabel('Voltage (uV)')
 plt.tight_layout()
 
-###############################################################################
+###################################################################################################
 #
 # Apply sliding window matching to neural signal
 # ----------------------------------------------
@@ -49,7 +56,7 @@ plt.tight_layout()
 # would help the robustness of the algorithm.
 #
 
-###############################################################################
+###################################################################################################
 
 # Define window length, in seconds
 L = .055
@@ -57,7 +64,6 @@ L = .055
 # Define minimum window spacing, in seconds
 G = .2
 
-np.random.seed(1)
 avg_window, window_starts, J = sliding_window_matching(sig, Fs, L, G, max_iterations=500)
 
 plt.figure(figsize=(4,4))
