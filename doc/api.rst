@@ -93,12 +93,32 @@ Signal simulation
 .. autosummary::
   :toctree: generated/
 
+Periodic Signals
+~~~~~~~~~~~~~~~~
+
+.. autosummary::
+  :toctree: generated/
+
+  sim_oscillator
+  sim_bursty_oscillator
+  sim_jittered_oscillator
+
+Aperiodic Signals
+~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+  :toctree: generated/
+
   sim_filtered_noise
   sim_synaptic_noise
   sim_ou_process
   sim_variable_powerlaw
-  sim_oscillator
+
+Combined Signals
+~~~~~~~~~~~~~~~~
+
+.. autosummary::
+  :toctree: generated/
+
   sim_noisy_oscillator
-  sim_bursty_oscillator
   sim_noisy_bursty_oscillator
-  sim_jittered_oscillator
