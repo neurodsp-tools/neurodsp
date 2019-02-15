@@ -94,7 +94,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like 1d</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Voltage time series.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
@@ -110,10 +110,10 @@ Units are normalized by the average signal magnitude.</p>
 <dt><strong>min_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd><p class="first last">Minimum burst duration in terms of number of cycles of f_range[0].</p>
 </dd>
-<dt><strong>average_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">‘median’ or ‘mean’</span></dt>
+<dt><strong>average_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘median’, ‘mean’}, optional</span></dt>
 <dd><p class="first last">Metric to normalize magnitude used for thresholding.</p>
 </dd>
-<dt><strong>magnitude_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">‘power’ or ‘amplitude’</span></dt>
+<dt><strong>magnitude_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘power’, ‘amplitude’}, optional</span></dt>
 <dd><p class="first last">Metric of magnitude used for thresholding.</p>
 </dd>
 <dt><strong>filter_kwargs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict, optional</span></dt>

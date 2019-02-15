@@ -89,36 +89,35 @@
 <dt id="neurodsp.spectral.morlet_convolve">
 <code class="descclassname">neurodsp.spectral.</code><code class="descname">morlet_convolve</code><span class="sig-paren">(</span><em>sig</em>, <em>freq</em>, <em>fs</em>, <em>n_cycles=7</em>, <em>scaling=0.5</em>, <em>filt_len=None</em>, <em>norm='sss'</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.spectral.morlet_convolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convolve a signal with a complex wavelet.</p>
-<p>The real part is the filtered signal
-Taking np.abs() of output gives the analytic amplitude
-Taking np.angle() of output gives the analytic phase</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Time series to filter.</p>
 </dd>
 <dt><strong>freq</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd><p class="first last">Center frequency of bandpass filter.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Sampling rate.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
-<dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Length of the filter in terms of the number of cycles of the oscillation with frequency freq.</p>
+<dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default=7</span></dt>
+<dd><p class="first last">Length of the filter, as the number of cycles of the oscillation with specified frequency.</p>
 </dd>
-<dt><strong>scaling</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dt><strong>scaling</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default=0.5</span></dt>
 <dd><p class="first last">Scaling factor for the morlet wavelet.</p>
 </dd>
-<dt><strong>filt_len</strong> <span class="classifier-delimiter">:</span> <span class="classifier">integer</span></dt>
-<dd><p class="first last">Length of the filter. If not None, overrides the freq and w inputs.</p>
+<dt><strong>filt_len</strong> <span class="classifier-delimiter">:</span> <span class="classifier">integer, optional</span></dt>
+<dd><p class="first last">Length of the filter. If not None, this overrides the freq and n_cycles inputs.</p>
 </dd>
-<dt><strong>norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Normalization method
-‘sss’ - divide by the sqrt of the sum of squares of points
-‘amp’ - divide by the sum of amplitudes divided by 2</p>
+<dt><strong>norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘sss’, ‘amp’}, optional</span></dt>
+<dd><p class="first">Normalization method:</p>
+<ul class="last simple">
+<li>‘sss’ - divide by the sqrt of the sum of squares of points</li>
+<li>‘amp’ - divide by the sum of amplitudes divided by 2</li>
+</ul>
 </dd>
 </dl>
 </td>
@@ -132,6 +131,12 @@ Taking np.angle() of output gives the analytic phase</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>The real part of the returned array is the filtered signal.</li>
+<li>Taking np.abs() of output gives the analytic amplitude.</li>
+<li>Taking np.angle() of output gives the analytic phase.</li>
+</ul>
 </dd></dl>
 
 </div>

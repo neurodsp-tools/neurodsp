@@ -92,34 +92,40 @@
 <p>This notebook shows how to use the neurodsp module to compute lagged coherence.
 For more details, see Fransen et al., 2015, Neuroimage.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">neurodsp.laggedcoherence</span> <span class="kn">import</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.laggedcoherence</span> <span class="kn">import</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="simulate-signal-with-oscillatory-bursts">
 <h2>Simulate signal with oscillatory bursts<a class="headerlink" href="#simulate-signal-with-oscillatory-bursts" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters for simulated signal</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5000</span>
-<span class="n">Fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">burst_freq</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">burst_starts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3000</span><span class="p">]</span>
 <span class="n">burst_seconds</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">burst_samples</span> <span class="o">=</span> <span class="n">burst_seconds</span><span class="o">*</span><span class="n">Fs</span>
-
-<span class="c1"># Design burst kernel</span>
-<span class="n">burst_kernel_t</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">burst_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span>
+<span class="n">burst_samples</span> <span class="o">=</span> <span class="n">burst_seconds</span><span class="o">*</span><span class="n">fs</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Design burst kernel</span>
+<span class="n">burst_kernel_t</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">burst_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
 <span class="n">burst_kernel</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">burst_kernel_t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">burst_freq</span><span class="p">)</span>
 
 <span class="c1"># Generate random signal with bursts</span>
-<span class="n">t</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">/</span><span class="n">Fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span>
-<a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.randn" title="View documentation for numpy.random.randn"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">burst_starts</span><span class="p">:</span>
-    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">burst_samples</span><span class="p">]</span> <span class="o">+=</span> <span class="n">burst_kernel</span>
-
-<span class="c1"># Plot example signal</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.randn" title="View documentation for numpy.random.randn"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">burst_starts</span><span class="p">:</span>
+    <span class="n">sig</span><span class="p">[</span><span class="n">ind</span><span class="p">:</span><span class="n">ind</span><span class="o">+</span><span class="n">burst_samples</span><span class="p">]</span> <span class="o">+=</span> <span class="n">burst_kernel</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_3-LaggedCoherence_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_3-LaggedCoherence_001.png" />
@@ -127,7 +133,7 @@ For more details, see Fransen et al., 2015, Neuroimage.</p>
 <div class="section" id="compute-lagged-coherence-for-an-alpha-oscillation">
 <h2>Compute lagged coherence for an alpha oscillation<a class="headerlink" href="#compute-lagged-coherence-for-an-alpha-oscillation" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="n">lag_coh_alpha</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">Fs</span><span class="p">)</span>
+<span class="n">lag_coh_alpha</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence = &#39;</span><span class="p">,</span> <span class="n">lag_coh_alpha</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -140,11 +146,11 @@ For more details, see Fransen et al., 2015, Neuroimage.</p>
 <h2>Compute lagged coherence across the frequency spectrum<a class="headerlink" href="#compute-lagged-coherence-across-the-frequency-spectrum" title="Permalink to this headline">¶</a></h2>
 <p>Notice that lagged coherence peaks around 10Hz (the frequency of our
 oscillator), but it is not very specific to that frequency.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">Fs</span><span class="p">,</span> <span class="n">return_spectrum</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">fs</span><span class="p">,</span> <span class="n">return_spectrum</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c1"># Visualize lagged coherence as a function of frequency</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="s1">&#39;k.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="s1">&#39;k.-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Lagged coherence&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -160,8 +166,8 @@ does not have an oscillator.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samp_burst</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">samp_noburst</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
 
-<span class="n">lag_coh_burst</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">samp_burst</span><span class="p">],</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">Fs</span><span class="p">)</span>
-<span class="n">lag_coh_noburst</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">samp_noburst</span><span class="p">],</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">Fs</span><span class="p">)</span>
+<span class="n">lag_coh_burst</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">samp_burst</span><span class="p">],</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">lag_coh_noburst</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">samp_noburst</span><span class="p">],</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_burst</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, not bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_noburst</span><span class="p">)</span>
 </pre></div>
@@ -175,31 +181,33 @@ Lagged coherence, not bursting =  0.6340581331289348
 <div class="section" id="compute-lagged-coherence-of-an-example-neural-signal">
 <h2>Compute lagged coherence of an example neural signal<a class="headerlink" href="#compute-lagged-coherence-of-an-example-neural-signal" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load signal</span>
-<span class="n">x</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1.npy&#39;</span><span class="p">)</span>
-<span class="n">x_filt_true</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1_filt.npy&#39;</span><span class="p">)</span>
-<span class="n">Fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">t</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">Fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span>
-<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
-
-<span class="c1"># Plot example signal</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sig</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1.npy&#39;</span><span class="p">)</span>
+<span class="n">sig_filt_true</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1_filt.npy&#39;</span><span class="p">)</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (uV)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-
-<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-<span class="n">lag_coh_beta</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">Fs</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence = &#39;</span><span class="p">,</span> <span class="n">lag_coh_beta</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_3-LaggedCoherence_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_3-LaggedCoherence_003.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">lag_coh_beta</span> <span class="o">=</span> <a href="../generated/neurodsp.laggedcoherence.lagged_coherence.html#neurodsp.laggedcoherence.lagged_coherence" title="View documentation for neurodsp.laggedcoherence.lagged_coherence"><span class="n">lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence = &#39;</span><span class="p">,</span> <span class="n">lag_coh_beta</span><span class="p">)</span>
+</pre></div>
+</div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.24582055225422916
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.141 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.117 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-3-laggedcoherence-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/2317b06add9db4d43e15b6220ec71e7f/plot_3-LaggedCoherence.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_3-LaggedCoherence.py</span></code></a></div>

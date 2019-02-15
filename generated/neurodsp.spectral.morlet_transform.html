@@ -88,23 +88,23 @@
 <dl class="function">
 <dt id="neurodsp.spectral.morlet_transform">
 <code class="descclassname">neurodsp.spectral.</code><code class="descname">morlet_transform</code><span class="sig-paren">(</span><em>sig</em>, <em>freqs</em>, <em>fs</em>, <em>n_cycles=7</em>, <em>scaling=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.spectral.morlet_transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the time-frequency representation using morlet wavelets.</p>
+<dd><p>Calculate the time-frequency representation of a signal using morlet wavelets.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Time series.</p>
 </dd>
-<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Frequency axis.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Sampling rate.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
 <dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Length of the filter in terms of the number of cycles of the oscillation
+<dd><p class="first last">Length of the filter, as the number of cycles of the oscillation
 whose frequency is the center of the bandpass filter.</p>
 </dd>
 <dt><strong>scaling</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>

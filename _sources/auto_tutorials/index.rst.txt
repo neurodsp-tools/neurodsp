@@ -14,7 +14,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Filtering">
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial covers using digital filters, and is broken down into the following sections:">
 
 .. only:: html
 
@@ -34,7 +34,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Time">
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will show how to estimate instantaneous measures of phase, amplitude, and ...">
 
 .. only:: html
 
@@ -54,7 +54,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Lagged Coherence">
+    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to use the neurodsp module to compute lagged coherence. For more detail...">
 
 .. only:: html
 
@@ -74,7 +74,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will demonstrate how to use the spectral (or, frequency) domain analysis f...">
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will demonstrate how to use spectral domain analysis functions.">
 
 .. only:: html
 
@@ -94,7 +94,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Burst Detection">
+    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to use `neurodsp.burst` to determine the portions of a signal that cont...">
 
 .. only:: html
 
@@ -114,7 +114,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to implement sliding window matching (SWM) for identifying recurring pa...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Find recurrent patterns in a neural signal using Sliding Window Matching.">
 
 .. only:: html
 
@@ -134,7 +134,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Simulating Signals">
+    <div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic (oscillatory) and aperiodic (1/f-like) signals with neurodsp.sim. ">
 
 .. only:: html
 

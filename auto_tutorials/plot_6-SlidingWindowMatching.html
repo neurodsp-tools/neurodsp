@@ -95,21 +95,27 @@ identifying recurring patterns in a neural signal, like the shape of an
 oscillatory waveform.</p>
 <p>For more details, see Gips et al., 2017, J Neuro Methods.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">neurodsp.swm</span> <span class="kn">import</span> <a href="../generated/neurodsp.swm.sliding_window_matching.html#neurodsp.swm.sliding_window_matching" title="View documentation for neurodsp.swm.sliding_window_matching"><span class="n">sliding_window_matching</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.swm</span> <span class="kn">import</span> <a href="../generated/neurodsp.swm.sliding_window_matching.html#neurodsp.swm.sliding_window_matching" title="View documentation for neurodsp.swm.sliding_window_matching"><span class="n">sliding_window_matching</span></a>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="load-neural-signal">
 <h2>Load neural signal<a class="headerlink" href="#load-neural-signal" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sig</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1.npy&#39;</span><span class="p">)</span>
-<span class="n">Fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">t</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">Fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span>
-<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load example data</span>
+<span class="n">sig</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./data/sample_data_1.npy&#39;</span><span class="p">)</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 
 <span class="c1"># Plot example signal</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (uV)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -126,16 +132,17 @@ window is a beta cycle with a sharp trough.</p>
 <p>However, notice that these results change dramatically by changing the
 random seed. Using more data and increasing the number of iterations
 would help the robustness of the algorithm.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define window length, in seconds</span>
-<span class="n">L</span> <span class="o">=</span> <span class="o">.</span><span class="mo">055</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define window length &amp; minimum window spacing, both in seconds</span>
+<span class="n">win_len</span> <span class="o">=</span> <span class="o">.</span><span class="mo">055</span>
+<span class="n">win_spacing</span> <span class="o">=</span> <span class="o">.</span><span class="mi">2</span>
 
-<span class="c1"># Define minimum window spacing, in seconds</span>
-<span class="n">G</span> <span class="o">=</span> <span class="o">.</span><span class="mi">2</span>
-
-<a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">avg_window</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">J</span> <span class="o">=</span> <a href="../generated/neurodsp.swm.sliding_window_matching.html#neurodsp.swm.sliding_window_matching" title="View documentation for neurodsp.swm.sliding_window_matching"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">Fs</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="c1"># Apply the sliding window matching algorithm to the time series</span>
+<span class="n">avg_window</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">J</span> <span class="o">=</span> <a href="../generated/neurodsp.swm.sliding_window_matching.html#neurodsp.swm.sliding_window_matching" title="View documentation for neurodsp.swm.sliding_window_matching"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span>
+                                                       <span class="n">max_iterations</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the discovered pattern</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">avg_window</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (samples)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (a.u.)&#39;</span><span class="p">)</span>
@@ -144,7 +151,7 @@ would help the robustness of the algorithm.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_6-SlidingWindowMatching_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_6-SlidingWindowMatching_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.425 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  1.306 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-6-slidingwindowmatching-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/4f4ff6b1a132fc339b5163e35a48ecf8/plot_6-SlidingWindowMatching.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_6-SlidingWindowMatching.py</span></code></a></div>

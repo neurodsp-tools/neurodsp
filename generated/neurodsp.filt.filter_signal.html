@@ -94,13 +94,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like 1d</span></dt>
-<dd><p class="first last">Voltage time series.</p>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
+<dd><p class="first last">Time series.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd><p class="first last">The sampling rate, in Hz.</p>
 </dd>
-<dt><strong>pass_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dt><strong>pass_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘bandpass’, ‘bandstop’, ‘lowpass’, ‘highpass’}</span></dt>
 <dd><p class="first">Which kind of filter to apply:</p>
 <ul class="last simple">
 <li>‘bandpass’: apply a bandpass filter</li>
@@ -157,8 +157,7 @@ the signal edge with np.nan.</p>
 <dd><p class="first last">Filtered time series.</p>
 </dd>
 <dt><strong>kernel</strong> <span class="classifier-delimiter">:</span> <span class="classifier">length-2 tuple of arrays</span></dt>
-<dd><p class="first last">Filter kernel.
-Returned only if ‘return_kernel’ is True.</p>
+<dd><p class="first last">Filter kernel. Only returned if ‘return_kernel’ is True.</p>
 </dd>
 </dl>
 </td>

@@ -95,13 +95,13 @@ the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolli
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like 1d</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Time series of measurement values.</p>
 </dd>
-<dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, Hz</span></dt>
-<dd><p class="first last">Sampling frequency of the sig time series.</p>
+<dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
-<dt><strong>window</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or tuple or array_like, optional</span></dt>
+<dt><strong>window</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or tuple or array_like, optional, default=’hann’</span></dt>
 <dd><p class="first last">Desired window to use. Defaults to a Hann window.
 See scipy.signal.get_window for a list of windows and required parameters.
 If window is array_like, this array will be used as the window and its length must be nperseg.</p>
@@ -130,13 +130,13 @@ This specifies the number of slices per draw, and number of slices to step forwa
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>freq</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Array of sample frequencies.</p>
 </dd>
-<dt><strong>t_inds</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>t_inds</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Array of time indices, for ‘rolling’ resampling. If ‘bootstrap’, t_inds = None.</p>
 </dd>
-<dt><strong>spect_cv_rs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>spect_cv_rs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Resampled spectral coefficient of variation.</p>
 </dd>
 </dl>

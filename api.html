@@ -99,7 +99,12 @@
 <li><a class="reference internal" href="#lagged-coherence" id="id8">Lagged Coherence</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#signal-simulation" id="id9">Signal simulation</a></li>
+<li><a class="reference internal" href="#signal-simulation" id="id9">Signal simulation</a><ul>
+<li><a class="reference internal" href="#periodic-signals" id="id10">Periodic Signals</a></li>
+<li><a class="reference internal" href="#aperiodic-signals" id="id11">Aperiodic Signals</a></li>
+<li><a class="reference internal" href="#combined-signals" id="id12">Combined Signals</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section" id="filtering">
@@ -157,7 +162,7 @@
 <td>Compute the distribution of log10 power at each frequency from the signal spectrogram.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.spectral.morlet_transform.html#neurodsp.spectral.morlet_transform" title="neurodsp.spectral.morlet_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">morlet_transform</span></code></a>(sig,&nbsp;freqs,&nbsp;fs[,&nbsp;n_cycles,&nbsp;…])</td>
-<td>Calculate the time-frequency representation using morlet wavelets.</td>
+<td>Calculate the time-frequency representation of a signal using morlet wavelets.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.spectral.morlet_convolve.html#neurodsp.spectral.morlet_convolve" title="neurodsp.spectral.morlet_convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">morlet_convolve</span></code></a>(sig,&nbsp;freq,&nbsp;fs[,&nbsp;n_cycles,&nbsp;…])</td>
 <td>Convolve a signal with a complex wavelet.</td>
@@ -224,6 +229,36 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
+</tbody>
+</table>
+<div class="section" id="periodic-signals">
+<h4><a class="toc-backref" href="#id10">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_oscillator.html#neurodsp.sim.sim_oscillator" title="neurodsp.sim.sim_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;rdsym])</td>
+<td>Simulate an oscillation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="neurodsp.sim.sim_bursty_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_bursty_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;…])</td>
+<td>Simulate a bursty oscillation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_jittered_oscillator.html#neurodsp.sim.sim_jittered_oscillator" title="neurodsp.sim.sim_jittered_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_jittered_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq)</td>
+<td>Simulate a jittered oscillator, as defined by the oscillator frequency, the oscillator cycle, and how much (in time) to jitter each period.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="aperiodic-signals">
+<h4><a class="toc-backref" href="#id11">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_filtered_noise.html#neurodsp.sim.sim_filtered_noise" title="neurodsp.sim.sim_filtered_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_filtered_noise</span></code></a>(n_seconds,&nbsp;fs[,&nbsp;…])</td>
 <td>Simulate colored noise that is highpass or bandpass filtered.</td>
 </tr>
@@ -231,28 +266,31 @@
 <td>Simulate a neural signal with 1/f characteristics beyond a knee frequency.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_ou_process.html#neurodsp.sim.sim_ou_process" title="neurodsp.sim.sim_ou_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_ou_process</span></code></a>(n_seconds,&nbsp;fs[,&nbsp;theta,&nbsp;mu,&nbsp;sigma])</td>
-<td>Simulate mean-reverting random walk (Ornstein-Uhlenbeck process)</td>
+<td>Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.sim.sim_variable_powerlaw.html#neurodsp.sim.sim_variable_powerlaw" title="neurodsp.sim.sim_variable_powerlaw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_variable_powerlaw</span></code></a>(n_seconds,&nbsp;fs[,&nbsp;exponent])</td>
 <td>Generate a power law time series with specified exponent by spectrally rotating white noise.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_oscillator.html#neurodsp.sim.sim_oscillator" title="neurodsp.sim.sim_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;rdsym])</td>
-<td>Simulate an oscillation.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.sim.sim_noisy_oscillator.html#neurodsp.sim.sim_noisy_oscillator" title="neurodsp.sim.sim_noisy_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_noisy_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;…])</td>
+</tbody>
+</table>
+</div>
+<div class="section" id="combined-signals">
+<h4><a class="toc-backref" href="#id12">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_noisy_oscillator.html#neurodsp.sim.sim_noisy_oscillator" title="neurodsp.sim.sim_noisy_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_noisy_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;…])</td>
 <td>Simulate an oscillation embedded in background 1/f noise.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="neurodsp.sim.sim_bursty_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_bursty_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq[,&nbsp;…])</td>
-<td>Simulate a bursty oscillation.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.sim.sim_noisy_bursty_oscillator.html#neurodsp.sim.sim_noisy_bursty_oscillator" title="neurodsp.sim.sim_noisy_bursty_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_noisy_bursty_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq)</td>
 <td>Simulate a bursty oscillation embedded in background 1/f noise.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.sim.sim_jittered_oscillator.html#neurodsp.sim.sim_jittered_oscillator" title="neurodsp.sim.sim_jittered_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_jittered_oscillator</span></code></a>(n_seconds,&nbsp;fs,&nbsp;freq)</td>
-<td>Simulate a jittered oscillator, as defined by the oscillator frequency, the oscillator cycle, and how much (in time) to jitter each period.</td>
-</tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>

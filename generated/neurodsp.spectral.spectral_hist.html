@@ -94,13 +94,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like 1d</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Time series of measurement values.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Sampling frequency of the time series, in Hz.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
-<dt><strong>window</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or tuple or array_like, optional</span></dt>
+<dt><strong>window</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or tuple or array_like, optional, default=’hann’</span></dt>
 <dd><p class="first last">Desired window to use. Defaults to a Hann window.
 See scipy.signal.get_window for a list of windows and required parameters.
 If window is array_like, this array will be used as the window and its length must be nperseg.</p>
@@ -126,14 +126,14 @@ If None, and window is array_like, is set to the length of the window.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Array of frequencies.</p>
 </dd>
-<dt><strong>power_bins</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>power_bins</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Histogram bins used to compute the distribution.</p>
 </dd>
-<dt><strong>spect_hist</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray (2D)</span></dt>
-<dd><p class="first last">Power distribution at every frequency, nbins x fs 2D matrix/</p>
+<dt><strong>spect_hist</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2d array</span></dt>
+<dd><p class="first last">Power distribution at every frequency, nbins x fs 2D matrix.</p>
 </dd>
 </dl>
 </td>

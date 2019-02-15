@@ -94,14 +94,14 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like 1d</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Voltage time series.</p>
 </dd>
 <dt><strong>f_range</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list of float</span></dt>
 <dd><p class="first last">Frequency range of the oscillator, as [low, high], in Hz.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Sampling rate.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
 <dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default: 3</span></dt>
 <dd><p class="first last">Number of cycles of the frequency of interest used to compute lagged coherence.</p>
@@ -110,18 +110,18 @@
 <dd><p class="first last">Step size to calculate lagged coherence in the frequency range, in Hz.</p>
 </dd>
 <dt><strong>return_spectrum</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
-<dd><p class="first last">If True, return the lagged coherence for all frequency values. otherwise, only return mean.</p>
+<dd><p class="first last">If True, return the lagged coherence for all frequency values. Otherwise, only return mean.</p>
 </dd>
 </dl>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>lc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float (or numpy.array 1d)</span></dt>
+<dt><strong>lc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float or 1d array</span></dt>
 <dd><p class="first last">If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
 If return_spectrum is True: lagged coherence value for each frequency in the frequency range.</p>
 </dd>
-<dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">numpy.array 1d</span></dt>
-<dd><p class="first last">Frequencies (Hz) corresponding to the lagged coherence values in lc.
+<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
+<dd><p class="first last">Frequencies, in Hz, corresponding to the lagged coherence values in lc.
 Only returned if return_spectrum is True.</p>
 </dd>
 </dl>

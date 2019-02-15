@@ -95,13 +95,13 @@ Transform (mean, median), or the entire signal’s FFT smoothed (medfilt).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array_like 1d or 2d</span></dt>
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d or 2d array</span></dt>
 <dd><p class="first last">Time series of measurement values.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Sampling frequency, in Hz, of the sig time series.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
-<dt><strong>method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘mean’, ‘median’, ‘medfilt’}</span></dt>
+<dt><strong>method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘mean’, ‘median’, ‘medfilt’}, optional</span></dt>
 <dd><p class="first">Method to calculate the spectrum:</p>
 <ul class="last simple">
 <li>‘mean’ is the same as Welch’s method (mean of STFT).</li>
@@ -140,11 +140,11 @@ Must be between 0 and 100.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dt><strong>freqs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
 <dd><p class="first last">Array of sample frequencies.</p>
 </dd>
-<dt><strong>spectrum</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
-<dd><p class="first last">Power spectral density of x.</p>
+<dt><strong>spectrum</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d or 2d array</span></dt>
+<dd><p class="first last">Power spectral density.</p>
 </dd>
 </dl>
 </td>
