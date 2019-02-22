@@ -2,8 +2,9 @@
 Burst Detection
 ===============
 
-This notebook shows how to use `neurodsp.burst` to determine the portions
-of a signal that contain a burst of an oscillation of interest.
+Analyze neural signals for bursts of oscillations of interest.
+
+This tutorial primarily covers :mod:`neurodsp.burst`.
 """
 
 ###################################################################################################

@@ -2,8 +2,9 @@
 Time-frequency analysis
 =======================
 
-In this tutorial, we will show how to estimate instantaneous measures of
-phase, amplitude, and frequency.
+Estimate instantaneous measures of phase, amplitude, and frequency.
+
+This tutorial primarily covers :mod:`neurodsp.timefrequency`.
 """
 
 ###################################################################################################

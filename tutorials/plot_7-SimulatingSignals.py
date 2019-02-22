@@ -2,7 +2,9 @@
 Simulating Signals
 ==================
 
-Simulate periodic (oscillatory) and aperiodic (1/f-like) signals with neurodsp.sim.
+Simulate periodic (oscillatory) and aperiodic (1/f-like) signals.
+
+This tutorial primarily covers :mod:`neurodsp.sim`.
 """
 
 ###################################################################################################
