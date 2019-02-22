@@ -7,7 +7,6 @@ from neurodsp.timefrequency import amp_by_time
 ###################################################################################################
 ###################################################################################################
 
-
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
                                  filter_kwargs=None, verbose=True):
@@ -15,25 +14,25 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
 
     Parameters
     ----------
-    sig : array-like 1d
-        voltage time series
+    sig : 1d array
+        Voltage time series.
     fs : float
-        The sampling rate in Hz
+        Sampling rate, in Hz.
     f_range : tuple of (float, float)
-        frequency range (Hz) for narrowband signal of interest
+        Frequency range, in Hz, for narrowband signal of interest.
     dual_thresh : tuple of (float, float)
-        Low and high threshold values for burst detection
-        Units are normalized by the average signal magnitude
+        Low and high threshold values for burst detection.
+        Units are normalized by the average signal magnitude.
     min_cycles : float
-        minimum burst duration in terms of number of cycles of f_range[0]
-    average_method : string in ('median', 'mean')
-        metric to normalize magnitude used for thresholding
-    magnitude_type : string in ('power', 'amplitude')
-        metric of magnitude used for thresholding
-    filter_kwargs : dict
-        keyword arguments to the neurodsp.filt.filter_signal()
-    verbose : bool
-        if True, print filter transition band and any other prints
+        Minimum burst duration in terms of number of cycles of f_range[0].
+    average_method : {'median', 'mean'}, optional
+        Metric to normalize magnitude used for thresholding.
+    magnitude_type : {'power', 'amplitude'}, optional
+        Metric of magnitude used for thresholding.
+    filter_kwargs : dict, optional
+        Keyword arguments to the neurodsp.filt.filter_signal().
+    verbose : bool, optiona, default: True
+        If True, print filter transition band and any other prints.
 
     Returns
     -------
@@ -85,25 +84,27 @@ def compute_burst_stats(bursting, fs):
 
     Parameters
     ----------
-    bursting : array-like 1d
+    bursting : 1d array
         Boolean indication of where bursts are present in the input signal.
-        Output of detect_bursts_dualthreshold()
+        Output of detect_bursts_dualthreshold().
     fs : float
-        The sampling rate in Hz
+        Sampling rate, in Hz.
 
     Returns
     -------
     stats_dict : dict
-        dict with following keys: 'N_bursts' - the number of bursts
-                                  'duration_mean' - mean duration of bursts (sec)
-                                  'duration_std' - std dev of burst durations (sec)
-                                  'percent_burst' - % time in bursts
-                                  'burst_rate' - bursts/sec
+        Contains the following keys:
+
+        * 'N_bursts': the number of bursts
+        * 'duration_mean': mean duration of bursts, in seconds
+        * 'duration_std': standard deviation of burst durations, in seconds
+        * 'percent_burst': percent time in bursts
+        * 'burst_rate': bursts/sec
     """
 
     tot_time = len(bursting) / fs
 
-    # find burst starts and ends
+    # Find burst starts and ends
     starts = np.array([])
     ends = np.array([])
 
@@ -114,7 +115,7 @@ def compute_burst_stats(bursting, fs):
         else:
             ends = np.append(ends, index)
 
-    # duration of each burst
+    # Duration of each burst
     durations = (ends - starts) / fs
 
     stats_dict = {'N_bursts': len(starts),
@@ -127,9 +128,8 @@ def compute_burst_stats(bursting, fs):
 
 
 def _dual_threshold_split(sig, thresh_hi, thresh_lo):
-    """
-    Identify periods of a time series that are above thresh_lo and have at
-    least one value above thresh_hi
+    """Identify periods of a time series that are above thresh_lo and
+    have at least one value above thresh_hi.
     """
 
     # Find all values above thresh_hi
