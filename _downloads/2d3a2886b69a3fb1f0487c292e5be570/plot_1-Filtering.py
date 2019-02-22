@@ -2,14 +2,24 @@
 Filtering
 =========
 
-This tutorial covers using digital filters, and is broken down into the following sections:
+Using digital filters on neural signals, including highpass, lowpass, bandpass & bandstop.
 
-1. Bandpass filter: extract a single oscillator from your signal
-2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
-3. Time-frequency resolution tradeoff: Change the filter length
-4. Infinite-impulse-response (IIR) filter option.
-5. Beta bandpass filter on a neural signal
+This tutorial primarily covers :mod:`neurodsp.filt`.
 """
+
+###################################################################################################
+#
+# Sections
+# --------
+#
+# This tutorial is broken down into the following sections:
+#
+# 1. Bandpass filter: extract a single oscillator from your signal
+# 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
+# 3. Time-frequency resolution tradeoff: Change the filter length
+# 4. Infinite-impulse-response (IIR) filter option.
+# 5. Beta bandpass filter on a neural signal
+#
 
 ###################################################################################################
 

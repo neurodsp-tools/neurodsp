@@ -89,8 +89,12 @@
 </div>
 <div class="sphx-glr-example-title section" id="lagged-coherence">
 <span id="sphx-glr-auto-tutorials-plot-3-laggedcoherence-py"></span><h1>Lagged Coherence<a class="headerlink" href="#lagged-coherence" title="Permalink to this headline">¶</a></h1>
-<p>This notebook shows how to use the neurodsp module to compute lagged coherence.
-For more details, see Fransen et al., 2015, Neuroimage.</p>
+<p>Compute lagged coherence on neural signals.</p>
+<p>This tutorial primarily covers <code class="xref py py-mod docutils literal notranslate"><span class="pre">neurodsp.laggedcoherence</span></code>.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Lagged coherence is a measure to quantify the rhythmicity of neural signals.</p>
+<p>For more details on the lagged coherence measure see Fransen et al., 2015, Neuroimage.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
@@ -100,6 +104,7 @@ For more details, see Fransen et al., 2015, Neuroimage.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
 <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 <div class="section" id="simulate-signal-with-oscillatory-bursts">
 <h2>Simulate signal with oscillatory bursts<a class="headerlink" href="#simulate-signal-with-oscillatory-bursts" title="Permalink to this headline">¶</a></h2>
@@ -209,7 +214,7 @@ Lagged coherence, not bursting =  0.6340581331289348
 </div>
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 2</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.107 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.104 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-3-laggedcoherence-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/2317b06add9db4d43e15b6220ec71e7f/plot_3-LaggedCoherence.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_3-LaggedCoherence.py</span></code></a></div>

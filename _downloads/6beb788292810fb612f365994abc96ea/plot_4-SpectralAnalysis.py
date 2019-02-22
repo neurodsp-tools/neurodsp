@@ -2,16 +2,24 @@
 Spectral domain analysis
 ========================
 
-In this tutorial, we will demonstrate how to use spectral domain analysis functions.
+Apply spectral domain analyses.
 
-This tutorial covers:
-
-- Computing the power spectral density (PSD)
-- Computing and displaying the spectral histogram
-- Computing the spectral coefficient of variation (SCV) and the resampled estimates
-
-Detailed explanations for each of the above concept are provided below as we come across them.
+This tutorial primarily covers :mod:`neurodsp.spectral`.
 """
+
+###################################################################################################
+#
+# Overview
+# --------
+#
+# This tutorial covers:
+#
+# - Computing the power spectral density (PSD)
+# - Computing and displaying the spectral histogram
+# - Computing the spectral coefficient of variation (SCV) and the resampled estimates
+#
+# Detailed explanations for each of the above concept are provided below as we come across them.
+#
 
 ###################################################################################################
 

@@ -12,11 +12,18 @@ Sliding Window Matching
 
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
+This tutorial primarily covers :mod:`neurodsp.swm`.
+
+
+Overview
+--------
+
 This notebook shows how to implement sliding window matching (SWM) for
 identifying recurring patterns in a neural signal, like the shape of an
 oscillatory waveform.
 
-For more details, see Gips et al., 2017, J Neuro Methods.
+For more details on Sliding Window Matching see Gips et al., 2017, J Neuro Methods.
+
 
 
 
@@ -137,7 +144,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  1.350 seconds)
+**Total running time of the script:** ( 0 minutes  1.746 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_6-SlidingWindowMatching.py:

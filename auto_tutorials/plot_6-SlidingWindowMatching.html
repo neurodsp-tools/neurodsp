@@ -90,10 +90,13 @@
 <div class="sphx-glr-example-title section" id="sliding-window-matching">
 <span id="sphx-glr-auto-tutorials-plot-6-slidingwindowmatching-py"></span><h1>Sliding Window Matching<a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h1>
 <p>Find recurrent patterns in a neural signal using Sliding Window Matching.</p>
+<p>This tutorial primarily covers <code class="xref py py-mod docutils literal notranslate"><span class="pre">neurodsp.swm</span></code>.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This notebook shows how to implement sliding window matching (SWM) for
 identifying recurring patterns in a neural signal, like the shape of an
 oscillatory waveform.</p>
-<p>For more details, see Gips et al., 2017, J Neuro Methods.</p>
+<p>For more details on Sliding Window Matching see Gips et al., 2017, J Neuro Methods.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
@@ -103,6 +106,7 @@ oscillatory waveform.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
 <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.html#numpy.random.seed" title="View documentation for numpy.random.seed"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 <div class="section" id="load-neural-signal">
 <h2>Load neural signal<a class="headerlink" href="#load-neural-signal" title="Permalink to this headline">¶</a></h2>
@@ -153,7 +157,7 @@ would help the robustness of the algorithm.</p>
 <img alt="../_images/sphx_glr_plot_6-SlidingWindowMatching_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_6-SlidingWindowMatching_002.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 2</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.350 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  1.746 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-6-slidingwindowmatching-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/4f4ff6b1a132fc339b5163e35a48ecf8/plot_6-SlidingWindowMatching.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_6-SlidingWindowMatching.py</span></code></a></div>

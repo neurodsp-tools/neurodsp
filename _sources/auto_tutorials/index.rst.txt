@@ -14,7 +14,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial covers using digital filters, and is broken down into the following sections:">
+    <div class="sphx-glr-thumbcontainer" tooltip="Using digital filters on neural signals, including highpass, lowpass, bandpass &amp; bandstop.">
 
 .. only:: html
 
@@ -34,7 +34,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will show how to estimate instantaneous measures of phase, amplitude, and ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Estimate instantaneous measures of phase, amplitude, and frequency.">
 
 .. only:: html
 
@@ -54,7 +54,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to use the neurodsp module to compute lagged coherence. For more detail...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Compute lagged coherence on neural signals.">
 
 .. only:: html
 
@@ -74,7 +74,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will demonstrate how to use spectral domain analysis functions.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses.">
 
 .. only:: html
 
@@ -94,7 +94,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This notebook shows how to use `neurodsp.burst` to determine the portions of a signal that cont...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest.">
 
 .. only:: html
 
@@ -134,7 +134,7 @@ Below is a series of notebooks that provide an introduction to the tools in neur
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic (oscillatory) and aperiodic (1/f-like) signals with neurodsp.sim. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic (oscillatory) and aperiodic (1/f-like) signals.">
 
 .. only:: html
 

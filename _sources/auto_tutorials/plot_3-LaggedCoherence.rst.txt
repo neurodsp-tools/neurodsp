@@ -10,8 +10,18 @@
 Lagged Coherence
 ================
 
-This notebook shows how to use the neurodsp module to compute lagged coherence.
-For more details, see Fransen et al., 2015, Neuroimage.
+Compute lagged coherence on neural signals.
+
+This tutorial primarily covers :mod:`neurodsp.laggedcoherence`.
+
+
+Overview
+--------
+
+Lagged coherence is a measure to quantify the rhythmicity of neural signals.
+
+For more details on the lagged coherence measure see Fransen et al., 2015, Neuroimage.
+
 
 
 
@@ -262,7 +272,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  0.107 seconds)
+**Total running time of the script:** ( 0 minutes  0.104 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_3-LaggedCoherence.py:

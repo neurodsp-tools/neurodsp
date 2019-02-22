@@ -10,7 +10,13 @@
 Spectral domain analysis
 ========================
 
-In this tutorial, we will demonstrate how to use spectral domain analysis functions.
+Apply spectral domain analyses.
+
+This tutorial primarily covers :mod:`neurodsp.spectral`.
+
+
+Overview
+--------
 
 This tutorial covers:
 
@@ -19,6 +25,7 @@ This tutorial covers:
 - Computing the spectral coefficient of variation (SCV) and the resampled estimates
 
 Detailed explanations for each of the above concept are provided below as we come across them.
+
 
 
 
@@ -327,7 +334,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  0.978 seconds)
+**Total running time of the script:** ( 0 minutes  1.014 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_4-SpectralAnalysis.py:
