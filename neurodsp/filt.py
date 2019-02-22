@@ -18,56 +18,57 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     Parameters
     ----------
-    sig : array-like 1d
-        Voltage time series
+    sig : 1d array
+        Time series.
     fs : float
-        The sampling rate
-    pass_type : str
-        'bandpass' : apply a bandpass filter
-        'bandstop' : apply a bandstop (notch) filter
-        'lowpass' : apply a lowpass filter
-        'highpass' : apply a highpass filter
+        The sampling rate, in Hz.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
     fc : tuple or float
-        cutoff frequency(ies) used for filter
-        Should be a tuple of 2 floats for bandpass and bandstop
+        Cutoff frequency(ies) used for filter.
+        Should be a tuple of 2 floats for bandpass and bandstop.
         Can be a tuple of 2 floats, or a single float, for low/highpass.
         If float, it's taken as the cutoff frequency. If tuple, it's assumed
-            as (None,f_hi) for LP, and (f_lo,None) for HP.
-    n_cycles : float, optional
-        Length of filter in terms of number of cycles at 'f_lo' frequency
-        This parameter is overwritten by 'n_seconds'
+        as (None,f_hi) for LP, and (f_lo,None) for HP.
+    n_cycles : float, optional, default: 3
+        Length of filter in terms of number of cycles at 'f_lo' frequency.
+        This parameter is overwritten by 'n_seconds', if provided.
     n_seconds : float, optional
-        Length of filter (seconds)
+        Length of filter, in seconds.
     iir : bool, optional
-        if True, use an infinite-impulse response (IIR) filter
-        The only IIR filter to be used is a butterworth filter
+        If True, use an infinite-impulse response (IIR) filter.
+        The only IIR filter to be used is a butterworth filter.
     butterworth_order : int, optional
-        order of the butterworth filter
-        see input 'N' in scipy.signal.butter
+        Order of the butterworth filter.
+        See input 'N' in scipy.signal.butter.
     plot_freq_response : bool, optional
-        if True, plot the frequency response of the filter
+        If True, plot the frequency response of the filter
     return_kernel : bool, optional
-        if True, return the complex filter kernel
+        If True, return the complex filter kernel
     verbose : bool, optional
-        if True, print optional information
+        If True, print optional information
     compute_transition_band : bool, optional
-        if True, the function computes the transition bandwidth,
+        If True, the function computes the transition bandwidth,
         defined as the frequency range between -20dB and -3dB attenuation,
         and warns the user if this band is longer than the frequency bandwidth.
     remove_edge_artifacts : bool, optional
-        if True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan
+        If True, replace the samples that are within half a kernel's length to
+        the signal edge with np.nan.
 
     Returns
     -------
-    sig_filt : array-like 1d
-        filtered time series
+    sig_filt : 1d array
+        Filtered time series.
     kernel : length-2 tuple of arrays
-        filter kernel
-        returned only if 'return_kernel' == True
+        Filter kernel. Only returned if 'return_kernel' is True.
     """
 
-    # Check inputs &  compute the nyquist frequency
+    # Check inputs & compute the nyquist frequency
     f_lo, f_hi = check_filter_definitions(pass_type, fc)
     f_nyq = fs / 2.
 
