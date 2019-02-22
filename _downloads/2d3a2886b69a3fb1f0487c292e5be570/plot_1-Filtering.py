@@ -309,3 +309,9 @@ plt.legend(loc='best')
 # `bycycle <https://bycycle-tools.github.io/bycycle/>`_,
 # which is a tool for time-domain analyses of waveform shape.
 #
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 12
+#

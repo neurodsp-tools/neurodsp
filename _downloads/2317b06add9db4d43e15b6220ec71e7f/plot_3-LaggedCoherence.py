@@ -126,3 +126,9 @@ plt.tight_layout()
 f_range = (13, 30)
 lag_coh_beta = lagged_coherence(sig, f_range, fs)
 print('Lagged coherence = ', lag_coh_beta)
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 2
+#

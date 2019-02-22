@@ -638,7 +638,12 @@ which is a tool for time-domain analyses of waveform shape.
 
 
 
-**Total running time of the script:** ( 0 minutes  0.231 seconds)
+Sphinx settings:
+sphinx_gallery_thumbnail_number = 12
+
+
+
+**Total running time of the script:** ( 0 minutes  0.233 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_1-Filtering.py:

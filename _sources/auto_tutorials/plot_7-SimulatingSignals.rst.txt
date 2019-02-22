@@ -683,13 +683,19 @@ oscillator with brown noise.
 
 
 
+
 .. image:: /auto_tutorials/images/sphx_glr_plot_7-SimulatingSignals_016.png
     :class: sphx-glr-single-img
 
 
 
 
-**Total running time of the script:** ( 0 minutes  0.801 seconds)
+Sphinx settings:
+sphinx_gallery_thumbnail_number = 15
+
+
+
+**Total running time of the script:** ( 0 minutes  0.901 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_7-SimulatingSignals.py:
