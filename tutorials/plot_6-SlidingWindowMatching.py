@@ -79,3 +79,9 @@ plt.xlabel('Time (samples)')
 plt.ylabel('Voltage (a.u.)')
 plt.title('Average pattern in neural signal')
 plt.tight_layout()
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 2
+#

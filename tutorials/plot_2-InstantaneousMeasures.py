@@ -123,3 +123,9 @@ plt.xlim((4, 5))
 plt.xlabel('Time (s)')
 plt.ylabel('Instantaneous\nFrequency (Hz)')
 plt.ylim((10, 30))
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 3
+#

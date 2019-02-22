@@ -152,3 +152,9 @@ plt.legend(loc='best')
 # Much better! This just goes to show that burst detection is an art that
 # requires some knowledge of the data you're working with.
 #
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 2
+#

@@ -224,3 +224,9 @@ plt.figure(figsize=(5, 5))
 plt.loglog(freq_med[:200], psd_med[:200], label='Original')
 plt.loglog(freq_med[:200], psd_rot[:200], label='Rotated')
 plt.legend()
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 2
+#

@@ -397,3 +397,9 @@ plt.figure(figsize=(5, 5))
 plt.loglog(freqs, psd, 'k')
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('Power')
+
+###################################################################################################
+#
+# Sphinx settings:
+# sphinx_gallery_thumbnail_number = 15
+#

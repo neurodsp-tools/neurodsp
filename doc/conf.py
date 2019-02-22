@@ -245,7 +245,6 @@ sphinx_gallery_conf = {
     'gallery_dirs': ['auto_examples', 'auto_tutorials'],
     'within_subsection_order': FileNameSortKey,
     'backreferences_dir': 'generated',
-    'thumbnail_size': (250, 250),
     'reference_url': {
         'neurodsp': None,
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
