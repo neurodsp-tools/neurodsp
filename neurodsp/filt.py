@@ -69,34 +69,28 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     """
 
     if iir:
-        _iir_checks(pass_type, n_seconds, butterworth_order, remove_edge_artifacts)
-        return iir_filt(sig, fs, pass_type, fc, butterworth_order, plot_freq_response, return_kernel, compute_transition_band)
+        _iir_checks(n_seconds, butterworth_order, remove_edge_artifacts)
+        return filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response,
+                                 return_kernel, compute_transition_band)
     else:
-        return fir_filt(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response, return_kernel, compute_transition_band, remove_edge_artifacts)
+        return filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response,
+                                 return_kernel, compute_transition_band, remove_edge_artifacts)
 
 
-def fir_filt(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response, return_kernel, compute_transition_band, remove_edge_artifacts):
+
+
+
+def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response,
+                      return_kernel, compute_transition_band, remove_edge_artifacts):
     """Words, words, words."""
 
-    # Check filter definition
-    f_lo, f_hi = check_filter_definitions(pass_type, fc)
-    filt_len = _fir_checks(sig, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
-
     # Design filter
-    f_nyq = compute_nyquist(fs)
-    if pass_type == 'bandpass':
-        kernel = signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
-    elif pass_type == 'bandstop':
-        kernel = signal.firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
-    elif pass_type == 'highpass':
-        kernel = signal.firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
-    elif pass_type == 'lowpass':
-        kernel = signal.firwin(filt_len, f_hi, nyq=f_nyq)
+    kernel = design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, len(sig))
 
     # Compute transition bandwidth
     if compute_transition_band:
         a_vals, b_vals = 1, kernel
-        check_filter_properties(b_vals, a_vals, fs, pass_type, f_lo, f_hi)
+        check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = _remove_nans(sig)
@@ -106,7 +100,7 @@ def fir_filt(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response, re
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        sig_filt = _drop_edge_artifacts(sig_filt, filt_len)
+        sig_filt = _drop_edge_artifacts(sig_filt, len(kernel))
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = _restore_nans(sig_filt, sig_nans)
@@ -121,26 +115,16 @@ def fir_filt(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response, re
         return sig_filt
 
 
-def iir_filt(sig, fs, pass_type, fc, butterworth_order, plot_freq_response, return_kernel, compute_transition_band):
+def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response,
+                      return_kernel, compute_transition_band):
     """Words, words, words."""
 
-    # Check filter definition
-    f_lo, f_hi = check_filter_definitions(pass_type, fc)
-
-    f_nyq = compute_nyquist(fs)
-    if pass_type in ('bandpass', 'bandstop'):
-        win = (f_lo / f_nyq, f_hi / f_nyq)
-    elif pass_type == 'highpass':
-        win = f_lo / f_nyq
-    elif pass_type == 'lowpass':
-        win = f_hi / f_nyq
-
     # Design filter
-    b_vals, a_vals = signal.butter(butterworth_order, win, pass_type)
+    b_vals, a_vals = design_iir_filter(pass_type, fc, butterworth_order, fs)
 
     # Compute transition bandwidth
     if compute_transition_band:
-        check_filter_properties(b_vals, a_vals, fs, pass_type, f_lo, f_hi)
+        check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = _remove_nans(sig)
@@ -161,7 +145,51 @@ def iir_filt(sig, fs, pass_type, fc, butterworth_order, plot_freq_response, retu
         return sig_filt
 
 
-def check_filter_definitions(pass_type, fc):
+def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
+    """Words, words, words."""
+
+    # Check filter definition
+    f_lo, f_hi = check_filter_definition(pass_type, fc)
+    filt_len = _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length)
+
+    f_nyq = compute_nyquist(fs)
+    if pass_type == 'bandpass':
+        kernel = signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
+    elif pass_type == 'bandstop':
+        kernel = signal.firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
+    elif pass_type == 'highpass':
+        kernel = signal.firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
+    elif pass_type == 'lowpass':
+        kernel = signal.firwin(filt_len, f_hi, nyq=f_nyq)
+
+    return kernel
+
+
+def design_iir_filter(pass_type, fc, butterworth_order, fs):
+    """Words, words, words."""
+
+    # Warn about only recommending IIR for bandstop
+    if pass_type != 'bandstop':
+        warnings.warn('IIR filters are not recommended other than for notch filters.')
+
+    # Check filter definition
+    f_lo, f_hi = check_filter_definition(pass_type, fc)
+
+    f_nyq = compute_nyquist(fs)
+    if pass_type in ('bandpass', 'bandstop'):
+        win = (f_lo / f_nyq, f_hi / f_nyq)
+    elif pass_type == 'highpass':
+        win = f_lo / f_nyq
+    elif pass_type == 'lowpass':
+        win = f_hi / f_nyq
+
+    # Design filter
+    b_vals, a_vals = signal.butter(butterworth_order, win, pass_type)
+
+    return b_vals, a_vals
+
+
+def check_filter_definition(pass_type, fc):
     """Words, words, words."""
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
@@ -197,8 +225,10 @@ def check_filter_definitions(pass_type, fc):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, f_lo, f_hi, transitions=(-20, -3)):
+def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20, -3)):
     """Words, words, words."""
+
+    f_lo, f_hi = check_filter_definition(pass_type, fc)
 
     # Compute the frequency response
     f_db, db = compute_frequency_response(b_vals, a_vals, fs)
@@ -217,8 +247,8 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_lo, f_hi, transitio
                           "more than {} dB. Increase filter length.".format(abs(transitions[0])))
 
     # Compute pass & transition bandwidth
-    pass_bw = compute_pass_band(pass_type, fs, f_hi, f_lo)
-    transition_bw = compute_transition_band(db, f_db, transitions[0], transitions[1])
+    pass_bw = compute_pass_band(pass_type, fc, fs)
+    transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
 
     # Raise warning if transition bandwidth is too high
     if transition_bw > pass_bw:
@@ -240,9 +270,10 @@ def compute_frequency_response(b_vals, a_vals, fs):
     return f_db, db
 
 
-def compute_pass_band(pass_type, fs, f_hi, f_lo):
-    """Compute pass bandwidth"""
+def compute_pass_band(pass_type, fc, fs):
+    """Compute pass bandwidth."""
 
+    f_lo, f_hi = check_filter_definition(pass_type, fc)
     if pass_type in ['bandpass', 'bandstop']:
         pass_bw = f_hi - f_lo
     elif pass_type == 'highpass':
@@ -253,8 +284,8 @@ def compute_pass_band(pass_type, fs, f_hi, f_lo):
     return pass_bw
 
 
-def compute_transition_band(db, f_db, low, high):
-    """Compute transition bandwidth"""
+def compute_transition_band(f_db, db, low, high):
+    """Compute transition bandwidth."""
 
     # This gets the indices of transitions to the values in searched for range
     inds = np.where(np.diff(np.logical_and(db > low, db < high)))[0]
@@ -265,12 +296,12 @@ def compute_transition_band(db, f_db, low, high):
 
 
 def compute_nyquist(fs):
-    """Calculate the nyquist frequency."""
+    """Compute the nyquist frequency."""
 
     return fs / 2.
 
-##
-##
+###################################################################################################
+###################################################################################################
 
 def _remove_nans(sig):
     """Words, words, words."""
@@ -300,7 +331,7 @@ def _drop_edge_artifacts(sig, filt_len):
     return sig
 
 
-def _fir_checks(sig, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
+def _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length):
     """Check for running an FIR filter, including figuring out the filter length."""
 
     # Compute filter length if specified in seconds
@@ -317,23 +348,21 @@ def _fir_checks(sig, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
         filt_len = int(filt_len + 1)
 
     # Raise an error if the filter is longer than the signal
-    if filt_len >= len(sig):
+    if filt_len >= sig_length:
         raise ValueError(
             """The designed filter (length: {:d}) is longer than the signal (length: {:d}).
             The filter needs to be shortened by decreasing the n_cycles or n_seconds parameter.
-            However, this will decrease the frequency resolution of the filter.""".format(filt_len, len(sig)))
+            However, this will decrease the frequency resolution of the filter.""".format(filt_len, sig_length))
 
     return filt_len
 
 
-def _iir_checks(pass_type, n_seconds, butterworth_order, remove_edge_artifacts):
+def _iir_checks(n_seconds, butterworth_order, remove_edge_artifacts):
     """Checks for using an IIR filter if called from the general filter function."""
 
-    # Check input for IIR filters
+    # Check inputs for IIR filters
     if remove_edge_artifacts:
         warnings.warn('Edge artifacts are not removed when using an IIR filter.')
-    if pass_type != 'bandstop':
-        warnings.warn('IIR filters are not recommended other than for notch filters.')
     if n_seconds is not None:
         raise TypeError('n_seconds should not be defined for an IIR filter.')
     if butterworth_order is None:
