@@ -19,9 +19,9 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     Parameters
     ----------
     sig : 1d array
-        Time series.
+        Time series to be filtered.
     fs : float
-        The sampling rate, in Hz.
+        Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply:
 
@@ -29,43 +29,40 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple or float
-        Cutoff frequency(ies) used for filter.
-        Should be a tuple of 2 floats for bandpass and bandstop.
-        Can be a tuple of 2 floats, or a single float, for low/highpass.
-        If float, it's taken as the cutoff frequency. If tuple, it's assumed
-        as (None, f_hi) for LP, and (f_lo, None) for HP.
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
     n_cycles : float, optional, default: 3
-        Length of filter in terms of number of cycles at 'f_lo' frequency.
-        This parameter is overwritten by 'n_seconds', if provided.
+        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
+        This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float, optional
         Length of filter, in seconds.
+        This parameter overwrites `n_cycles`.
     iir : bool, optional
         If True, use an infinite-impulse response (IIR) filter.
-        The only IIR filter to be used is a butterworth filter.
+        The only IIR filter offered is a butterworth filter.
     butterworth_order : int, optional
-        Order of the butterworth filter.
+        Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
     plot_freq_response : bool, optional
         If True, plot the frequency response of the filter
     return_kernel : bool, optional
-        If True, return the complex filter kernel
+        If True, return the complex filter kernel.
     verbose : bool, optional
-        If True, print optional information
+        If True, print optional information.
     compute_transition_band : bool, optional
-        If True, the function computes the transition bandwidth,
-        defined as the frequency range between -20dB and -3dB attenuation,
-        and warns the user if this band is longer than the frequency bandwidth.
+        If True, computes the transition bandwidth, and prints this information.
     remove_edge_artifacts : bool, optional
-        If True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan.
+        If True, replace samples within half the kernel length to be np.nan.
 
     Returns
     -------
     sig_filt : 1d array
         Filtered time series.
     kernel : length-2 tuple of arrays
-        Filter kernel. Only returned if 'return_kernel' is True.
+        Filter kernel. Only returned if `return_kernel` is True.
     """
 
     if iir:
@@ -77,12 +74,50 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                                  return_kernel, compute_transition_band, remove_edge_artifacts)
 
 
-
-
-
 def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response,
                       return_kernel, compute_transition_band, remove_edge_artifacts):
-    """Words, words, words."""
+    """Apply an FIR filter to a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series to be filtered.
+    fs : float
+        Sampling rate, in Hz.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    n_cycles : float, optional, default: 3
+        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
+        This parameter is overwritten by `n_seconds`, if provided.
+    n_seconds : float, optional
+        Length of filter, in seconds.
+        This parameter overwrites `n_cycles`.
+    plot_freq_response : bool, optional
+        If True, plot the frequency response of the filter
+    return_kernel : bool, optional
+        If True, return the complex filter kernel.
+    compute_transition_band : bool, optional
+        If True, computes the transition bandwidth, and prints this information.
+    remove_edge_artifacts : bool, optional
+        If True, replace samples within half the kernel length to be np.nan.
+
+    Returns
+    -------
+    sig_filt : 1d array
+        Filtered time series.
+    kernel : length-2 tuple of arrays
+        Filter kernel. Only returned if `return_kernel` is True.
+    """
 
     # Design filter
     kernel = design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, len(sig))
@@ -117,7 +152,43 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_res
 
 def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response,
                       return_kernel, compute_transition_band):
-    """Words, words, words."""
+    """Apply an IIR filter to a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series to be filtered.
+    fs : float
+        Sampling rate, in Hz.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    butterworth_order : int, optional
+        Order of the butterworth filter, if using an IIR filter.
+        See input 'N' in scipy.signal.butter.
+    plot_freq_response : bool, optional
+        If True, plot the frequency response of the filter
+    return_kernel : bool, optional
+        If True, return the complex filter kernel.
+    compute_transition_band : bool, optional
+        If True, computes the transition bandwidth, and prints this information.
+
+    Returns
+    -------
+    sig_filt : 1d array
+        Filtered time series.
+    kernel : length-2 tuple of arrays
+        Filter kernel. Only returned if `return_kernel` is True.
+    """
 
     # Design filter
     b_vals, a_vals = design_iir_filter(pass_type, fc, butterworth_order, fs)
@@ -146,7 +217,38 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
 
 
 def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
-    """Words, words, words."""
+    """Design an FIR filter.
+
+    Parameters
+    ----------
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    n_cycles : float, optional, default: 3
+        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
+        This parameter is overwritten by `n_seconds`, if provided.
+    n_seconds : float, optional
+        Length of filter, in seconds.
+        This parameter overwrites `n_cycles`.
+    fs : float
+        Sampling rate, in Hz.
+    sig_length : int
+        The length of the signal to be filtered.
+
+    Returns
+    -------
+    kernel : 1d array
+        The kernel definition of an FIR filter.
+    """
 
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, fc)
@@ -166,7 +268,35 @@ def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
 
 
 def design_iir_filter(pass_type, fc, butterworth_order, fs):
-    """Words, words, words."""
+    """Design an IIR filter.
+
+    Parameters
+    ----------
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    butterworth_order : int, optional
+        Order of the butterworth filter, if using an IIR filter.
+        See input 'N' in scipy.signal.butter.
+    fs : float
+        Sampling rate, in Hz.
+
+    Returns
+    -------
+    b_vals : 1d array
+        B values for the filter.
+    a_vals : 1d array
+        A values for the filter.
+    """
 
     # Warn about only recommending IIR for bandstop
     if pass_type != 'bandstop':
@@ -190,7 +320,30 @@ def design_iir_filter(pass_type, fc, butterworth_order, fs):
 
 
 def check_filter_definition(pass_type, fc):
-    """Words, words, words."""
+    """Check a filter definition for validity, and get f_lo and f_hi.
+
+    Parameters
+    ----------
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+
+    Returns
+    -------
+    f_lo : float or None
+        The lowpass frequency of the filter, if specified.
+    f_hi : float or None
+        The highpass frequency of the filter, if specified.
+    """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
         raise ValueError('Filter passtype not understood.')
@@ -206,8 +359,7 @@ def check_filter_definition(pass_type, fc):
         # Map fc to f_lo and f_hi
         f_lo, f_hi = fc
 
-    # For LP and HP can be tuple or int/float
-    #   Tuple is assumed to be (0, f_hi) for LP; (f_lo, f_nyq) for HP
+    # For lowpass and highpass can be tuple or int/float
     if pass_type == 'lowpass':
         if isinstance(fc, (int, float)):
             f_hi = fc
@@ -226,7 +378,31 @@ def check_filter_definition(pass_type, fc):
 
 
 def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20, -3)):
-    """Words, words, words."""
+    """Check a filters properties, including pass band and transition band.
+
+    Parameters
+    ----------
+    b_vals : 1d array
+        B values for the filter.
+    a_vals : 1d array
+        A values for the filter.
+    fs : float
+        Sampling rate, in Hz.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    transitions : tuple of (float, float), optional, default: (-20, -3)
+        Cutoffs, in dB, that define the transition band.
+    """
 
     f_lo, f_hi = check_filter_definition(pass_type, fc)
 
@@ -255,13 +431,30 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
         warnings.warn('Transition bandwidth is  {:.1f}  Hz. This is greater than the desired'\
                       'pass/stop bandwidth of  {:.1f} Hz'.format(transition_bw, pass_bw))
 
-    # Print out things
+    # Print out transition bandwidth and pass bandwidth to the user
     print('Transition bandwidth is {:.1f} Hz.'.format(transition_bw))
     print('Pass/stop bandwidth is {:.1f} Hz'.format(pass_bw))
 
 
 def compute_frequency_response(b_vals, a_vals, fs):
-    """Compute frequency response."""
+    """Compute the frequency response of a filter.
+
+    Parameters
+    ----------
+    b_vals : 1d array
+        B values for the filter.
+    a_vals : 1d array
+        A values for the filter.
+    fs : float
+        Sampling rate, in Hz.
+
+    Returns
+    -------
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in f_db, in dB.
+    """
 
     w_vals, h_vals = signal.freqz(b_vals, a_vals)
     f_db = w_vals * fs / (2. * np.pi)
@@ -271,7 +464,30 @@ def compute_frequency_response(b_vals, a_vals, fs):
 
 
 def compute_pass_band(pass_type, fc, fs):
-    """Compute pass bandwidth."""
+    """Compute the pass bandwidth of a filter.
+
+    Parameters
+    ----------
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply:
+
+        * 'bandpass': apply a bandpass filter
+        * 'bandstop': apply a bandstop (notch) filter
+        * 'lowpass': apply a lowpass filter
+        * 'highpass' : apply a highpass filter
+    fc : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+        For 'bandpass' & 'bandstop', must be a tuple.
+        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
+        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
+    fs : float
+        Sampling rate, in Hz.
+
+    Returns
+    -------
+    pass_bw : float
+        The pass bandwidth of the filter.
+    """
 
     f_lo, f_hi = check_filter_definition(pass_type, fc)
     if pass_type in ['bandpass', 'bandstop']:
@@ -285,18 +501,46 @@ def compute_pass_band(pass_type, fc, fs):
 
 
 def compute_transition_band(f_db, db, low, high):
-    """Compute transition bandwidth."""
+    """Compute transition bandwidth of a filter.
+
+    Parameters
+    ----------
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in f_db, in dB.
+    low : float
+        The lower limit that defines the transition band, in dB.
+    high : float
+        The upper limit that defines the transition band, in dB.
+
+    Returns
+    -------
+    transition_band : float
+        The transition bandwidth of the filter.
+    """
 
     # This gets the indices of transitions to the values in searched for range
     inds = np.where(np.diff(np.logical_and(db > low, db < high)))[0]
     # This steps through the indices, in pairs, selecting from the vector to select from
-    trans_band = np.max([(b - a) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])])
+    transition_band = np.max([(b - a) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])])
 
-    return trans_band
+    return transition_band
 
 
 def compute_nyquist(fs):
-    """Compute the nyquist frequency."""
+    """Compute the nyquist frequency.
+
+    Parameters
+    ----------
+    fs : float
+        Sampling rate, in Hz.
+
+    Returns
+    -------
+    float
+        The nyquist frequency of a signal with the given sampling rate, in Hz.
+    """
 
     return fs / 2.
 
@@ -304,7 +548,20 @@ def compute_nyquist(fs):
 ###################################################################################################
 
 def _remove_nans(sig):
-    """Words, words, words."""
+    """Drop any NaNs on the edges of a 1d array.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal to be checked for edge NaNs.
+
+    Returns
+    -------
+    sig_removed : 1d array
+        Signal with NaN edges removed.
+    sig_nans : 1d array
+        Boolean array indicating where NaNs were in the original array.
+    """
 
     sig_nans = np.isnan(sig)
     sig_removed = sig[np.where(~np.isnan(sig))]
@@ -313,7 +570,20 @@ def _remove_nans(sig):
 
 
 def _restore_nans(sig, sig_nans):
-    """Words, words, words."""
+    """Restore NaN values to the edges of a 1d array.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal that has had NaN edges removed.
+    sig_nans : 1d array
+        Boolean array indicating where NaNs were in the original array.
+
+    Returns
+    -------
+    sig_restored : 1d array
+        Signal with NaN edges restored.
+    """
 
     sig_restored = np.ones(len(sig_nans)) * np.nan
     sig_restored[~sig_nans] = sig
@@ -322,7 +592,20 @@ def _restore_nans(sig, sig_nans):
 
 
 def _drop_edge_artifacts(sig, filt_len):
-    """Words, words, words."""
+    """Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Filtered signal to have edge artifacts removed from.
+    filt_len : int
+        Length of the filter that was applied.
+
+    Returns
+    -------
+    sig : 1d array
+        Filter signal with edge artifacts switched to NaNs.
+    """
 
     n_rmv = int(np.ceil(filt_len / 2))
     sig[:n_rmv] = np.nan
