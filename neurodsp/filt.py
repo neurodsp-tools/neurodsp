@@ -13,7 +13,7 @@ from neurodsp.plts.filt import plot_frequency_response
 def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                   iir=False, butterworth_order=None,
                   plot_freq_response=False, return_kernel=False,
-                  verbose=True, compute_transition_band=True, remove_edge_artifacts=True):
+                  verbose=False, compute_transition_band=True, remove_edge_artifacts=True):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
@@ -46,15 +46,15 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     butterworth_order : int, optional
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
-    plot_freq_response : bool, optional
+    plot_freq_response : bool, optional, default: False
         If True, plot the frequency response of the filter
-    return_kernel : bool, optional
+    return_kernel : bool, optional, default: False
         If True, return the complex filter kernel.
-    verbose : bool, optional
+    verbose : bool, optional, default: False
         If True, print optional information.
-    compute_transition_band : bool, optional
+    compute_transition_band : bool, optional, default: True
         If True, computes the transition bandwidth, and prints this information.
-    remove_edge_artifacts : bool, optional
+    remove_edge_artifacts : bool, optional, default: True
         If True, replace samples within half the kernel length to be np.nan.
 
     Returns
@@ -74,8 +74,8 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
                                  return_kernel, compute_transition_band, remove_edge_artifacts)
 
 
-def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response,
-                      return_kernel, compute_transition_band, remove_edge_artifacts):
+def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_freq_response=False,
+                      return_kernel=False, compute_transition_band=True, remove_edge_artifacts=True):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -102,9 +102,9 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_res
     n_seconds : float, optional
         Length of filter, in seconds.
         This parameter overwrites `n_cycles`.
-    plot_freq_response : bool, optional
+    plot_freq_response : bool, optional, default: False
         If True, plot the frequency response of the filter
-    return_kernel : bool, optional
+    return_kernel : bool, optional, default: False
         If True, return the complex filter kernel.
     compute_transition_band : bool, optional
         If True, computes the transition bandwidth, and prints this information.
@@ -120,7 +120,7 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_res
     """
 
     # Design filter
-    kernel = design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, len(sig))
+    kernel = design_fir_filter(len(sig), fs, pass_type, fc, n_cycles, n_seconds)
 
     # Compute transition bandwidth
     if compute_transition_band:
@@ -150,8 +150,8 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_res
         return sig_filt
 
 
-def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response,
-                      return_kernel, compute_transition_band):
+def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response=False,
+                      return_kernel=False, compute_transition_band=True):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -172,14 +172,14 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    butterworth_order : int, optional
+    butterworth_order : int
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
-    plot_freq_response : bool, optional
+    plot_freq_response : bool, optional, default: False
         If True, plot the frequency response of the filter
-    return_kernel : bool, optional
+    return_kernel : bool, optional, default: False
         If True, return the complex filter kernel.
-    compute_transition_band : bool, optional
+    compute_transition_band : bool, optional, default: True
         If True, computes the transition bandwidth, and prints this information.
 
     Returns
@@ -191,7 +191,7 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
     """
 
     # Design filter
-    b_vals, a_vals = design_iir_filter(pass_type, fc, butterworth_order, fs)
+    b_vals, a_vals = design_iir_filter(fs, pass_type, fc, butterworth_order)
 
     # Compute transition bandwidth
     if compute_transition_band:
@@ -216,11 +216,15 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
         return sig_filt
 
 
-def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
+def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None):
     """Design an FIR filter.
 
     Parameters
     ----------
+    sig_length : int
+        The length of the signal to be filtered.
+    fs : float
+        Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply:
 
@@ -239,10 +243,6 @@ def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
     n_seconds : float, optional
         Length of filter, in seconds.
         This parameter overwrites `n_cycles`.
-    fs : float
-        Sampling rate, in Hz.
-    sig_length : int
-        The length of the signal to be filtered.
 
     Returns
     -------
@@ -267,11 +267,13 @@ def design_fir_filter(pass_type, fc, n_cycles, n_seconds, fs, sig_length):
     return kernel
 
 
-def design_iir_filter(pass_type, fc, butterworth_order, fs):
+def design_iir_filter(fs, pass_type, fc, butterworth_order):
     """Design an IIR filter.
 
     Parameters
     ----------
+    fs : float
+        Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply:
 
@@ -284,11 +286,9 @@ def design_iir_filter(pass_type, fc, butterworth_order, fs):
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    butterworth_order : int, optional
+    butterworth_order : int
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
-    fs : float
-        Sampling rate, in Hz.
 
     Returns
     -------
@@ -374,6 +374,10 @@ def check_filter_definition(pass_type, fc):
             f_lo = fc[0]
         f_hi = None
 
+    # Make sure pass freqs are floats
+    f_lo = float(f_lo) if f_lo else f_lo
+    f_hi = float(f_hi) if f_hi else f_hi
+
     return f_lo, f_hi
 
 
@@ -421,7 +425,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
                           'more than {} dB. Increase filter length.'.format(abs(transitions[0])))
 
     # Compute pass & transition bandwidth
-    pass_bw = compute_pass_band(pass_type, fc, fs)
+    pass_bw = compute_pass_band(fs, pass_type, fc)
     transition_bw = compute_trans_band(f_db, db, transitions[0], transitions[1])
 
     # Raise warning if transition bandwidth is too high
@@ -431,7 +435,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
 
     # Print out transition bandwidth and pass bandwidth to the user
     print('Transition bandwidth is {:.1f} Hz.'.format(transition_bw))
-    print('Pass/stop bandwidth is {:.1f} Hz'.format(pass_bw))
+    print('Pass/stop bandwidth is {:.1f} Hz.'.format(pass_bw))
 
 
 def compute_frequency_response(b_vals, a_vals, fs):
@@ -461,11 +465,13 @@ def compute_frequency_response(b_vals, a_vals, fs):
     return f_db, db
 
 
-def compute_pass_band(pass_type, fc, fs):
+def compute_pass_band(fs, pass_type, fc):
     """Compute the pass bandwidth of a filter.
 
     Parameters
     ----------
+    fs : float
+        Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply:
 
@@ -478,8 +484,6 @@ def compute_pass_band(pass_type, fc, fs):
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    fs : float
-        Sampling rate, in Hz.
 
     Returns
     -------
@@ -498,7 +502,7 @@ def compute_pass_band(pass_type, fc, fs):
     return pass_bw
 
 
-def compute_trans_band(f_db, db, low, high):
+def compute_trans_band(f_db, db, low=-20, high=-3):
     """Compute transition bandwidth of a filter.
 
     Parameters
@@ -507,9 +511,9 @@ def compute_trans_band(f_db, db, low, high):
         Frequency vector corresponding to attenuation decibels, in Hz.
     db : 1d array
         Degree of attenuation for each frequency specified in f_db, in dB.
-    low : float
+    low : float, optional, default: -20
         The lower limit that defines the transition band, in dB.
-    high : float
+    high : float, optional, default: -3
         The upper limit that defines the transition band, in dB.
 
     Returns
