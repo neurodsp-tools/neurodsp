@@ -18,10 +18,30 @@ Filtering
 
 .. currentmodule:: neurodsp.filt
 
+Design & Apply Filters
+~~~~~~~~~~~~~~~~~~~~~~
+
 .. autosummary::
   :toctree: generated/
 
   filter_signal
+  filter_signal_fir
+  filter_signal_iir
+  design_fir_filter
+  design_iir_filter
+
+Filter Properties
+~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+  :toctree: generated/
+
+  check_filter_definition
+  check_filter_properties
+  compute_frequency_response
+  compute_pass_band
+  compute_trans_band
+  compute_nyquist
 
 Time-Frequency analysis
 -----------------------
