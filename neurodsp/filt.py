@@ -404,27 +404,25 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
         Cutoffs, in dB, that define the transition band.
     """
 
-    f_lo, f_hi = check_filter_definition(pass_type, fc)
-
     # Compute the frequency response
     f_db, db = compute_frequency_response(b_vals, a_vals, fs)
 
     # Check that frequency response goes below transition level (has significant attenuation)
     if np.min(db) >= transitions[0]:
-        warnings.warn("The filter attenuation never goes below -20dB."\
-                      "Increase filter length.".format(transitions[0]))
+        warnings.warn('The filter attenuation never goes below {} dB.'\
+                      'Increase filter length.'.format(transitions[0]))
         # If there is no attenuation, cannot calculate bands - so return here
         return
 
     # Check that both sides of a bandpass have significant attenuation
     if pass_type == 'bandpass':
         if db[0] >= transitions[0] or db[-1] >= transitions[0]:
-            warnings.warn("The low or high frequency stopband never gets attenuated by"\
-                          "more than {} dB. Increase filter length.".format(abs(transitions[0])))
+            warnings.warn('The low or high frequency stopband never gets attenuated by'\
+                          'more than {} dB. Increase filter length.'.format(abs(transitions[0])))
 
     # Compute pass & transition bandwidth
     pass_bw = compute_pass_band(pass_type, fc, fs)
-    transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
+    transition_bw = compute_trans_band(f_db, db, transitions[0], transitions[1])
 
     # Raise warning if transition bandwidth is too high
     if transition_bw > pass_bw:
@@ -500,7 +498,7 @@ def compute_pass_band(pass_type, fc, fs):
     return pass_bw
 
 
-def compute_transition_band(f_db, db, low, high):
+def compute_trans_band(f_db, db, low, high):
     """Compute transition bandwidth of a filter.
 
     Parameters
@@ -619,23 +617,27 @@ def _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length):
 
     # Compute filter length if specified in seconds
     if n_seconds is not None:
-        filt_len = int(np.ceil(fs * n_seconds))
+        filt_len = fs * n_seconds
     else:
         if pass_type == 'lowpass':
-            filt_len = int(np.ceil(fs * n_cycles / f_hi))
+            filt_len = fs * n_cycles / f_hi
         else:
-            filt_len = int(np.ceil(fs * n_cycles / f_lo))
+            filt_len = fs * n_cycles / f_lo
+
+    # Typecast filter length to an integer, rounding up
+    filt_len = int(np.ceil(filt_len))
 
     # Force filter length to be odd
     if filt_len % 2 == 0:
-        filt_len = int(filt_len + 1)
+        filt_len = filt_len + 1
 
     # Raise an error if the filter is longer than the signal
     if filt_len >= sig_length:
         raise ValueError(
-            """The designed filter (length: {:d}) is longer than the signal (length: {:d}).
-            The filter needs to be shortened by decreasing the n_cycles or n_seconds parameter.
-            However, this will decrease the frequency resolution of the filter.""".format(filt_len, sig_length))
+            'The designed filter (length: {:d}) is longer than the signal '\
+            '(length: {:d}). The filter needs to be shortened by decreasing '\
+            'the n_cycles or n_seconds parameter. However, this will decrease '\
+            'the frequency resolution of the filter.'.format(filt_len, sig_length))
 
     return filt_len
 
