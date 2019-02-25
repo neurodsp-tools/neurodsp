@@ -14,6 +14,12 @@ A package of tools to process, analyze, and simulate neural recordings as indivi
 
 Documentation for the NeuroDSP module is available [here](https://neurodsp-tools.github.io/neurodsp/).
 
+The documentation also includes a full set of [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html)
+covering the functionality of NeuroDSP.
+
+If you have a question about using NeuroDSP that doesn't seem to be covered by the documentation, feel free to
+open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
+
 ## Dependencies
 
 NeuroDSP is written in Python, and requires Python >= 3.5 to run.
@@ -58,7 +64,7 @@ Please use the [Github issue tracker](https://github.com/neurodsp-tools/neurodsp
 
 ## Modules
 
-NeuroDSP includes the following modules, each of which have dedicated [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html).
+NeuroDSP includes the following modules:
 
 - ```filt``` : Filter data with bandpass, highpass, lowpass, or notch filters
 - ```burst``` : Detect bursting oscillations in neural signals
