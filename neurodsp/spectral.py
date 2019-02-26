@@ -32,7 +32,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
             If None, and window is str or tuple, is set to 1 second of data.
             If None, and window is array_like, is set to the length of the window.
     noverlap : int, optional
-        Number of points to overlap between segments. If None, noverlap = nperseg // 2. Defaults to None.
+        Number of points to overlap between segments. If None, noverlap = nperseg // 8. Defaults to None.
     filt_len : float, Hz, optional
         (For medfilt method) Length of median filter in Hz.
     f_lim : float, Hz, optional

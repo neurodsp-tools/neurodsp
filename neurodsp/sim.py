@@ -615,7 +615,6 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
 
     # enforce that sig is non-negative in cases of low firing rate
     sig[np.where(sig < 0.)] = 0.
-
     return sig
 
 
@@ -644,7 +643,8 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
         Computed synaptic kernel with length equal to t
     """
 
-    times = np.arange(0, t_ker, 1 / fs)
+    ### NOTE: sometimes t_ker is not exact, resulting in a slightly longer ts
+    times = np.arange(0, t_ker, 1./fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
@@ -700,7 +700,7 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
     """
     if t_ker is None:
         # Automatically compute t_ker as a function of decay time constant
-        t_ker = 5. * tau_d
+        t_ker = 5 * tau_d
 
     # Simulate an extra bit because the convolution will snip it
     sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker),
