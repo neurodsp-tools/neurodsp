@@ -643,17 +643,17 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
         Computed synaptic kernel with length equal to t
     """
 
-    ### NOTE: sometimes t_ker is not exact, resulting in a slightly longer ts
+    ### NOTE: sometimes t_ker is not exact, resulting in a slightly longer or
+    ###     shorter times vector, which will affect final signal length
+    # https://docs.python.org/2/tutorial/floatingpoint.html
     times = np.arange(0, t_ker, 1./fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
-
         kernel = np.exp(-times / tau_d)
 
     # Kernel type: alpha
     elif tau_r == tau_d:
-
         # I(t) = t/tau * exp(-t/tau)
         kernel = (times / tau_r) * np.exp(-times / tau_r)
 
@@ -700,7 +700,7 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2, tau_r=0, ta
     """
     if t_ker is None:
         # Automatically compute t_ker as a function of decay time constant
-        t_ker = 5 * tau_d
+        t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will snip it
     sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker),
