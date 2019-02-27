@@ -48,7 +48,7 @@ Populations of neurons exhibit time-varying fluctuations in their aggregate elec
 The modules included in ``NeuroDSP`` are:
 
 * filt : Filter data with bandpass, highpass, lowpass, or notch filters.
-* burst : Detect bursting oscillations in neural signals. Burst detection is done using the dual threshold algorithm. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
+* burst : Detect bursting oscillations in neural signals. Burst detection is done using the dual threshold algorithm [@feingold_bursts_2015]. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
 * laggedcoherence : Estimate rhythmicity using the lagged coherence measure for quantifying the presence of rhythms [@fransen_identifying_2015].
 * spectral : Compute spectral domain features, including power spectral estimation, mortlet wavelet transforms and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see the companion spectral parametrization toolbox, fitting oscillations and one-over-f (FOOOF) [@haller_parameterizing_2018].
 * swm : Identify recurrent patterns in a signal using the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
