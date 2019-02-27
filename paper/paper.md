@@ -62,6 +62,6 @@ The modules included in ``NeuroDSP`` are:
 
 # Acknowledgements
 
-Cole is supported by the National Science Foundation Graduate Research Fellowship Program and the University of California, San Diego Chancellor’s Research Excellence Scholarship. Gao is supported by the Natural Sciences and Engineering Research Council of Canada (NSERC PGS-D), UCSD Kavli Innovative Research Grant (IRG), and the Katzin Prize. Voytek is supported by a Sloan Research Fellowship (FG-2015-66057), the Whitehall Foundation (2017-12-73), and the National Science Foundation under grant BCS-1736028. The authors declare no competing financial interests.
+We thank Andrew J. Washington for his early code contributions to this project. Cole is supported by the National Science Foundation Graduate Research Fellowship Program and the University of California, San Diego Chancellor’s Research Excellence Scholarship. Gao is supported by the Natural Sciences and Engineering Research Council of Canada (NSERC PGS-D), UCSD Kavli Innovative Research Grant (IRG), and the Katzin Prize. Voytek is supported by a Sloan Research Fellowship (FG-2015-66057), the Whitehall Foundation (2017-12-73), and the National Science Foundation under grant BCS-1736028. The authors declare no competing financial interests.
 
 # References
