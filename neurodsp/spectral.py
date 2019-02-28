@@ -8,8 +8,7 @@ from scipy import signal
 
 def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
                      noverlap=None, filt_len=1., f_lim=None, spg_outlier_pct=0.):
-    """Estimate the power spectral density (PSD) of a time series from short-time Fourier
-    Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
+    """Estimate the power spectral density (PSD) of a time series.
 
     Parameters
     -----------
@@ -58,46 +57,117 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.html
     """
 
-    # welch-style spectrum (mean/median of STFT)
-    if method in ('mean', 'median'):
-
-        # Calculate the short time fourier transform with signal.spectrogram
-        nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
-        freqs, t_axis, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
-
-        # Pad data to 2D
-        if len(sig.shape) == 1:
-            sig = sig[None, :]
-
-        numchan = sig.shape[0]
-
-        # Throw out outliers if indicated
-        if spg_outlier_pct > 0.:
-            spg = discard_outliers(spg, spg_outlier_pct)
-
-        if method == 'mean':
-            spectrum = np.mean(spg, axis=-1)
-        elif method == 'median':
-            spectrum = np.median(spg, axis=-1)
-
-    elif method == 'medfilt':
-
-        # Take the positive half of the spectrum since it's symmetrical
-        FT = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
-        freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
-
-        # Convert median filter length from Hz to samples
-        filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
-        spectrum = signal.medfilt(np.abs(FT)**2. / (fs * len(sig)), filt_len_samp)
-
-    else:
+    if method not in ('mean', 'median', 'medfilt'):
         raise ValueError('Unknown power spectrum method: %s' % method)
 
-    if f_lim is not None:
-        f_lim_ind = np.where(freqs > f_lim)[0][0]
-        return freqs[:f_lim_ind], spectrum[..., :f_lim_ind]
-    else:
-        return freqs, spectrum
+    if method in ('mean', 'median'):
+        return compute_spectrum_welch(sig, fs, method, window, nperseg, noverlap, f_lim, spg_outlier_pct)
+
+    elif method == 'medfilt':
+        return compute_spectrum_medfilt(sig, fs, filt_len, f_lim)
+
+
+def compute_spectrum_welch(sig, fs, method='mean', window='hann', nperseg=None,
+                           noverlap=None, f_lim=None, spg_outlier_pct=0.):
+    """Estimate the power spectral density using Welch's method.
+
+    Parameters
+    -----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    method : {'mean', 'median'}, optional
+        Method to average across the windows:
+
+        * 'mean' is the same as Welch's method (mean of STFT).
+        * 'median' uses median of STFT instead of mean to minimize outlier effect.
+    window : str or tuple or array_like, optional, default: 'hann'
+        Desired window to use. Defaults to a Hann window.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If window is array_like, this array will be used as the window and its length must be nperseg.
+    nperseg : int, optional
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional
+        Number of points to overlap between segments.
+        If None, noverlap = nperseg // 8.
+    f_lim : float, optional
+        Maximum frequency to keep, in Hz.
+        If None, keeps up to Nyquist.
+    spg_outlier_pct : float, optional, default: 0.
+        Percentage of spectrogram windows with the highest powers to discard prior to averaging.
+        Useful for quickly eliminating potential outliers to compute spectrum.
+        Must be between 0 and 100.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Calculate the short time fourier transform with signal.spectrogram
+    nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
+    freqs, t_axis, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
+
+    # Pad data to 2D
+    if len(sig.shape) == 1:
+        sig = sig[np.newaxis :]
+
+    # Throw out outliers if indicated
+    if spg_outlier_pct > 0.:
+        spg = discard_outliers(spg, spg_outlier_pct)
+
+    if method == 'mean':
+        spectrum = np.mean(spg, axis=-1)
+    elif method == 'median':
+        spectrum = np.median(spg, axis=-1)
+
+    if f_lim:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+
+    return freqs, spectrum
+
+
+def compute_spectrum_medfilt(sig, fs, filt_len, f_lim=None):
+    """Estimate the power spectral densitry as a smoothed FFT.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    filt_len : float, optional
+        Length of the median filter, in Hz.
+        Only used with the 'medfilt' method.
+    f_lim : float, optional
+        Maximum frequency to keep, in Hz.
+        If None, keeps up to Nyquist.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Take the positive half of the spectrum since it's symmetrical
+    ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
+
+    # Convert median filter length from Hz to samples
+    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
+    spectrum = signal.medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
+
+    if f_lim:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+
+    return freqs, spectrum
 
 
 def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
@@ -444,6 +514,39 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
     rot_spectrum = f_mask * spectrum
 
     return rot_spectrum
+
+
+def trim_spectrum(freqs, power_spectra, f_range):
+    """Extract frequency range of interest from power spectra.
+    Parameters
+    ----------
+    freqs : 1d array
+        Frequency values for the PSD.
+    power_spectra : 1d or 2d array
+        Power spectral density values.
+    f_range: list of [float, float]
+        Frequency range to restrict to.
+    Returns
+    -------
+    freqs_ext : 1d array
+        Extracted frequency values for the power spectrum.
+    power_spectra_ext : 1d or 2d array
+        Extracted power spectral density values.
+    Notes
+    -----
+    This function extracts frequency ranges >= f_low and <= f_high.
+    It does not round to below or above f_low and f_high, respectively.
+    """
+
+    # Create mask to index only requested frequencies
+    f_mask = np.logical_and(freqs >= f_range[0], freqs <= f_range[1])
+
+    # Restrict freqs & psd to requested range. The if/else is to cover both 1d or 2d arrays
+    freqs_ext = freqs[f_mask]
+    power_spectra_ext = power_spectra[f_mask] if power_spectra.ndim == 1 \
+        else power_spectra[:, f_mask]
+
+    return freqs_ext, power_spectra_ext
 
 
 def discard_outliers(data, outlier_percent):
