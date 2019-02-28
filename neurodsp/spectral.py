@@ -73,17 +73,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
 
         # Throw out outliers if indicated
         if spg_outlier_pct > 0.:
-
-            n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlier_pct))
-            n_keep = int(len(t_axis)-n_discard)
-            spg_temp = np.zeros((numchan, len(freqs), n_keep))
-            outlier_inds = np.zeros((numchan, n_discard))
-
-            # Discard time windows with high total log powers, round up so it doesn't get a zero
-            for chan in range(numchan):
-                outlier_inds[chan, :] = np.argsort(np.mean(np.log10(spg[chan, :, :]), axis=0))[-n_discard:]
-                spg_temp[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
-            spg = spg_temp
+            spg = discard_outliers(spg, spg_outlier_pct)
 
         if method == 'mean':
             spectrum = np.mean(spg, axis=-1)
@@ -150,11 +140,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
     if outlier_pct is not None:
-
-        # Discard time windows with high powers. Round up so it doesn't get a zero.
-        discard = int(np.ceil(spg.shape[1] / 100. * outlier_pct))
-        outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
-        spg = spg[:, outlieridx]
+        spg = discard_outliers(spg, outlier_pct)
 
     spect_cv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
 
@@ -458,6 +444,24 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
     rot_spectrum = f_mask * spectrum
 
     return rot_spectrum
+
+
+def discard_outliers(data, outlier_percent):
+    """Discard outlier arrays with high values."""
+
+    # Get the number of arrays to discard - round up so it doesn't get a zero.
+    n_discard = int(np.ceil(data.shape[-1] / 100. * outlier_percent))
+
+    # Make 2D -> 3D for looping across array
+    data = data[np.newaxis, :, :] if data.ndim == 2 else data
+
+    # Select the windows to keep from each 2D component of the input data
+    data = [dat[:, np.argsort(np.mean(np.log10(dat), axis=0))[:-n_discard]] for dat in data]
+
+    # Reshape array and squeeze to drop back to 2D if that was original shape
+    data = np.squeeze(np.stack(data))
+
+    return data
 
 
 def _check_settings(fs, window, nperseg, noverlap):
