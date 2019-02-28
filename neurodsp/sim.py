@@ -612,7 +612,6 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
 
     # enforce that sig is non-negative in cases of low firing rate
     sig[np.where(sig < 0.)] = 0.
-
     return sig
 
 
@@ -641,7 +640,10 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
         Computed synaptic kernel with length equal to t
     """
 
-    times = np.arange(0, t_ker, 1 / fs)
+    ### NOTE: sometimes t_ker is not exact, resulting in a slightly longer or
+    ###     shorter times vector, which will affect final signal length
+    # https://docs.python.org/2/tutorial/floatingpoint.html
+    times = np.arange(0, t_ker, 1./fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
