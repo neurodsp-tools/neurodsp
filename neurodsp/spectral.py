@@ -58,23 +58,11 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.html
     """
 
+    # welch-style spectrum (mean/median of STFT)
     if method in ('mean', 'median'):
 
-        # welch-style spectrum (mean/median of STFT)
-        if nperseg is None:
-            if isinstance(window, (str, tuple)):
-                # window is a string or tuple, defaults to 1 second of data
-                nperseg = int(fs)
-            else:
-                # window is an array, defaults to window length
-                nperseg = len(window)
-        else:
-            nperseg = int(nperseg)
-
-        if noverlap is not None:
-            noverlap = int(noverlap)
-
         # Calculate the short time fourier transform with signal.spectrogram
+        nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
         freqs, t_axis, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
         # Pad data to 2D
@@ -157,19 +145,8 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     White noise should have a SCV of 1 at all frequencies.
     """
 
-    if nperseg is None:
-        if isinstance(window, str) or isinstance(window, tuple):
-            # window is a string or tuple, defaults to 1 second of data
-            nperseg = int(fs)
-        else:
-            # window is an array, defaults to window length
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
+    # Compute spectrogram of data
+    nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
     if outlier_pct is not None:
@@ -225,19 +202,8 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
         Resampled spectral coefficient of variation.
     """
 
-    if nperseg is None:
-        if isinstance(window, (str, tuple)):
-            # window is a string or tuple, defaults to 1 second of data
-            nperseg = int(fs)
-        else:
-            # window is an array, defaults to window length
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
+    # Compute spectrogram of data
+    nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
     freqs, ts, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
     if method == 'bootstrap':
@@ -324,21 +290,8 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     The histogram bins are the same for every frequency, thus evenly spacing the global min and max power.
     """
 
-    # Set the nperseg, if not provided:
-    #   If the window is a string or tuple, defaults to 1 second of data
-    #   If the window is an array, defaults to window length
-    if nperseg is None:
-        if isinstance(window, (str, tuple)):
-            nperseg = int(fs)
-        else:
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
     # Compute spectrogram of data
+    nperseg, noverlap = _check_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
 
     # Get log10 power before binning
@@ -505,3 +458,24 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
     rot_spectrum = f_mask * spectrum
 
     return rot_spectrum
+
+
+def _check_settings(fs, window, nperseg, noverlap):
+    """Check settings used for calculating spectrogram."""
+
+    # Set the nperseg, if not provided:
+    if nperseg is None:
+
+        # If the window is a string or tuple, defaults to 1 second of data
+        if isinstance(window, (str, tuple)):
+            nperseg = int(fs)
+        # If the window is an array, defaults to window length
+        else:
+            nperseg = len(window)
+    else:
+        nperseg = int(nperseg)
+
+    if noverlap is not None:
+        noverlap = int(noverlap)
+
+    return nperseg, noverlap
