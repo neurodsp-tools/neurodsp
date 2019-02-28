@@ -14,6 +14,12 @@ A package of tools to process, analyze, and simulate neural recordings as indivi
 
 Documentation for the NeuroDSP module is available [here](https://neurodsp-tools.github.io/neurodsp/).
 
+The documentation also includes a full set of [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html)
+covering the functionality of NeuroDSP.
+
+If you have a question about using NeuroDSP that doesn't seem to be covered by the documentation, feel free to
+open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
+
 ## Dependencies
 
 NeuroDSP is written in Python, and requires Python >= 3.5 to run.
@@ -30,9 +36,13 @@ We recommend using the [Anaconda](https://www.continuum.io/downloads) distributi
 
 ## Install
 
+**Stable Version**
+
 To install the latest release of neurodsp, you can install from pip:
 
 `$ pip install neurodsp`
+
+**Development Version**
 
 To get the development version (updates that are not yet published to pip), you can clone this repo.
 
@@ -42,9 +52,19 @@ To install this cloned copy of neurodsp, move into the directory you just cloned
 
 `$ pip install .`
 
+**Editable Version**
+
+If you want to install an editable version, for making contributions, download the development version as above, and run:
+
+`$ pip install -e .`
+
+## Bug Reports
+
+Please use the [Github issue tracker](https://github.com/neurodsp-tools/neurodsp/issues) to file bug reports and/or ask questions about this project.
+
 ## Modules
 
-NeuroDSP includes the following modules, each of which have dedicated [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html).
+NeuroDSP includes the following modules:
 
 - ```filt``` : Filter data with bandpass, highpass, lowpass, or notch filters
 - ```burst``` : Detect bursting oscillations in neural signals
@@ -54,3 +74,11 @@ NeuroDSP includes the following modules, each of which have dedicated [tutorials
 - ```timefrequency``` : Estimate instantaneous measures of oscillatory activity
 - ```sim``` : Simulate periodic and aperiodic signal components
 - ```plts``` : Plotting functions
+
+## Contribute
+
+`NeuroDSP` welcomes and encourages contributions from the community, as long as contributors follow the [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/add-code-of-conduct-1/CODE_OF_CONDUCT.md).
+
+If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
+
+When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md).
