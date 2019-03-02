@@ -111,6 +111,7 @@ html_theme_options = {
     'navbar_links': [
         ("API", "api"),
         ("Tutorial", "auto_tutorials/index"),
+        ("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
 
@@ -239,9 +240,7 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 sphinx_gallery_conf = {
-     # path to your examples scripts
     'examples_dirs': ['../examples', '../tutorials'],
-     # path where to save gallery generated examples
     'gallery_dirs': ['auto_examples', 'auto_tutorials'],
     'within_subsection_order': FileNameSortKey,
     'backreferences_dir': 'generated',
