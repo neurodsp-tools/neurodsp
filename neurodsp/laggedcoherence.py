@@ -12,27 +12,27 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
 
     Parameters
     ----------
-    sig : array-like 1d
-        voltage time series
-    f_range : (low, high), Hz
-        frequency range of the oscillator
+    sig : 1d array
+        Voltage time series.
+    f_range : list of float
+        Frequency range of the oscillator, as [low, high], in Hz.
     fs : float
-        sampling rate
-    n_cycles : float
-        Number of cycles of the frequency of interest used to compute lagged coherence
-    f_step : float, Hz
-        step size to calculate lagged coherence in the frequency range.
-    return_spectrum : bool
-        if True, return the lagged coherence for all frequency values. otherwise, only return mean
+        Sampling rate, in Hz.
+    n_cycles : float, optional, default: 3
+        Number of cycles of the frequency of interest used to compute lagged coherence.
+    f_step : float, optional, default: 1
+        Step size to calculate lagged coherence in the frequency range, in Hz.
+    return_spectrum : bool, optional, default: False
+        If True, return the lagged coherence for all frequency values. Otherwise, only return mean.
 
     Returns
     -------
-    lc : float (or numpy.array 1d)
-        if return_spectrum is False: mean lagged coherence value in the frequency range of interest
-        if return_spectrum is True: lagged coherence value for each frequency in the frequency range
-    fs : numpy.array 1d
-        Only returned if return_spectrum is True
-        Frequencies (Hz) corresponding to the lagged coherence values in lc
+    lc : float or 1d array
+        If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
+        If return_spectrum is True: lagged coherence value for each frequency in the frequency range.
+    freqs : 1d array
+        Frequencies, in Hz, corresponding to the lagged coherence values in lc.
+        Only returned if return_spectrum is True.
 
     References
     ----------

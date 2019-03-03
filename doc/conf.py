@@ -6,7 +6,6 @@
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
 
-
 import os
 from os.path import dirname as up
 
@@ -58,8 +57,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.mathjax',
     'sphinx_gallery.gen_gallery',
-    'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
+    'numpydoc',
     'm2r']
 
 # generate autosummary even if no references
@@ -100,7 +99,7 @@ pygments_style = 'sphinx'
 #
 #html_theme = 'alabaster'
 html_theme = 'bootstrap'
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+#html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -112,7 +111,6 @@ html_theme_options = {
     'navbar_links': [
         ("API", "api"),
         ("Tutorial", "auto_tutorials/index"),
-        #("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
 
@@ -127,7 +125,7 @@ html_theme_options = {
     # Currently, the supported themes are:
     # - Bootstrap 2: https://bootswatch.com/2
     # - Bootstrap 3: https://bootswatch.com/3
-    'bootswatch_theme': "sandstone", #darkly, journal
+    'bootswatch_theme': "flatly", #"sandstone", #darkly, journal
 
     # Render the current pages TOC in the navbar. (Default: true)
     'navbar_pagenav': False,
@@ -143,7 +141,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -213,7 +211,7 @@ texinfo_documents = [
 ]
 
 # Add logo
-html_logo = 'logo.png'
+#html_logo = 'logo.png'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
@@ -247,7 +245,6 @@ sphinx_gallery_conf = {
     'gallery_dirs': ['auto_examples', 'auto_tutorials'],
     'within_subsection_order': FileNameSortKey,
     'backreferences_dir': 'generated',
-    'thumbnail_size': (250, 250),
     'reference_url': {
         'neurodsp': None,
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',

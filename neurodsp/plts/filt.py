@@ -8,9 +8,18 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-
 def plot_frequency_response(fs, b_vals, a_vals=1):
-    """Compute frequency response of a filter kernel b with sampling rate fs"""
+    """Compute frequency response of a filter kernel b with sampling rate fs.
+
+    Parameters
+    ----------
+    fs : float
+        The sampling rate, in Hz.
+    b_vals : 1d array
+        B values for the filter.
+    a_vals : 1d array
+        A values for the filter.
+    """
 
     w_vals, h_vals = signal.freqz(b_vals, a_vals)
 
@@ -22,9 +31,9 @@ def plot_frequency_response(fs, b_vals, a_vals=1):
     plt.ylabel('Attenuation (dB)')
     plt.xlabel('Frequency (Hz)')
 
+    # Plot filter kernel, if available
     if isinstance(a_vals, int):
 
-        # Plot filter kernel
         plt.subplot(1, 2, 2)
         plt.plot(b_vals, 'k')
         plt.title('Kernel')
