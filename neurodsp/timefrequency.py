@@ -7,11 +7,12 @@ from scipy import signal
 
 import neurodsp
 from neurodsp.filt import filter_signal
+from neurodsp.filt import _drop_edge_artifacts, _remove_nans, _restore_nans
 
 ###################################################################################################
 ###################################################################################################
 
-def phase_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
+def phase_by_time(sig, fs, f_range, filter_kwargs={}, hilbert_increase_n=False,
                   remove_edge_artifacts=True, verbose=True):
     """Calculate the phase time series of a neural oscillation.
 
@@ -57,9 +58,7 @@ def phase_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        N_rmv = int(np.ceil(len(kernel) / 2))
-        pha[:N_rmv] = np.nan
-        pha[-N_rmv:] = np.nan
+        pha = _drop_edge_artifacts(pha, len(kernel))
 
     return pha
 
@@ -110,9 +109,7 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        N_rmv = int(np.ceil(len(kernel) / 2))
-        amp[:N_rmv] = np.nan
-        amp[-N_rmv:] = np.nan
+        amp = _drop_edge_artifacts(amp, len(kernel))
 
     return amp
 
@@ -169,9 +166,7 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
     """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN."""
 
     # Extract the signal that is not nan
-    first_nonan = np.where(~np.isnan(sig))[0][0]
-    last_nonan = np.where(~np.isnan(sig))[0][-1] + 1
-    sig_nonan = sig[first_nonan:last_nonan]
+    sig_nonan, sig_nans = _remove_nans(sig)
 
     # Compute hilbert transform of signal without nans
     if hilbert_increase_n:
@@ -182,8 +177,7 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
         sig_hilb_nonan = signal.hilbert(sig_nonan)
 
     # Fill in output hilbert with nans on edges
-    sig_hilb = np.ones(len(sig), dtype=complex) * np.nan
-    sig_hilb[first_nonan:last_nonan] = sig_hilb_nonan
+    sig_hilb = _restore_nans(sig_hilb_nonan, sig_nans, dtype=complex)
 
     return sig_hilb
 

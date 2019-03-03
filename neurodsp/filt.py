@@ -571,7 +571,7 @@ def _remove_nans(sig):
     return sig_removed, sig_nans
 
 
-def _restore_nans(sig, sig_nans):
+def _restore_nans(sig, sig_nans, dtype=float):
     """Restore NaN values to the edges of a 1d array.
 
     Parameters
@@ -587,7 +587,7 @@ def _restore_nans(sig, sig_nans):
         Signal with NaN edges restored.
     """
 
-    sig_restored = np.ones(len(sig_nans)) * np.nan
+    sig_restored = np.ones(len(sig_nans), dtype=dtype) * np.nan
     sig_restored[~sig_nans] = sig
 
     return sig_restored
