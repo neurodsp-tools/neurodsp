@@ -650,9 +650,9 @@ def _iir_checks(n_seconds, butterworth_order, remove_edge_artifacts):
     """Checks for using an IIR filter if called from the general filter function."""
 
     # Check inputs for IIR filters
+    if n_seconds is not None:
+        raise ValueError('n_seconds should not be defined for an IIR filter.')
+    if butterworth_order is None:
+        raise ValueError('butterworth_order must be defined when using an IIR filter.')
     if remove_edge_artifacts:
         warnings.warn('Edge artifacts are not removed when using an IIR filter.')
-    if n_seconds is not None:
-        raise TypeError('n_seconds should not be defined for an IIR filter.')
-    if butterworth_order is None:
-        raise TypeError('butterworth_order must be defined when using an IIR filter.')
