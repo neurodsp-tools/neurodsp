@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from neurodsp.sim.sim_periodic import sim_oscillator, sim_bursty_oscillator
-from neurodsp.sim.sim_aperiodic import _return_noise_sim
+from neurodsp.sim.periodic import sim_oscillator, sim_bursty_oscillator
+from neurodsp.sim.aperiodic import _return_noise_sim
 
 ###################################################################################################
 ###################################################################################################
@@ -56,9 +56,8 @@ def sim_noisy_oscillator(n_seconds, fs, freq, noise_generator='synaptic',
     # Determine length of signal in samples
     n_samples = int(n_seconds * fs)
 
-    # Generate noise
+    # Generate & demean noise
     noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
-    # demean noise
     noise = noise - noise.mean()
 
     # Generate oscillator

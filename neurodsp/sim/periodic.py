@@ -1,6 +1,7 @@
 """Simulating time series, with periodic activity."""
 
 import warnings
+from copy import deepcopy
 
 import numpy as np
 import pandas as pd
@@ -42,8 +43,8 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     decay_samples = n_samples_cycle - rise_samples
 
     # Make phase array for a single cycle, then repeat it
-    pha_one_cycle = np.hstack([np.linspace(
-        0, np.pi, decay_samples + 1), np.linspace(-np.pi, 0, rise_samples + 1)[1:-1]])
+    pha_one_cycle = np.hstack([np.linspace(0, np.pi, decay_samples + 1),
+                               np.linspace(-np.pi, 0, rise_samples + 1)[1:-1]])
     phase_t = np.tile(pha_one_cycle, n_cycles)
     phase_t = phase_t[:n_samples]
 
@@ -122,126 +123,19 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
     n_cycles_overestimate = int(np.ceil(n_samples / mean_period_samples * 2))
 
     # Simulate if a series of cycles are oscillating or not oscillating
-    is_oscillating = [False]
-    n_cycles_current = 1
-    while n_cycles_current < n_cycles_overestimate:
-        rand_num = np.random.rand()
-        if is_oscillating[-1]:
-            is_oscillating.append(rand_num > prob_leave_burst)
-        else:
-            is_oscillating.append(rand_num < prob_enter_burst)
-        n_cycles_current += 1
+    is_oscillating = _make_is_osc(n_cycles_overestimate, prob_enter_burst, prob_leave_burst)
 
-    # Determine period, amp, and rdsym for each cycle
-    periods = []
-    amps = []
-    rdsyms = []
-    for is_osc in is_oscillating:
-        if is_osc is False:
-            period = cycle_features_use['period_mean'] + \
-                np.random.randn() * cycle_features_use['period_std']
-            periods.append(int(period))
-            amps.append(np.nan)
-            rdsyms.append(np.nan)
+    # Determine what the cycle properties shall be for each cycle
+    periods, amps, rdsyms = _determine_cycle_properties(is_oscillating, cycle_features_use, n_tries)
 
-            current_burst_period_mean = np.nan
-            current_burst_amp_mean = np.nan
-            current_burst_rdsym_mean = np.nan
-        else:
-            if np.isnan(current_burst_period_mean):
-                current_burst_period_mean = cycle_features_use['period_mean'] + \
-                    np.random.randn() * cycle_features_use['period_burst_std']
-                current_burst_amp_mean = cycle_features_use['amp_mean'] + \
-                    np.random.randn() * cycle_features_use['amp_burst_std']
-                current_burst_rdsym_mean = cycle_features_use['rdsym_mean'] + \
-                    np.random.randn() * cycle_features_use['rdsym_burst_std']
-
-            # simulate for n_tries, if any params are still negative, raise error
-            tries_left = n_tries
-            features_valid = False
-            while features_valid is False and tries_left >= 0:
-                tries_left = tries_left - 1
-                period = current_burst_period_mean + \
-                    np.random.randn() * cycle_features_use['period_std']
-                amp = current_burst_amp_mean + \
-                    np.random.randn() * cycle_features_use['amp_std']
-                rdsym = current_burst_rdsym_mean + \
-                    np.random.randn() * cycle_features_use['rdsym_std']
-
-                if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
-                    features_valid = True
-
-            if features_valid is False:
-                # features are still invalid after n_tries, give up.
-                features_invalid = ''
-                if period <= 0:
-                    features_invalid += 'period '
-                if amp <= 0:
-                    features_invalid += 'amp '
-                if rdsym <= 0 or rdsym >= 1:
-                    features_invalid += 'rdsym '
-                error_str = """A cycle was repeatedly simulated with
-                               invalid feature(s) for: **{:s}** (e.g. less than 0).
-                               Please change per-cycle distribution parameters (mean &
-                               std) and restart simulation.""".format(features_invalid)
-                raise ValueError(error_str)
-            else:
-                periods.append(int(period))
-                amps.append(amp)
-                rdsyms.append(rdsym)
-
-    df = pd.DataFrame({'is_cycle': is_oscillating, 'period': periods,
-                       'amp': amps, 'rdsym': rdsyms})
+    # Set up the dataframe of parameters
+    df = pd.DataFrame({'is_cycle': is_oscillating, 'period': periods, 'amp': amps, 'rdsym': rdsyms})
     df['start_sample'] = np.insert(df['period'].cumsum().values[:-1], 0, 0)
     df = df[df['start_sample'] < n_samples]
-
     # Shorten df to only cycles that are included in the data
 
-    # Simulate time series for each cycle
-    sig = np.array([])
-    last_cycle_oscillating = False
-    for ind, row in df.iterrows():
-        if row['is_cycle'] is False:
-            # If last cycle was oscillating, add a decay to 0 then 0s
-            if last_cycle_oscillating:
-                decay_pha = np.linspace(0, np.pi / 2, int(row['period'] / 4))
-                decay_t = np.cos(decay_pha) * sig[-1]
-                sig = np.append(sig, decay_t)
-
-                cycle_t = np.zeros(row['period'] - int(row['period'] / 4))
-                sig = np.append(sig, cycle_t)
-            else:
-                # Add a blank cycle
-                cycle_t = np.zeros(row['period'])
-                sig = np.append(sig, cycle_t)
-            last_cycle_oscillating = False
-        else:
-            # If last cycle was oscillating, add a decay to 0
-            if not last_cycle_oscillating:
-                rise_pha = np.linspace(-np.pi / 2, 0,
-                                       int(row['period'] / 4))[1:]
-                rise_t = np.cos(rise_pha) * row['amp']
-                if len(rise_pha) > 0:
-                    sig[-len(rise_t):] = rise_t
-
-            # Add a cycle with rdsym
-            rise_samples = int(np.round(row['period'] * row['rdsym']))
-            decay_samples = row['period'] - rise_samples
-            pha_t = np.hstack([np.linspace(0, np.pi, decay_samples + 1)[1:],
-                               np.linspace(-np.pi, 0, rise_samples + 1)[1:]])
-            cycle_t = np.cos(pha_t)
-
-            # Adjust decay if the last cycle was oscillating
-            if last_cycle_oscillating:
-                scaling = (row['amp'] + sig[-1]) / 2
-                offset = (sig[-1] - row['amp']) / 2
-                cycle_t[:decay_samples] = cycle_t[:decay_samples] * \
-                    scaling + offset
-                cycle_t[decay_samples:] = cycle_t[decay_samples:] * row['amp']
-            else:
-                cycle_t = cycle_t * row['amp']
-            sig = np.append(sig, cycle_t)
-            last_cycle_oscillating = True
+    # Create the signal
+    sig = _sim_cycles(df)
     sig = sig[:n_samples]
 
     if return_cycle_df:
@@ -301,10 +195,8 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
 
     # Add jitter to "spike" indices
     if jitter != 0:
-
         spk_indices = spk_indices + \
-            np.random.randint(low=-int(fs * jitter),
-                              high=int(fs * jitter), size=len(spk_indices))
+            np.random.randint(low=-int(fs * jitter), high=int(fs * jitter), size=len(spk_indices))
 
     spks[spk_indices] = 1
     sig = np.convolve(spks, osc_cycle, 'valid')
@@ -313,7 +205,7 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
 
 
 def make_osc_cycle(t_ker, fs, cycle_params):
-    """Make 1 cycle of oscillation.
+    """Make one cycle of an oscillation.
 
     Parameters
     ----------
@@ -337,6 +229,9 @@ def make_osc_cycle(t_ker, fs, cycle_params):
         Simulated oscillation cycle.
     """
 
+    if cycle_params[0] not in ['gaussian', 'exp', '2exp']:
+        raise ValueError('Did not recognize cycle type.')
+
     if cycle_params[0] == 'gaussian':
         # cycle_params defines std in seconds
         cycle = signal.gaussian(t_ker * fs, cycle_params[1] * fs)
@@ -347,10 +242,147 @@ def make_osc_cycle(t_ker, fs, cycle_params):
 
     elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
-        cycle = make_synaptic_kernel(
-            t_ker, fs, cycle_params[1], cycle_params[2])
-
-    else:
-        raise ValueError('Did not recognize cycle type.')
+        cycle = make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
 
     return cycle
+
+##
+##
+
+def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
+
+    is_oscillating = [None] * (n_cycles)
+    is_oscillating[0] = False
+
+    for ii in range(1, n_cycles):
+
+        rand_num = np.random.rand()
+
+        if is_oscillating[ii-1]:
+            is_oscillating[ii] = rand_num > prob_leave_burst
+        else:
+            is_oscillating[ii] = rand_num  < prob_enter_burst
+
+    return is_oscillating
+
+
+def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
+
+    periods = np.zeros_like(is_oscillating, dtype=int)
+    amps = np.zeros_like(is_oscillating, dtype=float)
+    rdsyms = np.zeros_like(is_oscillating, dtype=float)
+
+    for ind, is_osc in enumerate(is_oscillating):
+
+        if is_osc is False:
+            period = cycle_features['period_mean'] + \
+                np.random.randn() * cycle_features['period_std']
+
+            periods[ind] = int(period)
+            amps[ind] = np.nan
+            rdsyms[ind] = np.nan
+
+            current_burst_period_mean = np.nan
+            current_burst_amp_mean = np.nan
+            current_burst_rdsym_mean = np.nan
+
+        else:
+            if np.isnan(current_burst_period_mean):
+                current_burst_period_mean = cycle_features['period_mean'] + \
+                    np.random.randn() * cycle_features['period_burst_std']
+                current_burst_amp_mean = cycle_features['amp_mean'] + \
+                    np.random.randn() * cycle_features['amp_burst_std']
+                current_burst_rdsym_mean = cycle_features['rdsym_mean'] + \
+                    np.random.randn() * cycle_features['rdsym_burst_std']
+
+            # simulate for n_tries, if any params are still negative, raise error
+            tries_left = n_tries
+            features_valid = False
+
+            while features_valid is False and tries_left >= 0:
+                tries_left = tries_left - 1
+                period = current_burst_period_mean + \
+                    np.random.randn() * cycle_features['period_std']
+                amp = current_burst_amp_mean + \
+                    np.random.randn() * cycle_features['amp_std']
+                rdsym = current_burst_rdsym_mean + \
+                    np.random.randn() * cycle_features['rdsym_std']
+
+                if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
+                    features_valid = True
+
+            if features_valid is False:
+                # features are still invalid after n_tries, give up.
+                features_invalid = ''
+                if period <= 0:
+                    features_invalid += 'period '
+                if amp <= 0:
+                    features_invalid += 'amp '
+                if rdsym <= 0 or rdsym >= 1:
+                    features_invalid += 'rdsym '
+
+                raise ValueError("""A cycle was repeatedly simulated with
+                                 invalid feature(s) for: **{:s}** (e.g. less than 0).
+                                 Please change per-cycle distribution parameters (mean &
+                                 std) and restart simulation.""".format(features_invalid))
+
+            else:
+                periods[ind] = int(period)
+                amps[ind] = amp
+                rdsyms[ind] = rdsym
+
+    return periods, amps, rdsyms
+
+
+def _sim_cycles(df):
+    """Simulate cycle time series, given a set of parameters for each cycle."""
+
+    # Simulate time series for each cycle
+    sig = np.array([])
+    last_cycle_oscillating = False
+
+    for ind, row in df.iterrows():
+
+        if row['is_cycle'] is False:
+            # If last cycle was oscillating, add a decay to 0 then 0s
+            if last_cycle_oscillating:
+                decay_pha = np.linspace(0, np.pi / 2, int(row['period'] / 4))
+                decay_t = np.cos(decay_pha) * sig[-1]
+                sig = np.append(sig, decay_t)
+
+                cycle_t = np.zeros(row['period'] - int(row['period'] / 4))
+                sig = np.append(sig, cycle_t)
+            else:
+                # Add a blank cycle
+                cycle_t = np.zeros(row['period'])
+                sig = np.append(sig, cycle_t)
+            last_cycle_oscillating = False
+
+        else:
+            # If last cycle was oscillating, add a decay to 0
+            if not last_cycle_oscillating:
+                rise_pha = np.linspace(-np.pi / 2, 0, int(row['period'] / 4))[1:]
+                rise_t = np.cos(rise_pha) * row['amp']
+                if len(rise_pha) > 0:
+                    sig[-len(rise_t):] = rise_t
+
+            # Add a cycle with rdsym
+            rise_samples = int(np.round(row['period'] * row['rdsym']))
+            decay_samples = row['period'] - rise_samples
+            pha_t = np.hstack([np.linspace(0, np.pi, decay_samples + 1)[1:],
+                               np.linspace(-np.pi, 0, rise_samples + 1)[1:]])
+            cycle_t = np.cos(pha_t)
+
+            # Adjust decay if the last cycle was oscillating
+            if last_cycle_oscillating:
+                scaling = (row['amp'] + sig[-1]) / 2
+                offset = (sig[-1] - row['amp']) / 2
+                cycle_t[:decay_samples] = cycle_t[:decay_samples] * scaling + offset
+                cycle_t[decay_samples:] = cycle_t[decay_samples:] * row['amp']
+            else:
+                cycle_t = cycle_t * row['amp']
+
+            sig = np.append(sig, cycle_t)
+            last_cycle_oscillating = True
+
+    return sig

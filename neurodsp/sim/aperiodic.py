@@ -6,6 +6,7 @@ import numpy as np
 from scipy.stats import zscore
 from scipy import signal
 
+from neurodsp.filt import filter_signal_fir
 from neurodsp.spectral import rotate_powerlaw
 
 ###################################################################################################
@@ -50,6 +51,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
 
     # enforce that sig is non-negative in cases of low firing rate
     sig[np.where(sig < 0.)] = 0.
+
     return sig
 
 
@@ -95,8 +97,7 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     # Kernel type: double exponential
     else:
         if tau_r > tau_d:
-            warnings.warn(
-                'Rise time constant should be shorter than decay time constant.')
+            warnings.warn('Rise time constant should be shorter than decay time constant.')
 
         # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
         kernel = (np.exp(-times / tau_d) - np.exp(-times / tau_r))
@@ -260,7 +261,7 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
     if f_range[1] is None:
         # Make filter order odd if necessary
         if filter_order % 2 == 0:
-            print('NOTE: Increased high-pass filter order by 1 in order to be odd')
+            #print('NOTE: Increased high-pass filter order by 1 in order to be odd')
             filter_order += 1
 
         # High pass filter
@@ -275,13 +276,29 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
 
     return noise
 
+    # # USE FILTER FROM NDSP
+    # # Infer passtype & filter signal
+    # #   TODO: Update this with infer_passtype helper function
+    # if f_range[1] is None:
+    #     pass_type = 'highpass'
+    # else:
+    #     pass_type = 'bandpass'
+    # noise = filter_signal_fir(noise, fs, pass_type, f_range)
+
+    # return noise
 
 
 def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
 
-    # Generate noise
-    if type(noise_generator) is str:
-        # use neurodsp defined noise generators
+
+    if isinstance(noise_generator, str):
+
+        # Check that the specified noise generator is valid
+        valid_noise_generators = ['filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process']
+        if noise_generator not in valid_noise_generators:
+            raise ValueError('Did not recognize noise type. Please check doc for acceptable function names.')
+
+
         if noise_generator == 'filtered_powerlaw':
             noise = sim_filtered_noise(n_seconds, fs, **noise_args)
 
@@ -294,11 +311,8 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
         elif noise_generator == 'ou_process':
             noise = sim_ou_process(n_seconds, fs, **noise_args)
 
-        else:
-            raise ValueError(
-                'Did not recognize noise type. Please check doc for acceptable function names.')
 
-    elif type(noise_generator) is np.ndarray:
+    elif isinstance(noise_generator, np.ndarray):
         if len(noise_generator) != int(n_seconds * fs):
             raise ValueError('Custom noise is not of same length as required oscillation length.')
         else:
