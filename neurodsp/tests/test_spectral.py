@@ -33,7 +33,6 @@ def test_compute_spectrum():
     assert np.allclose(np.sum(np.abs(gt_psd['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_psd['freqmf'] - freqmf)), 0, atol=10 ** -5)
 
-
 def test_compute_scv():
 
     # Load data
@@ -50,7 +49,6 @@ def test_compute_scv():
 
     assert np.allclose(np.sum(np.abs(gt_scv['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scv['SCV'] - spect_cv)), 0, atol=10 ** -5)
-
 
 def test_scv_rs():
 
@@ -77,7 +75,6 @@ def test_scv_rs():
     assert np.allclose(np.sum(np.abs(gt_scv_rs['Tro'] - t_ro)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scv_rs['SCVrsro'] - scv_rs_ro)), 0, atol=10 ** -5)
 
-
 def test_spectralhist():
 
     # Load data
@@ -95,7 +92,6 @@ def test_spectralhist():
     assert np.allclose(np.sum(np.abs(gt_sphist['bins'] - bins)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_sphist['sp_hist'] - sp_hist)), 0, atol=10 ** -5)
 
-
 def test_rotatepsd():
 
     rot_exp = -2
@@ -108,7 +104,6 @@ def test_rotatepsd():
                             '/tests/data/sim_rotatepsd.npy')
 
     assert np.allclose(spectrum_rot - spectrum_test, 0, atol=10 ** -5)
-
 
 def test_morlet_transform():
 

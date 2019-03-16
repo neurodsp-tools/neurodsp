@@ -11,9 +11,6 @@ from .util import plot_test
 
 @plot_test
 def test_plot_spectral_hist():
-    """
-    Confirm spectral hist function works as expected
-    """
 
     # Generate random signal
     sig = np.random.randn(2000)

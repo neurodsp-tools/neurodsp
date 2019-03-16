@@ -19,7 +19,6 @@ def test_plot_frequency_response_call():
     sig_filt, kernel = filter_signal(sig, fs, 'bandpass', (8, 12), plot_freq_response=True,
                                      return_kernel=True, verbose=False)
 
-
 @plot_test
 def test_plot_frequency_response():
 

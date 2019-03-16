@@ -11,26 +11,6 @@ from neurodsp.filt import _remove_nans, _restore_nans, _drop_edge_artifacts, _fi
 ###################################################################################################
 ###################################################################################################
 
-def test_filter_signal():
-    # TODO
-    pass
-
-def test_filter_signal_fir():
-    # TODO
-    pass
-
-def test_filter_signal_iir():
-    # TODO
-    pass
-
-def test_design_fir_filter():
-    # TODO
-    pass
-
-def test_design_iir_filter():
-    # TODO
-    pass
-
 def test_check_filter_definition():
 
     # Check that error catching works for bad pass_type definition
@@ -64,14 +44,6 @@ def test_check_filter_definition():
     with raises(ValueError):
         f_lo, f_hi = check_filter_definition('bandstop', fc=(62, 58))
 
-def test_check_filter_properties():
-    # TODO
-    pass
-
-def compute_frequency_response():
-    # TODO
-    pass
-
 def compute_pass_band():
 
     fs = 500
@@ -79,9 +51,6 @@ def compute_pass_band():
     assert compute_pass_band(fs, 'highpass', 20) == 20.
     assert compute_pass_band(fs, 'lowpass', 5) == compute_nyquist(fs) - 5
 
-def compute_trans_band():
-    # TODO
-    pass
 
 def test_compute_nyquist():
 
