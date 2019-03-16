@@ -546,6 +546,37 @@ def compute_nyquist(fs):
 
     return fs / 2.
 
+
+def infer_passtype(fc):
+    """Given frequency definition of a filter, infer the passtype.
+
+    Parameters
+    ----------
+    fc : tuple of (float, float)
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+
+    Returns
+    -------
+    pass_type : str
+        Which kind of filter pass_type is consistent with the frequency definition provided.
+
+    Notes
+    -----
+    Assumes that a definition with two frequencies is a 'bandpass' (not 'bandstop').
+    """
+
+    if fc[0] is None:
+        pass_type = 'lowpass'
+    elif fc[1] is None:
+        pass_type = 'highpass'
+    else:
+        pass_type = 'bandpass'
+
+    # Check the inferred passtype & frequency definition is valid
+    _ = check_filter_definition(pass_type, fc)
+
+    return pass_type
+
 ###################################################################################################
 ###################################################################################################
 
@@ -571,7 +602,7 @@ def _remove_nans(sig):
     return sig_removed, sig_nans
 
 
-def _restore_nans(sig, sig_nans):
+def _restore_nans(sig, sig_nans, dtype=float):
     """Restore NaN values to the edges of a 1d array.
 
     Parameters
@@ -587,7 +618,7 @@ def _restore_nans(sig, sig_nans):
         Signal with NaN edges restored.
     """
 
-    sig_restored = np.ones(len(sig_nans)) * np.nan
+    sig_restored = np.ones(len(sig_nans), dtype=dtype) * np.nan
     sig_restored[~sig_nans] = sig
 
     return sig_restored
