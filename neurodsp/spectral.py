@@ -8,8 +8,7 @@ from scipy import signal
 
 def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
                      noverlap=None, filt_len=1., f_lim=None, spg_outlier_pct=0.):
-    """Estimate the power spectral density (PSD) of a time series from short-time Fourier
-    Transform (mean, median), or the entire signal's FFT smoothed (medfilt).
+    """Estimate the power spectral density (PSD) of a time series.
 
     Parameters
     -----------
@@ -26,7 +25,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
     window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
-        If window is array_like, this array will be used as the window and its length must be nperseg.
+        If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
         If None, and window is str or tuple, is set to 1 second of data.
@@ -37,7 +36,7 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
     filt_len : float, optional
         Length of the median filter, in Hz.
         Only used with the 'medfilt' method.
-    f_lim : float, optional
+    f_lim : float, optional, default: 1.
         Maximum frequency to keep, in Hz.
         If None, keeps up to Nyquist.
     spg_outlier_pct : float, optional, default: 0.
@@ -58,68 +57,116 @@ def compute_spectrum(sig, fs, method='mean', window='hann', nperseg=None,
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.html
     """
 
-    if method in ('mean', 'median'):
-
-        # welch-style spectrum (mean/median of STFT)
-        if nperseg is None:
-            if isinstance(window, (str, tuple)):
-                # window is a string or tuple, defaults to 1 second of data
-                nperseg = int(fs)
-            else:
-                # window is an array, defaults to window length
-                nperseg = len(window)
-        else:
-            nperseg = int(nperseg)
-
-        if noverlap is not None:
-            noverlap = int(noverlap)
-
-        # Calculate the short time fourier transform with signal.spectrogram
-        freqs, t_axis, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
-
-        # Pad data to 2D
-        if len(sig.shape) == 1:
-            sig = sig[None, :]
-
-        numchan = sig.shape[0]
-
-        # Throw out outliers if indicated
-        if spg_outlier_pct > 0.:
-
-            n_discard = int(np.ceil(len(t_axis) / 100. * spg_outlier_pct))
-            n_keep = int(len(t_axis)-n_discard)
-            spg_temp = np.zeros((numchan, len(freqs), n_keep))
-            outlier_inds = np.zeros((numchan, n_discard))
-
-            # Discard time windows with high total log powers, round up so it doesn't get a zero
-            for chan in range(numchan):
-                outlier_inds[chan, :] = np.argsort(np.mean(np.log10(spg[chan, :, :]), axis=0))[-n_discard:]
-                spg_temp[chan, :, :] = np.delete(spg[chan], outlier_inds[chan, :], axis=-1)
-            spg = spg_temp
-
-        if method == 'mean':
-            spectrum = np.mean(spg, axis=-1)
-        elif method == 'median':
-            spectrum = np.median(spg, axis=-1)
-
-    elif method == 'medfilt':
-
-        # Take the positive half of the spectrum since it's symmetrical
-        FT = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
-        freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
-
-        # Convert median filter length from Hz to samples
-        filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
-        spectrum = signal.medfilt(np.abs(FT)**2. / (fs * len(sig)), filt_len_samp)
-
-    else:
+    if method not in ('mean', 'median', 'medfilt'):
         raise ValueError('Unknown power spectrum method: %s' % method)
 
-    if f_lim is not None:
-        f_lim_ind = np.where(freqs > f_lim)[0][0]
-        return freqs[:f_lim_ind], spectrum[..., :f_lim_ind]
-    else:
-        return freqs, spectrum
+    if method in ('mean', 'median'):
+        return compute_spectrum_welch(sig, fs, method, window,
+                                      nperseg, noverlap, f_lim, spg_outlier_pct)
+
+    elif method == 'medfilt':
+        return compute_spectrum_medfilt(sig, fs, filt_len, f_lim)
+
+
+def compute_spectrum_welch(sig, fs, method='mean', window='hann', nperseg=None,
+                           noverlap=None, f_lim=None, spg_outlier_pct=0.):
+    """Estimate the power spectral density using Welch's method.
+
+    Parameters
+    -----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    method : {'mean', 'median'}, optional
+        Method to average across the windows:
+
+        * 'mean' is the same as Welch's method (mean of STFT).
+        * 'median' uses median of STFT instead of mean to minimize outlier effect.
+    window : str or tuple or array_like, optional, default: 'hann'
+        Desired window to use. Defaults to a Hann window.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If array_like, the array will be used as the window and its length must be nperseg.
+    nperseg : int, optional
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional
+        Number of points to overlap between segments.
+        If None, noverlap = nperseg // 8.
+    f_lim : float, optional
+        Maximum frequency to keep, in Hz.
+        If None, keeps up to Nyquist.
+    spg_outlier_pct : float, optional, default: 0.
+        Percentage of spectrogram windows with the highest powers to discard prior to averaging.
+        Useful for quickly eliminating potential outliers to compute spectrum.
+        Must be between 0 and 100.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Calculate the short time fourier transform with signal.spectrogram
+    nperseg, noverlap = _check_spg_settings(fs, window, nperseg, noverlap)
+    freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
+
+    # Pad data to 2D
+    if len(sig.shape) == 1:
+        sig = sig[np.newaxis :]
+
+    # Throw out outliers if indicated
+    if spg_outlier_pct > 0.:
+        spg = _discard_outliers(spg, spg_outlier_pct)
+
+    if method == 'mean':
+        spectrum = np.mean(spg, axis=-1)
+    elif method == 'median':
+        spectrum = np.median(spg, axis=-1)
+
+    if f_lim:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+
+    return freqs, spectrum
+
+
+def compute_spectrum_medfilt(sig, fs, filt_len=1., f_lim=None):
+    """Estimate the power spectral densitry as a smoothed FFT.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    filt_len : float, optional, default: 1.
+        Length of the median filter, in Hz. Only used with the 'medfilt' method.
+    f_lim : float, optional
+        Maximum frequency to keep, in Hz. If None, keeps up to Nyquist.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Take the positive half of the spectrum since it's symmetrical
+    ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
+
+    # Convert median filter length from Hz to samples
+    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
+    spectrum = signal.medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
+
+    if f_lim:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+
+    return freqs, spectrum
 
 
 def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
@@ -134,7 +181,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
-        If window is array_like, this array will be used as the window and its length must be nperseg.
+        If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
         If None, and window is str or tuple, is set to 1 second of data.
@@ -157,27 +204,12 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     White noise should have a SCV of 1 at all frequencies.
     """
 
-    if nperseg is None:
-        if isinstance(window, str) or isinstance(window, tuple):
-            # window is a string or tuple, defaults to 1 second of data
-            nperseg = int(fs)
-        else:
-            # window is an array, defaults to window length
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
+    # Compute spectrogram of data
+    nperseg, noverlap = _check_spg_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
     if outlier_pct is not None:
-
-        # Discard time windows with high powers. Round up so it doesn't get a zero.
-        discard = int(np.ceil(spg.shape[1] / 100. * outlier_pct))
-        outlieridx = np.argsort(np.mean(np.log10(spg), axis=0))[:-discard]
-        spg = spg[:, outlieridx]
+        spg = _discard_outliers(spg, outlier_pct)
 
     spect_cv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
 
@@ -197,7 +229,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
     window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
-        If window is array_like, this array will be used as the window and its length must be nperseg.
+        If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
         If None, and window is str or tuple, is set to 1 second of data.
@@ -225,33 +257,22 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
         Resampled spectral coefficient of variation.
     """
 
-    if nperseg is None:
-        if isinstance(window, (str, tuple)):
-            # window is a string or tuple, defaults to 1 second of data
-            nperseg = int(fs)
-        else:
-            # window is an array, defaults to window length
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
+    # Compute spectrogram of data
+    nperseg, noverlap = _check_spg_settings(fs, window, nperseg, noverlap)
     freqs, ts, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap)
 
     if method == 'bootstrap':
 
-        # Params are number of slices of STFT to compute SCV over & number of draws
+        # Params: number of slices of STFT to compute SCV over & number of draws
+        #   Defaults to draw 1/10 of STFT slices, 100 draws
         if rs_params is None:
-            # defaults to draw 1/10 of STFT slices, 100 draws
             rs_params = (int(spg.shape[1] / 10.), 100)
 
         nslices, ndraws = rs_params
         spect_cv_rs = np.zeros((len(freqs), ndraws))
+
+        # Repeated subsampling of spectrogram randomly, with replacement between draws
         for draw in range(ndraws):
-            # repeated subsampling of spectrogram randomly, with replacement
-            # between draws
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
             spect_cv_rs[:, draw] = np.std(
                 spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
@@ -260,10 +281,9 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
 
     elif method == 'rolling':
 
-        # params are number of slices of STFT to compute SCV over, and number
-        # of slices to roll forward
+        # Params: number of slices of STFT to compute SCV over & number of slices to roll forward
+        #   Defaults to 10 STFT slices, move forward by 5 slices
         if rs_params is None:
-            # defaults to 10 STFT slices, move forward by 5 slices
             rs_params = (10, 5)
 
         nslices, nsteps = rs_params
@@ -296,7 +316,7 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     window : str or tuple or array_like, optional, default='hann'
         Desired window to use. Defaults to a Hann window.
         See scipy.signal.get_window for a list of windows and required parameters.
-        If window is array_like, this array will be used as the window and its length must be nperseg.
+        If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
         If None, and window is str or tuple, is set to 1 second of data.
@@ -324,29 +344,14 @@ def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     The histogram bins are the same for every frequency, thus evenly spacing the global min and max power.
     """
 
-    # Set the nperseg, if not provided:
-    #   If the window is a string or tuple, defaults to 1 second of data
-    #   If the window is an array, defaults to window length
-    if nperseg is None:
-        if isinstance(window, (str, tuple)):
-            nperseg = int(fs)
-        else:
-            nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
-
-    if noverlap is not None:
-        noverlap = int(noverlap)
-
     # Compute spectrogram of data
+    nperseg, noverlap = _check_spg_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = signal.spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
 
-    # Get log10 power before binning
+    # Get log10 power & limit to frequency range of interest before binning
+    # ToDo / Note: currently includes a hack to maintain test shape
     ps = np.transpose(np.log10(spg))
-
-    # Limit spectrogram to freq range of interest
-    ps = ps[:, np.logical_and(freqs >= f_lim[0], freqs < f_lim[1])]
-    freqs = freqs[np.logical_and(freqs >= f_lim[0], freqs < f_lim[1])]
+    freqs, ps = trim_spectrum(freqs, ps, [f_lim[0], f_lim[1] - 1/fs])
 
     # Prepare bins for power - min and max of bins determined by power cutoff percentage
     power_min, power_max = np.percentile(np.ndarray.flatten(ps), cutpct)
@@ -396,7 +401,7 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=0.5):
     mwt = np.zeros([sig_len, freqs_len], dtype=complex)
 
     for f_ind, freq in enumerate(freqs):
-        mwt[:,f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
+        mwt[:, f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
 
     return mwt
 
@@ -468,12 +473,12 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
     spectrum : 1d array
         Power spectrum to be rotated.
     delta_f : float
-        Change in power law exponent to be applied. Positive is counterclockwise
-        rotation (flatten), negative is clockwise rotation (steepen).
+        Change in power law exponent to be applied.
+        Positive is counterclockwise rotation (flatten), negative is clockwise rotation (steepen).
     f_rotation : float, optional
         Axis of rotation frequency, in Hz, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
-        If None, the transform normalizes to power at 1Hz by defaults.
+        If None, the transform normalizes to power at 1Hz by default.
 
     Returns
     -------
@@ -505,3 +510,78 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
     rot_spectrum = f_mask * spectrum
 
     return rot_spectrum
+
+
+def trim_spectrum(freqs, power_spectra, f_range):
+    """Extract frequency range of interest from power spectra.
+
+    Parameters
+    ----------
+    freqs : 1d array
+        Frequency values for the PSD.
+    power_spectra : 1d or 2d array
+        Power spectral density values.
+    f_range: list of [float, float]
+        Frequency range to restrict to.
+
+    Returns
+    -------
+    freqs_ext : 1d array
+        Extracted frequency values for the power spectrum.
+    power_spectra_ext : 1d or 2d array
+        Extracted power spectral density values.
+
+    Notes
+    -----
+    This function extracts frequency ranges >= f_low and <= f_high.
+    It does not round to below or above f_low and f_high, respectively.
+    """
+
+    # Create mask to index only requested frequencies
+    f_mask = np.logical_and(freqs >= f_range[0], freqs <= f_range[1])
+
+    # Restrict freqs & psd to requested range. The if/else is to cover both 1d or 2d arrays
+    freqs_ext = freqs[f_mask]
+    power_spectra_ext = power_spectra[f_mask] if power_spectra.ndim == 1 \
+        else power_spectra[:, f_mask]
+
+    return freqs_ext, power_spectra_ext
+
+
+def _discard_outliers(data, outlier_percent):
+    """Discard outlier arrays with high values."""
+
+    # Get the number of arrays to discard - round up so it doesn't get a zero.
+    n_discard = int(np.ceil(data.shape[-1] / 100. * outlier_percent))
+
+    # Make 2D -> 3D for looping across array
+    data = data[np.newaxis, :, :] if data.ndim == 2 else data
+
+    # Select the windows to keep from each 2D component of the input data
+    data = [dat[:, np.argsort(np.mean(np.log10(dat), axis=0))[:-n_discard]] for dat in data]
+
+    # Reshape array and squeeze to drop back to 2D if that was original shape
+    data = np.squeeze(np.stack(data))
+
+    return data
+
+
+def _check_spg_settings(fs, window, nperseg, noverlap):
+    """Check settings used for calculating spectrogram."""
+
+    # Set the nperseg, if not provided:
+    if nperseg is None:
+
+        # If the window is a string or tuple, defaults to 1 second of data
+        if isinstance(window, (str, tuple)):
+            nperseg = int(fs)
+        # If the window is an array, defaults to window length
+        else:
+            nperseg = len(window)
+    else:
+        nperseg = int(nperseg)
+
+    if noverlap is not None:
+        noverlap = int(noverlap)
+
+    return nperseg, noverlap
