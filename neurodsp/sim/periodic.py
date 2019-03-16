@@ -1,12 +1,13 @@
 """Simulating time series, with periodic activity."""
 
-import warnings
 from copy import deepcopy
 
 import numpy as np
 from numpy.random import rand, randn, randint
 import pandas as pd
 from scipy import signal
+
+from neurodsp.sim.transients import make_osc_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -204,53 +205,11 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
 
     return sig
 
-
-def make_osc_cycle(t_ker, fs, cycle_params):
-    """Make one cycle of an oscillation.
-
-    Parameters
-    ----------
-    t_ker : float
-        Length of cycle window in seconds.
-        Note that this is NOT the period of the cycle, but the length of the
-        returned array that contains the cycle, which can be (and usually is)
-        much shorter.
-    fs : float
-        Sampling frequency of the cycle simulation.
-    cycle_params : tuple
-        Defines the parameters for the oscillation cycle. Possible values:
-
-        - ('gaussian', std): gaussian cycle, standard deviation in seconds
-        - ('exp', decay time): exponential decay, decay time constant in seconds
-        - ('2exp', rise time, decay time): exponential rise and decay
-
-    Returns
-    -------
-    cycle: 1d array
-        Simulated oscillation cycle.
-    """
-
-    if cycle_params[0] not in ['gaussian', 'exp', '2exp']:
-        raise ValueError('Did not recognize cycle type.')
-
-    if cycle_params[0] == 'gaussian':
-        # cycle_params defines std in seconds
-        cycle = signal.gaussian(t_ker * fs, cycle_params[1] * fs)
-
-    elif cycle_params[0] == 'exp':
-        # cycle_params defines decay time constant in seconds
-        cycle = make_synaptic_kernel(t_ker, fs, 0, cycle_params[1])
-
-    elif cycle_params[0] == '2exp':
-        # cycle_params defines rise and decay time constant in seconds
-        cycle = make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
-
-    return cycle
-
-##
-##
+###################################################################################################
+###################################################################################################
 
 def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
+    """Create a vector describing if each cycle is oscillating."""
 
     is_oscillating = [None] * (n_cycles)
     is_oscillating[0] = False
@@ -268,6 +227,7 @@ def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
 
 
 def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
+    """Calculate the properties for each cycle."""
 
     periods = np.zeros_like(is_oscillating, dtype=int)
     amps = np.zeros_like(is_oscillating, dtype=float)
@@ -277,10 +237,8 @@ def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
 
         if is_osc is False:
             period = cycle_features['period_mean'] + randn() * cycle_features['period_std']
-
-            periods[ind] = int(period)
-            amps[ind] = np.nan
-            rdsyms[ind] = np.nan
+            amp = np.nan
+            rdsym = np.nan
 
             cur_burst = {'period_mean' : np.nan, 'amp_mean' : np.nan, 'rdsym_mean' : np.nan}
 
@@ -292,41 +250,30 @@ def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
                 cur_burst['amp_mean'] = cycle_features['amp_mean'] + randn() * cycle_features['amp_burst_std']
                 cur_burst['rdsym_mean'] = cycle_features['rdsym_mean'] + randn() * cycle_features['rdsym_burst_std']
 
-            # simulate for n_tries, if any params are still negative, raise error
-            tries_left = n_tries
-            features_valid = False
-
-            while features_valid is False and tries_left >= 0:
-
-                tries_left = tries_left - 1
+            # Simulate for n_tries to get valid features -  then if any params are still negative, raise error
+            for n_try in range(n_tries):
 
                 period = cur_burst['period_mean'] + randn() * cycle_features['period_std']
                 amp = cur_burst['amp_mean'] + randn() * cycle_features['amp_std']
                 rdsym = cur_burst['rdsym_mean'] + randn() * cycle_features['rdsym_std']
 
                 if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
-                    features_valid = True
+                    break
 
-            if features_valid is False:
-
-                # features are still invalid after n_tries, give up.
-                features_invalid = ''
-                if period <= 0:
-                    features_invalid += 'period '
-                if amp <= 0:
-                    features_invalid += 'amp '
-                if rdsym <= 0 or rdsym >= 1:
-                    features_invalid += 'rdsym '
-
-                raise ValueError("""A cycle was repeatedly simulated with
-                                 invalid feature(s) for: **{:s}** (e.g. less than 0).
-                                 Please change per-cycle distribution parameters (mean &
-                                 std) and restart simulation.""".format(features_invalid))
-
+            # If did not break out of the for loop, no valid features were found (for/else construction)
             else:
-                periods[ind] = int(period)
-                amps[ind] = amp
-                rdsyms[ind] = rdsym
+
+                # Check which features are invalid - anything below 0, and rdsym above 1
+                features_invalid = [label for label in ['period', 'amp', 'rdsym'] if eval(label) < 0]
+                features_invalid = features_invalid + ['rdsym'] if rdsym > 1 else features_invalid
+
+                raise ValueError("""A cycle was repeatedly simulated with invalid feature(s) for: {}
+                                    (e.g. less than 0). Please change per-cycle distribution parameters
+                                    (mean & std) and restart simulation.""".format(', '.join(features_invalid)))
+
+        periods[ind] = int(period)
+        amps[ind] = amp
+        rdsyms[ind] = rdsym
 
     return periods, amps, rdsyms
 
@@ -334,7 +281,6 @@ def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
 def _sim_cycles(df):
     """Simulate cycle time series, given a set of parameters for each cycle."""
 
-    # Simulate time series for each cycle
     sig = np.array([])
     last_cycle_oscillating = False
 

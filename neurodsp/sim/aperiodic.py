@@ -1,13 +1,12 @@
 """Simulating time series, with aperiodic activity."""
 
-import warnings
-
 import numpy as np
 from scipy import signal
 from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal_fir
 from neurodsp.spectral import rotate_powerlaw
+from neurodsp.sim.transients import make_synaptic_kernel
 
 ###################################################################################################
 ###################################################################################################
@@ -53,61 +52,6 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     sig[np.where(sig < 0.)] = 0.
 
     return sig
-
-
-def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
-    """Creates synaptic kernels that with specified time constants.
-
-    Parameters
-    ----------
-    t_ker : float
-        Length of simulated kernel in seconds.
-    fs : float
-        Sampling rate of simulated signal, in Hz
-    tau_r : float
-        Rise time of synaptic kernel, in seconds.
-    tau_d : float
-        Decay time of synaptic kernel, in seconds.
-
-    Returns
-    -------
-    kernel : 1d array
-        Computed synaptic kernel with length equal to t
-
-    Notes
-    -----
-    3 types of kernels are available, based on combinations of time constants:
-    - tau_r == tau_d  : alpha (function) synapse
-    - tau_r = 0       : instantaneous rise, (single) exponential decay
-    - tau_r!=tau_d!=0 : double-exponential (rise and decay)
-    """
-
-    # NOTE: sometimes t_ker is not exact, resulting in a slightly longer or
-    #   shorter times vector, which will affect final signal length
-    #   https://docs.python.org/2/tutorial/floatingpoint.html
-    times = np.arange(0, t_ker, 1./fs)
-
-    # Kernel type: single exponential
-    if tau_r == 0:
-        kernel = np.exp(-times / tau_d)
-
-    # Kernel type: alpha
-    elif tau_r == tau_d:
-        # I(t) = t/tau * exp(-t/tau)
-        kernel = (times / tau_r) * np.exp(-times / tau_r)
-
-    # Kernel type: double exponential
-    else:
-        if tau_r > tau_d:
-            warnings.warn('Rise time constant should be shorter than decay time constant.')
-
-        # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
-        kernel = (np.exp(-times / tau_d) - np.exp(-times / tau_r))
-
-    # Normalize the integral to 1
-    kernel = kernel / np.sum(kernel)
-
-    return kernel
 
 
 def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
@@ -284,20 +228,9 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
 
     return noise
 
-    # # USE FILTER FROM NDSP
-    # # Infer passtype & filter signal
-    # #   TODO: Update this with infer_passtype helper function
-    # if f_range[1] is None:
-    #     pass_type = 'highpass'
-    # else:
-    #     pass_type = 'bandpass'
-    # noise = filter_signal_fir(noise, fs, pass_type, f_range)
-
-    # return noise
-
 
 def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
-
+    """   """
 
     if isinstance(noise_generator, str):
 
