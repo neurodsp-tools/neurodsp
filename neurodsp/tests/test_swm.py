@@ -1,23 +1,22 @@
-"""
-test_swm.py
-Test the sliding window matching function
-"""
+"""Test the sliding window matching function."""
+
+import os
 
 import numpy as np
-import os
 
 import neurodsp
 from neurodsp.swm import sliding_window_matching
-from .util import _load_example_data
+from .util import load_example_data
 
+###################################################################################################
+###################################################################################################
 
 def test_swm_consistent():
-    """
-    Confirm consistency in beta bandpass filter results on a neural signal
-    """
+    """Confirm consistency in beta bandpass filter results on a neural signal."""
+
     # Load data
     data_idx = 1
-    sig = _load_example_data(data_idx=data_idx)
+    sig = load_example_data(data_idx=data_idx)
     fs = 1000
 
     # Load ground truth lagged coherence

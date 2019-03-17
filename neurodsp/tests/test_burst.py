@@ -20,19 +20,22 @@ with open((os.path.dirname(neurodsp.__file__) + '/tests/data/sample_data_1_burst
 """
 
 import os
-import numpy as np
-import neurodsp
-from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
-from .util import _load_example_data
 import pickle
 
+import numpy as np
+
+import neurodsp
+from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
+from .util import load_example_data
+
+###################################################################################################
+###################################################################################################
 
 def test_detect_bursts_dual_threshold():
-    """
-    Confirm consistency in burst detection results on a generated neural signal
-    """
+    """Confirm consistency in burst detection results on a generated neural signal."""
+
     # Load data and ground-truth filtered signal
-    sig = _load_example_data(data_idx=1)
+    sig = load_example_data(data_idx=1)
     fs = 1000
     f_range = (13, 30)
 
@@ -47,9 +50,8 @@ def test_detect_bursts_dual_threshold():
 
 
 def test_compute_burst_stats():
-    """
-    Confirm consistency in burst detection results on a generated neural signal
-    """
+    """Confirm consistency in burst detection results on a generated neural signal."""
+
     # compute burst stats
     fs = 1000
     bursting_true = np.load(os.path.dirname(neurodsp.__file__) +

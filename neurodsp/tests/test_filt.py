@@ -1,131 +1,142 @@
-"""
-test_filt.py
-Test filtering functions
-"""
+"""Test filtering functions."""
 
-import pytest
+from pytest import raises, warns
+
 import numpy as np
+from numpy.testing import assert_equal
 
-from neurodsp.filt import filter_signal
-from .util import _load_example_data, _generate_random_sig
+from neurodsp.filt import *
+from neurodsp.filt import _remove_nans, _restore_nans, _drop_edge_artifacts, _fir_checks, _iir_checks
 
+###################################################################################################
+###################################################################################################
 
-def test_bandpass_filter_consistent():
-    """
-    Confirm consistency in beta bandpass filter results on a neural signal
-    """
+def test_check_filter_definition():
 
-    # Load data and ground-truth filtered signal
-    sig, sig_filt_true = _load_example_data(data_idx=1, filtered=True)
+    # Check that error catching works for bad pass_type definition
+    with raises(ValueError):
+        check_filter_definition('not_a_filter', (12, 12))
 
-    # filter data
-    fs = 1000
-    fc = (13, 30)
-    sig_filt = filter_signal(sig, fs, 'bandpass', fc=fc, n_cycles=3)
+    # Check that filter definitions that are legal evaluate as expected
+    #   Float or partially filled tuple for fc should work passable
+    f_lo, f_hi = check_filter_definition('bandpass', fc=(8, 12))
+    assert f_lo == 8; assert f_hi == 12
+    f_lo, f_hi = check_filter_definition('bandstop', fc=(58, 62))
+    assert f_lo == 58; assert f_hi == 62
+    f_lo, f_hi = check_filter_definition('lowpass', fc=58)
+    assert f_lo == None ; assert f_hi == 58
+    f_lo, f_hi = check_filter_definition('lowpass', fc=(0, 58))
+    assert f_lo == None ; assert f_hi == 58
+    f_lo, f_hi = check_filter_definition('highpass', fc=58)
+    assert f_lo == 58 ; assert f_hi == None
+    f_lo, f_hi = check_filter_definition('highpass', fc=(58, 100))
+    assert f_lo == 58 ; assert f_hi == None
 
-    # Compute difference between current and past filtered signals
-    signal_diff = sig_filt[~np.isnan(sig_filt)] - sig_filt_true[~np.isnan(sig_filt_true)]
-    assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)
-
-
-def test_edge_nan():
-    """
-    Confirm that the appropriate amount of edge artifact has been removed for FIR filters
-    and that edge artifacts are not removed for IIR filters
-    """
-
-    # Apply a 4-8Hz bandpass filter to random noise
-    sig = _generate_random_sig()
-    sig_filt, kernel = filter_signal(sig, 1000, 'bandpass', fc=(4, 8), return_kernel=True)
-
-    # Check if the correct edge artifacts have been removed
-    n_rmv = int(np.ceil(len(kernel) / 2))
-    assert all(np.isnan(sig_filt[:n_rmv]))
-    assert all(np.isnan(sig_filt[-n_rmv:]))
-    assert all(~np.isnan(sig_filt[n_rmv:-n_rmv]))
-
-    # Check that no edge artifacts are removed for IIR filters
-    sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(4, 8), iir=True, butterworth_order=3)
-    assert all(~np.isnan(sig_filt))
-
-
-def test_filter_length_error():
-    """
-    Confirm that the proper error is raised when the filter designed is longer than
-    the signal
-    """
-    n_seconds = 2
-    fs = 1000
-    sig = np.random.randn(n_seconds * fs)
-    with pytest.raises(ValueError) as excinfo:
-        sig_filt = filter_signal(sig, fs, 'bandpass', fc=(1, 10))
-    assert 'The filter needs to be shortened by decreasing the n_cycles' in str(excinfo.value)
-
-
-def test_frequency_input_errors():
-    """
-    Check that errors are properly raised when incorrectly enter frequency information
-    """
-
-    # Generate a random signal
-    sig = _generate_random_sig()
-
-    # Check that a bandpass filter cannot be completed without proper frequency limits
-    with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'bandpass', fc=8)
-    with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(8, 4))
-
-    # Check that a bandstop filter cannot be completed without proper frequency limits
-    with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'bandstop', fc=58)
-    with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'bandstop', fc=(62, 58))
-
-    # Check that a float or partially filled tuple for fc is passable
-    sig_filt = filter_signal(sig, 1000, 'lowpass', fc=58)
-    sig_filt = filter_signal(sig, 1000, 'lowpass', fc=(0,58))
-    sig_filt = filter_signal(sig, 1000, 'highpass', fc=58)
-    sig_filt = filter_signal(sig, 1000, 'highpass', fc=(58,1000))
+    # Check that a bandpass & bandstop definitions fail without proper definitions
+    with raises(ValueError):
+        f_lo, f_hi = check_filter_definition('bandpass', fc=8)
+    with raises(ValueError):
+        f_lo, f_hi = check_filter_definition('bandstop', fc=58)
 
     # Check that frequencies cannot be inverted
-    with pytest.raises(ValueError):
-        sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(100, 10))
+    with raises(ValueError):
+        f_lo, f_hi = check_filter_definition('bandpass', fc=(8, 4))
+    with raises(ValueError):
+        f_lo, f_hi = check_filter_definition('bandstop', fc=(62, 58))
+
+def compute_pass_band():
+
+    fs = 500
+    assert compute_pass_band(fs, 'bandpass', (4, 8)) == 4.
+    assert compute_pass_band(fs, 'highpass', 20) == 20.
+    assert compute_pass_band(fs, 'lowpass', 5) == compute_nyquist(fs) - 5
 
 
-def test_filter_length():
-    """
-    Check that the output kernel is of the correct length
-    """
+def test_compute_nyquist():
 
-    # Generate a random signal
-    sig = _generate_random_sig()
+    assert compute_nyquist(100.) == 50.
+    assert compute_nyquist(256) == 128.
 
-    # Specify filter length with number of cycles
-    fs = 1000
-    fc = (4, 8)
+###################################################################################################
+################################### TEST FILT PRIVATE FUNCTIONS ###################################
+###################################################################################################
+
+def test_remove_nans():
+
+    # Test with equal # of NaNs on either edge
+    arr = np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN, np.NaN])
+    arr_no_nans, arr_nans = _remove_nans(arr)
+    assert_equal(arr_no_nans, np.array([1, 2, 3]))
+    assert_equal(arr_nans, np.array([True, True, False, False, False, True, True]))
+
+    # Test with different # of NaNs on either edge
+    arr = np.array([np.NaN, np.NaN, 1, 2, 3, 4, np.NaN,])
+    arr_no_nans, arr_nans = _remove_nans(arr)
+    assert_equal(arr_no_nans, np.array([1, 2, 3, 4]))
+    assert_equal(arr_nans, np.array([True, True, False, False, False, False, True]))
+
+def test_restore_nans():
+
+    arr_no_nans = np.array([1, 2, 3])
+    arr_nans =  np.array([True, True, False, False, False, True])
+
+    arr_restored = _restore_nans(arr_no_nans, arr_nans)
+    assert_equal(arr_restored, np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN]))
+
+def test_drop_edge_artifacts():
+
+    # Get the length for a possible filter & calc # of values should be dropped for it
+    sig_len = 1000
+    sig = np.ones([1, sig_len])
+    filt_len = _fir_checks('bandpass', 4, 8, 3, None, 500, sig_len)
+    n_rmv = int(np.ceil(filt_len / 2))
+
+    dropped_sig = _drop_edge_artifacts(sig, filt_len)
+
+    assert np.all(np.isnan(dropped_sig[:n_rmv]))
+    assert np.all(np.isnan(dropped_sig[-n_rmv:]))
+    assert np.all(~np.isnan(dropped_sig[n_rmv:-n_rmv]))
+
+def test_fir_checks():
+
+    # Settings for checks
+    fs = 500
+    sig_length = 2000
+    f_lo, f_hi = 4, 8
+
+    # Check filt_len, if defined using n_seconds
+    n_seconds = 1.75 # Number chosen to create odd expected filt_len (not needing rounding up)
+    expected_filt_len = n_seconds * fs
+    filt_len = _fir_checks('bandpass', f_lo, f_hi, n_cycles=None, n_seconds=n_seconds,
+                           fs=fs, sig_length=sig_length)
+    assert filt_len == expected_filt_len
+
+    # Check filt_len, if defined using n_cycles
     n_cycles = 5
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', fc=fc,
-                                     n_cycles=n_cycles, return_kernel=True)
+    expected_filt_len = int(np.ceil(fs * n_cycles / f_lo))
+    filt_len = _fir_checks('bandpass', f_lo, f_hi, n_cycles=n_cycles, n_seconds=None,
+                           fs=fs, sig_length=sig_length)
+    assert filt_len == expected_filt_len
 
-    # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(fs * n_cycles / fc[0]))
-    if force_kernel_length % 2 == 0:
-        force_kernel_length = force_kernel_length + 1
+    # Check filt_len, if expected to be rounded up to be odd
+    n_cycles = 4
+    expected_filt_len = int(np.ceil(fs * n_cycles / f_lo)) + 1
+    filt_len = _fir_checks('bandpass', f_lo, f_hi, n_cycles=n_cycles, n_seconds=None,
+                           fs=fs, sig_length=sig_length)
+    assert filt_len == expected_filt_len
 
-    # Check correct length when defining number of cycles
-    assert np.allclose(len(kernel), force_kernel_length, atol=.1)
+    # Check error is raised if the filter designed is longer than the signal
+    with raises(ValueError):
+        _fir_checks('bandpass', f_lo, f_hi, None, 3, fs, sig_length=1000)
 
-    # Specify filter length with number of seconds
-    fs = 1000
-    n_seconds = .8
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', fc=fc,
-                                     n_seconds=n_seconds, return_kernel=True)
+def test_iir_checks():
 
-    # Compute how long the kernel should be
-    force_kernel_length = int(np.ceil(fs * n_seconds))
-    if force_kernel_length % 2 == 0:
-        force_kernel_length = force_kernel_length + 1
-
-    # Check correct length when defining number of seconds
-    assert np.allclose(len(kernel), force_kernel_length, atol=.1)
+    # Check catch for having n_seconds defined
+    with raises(ValueError):
+        _iir_checks(1, 3, None)
+    # Check catch for not having butterworth_order defined
+    with raises(ValueError):
+        _iir_checks(None, None, None)
+    # Check catch for having remove_edge_artifacts defined
+    with warns(UserWarning):
+        _iir_checks(None, 3, True)
