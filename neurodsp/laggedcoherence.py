@@ -7,14 +7,14 @@ from scipy import signal
 ###################################################################################################
 
 def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False):
-    """Quantify the rhythmicity of an oscillator using the lagged coherence measure.
+    """Quantify the rhythmicity of an oscillation using the lagged coherence measure.
 
     Parameters
     ----------
     sig : 1d array
         Voltage time series.
     f_range : list of float
-        Frequency range of the oscillator, as [low, high], in Hz.
+        Frequency range of the oscillation, as [low, high], in Hz.
     fs : float
         Sampling rate, in Hz.
     n_cycles : float, optional, default: 3

@@ -1,4 +1,4 @@
-"""Simulating time series, with transients."""
+"""Simulating transients."""
 
 import warnings
 

@@ -21,21 +21,21 @@ noise = sim_filtered_noise(n_seconds, fs, f_range_filter, filter_order, exponent
 np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/noise_filt.npy', noise)
 
 np.random.seed(0)
-osc = sim_oscillator(n_seconds, fs, freq, rdsym=rdsym)
+osc = sim_oscillation(n_seconds, fs, freq, rdsym=rdsym)
 np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_osc.npy', osc)
 
 np.random.seed(0)
-osc = sim_noisy_oscillator(n_seconds, fs, freq, exponent=exponent,
+osc = sim_noisy_oscillation(n_seconds, fs, freq, exponent=exponent,
                            rdsym=rdsym, f_range_filter=f_range_filter,
                            ratio_osc_var=ratio_osc_var, filter_order=filter_order)
 np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_noisy_osc.npy', osc)
 
 np.random.seed(0)
-osc = sim_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym)
+osc = sim_bursty_oscillation(n_seconds, fs, freq, rdsym=rdsym)
 np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_bursty_osc.npy', osc)
 
 np.random.seed(0)
-osc = sim_noisy_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym, exponent=exponent,
+osc = sim_noisy_bursty_oscillation(n_seconds, fs, freq, rdsym=rdsym, exponent=exponent,
                                   f_range_filter=f_range_filter, ratio_osc_var=ratio_osc_var,
                                   prob_enter_burst=.2, prob_leave_burst=.2,
                                   cycle_features=None, return_components=False,
@@ -51,8 +51,8 @@ ou_noise = sim_ou_process(2, 1000, 1., 0., 5.)
 np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_ou_process.npy', ou_noise)
 
 np.random.seed(0)
-jittered_osc = sim_jittered_oscillator(2, 1000, 20, 0.00, ('gaussian',0.01))
-np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy', jittered_osc)
+jittered_osc = sim_jittered_oscillation(2, 1000, 20, 0.00, ('gaussian',0.01))
+np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_jittered_oscillation.npy', jittered_osc)
 
 np.random.seed(0)
 powerlaw = sim_variable_powerlaw(60, 1000, -2.25)
@@ -87,18 +87,18 @@ def test_sim_filtered_noise():
     assert np.allclose(np.sum(np.abs(noise - noise_true)), 0, atol=10 ** -5)
 
 
-def test_sim_oscillator():
+def test_sim_oscillation():
     np.random.seed(0)
-    osc = sim_oscillator(n_seconds, fs, freq, rdsym=rdsym)
+    osc = sim_oscillation(n_seconds, fs, freq, rdsym=rdsym)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_osc.npy', osc)
     osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_osc.npy')
     assert np.allclose(np.sum(np.abs(osc - osc_true)), 0, atol=10 ** -5)
 
 
-def test_sim_noisy_oscillator():
+def test_sim_noisy_oscillation():
     np.random.seed(0)
-    osc = sim_noisy_oscillator(n_seconds, fs, freq, 'filtered_powerlaw',
+    osc = sim_noisy_oscillation(n_seconds, fs, freq, 'filtered_powerlaw',
                                {'exponent': exponent, 'f_range': f_range_filter,
                                    'filter_order': filter_order},
                                ratio_osc_var=ratio_osc_var)
@@ -109,18 +109,18 @@ def test_sim_noisy_oscillator():
     assert np.allclose(np.sum(np.abs(osc - osc_true)), 0, atol=10 ** -5)
 
 
-def test_sim_bursty_oscillator():
+def test_sim_bursty_oscillation():
     np.random.seed(0)
-    osc = sim_bursty_oscillator(n_seconds, fs, freq, rdsym=rdsym)
+    osc = sim_bursty_oscillation(n_seconds, fs, freq, rdsym=rdsym)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_bursty_osc.npy', osc)
     osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_bursty_osc.npy')
     assert np.allclose(np.sum(np.abs(osc - osc_true)), 0, atol=10 ** -5)
 
 
-def test_sim_noisy_bursty_oscillator():
+def test_sim_noisy_bursty_oscillation():
     np.random.seed(0)
-    osc = sim_noisy_bursty_oscillator(n_seconds, fs, freq, 'filtered_powerlaw',
+    osc = sim_noisy_bursty_oscillation(n_seconds, fs, freq, 'filtered_powerlaw',
                                       {'exponent': exponent, 'f_range': f_range_filter,
                                           'filter_order': filter_order},
                                       rdsym=.5, ratio_osc_var=1, prob_enter_burst=.2, prob_leave_burst=.2,
@@ -174,9 +174,9 @@ def test_sim_ou_process():
     assert np.allclose(np.sum(np.abs(ou_noise - ou_noise_true)), 0, atol=10 ** -5)
 
 
-def test_sim_jittered_oscillator():
+def test_sim_jittered_oscillation():
     np.random.seed(0)
-    jittered_osc = sim_jittered_oscillator(2, 1000, 20, 0.00, ('gaussian', 0.01))
+    jittered_osc = sim_jittered_oscillation(2, 1000, 20, 0.00, ('gaussian', 0.01))
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy', jittered_osc)
     jittered_osc_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_jittered_oscillator.npy')

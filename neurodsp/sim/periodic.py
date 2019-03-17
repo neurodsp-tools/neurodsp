@@ -1,7 +1,5 @@
 """Simulating time series, with periodic activity."""
 
-from copy import deepcopy
-
 import numpy as np
 from numpy.random import rand, randn, randint
 import pandas as pd
@@ -12,7 +10,7 @@ from neurodsp.sim.transients import make_osc_cycle
 ###################################################################################################
 ###################################################################################################
 
-def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
+def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
     """Simulate an oscillation.
 
     Parameters
@@ -22,9 +20,9 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     fs : float
         Signal sampling rate, in Hz.
     freq : float
-        Oscillator frequency.
+        Oscillation frequency.
     rdsym : float
-        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time, where:
+        Rise-decay symmetry of the oscillation, as fraction of the period in the rise time, where:
         = 0.5 - symmetric (sine wave)
         < 0.5 - shorter rise, longer decay
         > 0.5 - longer rise, shorter decay
@@ -50,13 +48,13 @@ def sim_oscillator(n_seconds, fs, freq, rdsym=.5):
     phase_t = np.tile(pha_one_cycle, n_cycles)
     phase_t = phase_t[:n_samples]
 
-    # Transform phase into an oscillator
+    # Transform phase into an oscillation
     osc = np.cos(phase_t)
 
     return osc
 
 
-def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
+def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                           prob_leave_burst=.2, cycle_features=None,
                           return_cycle_df=False, n_tries=5):
     """Simulate a bursty oscillation.
@@ -68,9 +66,9 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
     fs : float
         Sampling rate of simulated signal, in Hz
     freq : float
-        Oscillator frequency, in Hz.
+        Oscillation frequency, in Hz.
     rdsym : float
-        Rise-decay symmetry of the oscillator, as fraction of the period in the rise time:
+        Rise-decay symmetry of the oscillation, as fraction of the period in the rise time:
 
         - = 0.5: symmetric (sine wave)
         - < 0.5: shorter rise, longer decay
@@ -95,7 +93,7 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         * rdsym_burst_std: standard deviation of mean rdsym for each burst
     return_cycle_df : bool
         If True, return the dataframe that contains the simulation parameters for each cycle.
-        This may be useful for computing power, for example, as the power of the oscillator
+        This may be useful for computing power, for example, as the power of the oscillation
         should only be considered over the times where there are bursts.
     n_tries : int, optional, default=5
         Number of times to try to resimulate cycle features when an
@@ -104,9 +102,9 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
     Returns
     -------
     sig : 1d array
-        Bursty oscillator.
+        Bursty oscillation.
     df : pd.DataFrame
-        Cycle-by-cycle properties of the simulated oscillator.
+        Cycle-by-cycle properties of the simulated oscillation.
     """
 
     # Define default parameters for cycle features
@@ -148,9 +146,9 @@ def sim_bursty_oscillator(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
-def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
-    """Simulate a jittered oscillator, as defined by the oscillator frequency,
-    the oscillator cycle, and how much (in time) to jitter each period.
+def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
+    """Simulate a jittered oscillation, as defined by the oscillation frequency,
+    the oscillation cycle, and how much (in time) to jitter each period.
 
     Parameters
     ----------
@@ -159,7 +157,7 @@ def sim_jittered_oscillator(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.
     fs : float
         Sampling rate of simulated signal, in Hz.
     freq : float
-        Frequency of simulated oscillator, in Hz.
+        Frequency of simulated oscillation, in Hz.
     jitter : float
         Maximum jitter of oscillation period, in seconds.
     cycle : tuple or 1d array
