@@ -6,7 +6,7 @@ import numpy as np
 from scipy import signal
 
 import neurodsp
-from neurodsp.filt import filter_signal, infer_passtype, _drop_edge_artifacts
+from neurodsp.filt import filter_signal, infer_passtype, remove_filter_edges
 from neurodsp.utils import remove_nans, restore_nans
 
 ###################################################################################################
@@ -57,7 +57,7 @@ def phase_by_time(sig, fs, f_range, filter_kwargs={}, hilbert_increase_n=False,
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        pha = _drop_edge_artifacts(pha, len(kernel))
+        pha = remove_filter_edges(pha, len(kernel))
 
     return pha
 
@@ -107,7 +107,7 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        amp = _drop_edge_artifacts(amp, len(kernel))
+        amp = remove_filter_edges(amp, len(kernel))
 
     return amp
 

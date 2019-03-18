@@ -101,7 +101,7 @@ def test_sim_oscillation():
 def test_sim_noisy_oscillation():
 
     np.random.seed(0)
-    osc = sim_noisy_oscillator(n_seconds, fs, freq, 'filtered_powerlaw',
+    osc = sim_noisy_oscillation(n_seconds, fs, freq, 'filtered_powerlaw',
                                {'exponent': exponent,
                                 'f_range': f_range_filter,
                                 'filter_order': filter_order},
@@ -125,7 +125,7 @@ def test_sim_bursty_oscillation():
 def test_sim_noisy_bursty_oscillation():
 
     np.random.seed(0)
-    osc = sim_noisy_bursty_oscillator(n_seconds, fs, freq, 'filtered_powerlaw',
+    osc = sim_noisy_bursty_oscillation(n_seconds, fs, freq, 'filtered_powerlaw',
                                       {'exponent': exponent,
                                        'f_range': f_range_filter,
                                        'filter_order': filter_order},

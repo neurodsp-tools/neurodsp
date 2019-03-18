@@ -3,10 +3,9 @@
 from pytest import raises, warns
 
 import numpy as np
-from numpy.testing import assert_equal
 
 from neurodsp.filt import *
-from neurodsp.filt import _drop_edge_artifacts, _fir_checks, _iir_checks
+from neurodsp.filt import _fir_checks, _iir_checks
 
 ###################################################################################################
 ###################################################################################################
@@ -61,7 +60,7 @@ def test_compute_nyquist():
 ################################### TEST FILT PRIVATE FUNCTIONS ###################################
 ###################################################################################################
 
-def test_drop_edge_artifacts():
+def test_remove_filter_edges():
 
     # Get the length for a possible filter & calc # of values should be dropped for it
     sig_len = 1000
@@ -69,7 +68,7 @@ def test_drop_edge_artifacts():
     filt_len = _fir_checks('bandpass', 4, 8, 3, None, 500, sig_len)
     n_rmv = int(np.ceil(filt_len / 2))
 
-    dropped_sig = _drop_edge_artifacts(sig, filt_len)
+    dropped_sig = remove_filter_edges(sig, filt_len)
 
     assert np.all(np.isnan(dropped_sig[:n_rmv]))
     assert np.all(np.isnan(dropped_sig[-n_rmv:]))

@@ -581,10 +581,8 @@ def infer_passtype(fc):
 
     return pass_type
 
-###################################################################################################
-###################################################################################################
 
-def _drop_edge_artifacts(sig, filt_len):
+def remove_filter_edges(sig, filt_len):
     """Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.
 
     Parameters
@@ -606,6 +604,8 @@ def _drop_edge_artifacts(sig, filt_len):
 
     return sig
 
+###################################################################################################
+###################################################################################################
 
 def _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length):
     """Check for running an FIR filter, including figuring out the filter length."""
