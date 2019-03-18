@@ -4,8 +4,8 @@ import os
 
 import numpy as np
 
+import neurodsp
 from neurodsp.timefrequency import *
-from neurodsp.timefrequency import _hilbert_ignore_nan
 
 from .util import load_example_data
 
@@ -21,7 +21,7 @@ def test_amp_by_time():
 def test_freq_by_time():
     pass
 
-def test_hilbert_ignore_nan():
+def test_robust_hilbert():
     """Check that time-resolved timefrequency functions do not return all NaN
     if one of the elements in the input array is NaN.
     Do this by replacing edge artifacts with NaN for a lowpass filter
@@ -33,11 +33,11 @@ def test_hilbert_ignore_nan():
     sig[0:n_nans] = np.nan
 
     # Check has correct number of nans (not all nan), without increase_n
-    hilb_sig = _hilbert_ignore_nan(sig)
+    hilb_sig = robust_hilbert(sig)
     assert sum(np.isnan(hilb_sig)) == n_nans
 
     # Check has correct number of nans (not all nan), with increase_n
-    hilb_sig = _hilbert_ignore_nan(sig, True)
+    hilb_sig = robust_hilbert(sig, True)
     assert sum(np.isnan(hilb_sig)) == n_nans
 
 def test_timefreq_consistent():

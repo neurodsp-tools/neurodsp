@@ -9,7 +9,7 @@ from neurodsp.timefrequency import amp_by_time
 
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
-                                 filter_kwargs=None, verbose=True):
+                                 **filter_kwargs):
     """Detect periods of oscillatory bursting in a neural signal.
 
     Parameters
@@ -23,16 +23,14 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
     dual_thresh : tuple of (float, float)
         Low and high threshold values for burst detection.
         Units are normalized by the average signal magnitude.
-    min_cycles : float
+    min_cycles : float, optional, default=3
         Minimum burst duration in terms of number of cycles of f_range[0].
     average_method : {'median', 'mean'}, optional
         Metric to normalize magnitude used for thresholding.
-    magnitude_type : {'power', 'amplitude'}, optional
+    magnitude_type : {'amplitude', 'power'}, optional
         Metric of magnitude used for thresholding.
-    filter_kwargs : dict, optional
-        Keyword arguments to the neurodsp.filt.filter_signal().
-    verbose : bool, optiona, default: True
-        If True, print filter transition band and any other prints.
+    **filter_kwargs
+        Keyword parameters to pass to `filter_signal`.
 
     Returns
     -------
@@ -41,25 +39,17 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
         True indicates that a burst was detected at that sample, otherwise False.
     """
 
-    # Set default filtering parameters
-    if filter_kwargs is None:
-        filter_kwargs = {}
-
     if len(dual_thresh) != 2:
-        raise ValueError(
-            "Invalid number of elements in 'dual_thresh' parameter")
+        raise ValueError("Invalid number of elements in 'dual_thresh' parameter")
 
     # Compute amplitude time series
-    sig_magnitude = amp_by_time(sig, fs, f_range, filter_kwargs=filter_kwargs,
-                                remove_edge_artifacts=False, verbose=verbose)
+    sig_magnitude = amp_by_time(sig, fs, f_range, remove_edges=False, **filter_kwargs)
 
-    # Set magnitude as power or amplitude
+    # Set magnitude as power or amplitude: square if power, leave as is if amplitude
+    if magnitude_type not in ['amplitude', 'power']:
+        raise ValueError("Invalid input for 'magnitude_type'")
     if magnitude_type == 'power':
         sig_magnitude = sig_magnitude**2
-    elif magnitude_type == 'amplitude':
-        pass
-    else:
-        raise ValueError("Invalid input for 'magnitude_type'")
 
     # Calculate normalized magnitude
     if average_method == 'median':
@@ -198,7 +188,7 @@ def _rmv_short_periods(sig, n_samples):
     osc_ends_long = osc_ends[osc_length >= n_samples]
 
     is_osc = np.zeros(len(sig))
-    for osc in range(len(osc_starts_long)):
-        is_osc[osc_starts_long[osc]:osc_ends_long[osc]] = 1
+    for ind in range(len(osc_starts_long)):
+        is_osc[osc_starts_long[ind]:osc_ends_long[ind]] = 1
 
     return is_osc

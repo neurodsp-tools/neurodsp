@@ -147,6 +147,6 @@ def test_iir_checks():
     # Check catch for not having butterworth_order defined
     with raises(ValueError):
         _iir_checks(None, None, None)
-    # Check catch for having remove_edge_artifacts defined
+    # Check catch for having remove_edges defined
     with warns(UserWarning):
         _iir_checks(None, 3, True)
