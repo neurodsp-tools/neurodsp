@@ -303,7 +303,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
     return freqs, t_inds, spect_cv_rs
 
 
-def spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
+def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
                   nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.
 

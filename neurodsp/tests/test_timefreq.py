@@ -12,6 +12,15 @@ from .util import load_example_data
 ###################################################################################################
 ###################################################################################################
 
+def test_phase_by_time():
+    pass
+
+def test_amp_by_time():
+    pass
+
+def test_freq_by_time():
+    pass
+
 def test_hilbert_ignore_nan():
     """Check that time-resolved timefrequency functions do not return all NaN
     if one of the elements in the input array is NaN.

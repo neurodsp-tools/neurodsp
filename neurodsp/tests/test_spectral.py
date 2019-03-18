@@ -33,6 +33,12 @@ def test_compute_spectrum():
     assert np.allclose(np.sum(np.abs(gt_psd['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_psd['freqmf'] - freqmf)), 0, atol=10 ** -5)
 
+def test_compute_spectrum_welch():
+    pass
+
+def test_compute_spectrum_medfilt():
+    pass
+
 def test_compute_scv():
 
     # Load data
@@ -75,7 +81,7 @@ def test_scv_rs():
     assert np.allclose(np.sum(np.abs(gt_scv_rs['Tro'] - t_ro)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scv_rs['SCVrsro'] - scv_rs_ro)), 0, atol=10 ** -5)
 
-def test_spectralhist():
+def test_compute_spectral_hist():
 
     # Load data
     data_idx = 1
@@ -86,24 +92,11 @@ def test_spectralhist():
     gt_sphist = np.load(os.path.dirname(neurodsp.__file__) +
                         '/tests/data/sample_data_' + str(data_idx) + '_sphist.npz')
 
-    freq, bins, sp_hist = spectral.spectral_hist(sig, fs, nbins=10)
+    freq, bins, sp_hist = spectral.compute_spectral_hist(sig, fs, nbins=10)
 
     assert np.allclose(np.sum(np.abs(gt_sphist['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_sphist['bins'] - bins)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_sphist['sp_hist'] - sp_hist)), 0, atol=10 ** -5)
-
-def test_rotatepsd():
-
-    rot_exp = -2
-    spectrum = np.ones(500)
-    f_axis = np.arange(0, 500.)
-    spectrum_rot = spectral.rotate_powerlaw(f_axis, spectrum, rot_exp)
-
-    # load test data PSDs for testing
-    spectrum_test = np.load(os.path.dirname(neurodsp.__file__) +
-                            '/tests/data/sim_rotatepsd.npy')
-
-    assert np.allclose(spectrum_rot - spectrum_test, 0, atol=10 ** -5)
 
 def test_morlet_transform():
 
@@ -120,3 +113,33 @@ def test_morlet_transform():
                      '/tests/data/mwt.npy')
 
     assert np.allclose(np.sum(np.abs(gt_mwt - mwt)), 0, atol=10 ** -5)
+
+def test_morlet_convolve():
+    pass
+
+def test_rotate_powerlaw():
+
+    rot_exp = -2
+    spectrum = np.ones(500)
+    f_axis = np.arange(0, 500.)
+    spectrum_rot = spectral.rotate_powerlaw(f_axis, spectrum, rot_exp)
+
+    # load test data PSDs for testing
+    spectrum_test = np.load(os.path.dirname(neurodsp.__file__) +
+                            '/tests/data/sim_rotatepsd.npy')
+
+    assert np.allclose(spectrum_rot - spectrum_test, 0, atol=10 ** -5)
+
+def test_trim_spectrum():
+    pass
+
+##
+##
+
+def _discard_outliers():
+    pass
+
+def test_spg_settings():
+    pass
+
+

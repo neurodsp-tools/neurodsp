@@ -10,6 +10,38 @@ from neurodsp.filt import _fir_checks, _iir_checks
 ###################################################################################################
 ###################################################################################################
 
+def test_filter_signal():
+    # TODO
+    pass
+
+def test_filter_signal_fir():
+    # TODO
+    pass
+
+def test_filter_signal_iir():
+    # TODO
+    pass
+
+def test_design_fir_filter():
+    # TODO
+    pass
+
+def test_design_iir_filter():
+    # TODO
+    pass
+
+def test_check_filter_properties():
+    # TODO
+    pass
+
+def compute_frequency_response():
+    # TODO
+    pass
+
+def compute_trans_band():
+    # TODO
+    pass
+
 def test_check_filter_definition():
 
     # Check that error catching works for bad pass_type definition
@@ -56,9 +88,6 @@ def test_compute_nyquist():
     assert compute_nyquist(100.) == 50.
     assert compute_nyquist(256) == 128.
 
-###################################################################################################
-################################### TEST FILT PRIVATE FUNCTIONS ###################################
-###################################################################################################
 
 def test_remove_filter_edges():
 
@@ -73,6 +102,10 @@ def test_remove_filter_edges():
     assert np.all(np.isnan(dropped_sig[:n_rmv]))
     assert np.all(np.isnan(dropped_sig[-n_rmv:]))
     assert np.all(~np.isnan(dropped_sig[n_rmv:-n_rmv]))
+
+###################################################################################################
+################################### TEST FILT PRIVATE FUNCTIONS ###################################
+###################################################################################################
 
 def test_fir_checks():
 
