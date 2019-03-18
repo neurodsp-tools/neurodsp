@@ -8,32 +8,64 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-def plot_frequency_response(fs, b_vals, a_vals=1):
-    """Compute frequency response of a filter kernel b with sampling rate fs.
+def plot_filter_properties(f_db, db, b_vals):
+    """Plot filter properties, including frequency response and filter kernel.
 
     Parameters
     ----------
-    fs : float
-        The sampling rate, in Hz.
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in f_db, in dB.
     b_vals : 1d array
         B values for the filter.
-    a_vals : 1d array
-        A values for the filter.
     """
 
-    w_vals, h_vals = signal.freqz(b_vals, a_vals)
+    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 
-    # Plot frequency response
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(w_vals * fs / (2. * np.pi), 20 * np.log10(abs(h_vals)), 'k')
-    plt.title('Frequency response')
-    plt.ylabel('Attenuation (dB)')
-    plt.xlabel('Frequency (Hz)')
+    plot_frequency_response(f_db, db, ax=ax[0])
+    plot_filter_kernel(b_vals, ax=ax[1])
 
-    # Plot filter kernel, if available
-    if isinstance(a_vals, int):
 
-        plt.subplot(1, 2, 2)
-        plt.plot(b_vals, 'k')
-        plt.title('Kernel')
+def plot_frequency_response(f_db, db, ax=None):
+    """Plot the frequency response of a filter.
+
+    Parameters
+    ----------
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in f_db, in dB.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    """
+
+    if not ax:
+        _, ax = plt.subplots(figsize=(5, 5))
+
+    ax.plot(f_db, db, 'k')
+
+    ax.set_title('Frequency response')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('Attenuation (dB)')
+
+
+def plot_filter_kernel(b_vals, ax=None):
+    """Plot the kernel of a filter.
+
+    Parameters
+    ----------
+    b_vals : 1d array
+        B values for the filter.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    """
+
+    if not ax:
+        _, ax = plt.subplots(figsize=(5, 5))
+
+    ax.plot(b_vals, 'k')
+
+    ax.set_title('Kernel')
+    ax.set_xlabel('LABEL')
+    ax.set_ylabel('LABEL')

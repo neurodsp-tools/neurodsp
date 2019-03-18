@@ -4,8 +4,8 @@ Test filtering plots
 """
 
 import numpy as np
-from neurodsp.filt import filter_signal
-from neurodsp.plts.filt import plot_frequency_response
+from neurodsp.filt import filter_signal, design_fir_filter, compute_frequency_response
+from neurodsp.plts.filt import *
 from .util import plot_test
 
 
@@ -18,10 +18,18 @@ def test_plot_frequency_response_call():
     # Test plotting through the filter function
     sig = np.random.randn(2000)
     fs = 1000
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', (8, 12),
-        plot_freq_response=True, return_kernel=True, verbose=False)
+    sig_filt = filter_signal(sig, fs, 'bandpass', (8, 12), plot_properties=True)
     assert True
 
+@plot_test
+def test_plot_filter_properties():
+
+    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
+    f_db, db = compute_frequency_response(kernel, a_vals=1, fs=1000)
+
+    plot_filter_properties(f_db, db, kernel)
+
+    assert True
 
 @plot_test
 def test_plot_frequency_response():
@@ -29,9 +37,18 @@ def test_plot_frequency_response():
     Confirm frequency response plotting function works directly
     """
 
-    # Test plotting through the filter function
-    sig = np.random.randn(2000)
-    fs = 1000
-    sig_filt, kernel = filter_signal(sig, fs, 'bandpass', (8, 12), return_kernel=True, verbose=False)
-    plot_frequency_response(fs, kernel)
+    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
+    f_db, db = compute_frequency_response(kernel, a_vals=1, fs=1000)
+
+    plot_frequency_response(f_db, db)
+
+    assert True
+
+@plot_test
+def test_plot_filter_kernel():
+
+    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
+
+    plot_filter_kernel(kernel)
+
     assert True
