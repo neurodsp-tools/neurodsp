@@ -5,15 +5,16 @@ import warnings
 import numpy as np
 from scipy import signal
 
-from neurodsp.plts.filt import plot_frequency_response
+from neurodsp.utils import remove_nans, restore_nans
+from neurodsp.plts.filt import plot_filter_properties, plot_frequency_response
 
 ###################################################################################################
 ###################################################################################################
 
 def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
-                  iir=False, butterworth_order=None,
-                  plot_freq_response=False, return_kernel=False,
-                  verbose=False, compute_transition_band=True, remove_edge_artifacts=True):
+                  filt_type='fir', remove_edge_artifacts=True,
+                  butterworth_order=None, print_transitions=True,
+                  plot_properties=False, return_kernel=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
@@ -38,24 +39,22 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float, optional
-        Length of filter, in seconds.
-        This parameter overwrites `n_cycles`.
-    iir : bool, optional
-        If True, use an infinite-impulse response (IIR) filter.
+        Length of filter, in seconds. This parameter overwrites `n_cycles`.
+    filt_type : {'fir', 'iir'}, optional
+        Whether to use an FIR or IIR filter.
         The only IIR filter offered is a butterworth filter.
+    remove_edge_artifacts : bool, optional, default: True
+        If True, replace samples within half the kernel length to be np.nan.
+        Only used for FIR filters.
     butterworth_order : int, optional
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
-    plot_freq_response : bool, optional, default: False
-        If True, plot the frequency response of the filter
+    print_transitions : bool, optional, default: True
+        If True, computes the transition bandwidth(s), and prints this information.
+    plot_properties : bool, optional, default: False
+        If True, plot the properties of the filter, including frequency response and/or kernel.
     return_kernel : bool, optional, default: False
         If True, return the complex filter kernel.
-    verbose : bool, optional, default: False
-        If True, print optional information.
-    compute_transition_band : bool, optional, default: True
-        If True, computes the transition bandwidth, and prints this information.
-    remove_edge_artifacts : bool, optional, default: True
-        If True, replace samples within half the kernel length to be np.nan.
 
     Returns
     -------
@@ -65,17 +64,22 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         Filter kernel. Only returned if `return_kernel` is True.
     """
 
-    if iir:
+    if filt_type == 'fir':
+        return filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds,
+                                 remove_edge_artifacts, print_transitions,
+                                 plot_properties, return_kernel)
+    elif filt_type == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edge_artifacts)
-        return filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response,
-                                 return_kernel, compute_transition_band)
+        return filter_signal_iir(sig, fs, pass_type, fc, butterworth_order,
+                                 print_transitions, plot_properties,
+                                 return_kernel)
     else:
-        return filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds, plot_freq_response,
-                                 return_kernel, compute_transition_band, remove_edge_artifacts)
+        raise ValueError('Filter type not understood.')
 
 
-def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_freq_response=False,
-                      return_kernel=False, compute_transition_band=True, remove_edge_artifacts=True):
+def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
+                      remove_edge_artifacts=True, print_transitions=True,
+                      plot_properties=False, return_kernel=False):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -100,16 +104,15 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_f
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float, optional
-        Length of filter, in seconds.
-        This parameter overwrites `n_cycles`.
-    plot_freq_response : bool, optional, default: False
-        If True, plot the frequency response of the filter
-    return_kernel : bool, optional, default: False
-        If True, return the complex filter kernel.
-    compute_transition_band : bool, optional
-        If True, computes the transition bandwidth, and prints this information.
+        Length of filter, in seconds. This parameter overwrites `n_cycles`.
     remove_edge_artifacts : bool, optional
         If True, replace samples within half the kernel length to be np.nan.
+    print_transitions : bool, optional
+        If True, computes the transition bandwidth, and prints this information.
+    plot_properties : bool, optional, default: False
+        If True, plot the properties of the filter, including frequency response and/or kernel.
+    return_kernel : bool, optional, default: False
+        If True, return the complex filter kernel.
 
     Returns
     -------
@@ -121,14 +124,14 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_f
 
     # Design filter
     kernel = design_fir_filter(len(sig), fs, pass_type, fc, n_cycles, n_seconds)
+    b_vals, a_vals = kernel, 1
 
     # Compute transition bandwidth
-    if compute_transition_band:
-        a_vals, b_vals = 1, kernel
+    if print_transitions:
         check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
 
     # Remove any NaN on the edges of 'sig'
-    sig, sig_nans = _remove_nans(sig)
+    sig, sig_nans = remove_nans(sig)
 
     # Apply filter
     sig_filt = np.convolve(kernel, sig, 'same')
@@ -138,11 +141,12 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_f
         sig_filt = _drop_edge_artifacts(sig_filt, len(kernel))
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
-    sig_filt = _restore_nans(sig_filt, sig_nans)
+    sig_filt = restore_nans(sig_filt, sig_nans)
 
-    # Plot frequency response, if desired
-    if plot_freq_response:
-        plot_frequency_response(fs, kernel)
+    # Plot filter properties, if specified
+    if plot_properties:
+        f_db, db = compute_frequency_response(b_vals, a_vals, fs)
+        plot_filter_properties(f_db, db, b_vals)
 
     if return_kernel:
         return sig_filt, kernel
@@ -150,8 +154,8 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, plot_f
         return sig_filt
 
 
-def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_response=False,
-                      return_kernel=False, compute_transition_band=True):
+def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitions=True,
+                      plot_properties=False, return_kernel=False):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -175,12 +179,12 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
     butterworth_order : int
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
-    plot_freq_response : bool, optional, default: False
-        If True, plot the frequency response of the filter
+    print_transitions : bool, optional, default: True
+        If True, computes the transition bandwidth, and prints this information.
+    plot_properties : bool, optional, default: False
+        If True, plot the properties of the filter, including frequency response and/or kernel.
     return_kernel : bool, optional, default: False
         If True, return the complex filter kernel.
-    compute_transition_band : bool, optional, default: True
-        If True, computes the transition bandwidth, and prints this information.
 
     Returns
     -------
@@ -194,21 +198,22 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, plot_freq_respo
     b_vals, a_vals = design_iir_filter(fs, pass_type, fc, butterworth_order)
 
     # Compute transition bandwidth
-    if compute_transition_band:
+    if print_transitions:
         check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
 
     # Remove any NaN on the edges of 'sig'
-    sig, sig_nans = _remove_nans(sig)
+    sig, sig_nans = remove_nans(sig)
 
     # Apply filter
     sig_filt = signal.filtfilt(b_vals, a_vals, sig)
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
-    sig_filt = _restore_nans(sig_filt, sig_nans)
+    sig_filt = restore_nans(sig_filt, sig_nans)
 
     # Plot frequency response, if desired
-    if plot_freq_response:
-        plot_frequency_response(fs, b_vals, a_vals)
+    if plot_properties:
+        f_db, db = compute_frequency_response(b_vals, a_vals, fs)
+        plot_frequency_response(f_db, db)
 
     if return_kernel:
         return sig_filt, (b_vals, a_vals)
@@ -579,50 +584,6 @@ def infer_passtype(fc):
 
 ###################################################################################################
 ###################################################################################################
-
-def _remove_nans(sig):
-    """Drop any NaNs on the edges of a 1d array.
-
-    Parameters
-    ----------
-    sig : 1d array
-        Signal to be checked for edge NaNs.
-
-    Returns
-    -------
-    sig_removed : 1d array
-        Signal with NaN edges removed.
-    sig_nans : 1d array
-        Boolean array indicating where NaNs were in the original array.
-    """
-
-    sig_nans = np.isnan(sig)
-    sig_removed = sig[np.where(~np.isnan(sig))]
-
-    return sig_removed, sig_nans
-
-
-def _restore_nans(sig, sig_nans, dtype=float):
-    """Restore NaN values to the edges of a 1d array.
-
-    Parameters
-    ----------
-    sig : 1d array
-        Signal that has had NaN edges removed.
-    sig_nans : 1d array
-        Boolean array indicating where NaNs were in the original array.
-
-    Returns
-    -------
-    sig_restored : 1d array
-        Signal with NaN edges restored.
-    """
-
-    sig_restored = np.ones(len(sig_nans), dtype=dtype) * np.nan
-    sig_restored[~sig_nans] = sig
-
-    return sig_restored
-
 
 def _drop_edge_artifacts(sig, filt_len):
     """Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.

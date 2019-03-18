@@ -45,7 +45,7 @@ def test_edge_nan():
     assert all(~np.isnan(sig_filt[n_rmv:-n_rmv]))
 
     # Check that no edge artifacts are removed for IIR filters
-    sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(4, 8), iir=True, butterworth_order=3)
+    sig_filt = filter_signal(sig, 1000, 'bandpass', fc=(4, 8), filt_type='iir', butterworth_order=3)
     assert all(~np.isnan(sig_filt))
 
 

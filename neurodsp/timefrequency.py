@@ -6,8 +6,8 @@ import numpy as np
 from scipy import signal
 
 import neurodsp
-from neurodsp.filt import filter_signal, infer_passtype
-from neurodsp.filt import _drop_edge_artifacts, _remove_nans, _restore_nans
+from neurodsp.filt import filter_signal, infer_passtype, _drop_edge_artifacts
+from neurodsp.utils import remove_nans, restore_nans
 
 ###################################################################################################
 ###################################################################################################
@@ -50,8 +50,7 @@ def phase_by_time(sig, fs, f_range, filter_kwargs={}, hilbert_increase_n=False,
     # Filter signal
     sig_filt, kernel = filter_signal(sig, fs, pass_type, fc=f_range,
                                      remove_edge_artifacts=False,
-                                     return_kernel=True,
-                                     verbose=verbose, **filter_kwargs)
+                                     return_kernel=True, **filter_kwargs)
 
     # Compute phase time series
     pha = np.angle(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))
@@ -101,8 +100,7 @@ def amp_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
     # Filter signal
     sig_filt, kernel = filter_signal(sig, fs, pass_type, fc=f_range,
                                      remove_edge_artifacts=False,
-                                     return_kernel=True,
-                                     verbose=verbose, **filter_kwargs)
+                                     return_kernel=True, **filter_kwargs)
 
     # Compute amplitude time series
     amp = np.abs(_hilbert_ignore_nan(sig_filt, hilbert_increase_n=hilbert_increase_n))
@@ -150,8 +148,7 @@ def freq_by_time(sig, fs, f_range, filter_kwargs=None, hilbert_increase_n=False,
     pha = phase_by_time(sig, fs, f_range,
                         filter_kwargs=filter_kwargs,
                         hilbert_increase_n=hilbert_increase_n,
-                        remove_edge_artifacts=remove_edge_artifacts,
-                        verbose=verbose)
+                        remove_edge_artifacts=remove_edge_artifacts)
 
     phadiff = np.diff(pha)
     phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
@@ -166,7 +163,7 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
     """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN."""
 
     # Extract the signal that is not nan
-    sig_nonan, sig_nans = _remove_nans(sig)
+    sig_nonan, sig_nans = remove_nans(sig)
 
     # Compute hilbert transform of signal without nans
     if hilbert_increase_n:
@@ -177,6 +174,6 @@ def _hilbert_ignore_nan(sig, hilbert_increase_n=False):
         sig_hilb_nonan = signal.hilbert(sig_nonan)
 
     # Fill in output hilbert with nans on edges
-    sig_hilb = _restore_nans(sig_hilb_nonan, sig_nans, dtype=complex)
+    sig_hilb = restore_nans(sig_hilb_nonan, sig_nans, dtype=complex)
 
     return sig_hilb
