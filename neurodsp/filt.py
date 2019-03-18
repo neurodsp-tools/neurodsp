@@ -124,11 +124,10 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Design filter
     kernel = design_fir_filter(len(sig), fs, pass_type, fc, n_cycles, n_seconds)
-    b_vals, a_vals = kernel, 1
 
     # Compute transition bandwidth
     if print_transitions:
-        check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
+        check_filter_properties(kernel, 1, fs, pass_type, fc)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -145,8 +144,8 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Plot filter properties, if specified
     if plot_properties:
-        f_db, db = compute_frequency_response(b_vals, a_vals, fs)
-        plot_filter_properties(f_db, db, b_vals)
+        f_db, db = compute_frequency_response(kernel, 1, fs)
+        plot_filter_properties(f_db, db, kernel)
 
     if return_kernel:
         return sig_filt, kernel
@@ -154,8 +153,9 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         return sig_filt
 
 
-def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitions=True,
-                      plot_properties=False, return_kernel=False):
+def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order,
+                      print_transitions=True, plot_properties=False,
+                      return_kernel=False):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -246,8 +246,7 @@ def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None)
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float, optional
-        Length of filter, in seconds.
-        This parameter overwrites `n_cycles`.
+        Length of filter, in seconds. This parameter overwrites `n_cycles`.
 
     Returns
     -------
@@ -431,7 +430,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
 
     # Compute pass & transition bandwidth
     pass_bw = compute_pass_band(fs, pass_type, fc)
-    transition_bw = compute_trans_band(f_db, db, transitions[0], transitions[1])
+    transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
 
     # Raise warning if transition bandwidth is too high
     if transition_bw > pass_bw:
@@ -507,7 +506,7 @@ def compute_pass_band(fs, pass_type, fc):
     return pass_bw
 
 
-def compute_trans_band(f_db, db, low=-20, high=-3):
+def compute_transition_band(f_db, db, low=-20, high=-3):
     """Compute transition bandwidth of a filter.
 
     Parameters

@@ -1,8 +1,5 @@
 """Plotting functions for neurodsp.filt."""
 
-import numpy as np
-from scipy import signal
-
 import matplotlib.pyplot as plt
 
 ###################################################################################################
@@ -50,13 +47,13 @@ def plot_frequency_response(f_db, db, ax=None):
     ax.set_ylabel('Attenuation (dB)')
 
 
-def plot_filter_kernel(b_vals, ax=None):
+def plot_filter_kernel(kernel, ax=None):
     """Plot the kernel of a filter.
 
     Parameters
     ----------
-    b_vals : 1d array
-        B values for the filter.
+    kernel : 1d array
+        The kernel definition of an FIR filter.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     """
@@ -64,7 +61,7 @@ def plot_filter_kernel(b_vals, ax=None):
     if not ax:
         _, ax = plt.subplots(figsize=(5, 5))
 
-    ax.plot(b_vals, 'k')
+    ax.plot(kernel, 'k')
 
     ax.set_title('Kernel')
     ax.set_xlabel('LABEL')
