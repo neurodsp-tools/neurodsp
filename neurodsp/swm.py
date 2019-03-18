@@ -1,4 +1,4 @@
-"""Identify the waveform shape of neural oscillations using the sliding window matching algorithm."""
+"""Identify the waveform shape of oscillations using the sliding window matching algorithm."""
 
 import numpy as np
 
@@ -155,4 +155,5 @@ def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000
         else:
             n_tries += 1
             if n_tries > tries_limit:
-                raise RuntimeError('SWM algorithm has difficulty finding a new window. Increase the spacing parameter, G.')
+                raise RuntimeError('SWM algorithm has difficulty finding a new window. \
+                                    Increase the spacing parameter, G.')

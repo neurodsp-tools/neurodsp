@@ -3,7 +3,6 @@
 import numpy as np
 from numpy.random import rand, randn, randint
 import pandas as pd
-from scipy import signal
 
 from neurodsp.sim.transients import make_osc_cycle
 
@@ -55,8 +54,8 @@ def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
 
 
 def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
-                          prob_leave_burst=.2, cycle_features=None,
-                          return_cycle_df=False, n_tries=5):
+                           prob_leave_burst=.2, cycle_features=None,
+                           return_cycle_df=False, n_tries=5):
     """Simulate a bursty oscillation.
 
     Parameters
@@ -219,7 +218,7 @@ def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
         if is_oscillating[ii-1]:
             is_oscillating[ii] = rand_num > prob_leave_burst
         else:
-            is_oscillating[ii] = rand_num  < prob_enter_burst
+            is_oscillating[ii] = rand_num < prob_enter_burst
 
     return is_oscillating
 

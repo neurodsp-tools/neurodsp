@@ -216,7 +216,8 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     return freqs, spect_cv
 
 
-def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='bootstrap', rs_params=None):
+def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
+                   method='bootstrap', rs_params=None):
     """Resampled version of scv: instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
 
@@ -241,10 +242,10 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
         'bootstrap' randomly samples a subset of the spectrogram repeatedly.
         'rolling' takes the rolling window scv.
     rs_params : tuple, (int, int), optional
-        Parameters for resampling algorithm.
-        If method is 'bootstrap', rs_params = (nslices, ndraws), defaults to (10% of slices, 100 draws).
+        Parameters for resampling algorithm, depending on the method used.
+        If 'bootstrap', rs_params = (nslices, ndraws), defaults to (10% of slices, 100 draws).
         This specifies the number of slices per draw, and number of random draws.
-        If method is 'rolling', rs_params = (nslices, nsteps), defaults to (10, 5).
+        If 'rolling', rs_params = (nslices, nsteps), defaults to (10, 5).
         This specifies the number of slices per draw, and number of slices to step forward.
 
     Returns
@@ -304,7 +305,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0, method='boo
 
 
 def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
-                  nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
+                          nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.
 
     Parameters

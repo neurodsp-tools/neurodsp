@@ -223,7 +223,7 @@ def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
         elif noise_generator == 'powerlaw':
             noise = sim_variable_powerlaw(n_seconds, fs, **noise_args)
 
-        elif noise_generator == 'synaptic' or noise_generator == 'lorentzian':
+        elif noise_generator in ['synaptic', 'lorentzian']:
             noise = sim_synaptic_noise(n_seconds, fs, **noise_args)
 
         elif noise_generator == 'ou_process':

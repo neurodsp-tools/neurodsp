@@ -29,7 +29,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     -------
     lc : float or 1d array
         If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
-        If return_spectrum is True: lagged coherence value for each frequency in the frequency range.
+        If return_spectrum is True: lagged coherence value for each frequency across the range.
     freqs : 1d array
         Frequencies, in Hz, corresponding to the lagged coherence values in lc.
         Only returned if return_spectrum is True.
@@ -46,17 +46,15 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
 
     # Calculate lagged coherence for each frequency
     n_freqs = len(freqs)
-    lcs = np.zeros(n_freqs)
+    lc = np.zeros(n_freqs)
     for ind, freq in enumerate(freqs):
-        lcs[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
+        lc[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
 
     # Return desired measure of lagged coherence
     if return_spectrum:
-        lc = lcs
         return lc, freqs
     else:
-        lc = np.mean(lcs)
-        return lc
+        return np.mean(lc)
 
 
 def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
