@@ -464,22 +464,21 @@ def morlet_convolve(sig, freq, fs, n_cycles=7, scaling=0.5, filt_len=None, norm=
     return mwt_real + 1j * mwt_imag
 
 
-def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
+def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     """Change the power law exponent of a power spectrum about an axis frequency.
 
     Parameters
     ----------
-    f_axis : 1d array
+    freqs : 1d array
         Frequency axis of input spectrum, in Hz. Must be same length as spectrum.
     spectrum : 1d array
         Power spectrum to be rotated.
-    delta_f : float
+    delta_exponent : float
         Change in power law exponent to be applied.
         Positive is counterclockwise rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, optional
+    f_rotation : float, optional, default=1
         Axis of rotation frequency, in Hz, such that power at that frequency is unchanged
         by the rotation. Only matters if not further normalizing signal variance.
-        If None, the transform normalizes to power at 1Hz by default.
 
     Returns
     -------
@@ -487,30 +486,10 @@ def rotate_powerlaw(f_axis, spectrum, delta_f, f_rotation=None):
         Rotated spectrum.
     """
 
-    ## Make the 1/f rotation mask
-    # If starting freq is 0Hz, default power at 0Hz to old value because log
-    #   will return inf. Use case occurs in simulating/manipulating time series.
-    f_mask = np.zeros_like(f_axis)
+    mask = (np.abs(freqs) / f_rotation)**-delta_exponent
+    rotated_spectrum = mask * spectrum
 
-    if f_axis[0] == 0.:
-        f_mask[0] = 1.
-        f_mask[1:] = 10**(np.log10(np.abs(f_axis[1:])) * (delta_f))
-    # Otherwise, apply rotation to all frequencies.
-    else:
-        f_mask = 10**(np.log10(np.abs(f_axis)) * (delta_f))
-
-    if f_rotation is not None:
-
-        # Normalize power at rotation frequency
-        if f_rotation < np.abs(f_axis).min() or f_rotation > np.abs(f_axis).max():
-            raise ValueError('Rotation frequency not within frequency range.')
-
-        f_mask = f_mask / f_mask[np.where(f_axis >= f_rotation)[0][0]]
-
-    # Apply mask to rotate spectrum
-    rot_spectrum = f_mask * spectrum
-
-    return rot_spectrum
+    return rotated_spectrum
 
 
 def trim_spectrum(freqs, power_spectra, f_range):
