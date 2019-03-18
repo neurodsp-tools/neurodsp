@@ -137,7 +137,7 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
 
     # Remove edge artifacts
     if remove_edge_artifacts:
-        sig_filt = _drop_edge_artifacts(sig_filt, len(kernel))
+        sig_filt = remove_filter_edges(sig_filt, len(kernel))
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = restore_nans(sig_filt, sig_nans)

@@ -4,7 +4,7 @@ import numpy as np
 from scipy import signal
 from scipy.stats import zscore
 
-from neurodsp.filt import filter_signal_fir
+from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
 from neurodsp.sim.transients import make_synaptic_kernel
 
@@ -177,7 +177,7 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     return sig
 
 
-def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_order=None):
+def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), **filter_kwargs):
     """Simulate colored noise that is highpass or bandpass filtered.
 
     Parameters
@@ -191,8 +191,8 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
         denotes decay (i.e., negative slope in log-log spectrum).
     f_range : 2-element array (lo, hi) or None, optional
         Frequency range of simulated data. If not provided, default to a highpass at 0.5 Hz.
-    filter_order : int, optional
-        Order of filter. If not provided, defaults to 3 times the highpass filter cycle length.
+    **filter_kwargs : kwargs, optional
+        Keyword arguments to pass to `filter_signal`.
 
     Returns
     -------
@@ -200,31 +200,8 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_
         Filtered noise.
     """
 
-    # Simulate colored noise
     noise = sim_variable_powerlaw(n_seconds, fs, exponent)
-
-    nyq = fs / 2.
-
-    # Determine order of highpass filter (3 cycles of f_hipass)
-    if filter_order is None:
-        filter_order = int(3 * fs / f_range[0])
-
-    # High pass filtered
-    if f_range[1] is None:
-        # Make filter order odd if necessary
-        if filter_order % 2 == 0:
-            #print('NOTE: Increased high-pass filter order by 1 in order to be odd')
-            filter_order += 1
-
-        # High pass filter
-        taps = signal.firwin(filter_order, f_range[0] / nyq, pass_zero=False)
-        noise = signal.filtfilt(taps, [1], noise)
-
-    # Band pass filtered
-    else:
-        taps = signal.firwin(filter_order, np.array(
-            f_range) / nyq, pass_zero=False)
-        noise = signal.filtfilt(taps, [1], noise)
+    noise = filter_signal(noise, fs, infer_passtype(f_range), f_range, **filter_kwargs)
 
     return noise
 
