@@ -32,7 +32,6 @@ def test_sim_filtered_noise():
 
     #assert np.allclose(np.sum(np.abs(noise - noise_true)), 0, atol=10 ** -5)
 
-
 def test_sim_poisson_pop():
 
     np.random.seed(0)
@@ -42,7 +41,6 @@ def test_sim_poisson_pop():
         neurodsp.__file__) + '/tests/data/sim_poisson_pop.npy')
 
     assert np.allclose(np.sum(np.abs(poisson_noise - poisson_noise_true)), 0, atol=10 ** -5)
-
 
 def test_sim_synaptic_noise():
 
@@ -54,7 +52,6 @@ def test_sim_synaptic_noise():
 
     assert np.allclose(np.sum(np.abs(syn_noise - syn_noise_true)), 0, atol=10 ** -5)
 
-
 def test_sim_ou_process():
 
     np.random.seed(0)
@@ -64,8 +61,6 @@ def test_sim_ou_process():
         neurodsp.__file__) + '/tests/data/sim_OU_process.npy')
 
     assert np.allclose(np.sum(np.abs(ou_noise - ou_noise_true)), 0, atol=10 ** -5)
-
-
 
 def test_variable_powerlaw():
     pass

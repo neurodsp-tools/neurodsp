@@ -30,18 +30,6 @@ def test_design_iir_filter():
     # TODO
     pass
 
-def test_check_filter_properties():
-    # TODO
-    pass
-
-def compute_frequency_response():
-    # TODO
-    pass
-
-def compute_trans_band():
-    # TODO
-    pass
-
 def test_check_filter_definition():
 
     # Check that error catching works for bad pass_type definition
@@ -75,6 +63,14 @@ def test_check_filter_definition():
     with raises(ValueError):
         f_lo, f_hi = check_filter_definition('bandstop', fc=(62, 58))
 
+def test_check_filter_properties():
+    # TODO
+    pass
+
+def compute_frequency_response():
+    # TODO
+    pass
+
 def compute_pass_band():
 
     fs = 500
@@ -82,12 +78,20 @@ def compute_pass_band():
     assert compute_pass_band(fs, 'highpass', 20) == 20.
     assert compute_pass_band(fs, 'lowpass', 5) == compute_nyquist(fs) - 5
 
+def compute_transition_band():
+    # TODO
+    pass
 
 def test_compute_nyquist():
 
     assert compute_nyquist(100.) == 50.
     assert compute_nyquist(256) == 128.
 
+def test_infer_passtype():
+
+    assert infer_passtype((None, 1)) == 'lowpass'
+    assert infer_passtype((1, None)) == 'highpass'
+    assert infer_passtype((1, 2)) == 'bandpass'
 
 def test_remove_filter_edges():
 

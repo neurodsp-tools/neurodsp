@@ -32,3 +32,9 @@ def test_swm_consistent():
     # Compute difference between current and past signals
     signal_diff = avg_window - avg_window_true
     assert np.allclose(np.sum(np.abs(signal_diff)), 0, atol=10 ** -5)
+
+def test_compute_cost():
+    pass
+
+def test_find_new_windowidx():
+    pass

@@ -65,3 +65,12 @@ def test_compute_burst_stats():
     # Compare new and old burst stats
     for k in burst_stats_true.keys():
         assert np.isclose(burst_stats_true[k], burst_stats[k])
+
+##
+## PRIVATE FUNCTION TESTS
+
+def test_dual_threshold_split():
+    pass
+
+def tests_rmv_short_periods():
+    pass

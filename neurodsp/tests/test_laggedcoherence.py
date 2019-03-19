@@ -11,7 +11,7 @@ from .util import load_example_data
 ###################################################################################################
 ###################################################################################################
 
-def test_laggedcoherence_consistent():
+def test_lagged_coherence():
 
     # Load data
     data_idx = 1
@@ -27,3 +27,9 @@ def test_laggedcoherence_consistent():
     lag_coh_beta = lagged_coherence(sig, f_range, fs)
 
     assert np.allclose(lag_coh_beta, lc_true, atol=10 ** -5)
+
+def test_lagged_coherence_1freq():
+    pass
+
+def test_nonoverlapping_chunks():
+    pass

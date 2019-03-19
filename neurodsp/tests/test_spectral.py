@@ -56,7 +56,7 @@ def test_compute_scv():
     assert np.allclose(np.sum(np.abs(gt_scv['freq'] - freq)), 0, atol=10 ** -5)
     assert np.allclose(np.sum(np.abs(gt_scv['SCV'] - spect_cv)), 0, atol=10 ** -5)
 
-def test_scv_rs():
+def test_compute_scv_rs():
 
     # Load data
     data_idx = 1
@@ -139,7 +139,7 @@ def test_trim_spectrum():
 ##
 ##
 
-def _discard_outliers():
+def test_discard_outliers():
     pass
 
 def test_spg_settings():
