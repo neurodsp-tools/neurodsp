@@ -62,18 +62,17 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         window_starts = window_starts_custom
     n_windows = len(window_starts)
 
+    # Randomly sample windows with replacement
+    random_window_idx = np.random.choice(range(n_windows), size=max_iterations)
+
     # Calculate initial cost
     costs = np.zeros(max_iterations)
     costs[0] = _compute_cost(sig, window_starts, win_n_samps)
 
-    # Randomly sample windows with replacement
-    random_window_idx = np.random.choice(range(n_windows), size=max_iterations)
+    for iter_num in range(1, max_iterations):
 
-    # For each iteration, randomly replace a window with a new window
-    # to improve cross-window similarity
-    iter_num = 1
-    while iter_num < max_iterations:
-        # Pick a random window position
+        # Pick a random window position to randomly replace with a
+        # new window to improve cross-window similarity
         window_idx_replace = random_window_idx[iter_num]
 
         # Find a new allowed position for the window
@@ -81,10 +80,8 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         window_starts_temp[window_idx_replace] = _find_new_windowidx(
             window_starts, spacing_n_samps, len(sig) - win_n_samps)
 
-        # Calculate the cost
+        # Calculate the cost & the change in the cost function
         cost_temp = _compute_cost(sig, window_starts_temp, win_n_samps)
-
-        # Calculate the change in cost function
         delta_cost = cost_temp - costs[iter_num - 1]
 
         # Calculate the acceptance probability
@@ -92,16 +89,15 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
         # Accept update to J with a certain probability
         if np.random.rand() < p_accept:
-            # Update costs
+
+            # Update costs & windows
             costs[iter_num] = cost_temp
-            # Update windows
             window_starts = window_starts_temp
+
         else:
+
             # Update costs
             costs[iter_num] = costs[iter_num - 1]
-
-        # Update iteration number
-        iter_num += 1
 
     # Calculate average window
     avg_window = np.zeros(win_n_samps)
@@ -118,9 +114,10 @@ def _compute_cost(sig, window_starts, win_n_samps):
     # Get all windows and zscore them
     n_windows = len(window_starts)
     windows = np.zeros((n_windows, win_n_samps))
-    for w_ind in range(n_windows):
-        temp = sig[window_starts[w_ind]:window_starts[w_ind] + win_n_samps]
-        windows[w_ind] = (temp - np.mean(temp)) / np.std(temp)
+
+    for ind, window in enumerate(window_starts):
+        temp = sig[window:window_starts[ind] + win_n_samps]
+        windows[ind] = (temp - np.mean(temp)) / np.std(temp)
 
     # Calculate distances for all pairs of windows
     dists = []
@@ -139,21 +136,17 @@ def _compute_cost(sig, window_starts, win_n_samps):
 def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
     """Find a new sample for the starting window"""
 
-    found = False
-    n_tries = 0
+    for n_try in range(tries_limit):
 
-    while found is False:
-
-        # Generate a random sample
+        # Generate a random sample & check how close it is to other window starts
         new_samp = np.random.randint(n_samp)
-
-        # Check how close the sample is to other window starts
         dists = np.abs(window_starts - new_samp)
 
         if np.min(dists) > spacing_n_samps:
-            return new_samp
-        else:
-            n_tries += 1
-            if n_tries > tries_limit:
-                raise RuntimeError('SWM algorithm has difficulty finding a new window. \
-                                    Increase the spacing parameter, G.')
+            break
+
+    else:
+        raise RuntimeError('SWM algorithm has difficulty finding a new window. \
+                            Increase the spacing parameter, G.')
+
+    return new_samp

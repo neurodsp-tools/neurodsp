@@ -123,8 +123,7 @@ def _dual_threshold_split(sig, thresh_hi, thresh_lo):
     """
 
     # Find all values above thresh_hi
-    # To avoid bug in later loop, do not allow first or last index to start
-    # off as 1
+    # To avoid bug in later loop, do not allow first or last index to start off as 1
     sig[[0, -1]] = 0
     idx_over_hi = np.where(sig >= thresh_hi)[0]
 
@@ -136,6 +135,7 @@ def _dual_threshold_split(sig, thresh_hi, thresh_lo):
     sig_len = len(sig)
 
     for ind in idx_over_hi:
+
         j_down = ind - 1
         if positive[j_down] == 0:
             j_down_done = False

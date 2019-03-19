@@ -45,8 +45,7 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     freqs = np.arange(f_range[0], f_range[1] + f_step, f_step)
 
     # Calculate lagged coherence for each frequency
-    n_freqs = len(freqs)
-    lc = np.zeros(n_freqs)
+    lc = np.zeros(len(freqs))
     for ind, freq in enumerate(freqs):
         lc[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
 
@@ -80,8 +79,7 @@ def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
     lcs_num = 0
     for ind in range(chunks_len - 1):
         lcs_num += fourier_coefsoi[ind] * np.conj(fourier_coefsoi[ind + 1])
-    lcs_denom = np.sqrt(np.sum(
-        np.abs(fourier_coefsoi[:-1])**2) * np.sum(np.abs(fourier_coefsoi[1:])**2))
+    lcs_denom = np.sqrt(np.sum(np.abs(fourier_coefsoi[:-1])**2) * np.sum(np.abs(fourier_coefsoi[1:])**2))
 
     return np.abs(lcs_num / lcs_denom)
 
