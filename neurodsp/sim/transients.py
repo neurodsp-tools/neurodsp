@@ -15,9 +15,8 @@ def make_osc_cycle(t_ker, fs, cycle_params):
     ----------
     t_ker : float
         Length of cycle window in seconds.
-        Note that this is NOT the period of the cycle, but the length of the
-        returned array that contains the cycle, which can be (and usually is)
-        much shorter.
+        Note that this is NOT the period of the cycle, but the length of the returned array
+        that contains the cycle, which can be (and usually is) much shorter.
     fs : float
         Sampling frequency of the cycle simulation.
     cycle_params : tuple

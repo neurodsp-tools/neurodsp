@@ -88,9 +88,8 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
         t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will snip it
-    sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker),
-                          fs=fs, n_neurons=n_neurons, firing_rate=firing_rate)
-    ker = make_synaptic_kernel(t_ker=t_ker, fs=fs, tau_r=tau_r, tau_d=tau_d)
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
+    ker = make_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
     return sig
@@ -205,37 +204,39 @@ def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), **filte
     return noise
 
 
-def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
-    """   """
+def get_aperiodic_sim(n_seconds, fs, generator, **noise_kwargs):
+    """Get simulated aperiodic data, of the specified type.
 
-    if isinstance(noise_generator, str):
+    Parameters
+    ----------
+    n_seconds : float
+        Signal duration, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    generator : {'filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process'}
+        Generator for aperiodic activity, as one of the simulators in neurodsp.sim.
 
-        # Check that the specified noise generator is valid
-        valid_noise_generators = ['filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process']
-        if noise_generator not in valid_noise_generators:
-            raise ValueError('Did not recognize noise type. Please check doc for acceptable function names.')
+    Returns
+    -------
+    sig : 1d array
+        Simulated aperiodic signal.
+    """
 
+    # Check that the specified aperiodic generator is valid
+    if generator not in ['filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process']:
+        raise ValueError('Did not recognize aperiodic generator type.\
+                          Please check doc for acceptable function names.')
 
-        if noise_generator == 'filtered_powerlaw':
-            noise = sim_filtered_noise(n_seconds, fs, **noise_args)
+    if generator == 'filtered_powerlaw':
+        sig = sim_filtered_noise(n_seconds, fs, **noise_kwargs)
 
-        elif noise_generator == 'powerlaw':
-            noise = sim_variable_powerlaw(n_seconds, fs, **noise_args)
+    elif generator == 'powerlaw':
+        sig = sim_variable_powerlaw(n_seconds, fs, **noise_kwargs)
 
-        elif noise_generator in ['synaptic', 'lorentzian']:
-            noise = sim_synaptic_noise(n_seconds, fs, **noise_args)
+    elif generator in ['synaptic', 'lorentzian']:
+        sig = sim_synaptic_noise(n_seconds, fs, **noise_kwargs)
 
-        elif noise_generator == 'ou_process':
-            noise = sim_ou_process(n_seconds, fs, **noise_args)
+    elif generator == 'ou_process':
+        sig = sim_ou_process(n_seconds, fs, **noise_kwargs)
 
-
-    elif isinstance(noise_generator, np.ndarray):
-        if len(noise_generator) != int(n_seconds * fs):
-            raise ValueError('Custom noise is not of same length as required oscillation length.')
-        else:
-            noise = noise_generator
-
-    else:
-        raise ValueError('Unsupported noise type: must be np.ndarray or str.')
-
-    return noise
+    return sig

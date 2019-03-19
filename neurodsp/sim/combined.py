@@ -3,7 +3,8 @@
 import numpy as np
 
 from neurodsp.sim.periodic import sim_oscillation, sim_bursty_oscillation
-from neurodsp.sim.aperiodic import _return_noise_sim
+from neurodsp.sim.aperiodic import get_aperiodic_sim
+from neurodsp.sim.utils import normalized_sum
 
 ###################################################################################################
 ###################################################################################################
@@ -20,9 +21,8 @@ def sim_noisy_oscillation(n_seconds, fs, freq, noise_generator='synaptic',
         Signal sampling rate, in Hz.
     freq : float
         Oscillation frequency.
-    noise_generator: str or numpy.ndarray, optional, default='synaptic'
-        Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a
-        custom array with the same number of samples as the oscillation (n_seconds*fs).
+    noise_generator: str, optional, default='synaptic'
+        Noise model, can be one of the simulators in neurodsp.sim specificed as a string.
 
         Possible models (see respective documentation):
 
@@ -49,22 +49,21 @@ def sim_noisy_oscillation(n_seconds, fs, freq, noise_generator='synaptic',
 
     Returns
     -------
-    osc: 1d array
-        Oscillation with noise.
+    sig : 1d array
+        Combined signal with an oscillation and an aperiodic component.
     """
 
-    # Generate & demean noise
-    noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
-    noise = noise - noise.mean()
+    # Generate & demean aperiodic signal
+    aperiodic = get_aperiodic_sim(n_seconds, fs, noise_generator, noise_args)
+    aperiodic = aperiodic - aperiodic.mean()
 
     # Generate oscillation
     oscillation = sim_oscillation(n_seconds, fs, freq, rdsym=rdsym)
 
     # Normalize & combine signal
-    oscillation, noise = normalize_by_variance(oscillation, noise, ratio_osc_var)
-    osc = oscillation + noise
+    sig = normalized_sum(oscillation, aperiodic, ratio_osc_var)
 
-    return osc
+    return sig
 
 
 def sim_noisy_bursty_oscillation(n_seconds, fs, freq, noise_generator='synaptic', noise_args={},
@@ -80,9 +79,8 @@ def sim_noisy_bursty_oscillation(n_seconds, fs, freq, noise_generator='synaptic'
         Sampling rate of simulated signal, in Hz
     freq : float
         Oscillation frequency, in Hz
-    noise_generator: str or numpy.ndarray, optional, default: 'synaptic'
-        Noise model, can be one of the simulators in neurodsp.sim specificed as a string, or a custom
-        numpy.ndarray with the same number of samples as the oscillation (n_seconds*fs).
+    noise_generator: str, optional, default: 'synaptic'
+        Noise model, can be one of the simulators in neurodsp.sim specificed as a string.
 
         Possible models (see respective documentation):
 
@@ -133,7 +131,7 @@ def sim_noisy_bursty_oscillation(n_seconds, fs, freq, noise_generator='synaptic'
 
     Returns
     -------
-    signal : 1d array
+    sig : 1d array
         Bursty oscillation with noise time series.
     oscillation : 1d array
         Bursty oscillation component of signal.
@@ -143,9 +141,9 @@ def sim_noisy_bursty_oscillation(n_seconds, fs, freq, noise_generator='synaptic'
         Cycle-by-cycle properties of the simulated oscillation.
     """
 
-    # Generate & then demean noise
-    noise = _return_noise_sim(n_seconds, fs, noise_generator, noise_args)
-    noise = noise - noise.mean()
+    # Generate & demean aperiodic signal
+    aperiodic = get_aperiodic_sim(n_seconds, fs, noise_generator, noise_args)
+    aperiodic = aperiodic - aperiodic.mean()
 
     # Generate oscillation
     oscillation, df = sim_bursty_oscillation(n_seconds, fs, freq, rdsym=rdsym,
@@ -160,35 +158,18 @@ def sim_noisy_bursty_oscillation(n_seconds, fs, freq, noise_generator='synaptic'
         if row['is_cycle']:
             is_osc[row['start_sample']:row['start_sample'] + row['period']] = True
 
+    # NOTE: HAVE MESSED THIS UP A BIT, AS IT NOW NORMALIZES BASED ON VARIANCE INCLUDING NON BURST SAMPLES
+    #   SHOULD (USED TO) HAVE: oscillation[is_osc]
+    # Note: could this be fixed by adding a tag in 'normalize_variance'
+
     # Normalize & combine signal
-    oscillation, noise = normalize_by_variance(oscillation, noise, ratio_osc_var)
-    signal = oscillation + noise
+    sig = normalized_sum(oscillation, aperiodic, ratio_osc_var)
 
     if return_components:
         if return_cycle_df:
-            return signal, oscillation, noise, df
-        return signal, oscillation, noise
+            return sig, oscillation, aperiodic, df
+        return sig, oscillation, aperiodic
     else:
         if return_cycle_df:
-            return signal, df
-        return signal
-
-
-def normalize_by_variance(sig1, sig2, ratio):
-    """Normalize the variance across two signals.
-
-    Parameters
-    ----------
-    sig1, sig2 : 1d array
-        Vectors of data to normalize variance with respect to each other.
-    ratio : float
-        Desired ratio of sig1 variance to sig2 variance.
-        If >1 - sig1 is stronger, if <1 - noise is stronger.
-
-    Returns
-    -------
-    1d array, 1d array
-        Vectors of data, where sig2 has been normalized so the desired variance ratio is attained.
-    """
-
-    return sig1, np.sqrt(sig2**2 * np.var(sig1) / (np.var(sig2) * ratio)) * np.sign(sig2)
+            return sig, df
+        return sig
