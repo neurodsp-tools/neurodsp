@@ -165,12 +165,12 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     sig = np.random.randn(n_samps)
 
     # Compute the FFT
-    fc = np.fft.fft(sig)
+    fft_output = np.fft.fft(sig)
     freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
     # Rotate spectrum and invert, zscore to normalize
-    fc_rot = rotate_powerlaw(freqs, fc, exponent / 2.)
-    sig = zscore(np.real(np.fft.ifft(fc_rot)))
+    fft_output_rot = rotate_powerlaw(freqs, fft_output, exponent / 2.)
+    sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
 
     return sig
 

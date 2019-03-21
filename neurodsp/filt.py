@@ -11,7 +11,7 @@ from neurodsp.plts.filt import plot_filter_properties, plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
+def filter_signal(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None,
                   filt_type='fir', remove_edges=True, butterworth_order=None,
                   print_transitions=True, plot_properties=False, return_kernel=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
@@ -29,7 +29,7 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -64,19 +64,19 @@ def filter_signal(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None,
     """
 
     if filt_type == 'fir':
-        return filter_signal_fir(sig, fs, pass_type, fc, n_cycles, n_seconds,
+        return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
                                  remove_edges, print_transitions,
                                  plot_properties, return_kernel)
     elif filt_type == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edges)
-        return filter_signal_iir(sig, fs, pass_type, fc, butterworth_order,
+        return filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                                  print_transitions, plot_properties,
                                  return_kernel)
     else:
         raise ValueError('Filter type not understood.')
 
 
-def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, remove_edges=True,
+def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
                       print_transitions=True, plot_properties=False, return_kernel=False):
     """Apply an FIR filter to a signal.
 
@@ -93,7 +93,7 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, remove
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -121,11 +121,11 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, remove
     """
 
     # Design filter
-    kernel = design_fir_filter(len(sig), fs, pass_type, fc, n_cycles, n_seconds)
+    kernel = design_fir_filter(len(sig), fs, pass_type, f_range, n_cycles, n_seconds)
 
     # Compute transition bandwidth
     if print_transitions:
-        check_filter_properties(kernel, 1, fs, pass_type, fc)
+        check_filter_properties(kernel, 1, fs, pass_type, f_range)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -151,7 +151,7 @@ def filter_signal_fir(sig, fs, pass_type, fc, n_cycles=3, n_seconds=None, remove
         return sig_filt
 
 
-def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitions=True,
+def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_transitions=True,
                       plot_properties=False, return_kernel=False):
     """Apply an IIR filter to a signal.
 
@@ -168,7 +168,7 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitio
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -192,11 +192,11 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitio
     """
 
     # Design filter
-    b_vals, a_vals = design_iir_filter(fs, pass_type, fc, butterworth_order)
+    b_vals, a_vals = design_iir_filter(fs, pass_type, f_range, butterworth_order)
 
     # Compute transition bandwidth
     if print_transitions:
-        check_filter_properties(b_vals, a_vals, fs, pass_type, fc)
+        check_filter_properties(b_vals, a_vals, fs, pass_type, f_range)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -218,7 +218,7 @@ def filter_signal_iir(sig, fs, pass_type, fc, butterworth_order, print_transitio
         return sig_filt
 
 
-def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None):
+def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     """Design an FIR filter.
 
     Parameters
@@ -234,7 +234,7 @@ def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None)
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -252,7 +252,7 @@ def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None)
     """
 
     # Check filter definition
-    f_lo, f_hi = check_filter_definition(pass_type, fc)
+    f_lo, f_hi = check_filter_definition(pass_type, f_range)
     filt_len = _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length)
 
     f_nyq = compute_nyquist(fs)
@@ -268,7 +268,7 @@ def design_fir_filter(sig_length, fs, pass_type, fc, n_cycles=3, n_seconds=None)
     return kernel
 
 
-def design_iir_filter(fs, pass_type, fc, butterworth_order):
+def design_iir_filter(fs, pass_type, f_range, butterworth_order):
     """Design an IIR filter.
 
     Parameters
@@ -282,7 +282,7 @@ def design_iir_filter(fs, pass_type, fc, butterworth_order):
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -304,7 +304,7 @@ def design_iir_filter(fs, pass_type, fc, butterworth_order):
         warnings.warn('IIR filters are not recommended other than for notch filters.')
 
     # Check filter definition
-    f_lo, f_hi = check_filter_definition(pass_type, fc)
+    f_lo, f_hi = check_filter_definition(pass_type, f_range)
 
     f_nyq = compute_nyquist(fs)
     if pass_type in ('bandpass', 'bandstop'):
@@ -320,7 +320,7 @@ def design_iir_filter(fs, pass_type, fc, butterworth_order):
     return b_vals, a_vals
 
 
-def check_filter_definition(pass_type, fc):
+def check_filter_definition(pass_type, f_range):
     """Check a filter definition for validity, and get f_lo and f_hi.
 
     Parameters
@@ -332,7 +332,7 @@ def check_filter_definition(pass_type, fc):
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -352,27 +352,27 @@ def check_filter_definition(pass_type, fc):
     ## Check that frequency cutoff inputs are appropriate
     # For band filters, 2 inputs required & second entry must be > first
     if pass_type in ('bandpass', 'bandstop'):
-        if isinstance(fc, tuple) and fc[0] >= fc[1]:
+        if isinstance(f_range, tuple) and f_range[0] >= f_range[1]:
             raise ValueError('Second cutoff frequency must be greater than first.')
-        elif isinstance(fc, (int, float)) or len(fc) != 2:
+        elif isinstance(f_range, (int, float)) or len(f_range) != 2:
             raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
 
-        # Map fc to f_lo and f_hi
-        f_lo, f_hi = fc
+        # Map f_range to f_lo and f_hi
+        f_lo, f_hi = f_range
 
     # For lowpass and highpass can be tuple or int/float
     if pass_type == 'lowpass':
-        if isinstance(fc, (int, float)):
-            f_hi = fc
-        elif isinstance(fc, tuple):
-            f_hi = fc[1]
+        if isinstance(f_range, (int, float)):
+            f_hi = f_range
+        elif isinstance(f_range, tuple):
+            f_hi = f_range[1]
         f_lo = None
 
     if pass_type == 'highpass':
-        if isinstance(fc, (int, float)):
-            f_lo = fc
-        elif isinstance(fc, tuple):
-            f_lo = fc[0]
+        if isinstance(f_range, (int, float)):
+            f_lo = f_range
+        elif isinstance(f_range, tuple):
+            f_lo = f_range[0]
         f_hi = None
 
     # Make sure pass freqs are floats
@@ -382,7 +382,7 @@ def check_filter_definition(pass_type, fc):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20, -3)):
+def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=(-20, -3)):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
@@ -400,7 +400,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -426,7 +426,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, fc, transitions=(-20,
                           'more than {} dB. Increase filter length.'.format(abs(transitions[0])))
 
     # Compute pass & transition bandwidth
-    pass_bw = compute_pass_band(fs, pass_type, fc)
+    pass_bw = compute_pass_band(fs, pass_type, f_range)
     transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
 
     # Raise warning if transition bandwidth is too high
@@ -466,7 +466,7 @@ def compute_frequency_response(b_vals, a_vals, fs):
     return f_db, db
 
 
-def compute_pass_band(fs, pass_type, fc):
+def compute_pass_band(fs, pass_type, f_range):
     """Compute the pass bandwidth of a filter.
 
     Parameters
@@ -480,7 +480,7 @@ def compute_pass_band(fs, pass_type, fc):
         * 'bandstop': apply a bandstop (notch) filter
         * 'lowpass': apply a lowpass filter
         * 'highpass' : apply a highpass filter
-    fc : tuple of (float, float) or float
+    f_range : tuple of (float, float) or float
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
@@ -492,7 +492,7 @@ def compute_pass_band(fs, pass_type, fc):
         The pass bandwidth of the filter.
     """
 
-    f_lo, f_hi = check_filter_definition(pass_type, fc)
+    f_lo, f_hi = check_filter_definition(pass_type, f_range)
     if pass_type in ['bandpass', 'bandstop']:
         pass_bw = f_hi - f_lo
     elif pass_type == 'highpass':
@@ -548,12 +548,12 @@ def compute_nyquist(fs):
     return fs / 2.
 
 
-def infer_passtype(fc):
+def infer_passtype(f_range):
     """Given frequency definition of a filter, infer the passtype.
 
     Parameters
     ----------
-    fc : tuple of (float, float)
+    f_range : tuple of (float, float)
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
 
     Returns
@@ -566,15 +566,15 @@ def infer_passtype(fc):
     Assumes that a definition with two frequencies is a 'bandpass' (not 'bandstop').
     """
 
-    if fc[0] is None:
+    if f_range[0] is None:
         pass_type = 'lowpass'
-    elif fc[1] is None:
+    elif f_range[1] is None:
         pass_type = 'highpass'
     else:
         pass_type = 'bandpass'
 
     # Check the inferred passtype & frequency definition is valid
-    _ = check_filter_definition(pass_type, fc)
+    _ = check_filter_definition(pass_type, f_range)
 
     return pass_type
 

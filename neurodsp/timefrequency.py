@@ -35,7 +35,7 @@ def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True,
         Time series of phase.
     """
 
-    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), fc=f_range,
+    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
                                      remove_edges=False, return_kernel=True, **filter_kwargs)
 
     pha = np.angle(robust_hilbert(sig_filt, hilbert_increase_n=hilbert_increase_n))
@@ -72,7 +72,7 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
         Time series of amplitude.
     """
 
-    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), fc=f_range,
+    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
                                      remove_edges=False, return_kernel=True, **filter_kwargs)
 
     amp = np.abs(robust_hilbert(sig_filt, hilbert_increase_n=hilbert_increase_n))
