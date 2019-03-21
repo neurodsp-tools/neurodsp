@@ -18,18 +18,18 @@ def test_sim_make_synaptic_kernel():
 
     # smoke test that valid parameter configurations do not return negative values
     t_ker, fs, tau_r, tau_d = 1., 1000., 0., 0.02
-    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
+    assert np.all(sim_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
 
     t_ker, fs, tau_r, tau_d = 2., 2000., 0.005, 0.02
-    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
+    assert np.all(sim_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
 
     t_ker, fs, tau_r, tau_d = 1., 1000., 0.02, 0.02
-    assert np.all(make_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
+    assert np.all(sim_synaptic_kernel(t_ker, fs, tau_r, tau_d) >= 0.)
 
-def test_make_osc_cycle():
+def test_sim_osc_cycle():
 
     np.random.seed(0)
-    gaus_cycle = make_osc_cycle(0.05, 1000., ('gaussian', 0.01))
+    gaus_cycle = sim_osc_cycle(0.05, 1000., ('gaussian', 0.01))
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/make_osc_cycle.npy', gaus_cycle)
     gaus_cycle_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/make_osc_cycle.npy')

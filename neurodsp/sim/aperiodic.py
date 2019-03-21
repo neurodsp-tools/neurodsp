@@ -6,7 +6,7 @@ from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
-from neurodsp.sim.transients import make_synaptic_kernel
+from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
 ###################################################################################################
@@ -54,9 +54,9 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     return sig
 
 
-def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
-                       tau_r=0, tau_d=0.01, t_ker=None):
-    """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
+def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
+                         tau_r=0, tau_d=0.01, t_ker=None):
+    """Simulate a neural signal as synaptic current, which has 1/f characteristics with a knee.
 
     Parameters
     ----------
@@ -89,13 +89,13 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
 
     # Simulate an extra bit because the convolution will snip it
     sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
-    ker = make_synaptic_kernel(t_ker, fs, tau_r, tau_d)
+    ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
     return sig
 
 
-def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
+def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
@@ -143,7 +143,7 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     return sig
 
 
-def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
+def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """Generate a power law time series with specified exponent by spectrally rotating white noise.
 
     Parameters
@@ -154,6 +154,10 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
         Sampling rate of simulated signal, in Hz.
     exponent : float
         Desired power-law exponent: beta in P(f)=f^beta.
+    f_range : 2-element array (lo, hi) or None, optional
+        Frequency range to filter simulated data.
+    **filter_kwargs : kwargs, optional
+        Keyword arguments to pass to `filter_signal`.
 
     Returns
     -------
@@ -172,36 +176,10 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     fft_output_rot = rotate_powerlaw(freqs, fft_output, exponent / 2.)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
 
+    if f_range is not None:
+        filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
+
     return sig
-
-
-def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), **filter_kwargs):
-    """Simulate colored noise that is highpass or bandpass filtered.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Simulation time, in seconds.
-    fs : float
-        Sampling rate of simulated signal, in Hz.
-    exponent : float, optional, default=-2
-        Desired power-law exponent: beta in P(f)=f^beta. Negative exponent
-        denotes decay (i.e., negative slope in log-log spectrum).
-    f_range : 2-element array (lo, hi) or None, optional
-        Frequency range of simulated data. If not provided, default to a highpass at 0.5 Hz.
-    **filter_kwargs : kwargs, optional
-        Keyword arguments to pass to `filter_signal`.
-
-    Returns
-    -------
-    noise : 1d array
-        Filtered noise.
-    """
-
-    noise = sim_variable_powerlaw(n_seconds, fs, exponent)
-    noise = filter_signal(noise, fs, infer_passtype(f_range), f_range, **filter_kwargs)
-
-    return noise
 
 
 def get_aperiodic_sim(n_seconds, fs, generator, **noise_kwargs):

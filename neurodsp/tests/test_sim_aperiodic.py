@@ -16,22 +16,6 @@ exponent = -2
 f_range_filter = (2, None)
 filter_order = 1501
 
-def test_sim_filtered_noise():
-
-    noise = sim_filtered_noise(n_seconds, fs, exponent, f_range_filter)
-    assert np.all(noise)
-
-    # Note: old consistency test turned off after moving to using filter_signal which
-    #   is slightly different than the filter defined directly in `sim_filtered_noise`
-
-    #np.random.seed(0)
-    #noise = sim_filtered_noise(n_seconds, fs, exponent, f_range_filter, filter_order)
-    # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/noise_filt.npy', noise)
-    #noise_true = np.load(os.path.dirname(
-    #    neurodsp.__file__) + '/tests/data/noise_filt.npy')
-
-    #assert np.allclose(np.sum(np.abs(noise - noise_true)), 0, atol=10 ** -5)
-
 def test_sim_poisson_pop():
 
     np.random.seed(0)
@@ -42,27 +26,27 @@ def test_sim_poisson_pop():
 
     assert np.allclose(np.sum(np.abs(poisson_noise - poisson_noise_true)), 0, atol=10 ** -5)
 
-def test_sim_synaptic_noise():
+def test_sim_synaptic_current():
 
     np.random.seed(0)
-    syn_noise = sim_synaptic_noise(2, 1000, 1000, 2, 0.002, 2, 1.)
+    syn_noise = sim_synaptic_current(2, 1000, 1000, 2, 0.002, 2, 1.)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_synaptic_noise.npy', syn_noise)
     syn_noise_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_synaptic_noise.npy')
 
     assert np.allclose(np.sum(np.abs(syn_noise - syn_noise_true)), 0, atol=10 ** -5)
 
-def test_sim_ou_process():
+def test_sim_random_walk():
 
     np.random.seed(0)
-    ou_noise = sim_ou_process(2, 1000, 1., 0., 5.)
+    ou_noise = sim_random_walk(2, 1000, 1., 0., 5.)
     # np.save(os.path.dirname(neurodsp.__file__) + '/tests/data/sim_ou_process.npy', ou_noise)
     ou_noise_true = np.load(os.path.dirname(
         neurodsp.__file__) + '/tests/data/sim_OU_process.npy')
 
     assert np.allclose(np.sum(np.abs(ou_noise - ou_noise_true)), 0, atol=10 ** -5)
 
-def test_variable_powerlaw():
+def test_powerlaw():
     pass
 
     # Note: turned off consistency test after updating rotate_spectrum

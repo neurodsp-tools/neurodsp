@@ -8,12 +8,12 @@ from scipy import signal
 ###################################################################################################
 ###################################################################################################
 
-def make_osc_cycle(t_ker, fs, cycle_params):
+def sim_osc_cycle(n_seconds, fs, cycle_params):
     """Make one cycle of an oscillation.
 
     Parameters
     ----------
-    t_ker : float
+    n_seconds : float
         Length of cycle window in seconds.
         Note that this is NOT the period of the cycle, but the length of the returned array
         that contains the cycle, which can be (and usually is) much shorter.
@@ -37,25 +37,25 @@ def make_osc_cycle(t_ker, fs, cycle_params):
 
     if cycle_params[0] == 'gaussian':
         # cycle_params defines std in seconds
-        cycle = signal.gaussian(t_ker * fs, cycle_params[1] * fs)
+        cycle = signal.gaussian(n_seconds * fs, cycle_params[1] * fs)
 
     elif cycle_params[0] == 'exp':
         # cycle_params defines decay time constant in seconds
-        cycle = make_synaptic_kernel(t_ker, fs, 0, cycle_params[1])
+        cycle = make_synaptic_kernel(n_seconds, fs, 0, cycle_params[1])
 
     elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
-        cycle = make_synaptic_kernel(t_ker, fs, cycle_params[1], cycle_params[2])
+        cycle = make_synaptic_kernel(n_seconds, fs, cycle_params[1], cycle_params[2])
 
     return cycle
 
 
-def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
+def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     """Creates synaptic kernels that with specified time constants.
 
     Parameters
     ----------
-    t_ker : float
+    n_seconds : float
         Length of simulated kernel in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz
@@ -77,10 +77,10 @@ def make_synaptic_kernel(t_ker, fs, tau_r, tau_d):
     - tau_r!=tau_d!=0 : double-exponential (rise and decay)
     """
 
-    # NOTE: sometimes t_ker is not exact, resulting in a slightly longer or
+    # NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or
     #   shorter times vector, which will affect final signal length
     #   https://docs.python.org/2/tutorial/floatingpoint.html
-    times = np.arange(0, t_ker, 1./fs)
+    times = np.arange(0, n_seconds, 1./fs)
 
     # Kernel type: single exponential
     if tau_r == 0:

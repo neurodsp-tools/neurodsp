@@ -4,7 +4,7 @@ import numpy as np
 from numpy.random import rand, randn, randint
 import pandas as pd
 
-from neurodsp.sim.transients import make_osc_cycle
+from neurodsp.sim.transients import sim_osc_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -179,7 +179,7 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0
 
         # defaults to 1 second window for a cycle, which is more than enough
         # if interested in longer period oscillations, just pass in premade cycle
-        osc_cycle = make_osc_cycle(1, fs, cycle)
+        osc_cycle = sim_osc_cycle(1, fs, cycle)
 
     # If cycle is an array, just use it to do the convolution
     else:
