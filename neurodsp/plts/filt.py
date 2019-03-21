@@ -1,11 +1,12 @@
 """Plotting functions for neurodsp.filt."""
 
+import numpy as np
 import matplotlib.pyplot as plt
 
 ###################################################################################################
 ###################################################################################################
 
-def plot_filter_properties(f_db, db, b_vals):
+def plot_filter_properties(f_db, db, fs, impulse_response):
     """Plot filter properties, including frequency response and filter kernel.
 
     Parameters
@@ -14,14 +15,14 @@ def plot_filter_properties(f_db, db, b_vals):
         Frequency vector corresponding to attenuation decibels, in Hz.
     db : 1d array
         Degree of attenuation for each frequency specified in f_db, in dB.
-    b_vals : 1d array
-        B values for the filter.
+    impulse_response : 1d array
+        The impulse response of a filter. For an FIR filter, these are the filter coefficients.
     """
 
     fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 
     plot_frequency_response(f_db, db, ax=ax[0])
-    plot_filter_kernel(b_vals, ax=ax[1])
+    plot_impulse_response(fs, impulse_response, ax=ax[1])
 
 
 def plot_frequency_response(f_db, db, ax=None):
@@ -47,13 +48,13 @@ def plot_frequency_response(f_db, db, ax=None):
     ax.set_ylabel('Attenuation (dB)')
 
 
-def plot_filter_kernel(kernel, ax=None):
-    """Plot the kernel of a filter.
+def plot_impulse_response(fs, impulse_response, ax=None):
+    """Plot the impulse response of a filter.
 
     Parameters
     ----------
-    kernel : 1d array
-        The kernel definition of an FIR filter.
+    impulse_response : 1d array
+        The impulse response of a filter.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     """
@@ -61,8 +62,13 @@ def plot_filter_kernel(kernel, ax=None):
     if not ax:
         _, ax = plt.subplots(figsize=(5, 5))
 
-    ax.plot(kernel, 'k')
+    # Create a samples vector, center to zero, and convert to time
+    samples = np.arange(len(impulse_response))
+    samples = samples - (len(samples) - 1) / 2
+    time = samples / fs
+
+    ax.plot(time, impulse_response, 'k')
 
     ax.set_title('Kernel')
-    ax.set_xlabel('LABEL')
-    ax.set_ylabel('LABEL')
+    ax.set_xlabel('Time (seconds)')
+    ax.set_ylabel('Response')

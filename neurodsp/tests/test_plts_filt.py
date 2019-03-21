@@ -11,28 +11,30 @@ from .util import plot_test
 @plot_test
 def test_plot_filter_properties():
 
-    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
-    f_db, db = compute_frequency_response(kernel, a_vals=1, fs=1000)
+    fs = 1000
+    coefs = design_fir_filter(2000, fs, 'bandpass', (8, 12), 3)
+    f_db, db = compute_frequency_response(coefs, a_vals=1, fs=1000)
 
-    plot_filter_properties(f_db, db, kernel)
+    plot_filter_properties(f_db, db, fs, coefs)
 
     assert True
 
 @plot_test
 def test_plot_frequency_response():
 
-    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
-    f_db, db = compute_frequency_response(kernel, a_vals=1, fs=1000)
+    coefs = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
+    f_db, db = compute_frequency_response(coefs, a_vals=1, fs=1000)
 
     plot_frequency_response(f_db, db)
 
     assert True
 
 @plot_test
-def test_plot_filter_kernel():
+def test_plot_impulse_response():
 
-    kernel = design_fir_filter(2000, 1000, 'bandpass', (8, 12), 3)
+    fs = 1000
+    coefs = design_fir_filter(2000, fs, 'bandpass', (8, 12), 3)
 
-    plot_filter_kernel(kernel)
+    plot_impulse_response(fs, coefs)
 
     assert True

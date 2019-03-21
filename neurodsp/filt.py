@@ -13,7 +13,7 @@ from neurodsp.plts.filt import plot_filter_properties, plot_frequency_response
 
 def filter_signal(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None,
                   filt_type='fir', remove_edges=True, butterworth_order=None,
-                  print_transitions=True, plot_properties=False, return_kernel=False):
+                  print_transitions=True, plot_properties=False, return_filter=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
@@ -52,32 +52,32 @@ def filter_signal(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None,
         If True, computes the transition bandwidth(s), and prints this information.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
-    return_kernel : bool, optional, default: False
-        If True, return the complex filter kernel.
+    return_filter : bool, optional, default: False
+        If True, return the filter coefficients.
 
     Returns
     -------
     sig_filt : 1d array
         Filtered time series.
-    kernel : length-2 tuple of arrays
-        Filter kernel. Only returned if `return_kernel` is True.
+    kernel : 1d array or tuple of (1d array, 1d array)
+        Filter coefficients. Only returned if `return_filter` is True.
     """
 
     if filt_type == 'fir':
         return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
                                  remove_edges, print_transitions,
-                                 plot_properties, return_kernel)
+                                 plot_properties, return_filter)
     elif filt_type == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edges)
         return filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                                  print_transitions, plot_properties,
-                                 return_kernel)
+                                 return_filter)
     else:
         raise ValueError('Filter type not understood.')
 
 
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
-                      print_transitions=True, plot_properties=False, return_kernel=False):
+                      print_transitions=True, plot_properties=False, return_filter=False):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -109,50 +109,50 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         If True, computes the transition bandwidth, and prints this information.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
-    return_kernel : bool, optional, default: False
-        If True, return the complex filter kernel.
+    return_filter : bool, optional, default: False
+        If True, return the filter coefficients of the FIR filter.
 
     Returns
     -------
     sig_filt : 1d array
         Filtered time series.
-    kernel : length-2 tuple of arrays
-        Filter kernel. Only returned if `return_kernel` is True.
+    filter_coefs : 1d array
+        Filter coefficients of the FIR filter. Only returned if `return_filter` is True.
     """
 
     # Design filter
-    kernel = design_fir_filter(len(sig), fs, pass_type, f_range, n_cycles, n_seconds)
+    filter_coefs = design_fir_filter(len(sig), fs, pass_type, f_range, n_cycles, n_seconds)
 
     # Compute transition bandwidth
     if print_transitions:
-        check_filter_properties(kernel, 1, fs, pass_type, f_range)
+        check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
 
     # Apply filter
-    sig_filt = np.convolve(kernel, sig, 'same')
+    sig_filt = np.convolve(filter_coefs, sig, 'same')
 
     # Remove edge artifacts
     if remove_edges:
-        sig_filt = remove_filter_edges(sig_filt, len(kernel))
+        sig_filt = remove_filter_edges(sig_filt, len(filter_coefs))
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = restore_nans(sig_filt, sig_nans)
 
     # Plot filter properties, if specified
     if plot_properties:
-        f_db, db = compute_frequency_response(kernel, 1, fs)
-        plot_filter_properties(f_db, db, kernel)
+        f_db, db = compute_frequency_response(filter_coefs, 1, fs)
+        plot_filter_properties(f_db, db, filter_coefs)
 
-    if return_kernel:
-        return sig_filt, kernel
+    if return_filter:
+        return sig_filt, filter_coefs
     else:
         return sig_filt
 
 
 def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_transitions=True,
-                      plot_properties=False, return_kernel=False):
+                      plot_properties=False, return_filter=False):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -180,15 +180,16 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_tran
         If True, computes the transition bandwidth, and prints this information.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
-    return_kernel : bool, optional, default: False
-        If True, return the complex filter kernel.
+    return_filter : bool, optional, default: False
+        If True, return the filter coefficients of the IIR filter.
 
     Returns
     -------
     sig_filt : 1d array
         Filtered time series.
-    kernel : length-2 tuple of arrays
-        Filter kernel. Only returned if `return_kernel` is True.
+    filter_coefs : tuple of (1d array, 1d array)
+        Filter coefficients of the IIR filter, as (b_vals, a_vals).
+        Only returned if `return_filter` is True.
     """
 
     # Design filter
@@ -212,7 +213,7 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_tran
         f_db, db = compute_frequency_response(b_vals, a_vals, fs)
         plot_frequency_response(f_db, db)
 
-    if return_kernel:
+    if return_filter:
         return sig_filt, (b_vals, a_vals)
     else:
         return sig_filt
@@ -247,8 +248,8 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
 
     Returns
     -------
-    kernel : 1d array
-        The kernel definition of an FIR filter.
+    filter_coefs : 1d array
+        The filter coefficients for an FIR filter.
     """
 
     # Check filter definition
@@ -257,15 +258,15 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
 
     f_nyq = compute_nyquist(fs)
     if pass_type == 'bandpass':
-        kernel = signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
+        filter_coefs = signal.firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
     elif pass_type == 'bandstop':
-        kernel = signal.firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
+        filter_coefs = signal.firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
     elif pass_type == 'highpass':
-        kernel = signal.firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
+        filter_coefs = signal.firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
     elif pass_type == 'lowpass':
-        kernel = signal.firwin(filt_len, f_hi, nyq=f_nyq)
+        filter_coefs = signal.firwin(filt_len, f_hi, nyq=f_nyq)
 
-    return kernel
+    return filter_coefs
 
 
 def design_iir_filter(fs, pass_type, f_range, butterworth_order):
@@ -294,9 +295,9 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
     Returns
     -------
     b_vals : 1d array
-        B values for the filter.
+        B value filter coefficients for an IIR filter.
     a_vals : 1d array
-        A values for the filter.
+        A value filter coefficients for an IIR filter.
     """
 
     # Warn about only recommending IIR for bandstop
@@ -388,9 +389,9 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
     Parameters
     ----------
     b_vals : 1d array
-        B values for the filter.
+        B value filter coefficients for a filter.
     a_vals : 1d array
-        A values for the filter.
+        A value filter coefficients for a filter.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -445,9 +446,9 @@ def compute_frequency_response(b_vals, a_vals, fs):
     Parameters
     ----------
     b_vals : 1d array
-        B values for the filter.
+        B value filter coefficients for a filter.
     a_vals : 1d array
-        A values for the filter.
+        A value filter coefficients for a filter.
     fs : float
         Sampling rate, in Hz.
 
