@@ -5,7 +5,7 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def normalized_sum(sig1, sig2, ratio):
+def normalized_sum(sig1, sig2, ratio, select_nonzero=True):
     """Combine two signals, after transforming to have the desired variance ratio.
 
     Parameters
@@ -15,6 +15,8 @@ def normalized_sum(sig1, sig2, ratio):
     ratio : float
         Desired ratio of sig1 variance to sig2 variance.
         If > 1 - sig1 is stronger, if < 1 - sig2 is stronger.
+    select_nonzero : boolean, optional, default=True
+        Whether to calculate the variance of sig1 across only non-zero data points.
 
     Returns
     -------
@@ -22,10 +24,10 @@ def normalized_sum(sig1, sig2, ratio):
         New vector with the combined input signals.
     """
 
-    return sum(normalize_variance(sig1, sig2, ratio))
+    return sum(normalize_variance(sig1, sig2, ratio, select_nonzero))
 
 
-def normalize_variance(sig1, sig2, ratio):
+def normalize_variance(sig1, sig2, ratio, select_nonzero=True):
     """Normalize the variance across two signals to reflect a specified ratio.
 
     Parameters
@@ -35,11 +37,26 @@ def normalize_variance(sig1, sig2, ratio):
     ratio : float
         Desired ratio of sig1 variance to sig2 variance.
         If > 1 - sig1 is stronger, if < 1 - sig2 is stronger.
+    select_nonzero : boolean, optional, default=True
+        Whether to calculate the variance of sig1 across only non-zero data points.
 
     Returns
     -------
     1d array, 1d array
         New sig1 & sig2, where sig2 has been normalized so they have the desired variance ratio.
+
+    Notes
+    -----
+    Only sig2 is actually modified by this procedure, relative to the variance in sig1.
+    If sig1 is a potentially non-continuous periodic signal (for example, bursty), `select_nonzero`
+    allows for normalizing the variance across only segments of the signal with signal present.
     """
 
-    return sig1, np.sqrt(sig2**2 * np.var(sig1) / (np.var(sig2) * ratio)) * np.sign(sig2)
+    if select_nonzero:
+        sig1_var = np.var(np.nonzero(sig1))
+    else:
+        sig1_var = np.var(sig1)
+
+    sig2 = np.sqrt(sig2**2 * sig1_var / (np.var(sig2) * ratio)) * np.sign(sig2)
+
+    return sig1, sig2
