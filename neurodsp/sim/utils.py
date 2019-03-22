@@ -5,13 +5,68 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
+def demean(array):
+    """Demean an array.
+
+    Parameters
+    ----------
+    array : 1d array
+        Data to demean.
+
+    Returns
+    -------
+    1d array
+        Demeaned data.
+    """
+
+    return array - array.mean()
+
+
+def normalize_variance(array, variance=1.):
+    """Normalize the variance of an array.
+
+    Parameters
+    ----------
+    array : 1d array
+        Data to normalize variance to.
+    variance : float, optional, default=1.
+        Variance to normalize to.
+
+    Returns
+    -------
+    1d array
+        Variance normalized data.
+    """
+
+    return array / array.std() * np.sqrt(variance)
+
+
+def proportional_sum(signals, proportions):
+    """Sum a set of signals, each with a specified proportional variance.
+
+    Parameters
+    ----------
+    signals : list of 1d array
+        Signals to sum together.
+    proportions : list of float
+        Proportional variance for each signal.
+
+    Returns
+    -------
+    1d array
+        Sumated signal.
+    """
+
+    return sum([normalize_variance(sig, prop) for prop, sig in zip(proportions, signals)])
+
+
 def normalized_sum(sig1, sig2, ratio, select_nonzero=True):
     """Combine two signals, after transforming to have the desired variance ratio.
 
     Parameters
     ----------
     sig1, sig2 : 1d array
-        Vectors of data to normalize variance with respect to each other.
+        Arrays of data to normalize variance with respect to each other.
     ratio : float
         Desired ratio of sig1 variance to sig2 variance.
         If > 1 - sig1 is stronger, if < 1 - sig2 is stronger.
@@ -21,13 +76,13 @@ def normalized_sum(sig1, sig2, ratio, select_nonzero=True):
     Returns
     -------
     1d array
-        New vector with the combined input signals.
+        New array with the combined input signals.
     """
 
-    return sum(normalize_variance(sig1, sig2, ratio, select_nonzero))
+    return sum(variance_ratio(sig1, sig2, ratio, select_nonzero))
 
 
-def normalize_variance(sig1, sig2, ratio, select_nonzero=True):
+def variance_ratio(sig1, sig2, ratio, select_nonzero=True):
     """Normalize the variance across two signals to reflect a specified ratio.
 
     Parameters
