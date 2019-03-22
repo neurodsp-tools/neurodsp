@@ -6,6 +6,7 @@ from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
+from neurodsp.sim.utils import demean
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
@@ -178,43 +179,5 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     if f_range is not None:
         filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
-
-    return sig
-
-
-def get_aperiodic_sim(n_seconds, fs, generator, **noise_kwargs):
-    """Get simulated aperiodic data, of the specified type.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Signal duration, in seconds.
-    fs : float
-        Signal sampling rate, in Hz.
-    generator : {'filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process'}
-        Generator for aperiodic activity, as one of the simulators in neurodsp.sim.
-
-    Returns
-    -------
-    sig : 1d array
-        Simulated aperiodic signal.
-    """
-
-    # Check that the specified aperiodic generator is valid
-    if generator not in ['filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process']:
-        raise ValueError('Did not recognize aperiodic generator type.\
-                          Please check doc for acceptable function names.')
-
-    if generator == 'filtered_powerlaw':
-        sig = sim_filtered_noise(n_seconds, fs, **noise_kwargs)
-
-    elif generator == 'powerlaw':
-        sig = sim_variable_powerlaw(n_seconds, fs, **noise_kwargs)
-
-    elif generator in ['synaptic', 'lorentzian']:
-        sig = sim_synaptic_noise(n_seconds, fs, **noise_kwargs)
-
-    elif generator == 'ou_process':
-        sig = sim_ou_process(n_seconds, fs, **noise_kwargs)
 
     return sig
