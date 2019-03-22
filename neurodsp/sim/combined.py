@@ -42,7 +42,7 @@ def sim_combined(n_seconds, fs, freq,
     sim_pe = get_sim_func(sim_periodic) if isinstance(sim_periodic, str) else sim_periodic
     sim_ap = get_sim_func(sim_aperiodic) if isinstance(sim_aperiodic, str) else sim_aperiodic
 
-    sig normalized_sum(sim_pe(n_seconds, fs, freq, **periodic_args),
+    sig = normalized_sum(sim_pe(n_seconds, fs, freq, **periodic_args),
                        sim_ap(n_seconds, fs, **aperiodc_args),
                        ratio, select_nonzero)
 
