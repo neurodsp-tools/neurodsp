@@ -11,23 +11,18 @@ from neurodsp.filt import _fir_checks, _iir_checks
 ###################################################################################################
 
 def test_filter_signal():
-    # TODO
     pass
 
 def test_filter_signal_fir():
-    # TODO
     pass
 
 def test_filter_signal_iir():
-    # TODO
     pass
 
 def test_design_fir_filter():
-    # TODO
     pass
 
 def test_design_iir_filter():
-    # TODO
     pass
 
 def test_check_filter_definition():
@@ -64,11 +59,9 @@ def test_check_filter_definition():
         f_lo, f_hi = check_filter_definition('bandstop', f_range=(62, 58))
 
 def test_check_filter_properties():
-    # TODO
     pass
 
 def compute_frequency_response():
-    # TODO
     pass
 
 def compute_pass_band():
@@ -79,7 +72,6 @@ def compute_pass_band():
     assert compute_pass_band(fs, 'lowpass', 5) == compute_nyquist(fs) - 5
 
 def compute_transition_band():
-    # TODO
     pass
 
 def test_compute_nyquist():

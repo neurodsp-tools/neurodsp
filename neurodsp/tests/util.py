@@ -1,12 +1,9 @@
 """Utility functions for testing neurodsp functions."""
 
-import os
 from functools import wraps
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-import neurodsp
 
 ###################################################################################################
 ###################################################################################################
@@ -18,22 +15,6 @@ def generate_random_signal(len_sig=2000, seed=0):
     sig = np.random.randn(len_sig)
 
     return sig
-
-
-def load_example_data(data_idx=1, filtered=False):
-    """Load an example voltage time series collected experimentally"""
-
-    # Load time series
-    sig = np.load(os.path.dirname(neurodsp.__file__) + \
-                  '/tests/data/sample_data_'+str(data_idx)+'.npy')
-
-    # Load ground-truth filtered data
-    if filtered:
-        sig_filt_true = np.load(os.path.dirname(neurodsp.__file__) + \
-            '/tests/data/sample_data_'+str(data_idx)+'_filt.npy')
-        return sig, sig_filt_true
-    else:
-        return sig
 
 
 def plot_test(func):
