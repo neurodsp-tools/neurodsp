@@ -13,11 +13,15 @@ from neurodsp.filt import _fir_checks, _iir_checks
 def test_filter_signal():
     pass
 
-def test_filter_signal_fir():
-    pass
+def test_filter_signal_fir(tsig):
 
-def test_filter_signal_iir():
-    pass
+    sig = filter_signal_fir(tsig, 500, 'bandpass', (8, 12))
+    assert True
+
+def test_filter_signal_iir(tsig):
+
+    sig = filter_signal_iir(tsig, 500, 'bandpass', (8, 12), 3)
+    assert True
 
 def test_design_fir_filter():
     pass

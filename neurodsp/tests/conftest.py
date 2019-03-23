@@ -1,6 +1,8 @@
 """Configuration file for pytest for NDSP."""
 
-from fooof.tests.utils import get_random_signal
+import pytest
+
+from neurodsp.tests.utils import get_random_signal
 
 ###################################################################################################
 ###################################################################################################
