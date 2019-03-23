@@ -1,4 +1,4 @@
-""".  """
+"""Utilities for accessing the simulation functions and retrieving information about them."""
 
 from inspect import getmembers, isfunction
 
@@ -48,7 +48,7 @@ def get_sim_names(module_name):
         The names of the available functions in the requested sub-module.
     """
 
-    return list(check_sim_funcs(module_name).keys())
+    return list(get_sim_funcs(module_name).keys())
 
 
 def get_sim_func(function_name):
@@ -57,7 +57,7 @@ def get_sim_func(function_name):
     Parameters
     ----------
     function_name : str
-        Name of the function to get, without the 'sim_' part.
+        Name of the sim function to retrieve.
 
     Returns
     -------
@@ -67,7 +67,7 @@ def get_sim_func(function_name):
 
     for module in SIM_MODULES:
         try:
-            func = get_sim_funcs(module)['sim_' + function_name]
+            func = get_sim_funcs(module)[function_name]
             break
         except KeyError:
             continue

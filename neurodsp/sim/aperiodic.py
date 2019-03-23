@@ -1,18 +1,18 @@
 """Simulating time series, with aperiodic activity."""
 
 import numpy as np
-from scipy import signal
 from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
-from neurodsp.sim.utils import demean
 from neurodsp.sim.transients import sim_synaptic_kernel
+from neurodsp.sim.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################
 
-def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
+@normalize
+def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     """Simulates a poisson population.
 
     Parameters
@@ -55,6 +55,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     return sig
 
 
+@normalize
 def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
                          tau_r=0, tau_d=0.01, t_ker=None):
     """Simulate a neural signal as synaptic current, which has 1/f characteristics with a knee.
@@ -88,14 +89,15 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
     if t_ker is None:
         t_ker = 5. * tau_d
 
-    # Simulate an extra bit because the convolution will snip it
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
+    # Simulate an extra bit because the convolution will snip it. Turn off normalization for this sig
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate, mean=None, variance=None)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
     return sig
 
 
+@normalize
 def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
@@ -144,6 +146,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     return sig
 
 
+@normalize
 def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """Generate a power law time series with specified exponent by spectrally rotating white noise.
 

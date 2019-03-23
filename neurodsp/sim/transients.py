@@ -41,11 +41,11 @@ def sim_osc_cycle(n_seconds, fs, cycle_params):
 
     elif cycle_params[0] == 'exp':
         # cycle_params defines decay time constant in seconds
-        cycle = make_synaptic_kernel(n_seconds, fs, 0, cycle_params[1])
+        cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params[1])
 
     elif cycle_params[0] == '2exp':
         # cycle_params defines rise and decay time constant in seconds
-        cycle = make_synaptic_kernel(n_seconds, fs, cycle_params[1], cycle_params[2])
+        cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params[1], cycle_params[2])
 
     return cycle
 

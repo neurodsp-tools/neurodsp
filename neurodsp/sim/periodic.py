@@ -5,6 +5,7 @@ from numpy.random import rand, randn, randint
 import pandas as pd
 
 from neurodsp.sim.transients import sim_osc_cycle
+from neurodsp.sim.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################
@@ -104,6 +105,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         Bursty oscillation.
     df : pd.DataFrame
         Cycle-by-cycle properties of the simulated oscillation.
+        Only returned if `return_cycle_df` is True.
     """
 
     # Define default parameters for cycle features
