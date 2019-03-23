@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-def generate_random_signal(len_sig=2000, seed=0):
-    """Generate a random time series"""
+def get_random_signal(len_sig=1000, seed=0):
+    """Generate a random time series for testing."""
 
     np.random.seed(seed)
     sig = np.random.randn(len_sig)
