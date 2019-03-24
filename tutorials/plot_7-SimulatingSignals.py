@@ -36,7 +36,7 @@ n_seconds = 10
 fs = 1000
 exponent = -2
 times = np.arange(0, n_seconds, 1/fs)
-br_noise = sim.sim_variable_powerlaw(n_seconds, fs, exponent)
+br_noise = sim.sim_powerlaw(n_seconds, fs, exponent)
 
 ###################################################################################################
 
@@ -74,7 +74,7 @@ plt.ylabel('Power')
 
 # Simulate highpass-filtered brown noise with a 1Hz cutoff frequency
 f_hipass_brown = 1
-brown_filt = sim.sim_filtered_noise(n_seconds, fs, exponent, (f_hipass_brown, None))
+brown_filt = sim.sim_powerlaw(n_seconds, fs, exponent, f_range=(f_hipass_brown, None))
 
 ###################################################################################################
 
@@ -117,8 +117,8 @@ plt.ylabel('Power')
 ###################################################################################################
 
 # Simulate aperiodic signals from OU process & synaptic noise model
-ou_noise = sim.sim_ou_process(n_seconds, fs)
-syn_noise = sim.sim_synaptic_noise(n_seconds, fs)
+ou_noise = sim.sim_random_walk(n_seconds, fs)
+syn_noise = sim.sim_synaptic_current(n_seconds, fs)
 
 ###################################################################################################
 
@@ -158,8 +158,8 @@ plt.ylabel('Power')
 n_samples_cycle = 100
 fs = 1000
 osc_freq = 6.5
-osc_a = sim.sim_oscillator(n_samples_cycle, fs, osc_freq, rdsym=.5)
-osc_b = sim.sim_oscillator(n_samples_cycle, fs, osc_freq, rdsym=.2)
+osc_a = sim.sim_oscillation(n_samples_cycle, fs, osc_freq, rdsym=.5)
+osc_b = sim.sim_oscillation(n_samples_cycle, fs, osc_freq, rdsym=.2)
 
 ###################################################################################################
 
@@ -207,21 +207,18 @@ plt.ylabel('Power')
 ###################################################################################################
 
 # Settings for simulation
-osc_freq = 8
 n_seconds = 5
 fs = 1000
-rdsym = .3
-SNR = 1.
+
+components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0,
+                                        'tau_r':0.002, 'tau_d':0.02},
+              'sim_oscillation' : {'freq' : 8}}
 
 ###################################################################################################
 
-# Simulate a noisy oscillation
-noise_model = 'synaptic'
-noise_args = {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0,
-              'tau_r':0.002, 'tau_d':0.02}
+# Simulate an oscillation over an aperiodic component & associated times vector
 times = np.arange(0, n_seconds, 1/fs)
-signal = sim.sim_noisy_oscillator(n_seconds, fs, osc_freq, noise_model, noise_args,
-                                  ratio_osc_var=SNR)
+signal = sim.combined.sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 
@@ -244,8 +241,8 @@ plt.ylabel('Power')
 
 ###################################################################################################
 #
-# Simulate a bursting oscillator
-# ------------------------------
+# Simulate a Bursting Oscillation
+# -------------------------------
 #
 # Sometimes we want to study oscillations that come and go, so it can be
 # useful to simulate oscillations with this property. We can do this by
@@ -262,9 +259,9 @@ prob_enter_burst = .1
 prob_leave_burst = .1
 
 # Simulate a bursty oscillation
-osc = sim.sim_bursty_oscillator(n_seconds, fs, osc_freq,
-                                prob_enter_burst=prob_enter_burst,
-                                prob_leave_burst=prob_leave_burst)
+osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                 prob_enter_burst=prob_enter_burst,
+                                 prob_leave_burst=prob_leave_burst)
 
 ###################################################################################################
 
@@ -284,9 +281,9 @@ plt.ylabel('Voltage')
 
 # Simulate a bursty oscillation, with a specified burst probability
 prob_leave_burst = .4
-osc = sim.sim_bursty_oscillator(n_seconds, fs, osc_freq,
-                                prob_enter_burst=prob_enter_burst,
-                                prob_leave_burst=prob_leave_burst)
+osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                 prob_enter_burst=prob_enter_burst,
+                                 prob_leave_burst=prob_leave_burst)
 
 ###################################################################################################
 
@@ -306,9 +303,9 @@ plt.ylabel('Voltage')
 
 # Simulate a bursty oscillation, with a specified burst probability
 prob_enter_burst = .4
-osc = sim.sim_bursty_oscillator(n_seconds, fs, osc_freq,
-                                prob_enter_burst=prob_enter_burst,
-                                prob_leave_burst=prob_leave_burst)
+osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                 prob_enter_burst=prob_enter_burst,
+                                 prob_leave_burst=prob_leave_burst)
 
 ###################################################################################################
 
@@ -346,10 +343,10 @@ plt.ylabel('Voltage')
 
 # Simulate a bursty oscillation, with specified cycle features
 cycle_features = {'amp_std': .5}
-osc = sim.sim_bursty_oscillator(n_seconds, fs, osc_freq,
-                                prob_enter_burst=prob_enter_burst,
-                                prob_leave_burst=prob_leave_burst,
-                                cycle_features=cycle_features)
+osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                 prob_enter_burst=prob_enter_burst,
+                                 prob_leave_burst=prob_leave_burst,
+                                 cycle_features=cycle_features)
 
 ###################################################################################################
 
@@ -369,18 +366,18 @@ plt.ylabel('Voltage')
 ###################################################################################################
 
 # Settings for simulation
-osc_freq = 10
 n_seconds = 5
-SNR = 2.
-noise_model = 'synaptic'
-noise_args = {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02}
-times = np.arange(0, n_seconds, 1/fs)
+fs = 1000
+components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
+                                        't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
+              'sim_bursty_oscillation' : {'freq' : 10}}
+
 
 ###################################################################################################
 
 # Simulate a noisy bursty oscillation
-osc = sim.sim_noisy_bursty_oscillator(n_seconds, fs, osc_freq, noise_model, noise_args,
-                                      ratio_osc_var=SNR)
+times = np.arange(0, n_seconds, 1/fs)
+osc = sim.combined.sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 

@@ -12,7 +12,7 @@ This tutorial primarily covers :mod:`neurodsp.burst`.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from neurodsp.sim import sim_noisy_bursty_oscillator
+from neurodsp.sim.combined import sim_combined
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
 ###################################################################################################
@@ -32,16 +32,11 @@ np.random.seed(0)
 
 n_seconds = 5
 fs = 1000
-freq = 10
-f_range = (8, 12)
+components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
+              'sim_bursty_oscillation' : {'freq' : 10, 'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
 
-noise_model = 'synaptic'
-noise_args = {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02}
-
-###################################################################################################
-
-sig = sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_model, noise_args,
-                                  ratio_osc_var=2., prob_enter_burst=.2, prob_leave_burst=.2,)
+# Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
+sig = sim_combined(n_seconds, fs, components)
 times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
@@ -76,6 +71,7 @@ plt.xlim((0, n_seconds))
 
 # Detect bursts using 'deviation' algorithm
 amp_dual_thresh = (1, 2)
+f_range = (8, 12)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
 # Plot original signal and burst activity
