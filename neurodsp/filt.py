@@ -143,7 +143,7 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
     # Plot filter properties, if specified
     if plot_properties:
         f_db, db = compute_frequency_response(filter_coefs, 1, fs)
-        plot_filter_properties(f_db, db, filter_coefs)
+        plot_filter_properties(f_db, db, fs, filter_coefs)
 
     if return_filter:
         return sig_filt, filter_coefs
