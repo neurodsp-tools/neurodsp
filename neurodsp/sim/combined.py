@@ -36,9 +36,11 @@ def sim_combined(n_seconds, fs, simulations, proportions=1):
     simulations = {(get_sim_func(name) if isinstance(name, str) else name) : params \
                    for name, params in simulations.items()}
 
-    components = [func(n_seconds, fs, **params) for func, params in simulations.items()]
-
     proportions = repeat(proportions) if isinstance(proportions, int) else proportions
+
+    #components = [func(n_seconds, fs, **params) for func, params in simulations.items()]
+    components = [func(n_seconds, fs, **params, variance=variance) for \
+        (func, params), variance in zip(simulations.items(), proportions)]
 
     sig = proportional_sum(components, proportions)
 

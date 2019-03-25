@@ -143,7 +143,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_lim=None):
     fs : float
         Sampling rate, in Hz.
     filt_len : float, optional, default: 1.
-        Length of the median filter, in Hz. Only used with the 'medfilt' method.
+        Length of the median filter, in Hz.
     f_lim : float, optional
         Maximum frequency to keep, in Hz. If None, keeps up to Nyquist.
 
@@ -379,7 +379,7 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=0.5):
     sig : 1d array
         Time series.
     freqs : 1d array
-        Frequency axis.
+        Frequency values to estimate with morlet wavelets.
     fs : float
         Sampling rate, in Hz.
     n_cycles : float
@@ -527,6 +527,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
 
     return freqs_ext, power_spectra_ext
 
+###################################################################################################
 
 def _discard_outliers(data, outlier_percent):
     """Discard outlier arrays with high values."""

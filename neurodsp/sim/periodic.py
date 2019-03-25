@@ -10,6 +10,7 @@ from neurodsp.sim.decorators import normalize
 ###################################################################################################
 ###################################################################################################
 
+@normalize
 def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
     """Simulate an oscillation.
 
@@ -54,6 +55,7 @@ def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
     return osc
 
 
+@normalize
 def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
                            prob_leave_burst=.2, cycle_features=None,
                            return_cycle_df=False, n_tries=5):
@@ -147,6 +149,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
         return sig
 
 
+@normalize
 def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
     """Simulate a jittered oscillation, as defined by the oscillation frequency,
     the oscillation cycle, and how much (in time) to jitter each period.
