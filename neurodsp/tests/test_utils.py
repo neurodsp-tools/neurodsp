@@ -3,10 +3,26 @@
 import numpy as np
 from numpy.testing import assert_equal
 
-from neurodsp.utils import *
+from neurodsp.utils.utils import *
 
 ###################################################################################################
 ###################################################################################################
+
+def test_demean():
+
+    dat = np.array([2, 2, 2])
+    dat = demean(dat)
+
+    # TODO: Add isclose checking here
+    assert True
+
+def test_normalize_variance():
+
+    dat = np.array([2, 2, 2])
+    dat = normalize_variance(dat)
+
+    # TODO: Add isclose checking here
+    assert True
 
 def test_remove_nans():
 
