@@ -15,7 +15,7 @@ From there, you can follow the procedures and conventions described below to
 add your contribution to NeuroDSP!
 
 Note that contributors to NeuroDSP are expected to follow the
-[Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/add-code-of-conduct-1/CODE_OF_CONDUCT.md).
+[Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
 
 ## Scope
 
