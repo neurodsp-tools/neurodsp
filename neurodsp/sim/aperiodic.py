@@ -5,8 +5,8 @@ from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
+from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_synaptic_kernel
-from neurodsp.sim.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################

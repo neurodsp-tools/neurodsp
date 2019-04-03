@@ -2,8 +2,8 @@
 
 from itertools import repeat
 
+from neurodsp.utils.decorators import normalize
 from neurodsp.sim.info import get_sim_func
-from neurodsp.sim.decorators import normalize
 from neurodsp.sim.utils import proportional_sum
 
 ###################################################################################################

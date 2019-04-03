@@ -2,12 +2,15 @@
 
 from functools import wraps
 
-from neurodsp.sim.utils import demean, normalize_variance
+import numpy as np
+
+from neurodsp.utils.utils import demean, normalize_variance
 
 ###################################################################################################
 ###################################################################################################
 
 def normalize(func, **kwargs):
+    """Decorator function to normalize the first output of the wrapped function."""
 
     @wraps(func)
     def decorated(*args, **kwargs):
@@ -28,5 +31,22 @@ def normalize(func, **kwargs):
 
         # Return sig & other outputs, if there were any, or just sig otherwise
         return (sig, out[1:]) if isinstance(out, tuple) else sig
+
+    return decorated
+
+
+def multidim(func, *args, **kwargs):
+    """Decorator function to apply the wrapped function across dimensions."""
+
+    @wraps(func)
+    def decorated(sig, *args, **kwargs):
+
+        if sig.ndim == 1:
+            out = func(sig, *args, **kwargs)
+
+        elif sig.ndim == 2:
+            out = np.vstack([func(dat, *args, **kwargs) for dat in sig])
+
+        return out
 
     return decorated

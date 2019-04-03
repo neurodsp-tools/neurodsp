@@ -4,8 +4,8 @@ import numpy as np
 from numpy.random import rand, randn, randint
 import pandas as pd
 
+from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_osc_cycle
-from neurodsp.sim.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################

@@ -5,44 +5,6 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def demean(array, mean=0.):
-    """Demean an array, updating to specified mean.
-
-    Parameters
-    ----------
-    array : 1d array
-        Data to demean.
-    mean : float, optional, default: 0
-        New mean for data to have.
-
-    Returns
-    -------
-    1d array
-        Demeaned data.
-    """
-
-    return array - array.mean() + mean
-
-
-def normalize_variance(array, variance=1.):
-    """Normalize the variance of an array, updating to specified variance.
-
-    Parameters
-    ----------
-    array : 1d array
-        Data to normalize variance to.
-    variance : float, optional, default=1.
-        Variance to normalize to.
-
-    Returns
-    -------
-    1d array
-        Variance normalized data.
-    """
-
-    return array / array.std() * np.sqrt(variance)
-
-
 def proportional_sum(signals, proportions):
     """Sum a set of signals, each with a specified proportional variance.
 
