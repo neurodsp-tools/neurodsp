@@ -45,15 +45,14 @@ Populations of neurons exhibit time-varying fluctuations in their aggregate elec
 
 ``NeuroDSP`` is accompanied by a [documentation site](https://neurodsp-tools.github.io/neurodsp/) that includes detailed [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html#) for each of the modules, which are described below, as well as suggested workflows for combining them.
 
-The modules included in ``NeuroDSP`` are:
+Modules in ``NeuroDSP`` include:
 
-* filt : Filter data with bandpass, highpass, lowpass, or notch filters.
-* burst : Detect bursting oscillations in neural signals. Burst detection is done using the dual threshold algorithm [@feingold_bursts_2015]. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
-* laggedcoherence : Estimate rhythmicity using the lagged coherence measure for quantifying the presence of rhythms [@fransen_identifying_2015].
+* filt : Filter data with bandpass, highpass, lowpass, or bandstop filters, using FIR or IIR filters.
+* burst : Detect bursting oscillations in neural signals, for example using the dual threshold algorithm [@feingold_bursts_2015]. For a more extensive time-domain toolbox for detecting contiguous rhythmic cycles and calculating cycle-by-cycle features, please the companion toolbox, bycycle [@cole_cycle-by-cycle_2018, @cole_hippocampal_2018].
+* rhythm : Detect rhythmic patterns in neural time series. Algorithms to do so include the lagged coherence measure for quantifying the presence of rhythms [@fransen_identifying_2015], and the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
 * spectral : Compute spectral domain features, including power spectral estimation, mortlet wavelet transforms and spectral coefficient of variation (SCV). For parametrizing the resulting spectrum, please see the companion spectral parametrization toolbox, fitting oscillations and one-over-f (FOOOF) [@haller_parameterizing_2018].
-* swm : Identify recurrent patterns in a signal using the sliding window matching (SWM) algorithm for identifying recurring patterns in a neural signal, like the shape of an oscillatory waveform [@gips_discovering_2017].
 * timefrequency : Estimate instantaneous measures of oscillatory activity, including instantaneous measures for calculating the amplitude, frequency, and phase from narrowband-filtered, putative oscillations.
-* sim : Simulate oscillations, that can vary in their waveform shape and stationarity, as well as aperiodic signals, simulated with various stochastic models.
+* sim : Simulate neural time series, including oscillations, that can vary in their waveform shape and stationarity, aperiodic signals, simulated with various stochastic models, transient events, as well as utilities to combine across various components.
 * plts : Plotting functions.
 
 # Statement of Need
