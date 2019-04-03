@@ -1,6 +1,6 @@
 """Simulating transients."""
 
-import warnings
+from warnings import warn
 
 import numpy as np
 from scipy import signal
@@ -94,7 +94,7 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     # Kernel type: double exponential
     else:
         if tau_r > tau_d:
-            warnings.warn('Rise time constant should be shorter than decay time constant.')
+            warn('Rise time constant should be shorter than decay time constant.')
 
         # I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))
         kernel = (np.exp(-times / tau_d) - np.exp(-times / tau_r))

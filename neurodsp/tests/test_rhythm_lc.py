@@ -1,17 +1,17 @@
-"""Test the sliding window matching function."""
+"""Test function to compute lagged coherence."""
 
-from neurodsp.swm import *
+from neurodsp.rhythm.lc import *
 
 ###################################################################################################
 ###################################################################################################
 
-def test_sliding_window_matching():
+def test_lagged_coherence():
     pass
 
 ## PRIVATE FUNCTIONS
 
-def test_compute_cost():
+def test_lagged_coherence_1freq():
     pass
 
-def test_find_new_windowidx():
+def test_nonoverlapping_chunks():
     pass

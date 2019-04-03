@@ -27,13 +27,13 @@ def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spect
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freqs)))
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spect_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spect_hist, extent=[freqs[0], freqs[-1],
+               power_bins[0], power_bins[-1]], aspect='auto')
     plt.xlabel('Frequency (Hz)', fontsize=15)
     plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
 
     # If a PSD is provided, plot over the histogram data
     if spectrum is not None:
-        plt.plot(spectrum_freqs[np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])],
-                 np.log10(spectrum[np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])]),
-                 color='w', alpha=0.8)
+        plt_inds = np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])
+        plt.plot(spectrum_freqs[plt_inds], np.log10(spectrum[plt_inds]), color='w', alpha=0.8)

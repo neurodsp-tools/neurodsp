@@ -1,4 +1,4 @@
-"""Identify the waveform shape of oscillations using the sliding window matching algorithm."""
+"""The sliding window matching algorithm for identifying rhythmic components of a neural signal."""
 
 import numpy as np
 

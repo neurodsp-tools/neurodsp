@@ -1,8 +1,8 @@
-"""Analyze periods of oscillatory bursting in a neural signal."""
+"""The dual threshold algorithm for detecting oscillatory bursts in a neural signal."""
 
 import numpy as np
 
-from neurodsp.timefrequency import amp_by_time
+from neurodsp.timefrequency.tf import amp_by_time
 
 ###################################################################################################
 ###################################################################################################
@@ -10,7 +10,7 @@ from neurodsp.timefrequency import amp_by_time
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  average_method='median', magnitude_type='amplitude',
                                  **filter_kwargs):
-    """Detect periods of oscillatory bursting in a neural signal.
+    """Detect bursts in a neural signal using the dual threshold algorithm.
 
     Parameters
     ----------
@@ -67,54 +67,6 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
     is_burst = _rmv_short_periods(is_burst, min_period_length)
 
     return is_burst.astype(bool)
-
-
-def compute_burst_stats(bursting, fs):
-    """Get statistics of bursts.
-
-    Parameters
-    ----------
-    bursting : 1d array
-        Boolean indication of where bursts are present in the input signal.
-        Output of detect_bursts_dualthreshold().
-    fs : float
-        Sampling rate, in Hz.
-
-    Returns
-    -------
-    stats_dict : dict
-        Contains the following keys:
-
-        * 'N_bursts': the number of bursts
-        * 'duration_mean': mean duration of bursts, in seconds
-        * 'duration_std': standard deviation of burst durations, in seconds
-        * 'percent_burst': percent time in bursts
-        * 'burst_rate': bursts/sec
-    """
-
-    tot_time = len(bursting) / fs
-
-    # Find burst starts and ends
-    starts = np.array([])
-    ends = np.array([])
-
-    for ii, index in enumerate(np.where(np.diff(bursting) != 0)[0]):
-
-        if (ii % 2) == 0:
-            starts = np.append(starts, index)
-        else:
-            ends = np.append(ends, index)
-
-    # Duration of each burst
-    durations = (ends - starts) / fs
-
-    stats_dict = {'N_bursts': len(starts),
-                  'duration_mean': np.mean(durations),
-                  'duration_std': np.std(durations),
-                  'percent_burst': 100 * np.sum(bursting) / len(bursting),
-                  'bursts_per_second': len(starts) / tot_time}
-
-    return stats_dict
 
 
 def _dual_threshold_split(sig, thresh_hi, thresh_lo):

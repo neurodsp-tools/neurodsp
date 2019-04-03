@@ -1,22 +1,9 @@
-"""Test functions for the time-frequency analysis module."""
+""".  """
 
-import numpy as np
-
-from neurodsp.timefrequency import *
+from neurodsp.timefrequency.hilbert import *
 
 ###################################################################################################
 ###################################################################################################
-
-def test_phase_by_time():
-    pass
-
-def test_amp_by_time():
-    pass
-
-def test_freq_by_time():
-    pass
-
-## PRIVATE FUNCTIONS
 
 def test_robust_hilbert():
 

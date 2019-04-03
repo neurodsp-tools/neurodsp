@@ -1,10 +1,10 @@
 """Tools for estimating properties of a neural oscillation over time."""
 
 import numpy as np
-from scipy import signal
 
-from neurodsp.filt import filter_signal, infer_passtype, remove_filter_edges
-from neurodsp.utils import remove_nans, restore_nans
+from neurodsp.filt import filter_signal
+from neurodsp.timefrequency.hilbert import robust_hilbert
+from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 ###################################################################################################
 ###################################################################################################
@@ -124,23 +124,3 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
     i_f = np.insert(i_f, 0, np.nan)
 
     return i_f
-
-
-def robust_hilbert(sig, hilbert_increase_n=False):
-    """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN."""
-
-    # Extract the signal that is not nan
-    sig_nonan, sig_nans = remove_nans(sig)
-
-    # Compute hilbert transform of signal without nans
-    if hilbert_increase_n:
-        sig_len = len(sig_nonan)
-        n_components = 2**(int(np.log2(sig_len)) + 1)
-        sig_hilb_nonan = signal.hilbert(sig_nonan, n_components)[:sig_len]
-    else:
-        sig_hilb_nonan = signal.hilbert(sig_nonan)
-
-    # Fill in output hilbert with nans on edges
-    sig_hilb = restore_nans(sig_hilb_nonan, sig_nans, dtype=complex)
-
-    return sig_hilb

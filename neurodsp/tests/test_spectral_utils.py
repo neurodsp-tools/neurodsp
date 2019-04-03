@@ -1,17 +1,12 @@
-"""Test function to compute lagged coherence."""
+""".  """
 
-from neurodsp.laggedcoherence import *
+from neurodsp.spectral.utils import *
 
 ###################################################################################################
 ###################################################################################################
 
-def test_lagged_coherence():
+def test_rotate_powerlaw():
     pass
 
-## PRIVATE FUNCTIONS
-
-def test_lagged_coherence_1freq():
-    pass
-
-def test_nonoverlapping_chunks():
+def test_trim_spectrum():
     pass

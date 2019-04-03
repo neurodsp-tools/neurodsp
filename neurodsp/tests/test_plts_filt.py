@@ -1,6 +1,9 @@
 """Test filtering plots."""
 
-from neurodsp.filt import filter_signal, design_fir_filter, compute_frequency_response
+from neurodsp.filt.filter import filter_signal
+from neurodsp.filt.fir import design_fir_filter
+from neurodsp.filt.utils import compute_frequency_response
+
 from neurodsp.tests.utils import plot_test
 
 from neurodsp.plts.filt import *

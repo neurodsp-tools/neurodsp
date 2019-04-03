@@ -29,3 +29,6 @@ def test_restore_nans():
 
     arr_restored = restore_nans(arr_no_nans, arr_nans)
     assert_equal(arr_restored, np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN]))
+
+def test_discard_outliers():
+    pass
