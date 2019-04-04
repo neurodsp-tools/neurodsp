@@ -1,4 +1,4 @@
-""".  """
+"""Tests fir FIR filters."""
 
 from pytest import raises
 
@@ -14,7 +14,13 @@ def test_filter_signal_fir(tsig):
     assert True
 
 def test_design_fir_filter():
-    pass
+
+    sig_length, fs = 1000, 100
+    test_filts = {'bandpass' : (8, 12), 'bandstop' : (58, 60),
+                  'lowpass' : (None, 10), 'highpass' : (10, None)}
+
+#    for pass_type, f_range in test_filts.items():
+#        filter_coefs = design_fir_filter()
 
 def test_fir_checks():
 

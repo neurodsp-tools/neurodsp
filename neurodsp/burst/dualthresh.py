@@ -3,12 +3,13 @@
 import numpy as np
 
 from neurodsp.timefrequency.tf import amp_by_time
+from neurodsp.utils.core import get_avg_func
 
 ###################################################################################################
 ###################################################################################################
 
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
-                                 average_method='median', magnitude_type='amplitude',
+                                 avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):
     """Detect bursts in a neural signal using the dual threshold algorithm.
 
@@ -25,8 +26,8 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
         Units are normalized by the average signal magnitude.
     min_cycles : float, optional, default=3
         Minimum burst duration in terms of number of cycles of f_range[0].
-    average_method : {'median', 'mean'}, optional
-        Metric to normalize magnitude used for thresholding.
+    avg_type : {'median', 'mean'}, optional
+        Averaging method to use to normalize the magnitude that is used for thresholding.
     magnitude_type : {'amplitude', 'power'}, optional
         Metric of magnitude used for thresholding.
     **filter_kwargs
@@ -52,12 +53,7 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
         sig_magnitude = sig_magnitude**2
 
     # Calculate normalized magnitude
-    if average_method == 'median':
-        sig_magnitude = sig_magnitude / np.median(sig_magnitude)
-    elif average_method == 'mean':
-        sig_magnitude = sig_magnitude / np.mean(sig_magnitude)
-    else:
-        raise ValueError("Invalid input for 'average_method'")
+    sig_magnitude = sig_magnitude / get_avg_func(avg_type)(sig_magnitude)
 
     # Identify time periods of bursting using the 2 thresholds
     is_burst = _dual_threshold_split(sig_magnitude, dual_thresh[1], dual_thresh[0])

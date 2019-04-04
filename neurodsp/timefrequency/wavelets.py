@@ -1,4 +1,4 @@
-"""Wavelets."""
+"""Time-frequency decompositions using wavelets."""
 
 import numpy as np
 from scipy.signal import morlet
@@ -6,17 +6,17 @@ from scipy.signal import morlet
 ###################################################################################################
 ###################################################################################################
 
-def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=0.5):
+def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     """Calculate the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
     ----------
     sig : 1d array
         Time series.
-    freqs : 1d array
-        Frequency values to estimate with morlet wavelets.
     fs : float
         Sampling rate, in Hz.
+    freqs : 1d array
+        Frequency values to estimate with morlet wavelets.
     n_cycles : float
         Length of the filter, as the number of cycles of the oscillation
         whose frequency is the center of the bandpass filter.
@@ -34,22 +34,22 @@ def morlet_transform(sig, freqs, fs, n_cycles=7, scaling=0.5):
     mwt = np.zeros([sig_len, freqs_len], dtype=complex)
 
     for f_ind, freq in enumerate(freqs):
-        mwt[:, f_ind] = morlet_convolve(sig, freq, fs, n_cycles, scaling)
+        mwt[:, f_ind] = morlet_convolve(sig, fs, freq, n_cycles, scaling)
 
     return mwt
 
 
-def morlet_convolve(sig, freq, fs, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
+def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
     """Convolve a signal with a complex wavelet.
 
     Parameters
     ----------
     sig : 1d array
         Time series to filter.
-    freq : float
-        Center frequency of bandpass filter.
     fs : float
         Sampling rate, in Hz.
+    freq : float
+        Center frequency of bandpass filter.
     n_cycles : float, optional, default=7
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
     scaling : float, optional, default=0.5

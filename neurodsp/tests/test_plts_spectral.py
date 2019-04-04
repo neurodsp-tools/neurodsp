@@ -1,6 +1,6 @@
 """Test spectral plots."""
 
-from neurodsp.spectral.scv import compute_spectral_hist
+from neurodsp.spectral.spectral import compute_spectral_hist
 from neurodsp.tests.utils import plot_test
 
 from neurodsp.plts.spectral import *
