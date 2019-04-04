@@ -44,6 +44,7 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorial</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -88,8 +89,7 @@
 <dl class="function">
 <dt id="neurodsp.spectral.compute_spectrum">
 <code class="descclassname">neurodsp.spectral.</code><code class="descname">compute_spectrum</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>method='mean'</em>, <em>window='hann'</em>, <em>nperseg=None</em>, <em>noverlap=None</em>, <em>filt_len=1.0</em>, <em>f_lim=None</em>, <em>spg_outlier_pct=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.spectral.compute_spectrum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Estimate the power spectral density (PSD) of a time series from short-time Fourier
-Transform (mean, median), or the entire signal’s FFT smoothed (medfilt).</p>
+<dd><p>Estimate the power spectral density (PSD) of a time series.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -112,7 +112,7 @@ Transform (mean, median), or the entire signal’s FFT smoothed (medfilt).</p>
 <dt><strong>window</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or tuple or array_like, optional, default: ‘hann’</span></dt>
 <dd><p class="first last">Desired window to use. Defaults to a Hann window.
 See scipy.signal.get_window for a list of windows and required parameters.
-If window is array_like, this array will be used as the window and its length must be nperseg.</p>
+If array_like, the array will be used as the window and its length must be nperseg.</p>
 </dd>
 <dt><strong>nperseg</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
 <dd><p class="first last">Length of each segment, in number of samples.
@@ -121,13 +121,13 @@ If None, and window is array_like, is set to the length of the window.</p>
 </dd>
 <dt><strong>noverlap</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
 <dd><p class="first last">Number of points to overlap between segments.
-If None, noverlap = nperseg // 2.</p>
+If None, noverlap = nperseg // 8.</p>
 </dd>
 <dt><strong>filt_len</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd><p class="first last">Length of the median filter, in Hz.
 Only used with the ‘medfilt’ method.</p>
 </dd>
-<dt><strong>f_lim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dt><strong>f_lim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default: 1.</span></dt>
 <dd><p class="first last">Maximum frequency to keep, in Hz.
 If None, keeps up to Nyquist.</p>
 </dd>

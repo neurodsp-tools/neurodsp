@@ -135,13 +135,6 @@ the cutoff frequency.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    NOTE: Increased high-pass filter order by 1 in order to be odd
 
 
 
@@ -697,7 +690,7 @@ sphinx_gallery_thumbnail_number = 15
 
 
 
-**Total running time of the script:** ( 0 minutes  0.936 seconds)
+**Total running time of the script:** ( 0 minutes  0.975 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_7-SimulatingSignals.py:

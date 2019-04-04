@@ -12,6 +12,26 @@ Examples
 
 
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example explores some example analyses using NeuroDSP in combination with `MNE &lt;https://mn...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_mne_example_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_mne_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_mne_example
 .. raw:: html
 
     <div style='clear:both'></div>

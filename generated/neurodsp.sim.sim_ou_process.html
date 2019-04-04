@@ -44,6 +44,7 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorial</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -89,12 +90,6 @@
 <dt id="neurodsp.sim.sim_ou_process">
 <code class="descclassname">neurodsp.sim.</code><code class="descname">sim_ou_process</code><span class="sig-paren">(</span><em>n_seconds</em>, <em>fs</em>, <em>theta=1.0</em>, <em>mu=0.0</em>, <em>sigma=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.sim.sim_ou_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.</p>
-<p>Discretized Ornstein-Uhlenbeck process:
-dx = theta*(x-mu)*dt + sigma*dWt
-dWt : increments of Wiener process, i.e. white noise
-theta : memory scale (higher = faster fluc)
-mu : mean
-sigma : std</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -127,6 +122,13 @@ sigma : std</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<p>Discretized Ornstein-Uhlenbeck process:
+dx = theta*(x-mu)*dt + sigma*dWt
+dWt : increments of Wiener process, i.e. white noise
+theta : memory scale (higher = faster fluc)
+mu : mean
+sigma : std</p>
 <p class="rubric">References</p>
 <dl class="docutils">
 <dt>See for integral solution:</dt>

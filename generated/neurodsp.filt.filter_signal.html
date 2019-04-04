@@ -44,6 +44,7 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorial</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -87,7 +88,7 @@
 <h1>neurodsp.filt.filter_signal<a class="headerlink" href="#neurodsp-filt-filter-signal" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="neurodsp.filt.filter_signal">
-<code class="descclassname">neurodsp.filt.</code><code class="descname">filter_signal</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>pass_type</em>, <em>fc</em>, <em>n_cycles=3</em>, <em>n_seconds=None</em>, <em>iir=False</em>, <em>butterworth_order=None</em>, <em>plot_freq_response=False</em>, <em>return_kernel=False</em>, <em>verbose=True</em>, <em>compute_transition_band=True</em>, <em>remove_edge_artifacts=True</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.filt.filter_signal" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">neurodsp.filt.</code><code class="descname">filter_signal</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>pass_type</em>, <em>fc</em>, <em>n_cycles=3</em>, <em>n_seconds=None</em>, <em>iir=False</em>, <em>butterworth_order=None</em>, <em>plot_freq_response=False</em>, <em>return_kernel=False</em>, <em>verbose=False</em>, <em>compute_transition_band=True</em>, <em>remove_edge_artifacts=True</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.filt.filter_signal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -95,10 +96,10 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
-<dd><p class="first last">Time series.</p>
+<dd><p class="first last">Time series to be filtered.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">The sampling rate, in Hz.</p>
+<dd><p class="first last">Sampling rate, in Hz.</p>
 </dd>
 <dt><strong>pass_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘bandpass’, ‘bandstop’, ‘lowpass’, ‘highpass’}</span></dt>
 <dd><p class="first">Which kind of filter to apply:</p>
@@ -109,45 +110,42 @@
 <li>‘highpass’ : apply a highpass filter</li>
 </ul>
 </dd>
-<dt><strong>fc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple or float</span></dt>
-<dd><p class="first last">Cutoff frequency(ies) used for filter.
-Should be a tuple of 2 floats for bandpass and bandstop.
-Can be a tuple of 2 floats, or a single float, for low/highpass.
-If float, it’s taken as the cutoff frequency. If tuple, it’s assumed
-as (None,f_hi) for LP, and (f_lo,None) for HP.</p>
+<dt><strong>fc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple of (float, float) or float</span></dt>
+<dd><p class="first last">Cutoff frequency(ies) used for filter, specified as f_lo &amp; f_hi.
+For ‘bandpass’ &amp; ‘bandstop’, must be a tuple.
+For ‘lowpass’ or ‘highpass’, can be a float that specifies pass frequency, or can be
+a tuple and is assumed to be (None, f_hi) for ‘lowpass’, and (f_lo, None) for ‘highpass’.</p>
 </dd>
 <dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default: 3</span></dt>
-<dd><p class="first last">Length of filter in terms of number of cycles at ‘f_lo’ frequency.
-This parameter is overwritten by ‘n_seconds’, if provided.</p>
+<dd><p class="first last">Length of filter, in number of cycles, defined at the ‘f_lo’ frequency.
+This parameter is overwritten by <cite>n_seconds</cite>, if provided.</p>
 </dd>
 <dt><strong>n_seconds</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first last">Length of filter, in seconds.</p>
+<dd><p class="first last">Length of filter, in seconds.
+This parameter overwrites <cite>n_cycles</cite>.</p>
 </dd>
 <dt><strong>iir</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
 <dd><p class="first last">If True, use an infinite-impulse response (IIR) filter.
-The only IIR filter to be used is a butterworth filter.</p>
+The only IIR filter offered is a butterworth filter.</p>
 </dd>
 <dt><strong>butterworth_order</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
-<dd><p class="first last">Order of the butterworth filter.
+<dd><p class="first last">Order of the butterworth filter, if using an IIR filter.
 See input ‘N’ in scipy.signal.butter.</p>
 </dd>
-<dt><strong>plot_freq_response</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dt><strong>plot_freq_response</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
 <dd><p class="first last">If True, plot the frequency response of the filter</p>
 </dd>
-<dt><strong>return_kernel</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, return the complex filter kernel</p>
+<dt><strong>return_kernel</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
+<dd><p class="first last">If True, return the complex filter kernel.</p>
 </dd>
-<dt><strong>verbose</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, print optional information</p>
+<dt><strong>verbose</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
+<dd><p class="first last">If True, print optional information.</p>
 </dd>
-<dt><strong>compute_transition_band</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, the function computes the transition bandwidth,
-defined as the frequency range between -20dB and -3dB attenuation,
-and warns the user if this band is longer than the frequency bandwidth.</p>
+<dt><strong>compute_transition_band</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: True</span></dt>
+<dd><p class="first last">If True, computes the transition bandwidth, and prints this information.</p>
 </dd>
-<dt><strong>remove_edge_artifacts</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, replace the samples that are within half a kernel’s length to
-the signal edge with np.nan.</p>
+<dt><strong>remove_edge_artifacts</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: True</span></dt>
+<dd><p class="first last">If True, replace samples within half the kernel length to be np.nan.</p>
 </dd>
 </dl>
 </td>
@@ -157,7 +155,7 @@ the signal edge with np.nan.</p>
 <dd><p class="first last">Filtered time series.</p>
 </dd>
 <dt><strong>kernel</strong> <span class="classifier-delimiter">:</span> <span class="classifier">length-2 tuple of arrays</span></dt>
-<dd><p class="first last">Filter kernel. Only returned if ‘return_kernel’ is True.</p>
+<dd><p class="first last">Filter kernel. Only returned if <cite>return_kernel</cite> is True.</p>
 </dd>
 </dl>
 </td>

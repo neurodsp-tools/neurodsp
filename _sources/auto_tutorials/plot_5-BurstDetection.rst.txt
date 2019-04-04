@@ -149,7 +149,8 @@ keyword argument.
 
  .. code-block:: none
 
-    Transition bandwidth is 2.9 Hz. Pass/stop bandwidth is 4 Hz
+    Transition bandwidth is 2.9 Hz.
+    Pass/stop bandwidth is 4.0 Hz.
 
 
 The graph above shows the bursting activity in red. The algorithm was
@@ -194,7 +195,8 @@ Burst detection applied to real recordings
 
  .. code-block:: none
 
-    Transition bandwidth is 2.9 Hz. Pass/stop bandwidth is 4 Hz
+    Transition bandwidth is 2.9 Hz.
+    Pass/stop bandwidth is 4.0 Hz.
 
 
 No bursts were detected! There could be a number of reasons for this.
@@ -229,7 +231,8 @@ Let's try making the thresholds lower.
 
  .. code-block:: none
 
-    Transition bandwidth is 2.9 Hz. Pass/stop bandwidth is 4 Hz
+    Transition bandwidth is 2.9 Hz.
+    Pass/stop bandwidth is 4.0 Hz.
 
 
 Better, but not very good. Note the undetected cycles just before 9s.
@@ -265,7 +268,8 @@ but the bursts in this data are *beta* bursts.
 
  .. code-block:: none
 
-    Transition bandwidth is 5.9 Hz. Pass/stop bandwidth is 17 Hz
+    Transition bandwidth is 5.9 Hz.
+    Pass/stop bandwidth is 17.0 Hz.
 
 
 Much better! This just goes to show that burst detection is an art that
@@ -278,7 +282,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  0.123 seconds)
+**Total running time of the script:** ( 0 minutes  0.164 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_5-BurstDetection.py:

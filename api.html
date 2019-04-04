@@ -44,6 +44,7 @@
             
                 <li><a href="#">API</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorial</a></li>
+                <li><a href="auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -90,25 +91,31 @@
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#filtering" id="id2">Filtering</a></li>
-<li><a class="reference internal" href="#time-frequency-analysis" id="id3">Time-Frequency analysis</a></li>
-<li><a class="reference internal" href="#spectral-analysis" id="id4">Spectral analysis</a></li>
-<li><a class="reference internal" href="#rhythmic-analysis" id="id5">Rhythmic analysis</a><ul>
-<li><a class="reference internal" href="#burst-detection" id="id6">Burst Detection</a></li>
-<li><a class="reference internal" href="#sliding-window-matching" id="id7">Sliding Window Matching</a></li>
-<li><a class="reference internal" href="#lagged-coherence" id="id8">Lagged Coherence</a></li>
+<li><a class="reference internal" href="#filtering" id="id2">Filtering</a><ul>
+<li><a class="reference internal" href="#design-apply-filters" id="id3">Design &amp; Apply Filters</a></li>
+<li><a class="reference internal" href="#filter-properties" id="id4">Filter Properties</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#signal-simulation" id="id9">Signal simulation</a><ul>
-<li><a class="reference internal" href="#periodic-signals" id="id10">Periodic Signals</a></li>
-<li><a class="reference internal" href="#aperiodic-signals" id="id11">Aperiodic Signals</a></li>
-<li><a class="reference internal" href="#combined-signals" id="id12">Combined Signals</a></li>
+<li><a class="reference internal" href="#time-frequency-analysis" id="id5">Time-Frequency analysis</a></li>
+<li><a class="reference internal" href="#spectral-analysis" id="id6">Spectral analysis</a></li>
+<li><a class="reference internal" href="#rhythmic-analysis" id="id7">Rhythmic analysis</a><ul>
+<li><a class="reference internal" href="#burst-detection" id="id8">Burst Detection</a></li>
+<li><a class="reference internal" href="#sliding-window-matching" id="id9">Sliding Window Matching</a></li>
+<li><a class="reference internal" href="#lagged-coherence" id="id10">Lagged Coherence</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#signal-simulation" id="id11">Signal simulation</a><ul>
+<li><a class="reference internal" href="#periodic-signals" id="id12">Periodic Signals</a></li>
+<li><a class="reference internal" href="#aperiodic-signals" id="id13">Aperiodic Signals</a></li>
+<li><a class="reference internal" href="#combined-signals" id="id14">Combined Signals</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="filtering">
 <h3><a class="toc-backref" href="#id2">Filtering</a><a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="design-apply-filters">
+<h4><a class="toc-backref" href="#id3">Design &amp; Apply Filters</a><a class="headerlink" href="#design-apply-filters" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -118,11 +125,53 @@
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal</span></code></a>(sig,&nbsp;fs,&nbsp;pass_type,&nbsp;fc[,&nbsp;…])</td>
 <td>Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.filt.filter_signal_fir.html#neurodsp.filt.filter_signal_fir" title="neurodsp.filt.filter_signal_fir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal_fir</span></code></a>(sig,&nbsp;fs,&nbsp;pass_type,&nbsp;fc[,&nbsp;…])</td>
+<td>Apply an FIR filter to a signal.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.filter_signal_iir.html#neurodsp.filt.filter_signal_iir" title="neurodsp.filt.filter_signal_iir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal_iir</span></code></a>(sig,&nbsp;fs,&nbsp;pass_type,&nbsp;fc,&nbsp;…)</td>
+<td>Apply an IIR filter to a signal.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter" title="neurodsp.filt.design_fir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_fir_filter</span></code></a>(sig_length,&nbsp;fs,&nbsp;pass_type,&nbsp;fc)</td>
+<td>Design an FIR filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_iir_filter</span></code></a>(fs,&nbsp;pass_type,&nbsp;fc,&nbsp;…)</td>
+<td>Design an IIR filter.</td>
+</tr>
 </tbody>
 </table>
 </div>
+<div class="section" id="filter-properties">
+<h4><a class="toc-backref" href="#id4">Filter Properties</a><a class="headerlink" href="#filter-properties" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.check_filter_definition.html#neurodsp.filt.check_filter_definition" title="neurodsp.filt.check_filter_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_filter_definition</span></code></a>(pass_type,&nbsp;fc)</td>
+<td>Check a filter definition for validity, and get f_lo and f_hi.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.filt.check_filter_properties.html#neurodsp.filt.check_filter_properties" title="neurodsp.filt.check_filter_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_filter_properties</span></code></a>(b_vals,&nbsp;a_vals,&nbsp;fs,&nbsp;…)</td>
+<td>Check a filters properties, including pass band and transition band.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.compute_frequency_response.html#neurodsp.filt.compute_frequency_response" title="neurodsp.filt.compute_frequency_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_frequency_response</span></code></a>(b_vals,&nbsp;a_vals,&nbsp;fs)</td>
+<td>Compute the frequency response of a filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.filt.compute_pass_band.html#neurodsp.filt.compute_pass_band" title="neurodsp.filt.compute_pass_band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_pass_band</span></code></a>(fs,&nbsp;pass_type,&nbsp;fc)</td>
+<td>Compute the pass bandwidth of a filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.filt.compute_trans_band.html#neurodsp.filt.compute_trans_band" title="neurodsp.filt.compute_trans_band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_trans_band</span></code></a>(f_db,&nbsp;db[,&nbsp;low,&nbsp;high])</td>
+<td>Compute transition bandwidth of a filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.filt.compute_nyquist.html#neurodsp.filt.compute_nyquist" title="neurodsp.filt.compute_nyquist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_nyquist</span></code></a>(fs)</td>
+<td>Compute the nyquist frequency.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="section" id="time-frequency-analysis">
-<h3><a class="toc-backref" href="#id3">Time-Frequency analysis</a><a class="headerlink" href="#time-frequency-analysis" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">Time-Frequency analysis</a><a class="headerlink" href="#time-frequency-analysis" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -142,7 +191,7 @@
 </table>
 </div>
 <div class="section" id="spectral-analysis">
-<h3><a class="toc-backref" href="#id4">Spectral analysis</a><a class="headerlink" href="#spectral-analysis" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6">Spectral analysis</a><a class="headerlink" href="#spectral-analysis" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -150,7 +199,7 @@
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum</span></code></a>(sig,&nbsp;fs[,&nbsp;method,&nbsp;window,&nbsp;…])</td>
-<td>Estimate the power spectral density (PSD) of a time series from short-time Fourier Transform (mean, median), or the entire signal’s FFT smoothed (medfilt).</td>
+<td>Estimate the power spectral density (PSD) of a time series.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scv</span></code></a>(sig,&nbsp;fs[,&nbsp;window,&nbsp;nperseg,&nbsp;…])</td>
 <td>Compute the spectral coefficient of variation (SCV) at each frequency.</td>
@@ -174,9 +223,9 @@
 </table>
 </div>
 <div class="section" id="rhythmic-analysis">
-<h3><a class="toc-backref" href="#id5">Rhythmic analysis</a><a class="headerlink" href="#rhythmic-analysis" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Rhythmic analysis</a><a class="headerlink" href="#rhythmic-analysis" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="burst-detection">
-<h4><a class="toc-backref" href="#id6">Burst Detection</a><a class="headerlink" href="#burst-detection" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id8">Burst Detection</a><a class="headerlink" href="#burst-detection" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -193,7 +242,7 @@
 </table>
 </div>
 <div class="section" id="sliding-window-matching">
-<h4><a class="toc-backref" href="#id7">Sliding Window Matching</a><a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id9">Sliding Window Matching</a><a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -207,7 +256,7 @@
 </table>
 </div>
 <div class="section" id="lagged-coherence">
-<h4><a class="toc-backref" href="#id8">Lagged Coherence</a><a class="headerlink" href="#lagged-coherence" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id10">Lagged Coherence</a><a class="headerlink" href="#lagged-coherence" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -222,7 +271,7 @@
 </div>
 </div>
 <div class="section" id="signal-simulation">
-<h3><a class="toc-backref" href="#id9">Signal simulation</a><a class="headerlink" href="#signal-simulation" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Signal simulation</a><a class="headerlink" href="#signal-simulation" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -232,7 +281,7 @@
 </tbody>
 </table>
 <div class="section" id="periodic-signals">
-<h4><a class="toc-backref" href="#id10">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id12">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -252,7 +301,7 @@
 </table>
 </div>
 <div class="section" id="aperiodic-signals">
-<h4><a class="toc-backref" href="#id11">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id13">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -275,7 +324,7 @@
 </table>
 </div>
 <div class="section" id="combined-signals">
-<h4><a class="toc-backref" href="#id12">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id14">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />

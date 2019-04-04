@@ -93,7 +93,8 @@ Compute and plot instantaneous phase
 
  .. code-block:: none
 
-    Transition bandwidth is 5.9 Hz. Pass/stop bandwidth is 17 Hz
+    Transition bandwidth is 5.9 Hz.
+    Pass/stop bandwidth is 17.0 Hz.
 
 
 
@@ -143,7 +144,8 @@ Compute and plot instantaneous amplitude
 
  .. code-block:: none
 
-    Transition bandwidth is 5.9 Hz. Pass/stop bandwidth is 17 Hz
+    Transition bandwidth is 5.9 Hz.
+    Pass/stop bandwidth is 17.0 Hz.
 
 
 
@@ -200,7 +202,8 @@ estimate in order to make it smoother (see e.g. Samaha & Postle, 2015)
 
  .. code-block:: none
 
-    Transition bandwidth is 5.9 Hz. Pass/stop bandwidth is 17 Hz
+    Transition bandwidth is 5.9 Hz.
+    Pass/stop bandwidth is 17.0 Hz.
 
 
 
@@ -241,7 +244,7 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-**Total running time of the script:** ( 0 minutes  0.151 seconds)
+**Total running time of the script:** ( 0 minutes  0.143 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_2-InstantaneousMeasures.py:
