@@ -13,4 +13,5 @@ def test_morlet_transform(tsig):
 def test_morlet_convolve(tsig):
 
     out = morlet_convolve(tsig, 500, 10)
+    #out = morlet_convolve(tsig, 500, 10, norm='amp')
     assert True

@@ -12,8 +12,8 @@ from neurodsp.plts.filt import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_transitions=True,
-                      plot_properties=False, return_filter=False):
+def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
+                      print_transitions=True, plot_properties=False, return_filter=False):
     """Apply an IIR filter to a signal.
 
     Parameters

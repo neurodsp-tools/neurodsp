@@ -5,8 +5,10 @@ from neurodsp.rhythm.swm import *
 ###################################################################################################
 ###################################################################################################
 
-def test_sliding_window_matching():
-    pass
+def test_sliding_window_matching(tsig):
+
+    sliding_window_matching(tsig, 100, 1, 0.5)
+    assert True
 
 ## PRIVATE FUNCTIONS
 

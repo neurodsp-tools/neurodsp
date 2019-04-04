@@ -5,8 +5,10 @@ from neurodsp.rhythm.lc import *
 ###################################################################################################
 ###################################################################################################
 
-def test_lagged_coherence():
-    pass
+def test_lagged_coherence(tsig):
+
+    lcs = lagged_coherence(tsig, (8, 12), 100)
+    assert True
 
 ## PRIVATE FUNCTIONS
 

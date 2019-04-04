@@ -1,4 +1,4 @@
-"""Tools for estimating properties of a neural oscillation over time."""
+"""Tools for estimating properties of a neural oscillation over time, using hilbert methods."""
 
 import numpy as np
 

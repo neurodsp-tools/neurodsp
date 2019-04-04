@@ -121,7 +121,7 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
 
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
-    filt_len = _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length)
+    filt_len = compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
 
     f_nyq = compute_nyquist(fs)
     if pass_type == 'bandpass':
@@ -136,8 +136,31 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
     return filter_coefs
 
 
-def _fir_checks(pass_type, f_lo, f_hi, n_cycles, n_seconds, fs, sig_length):
-    """Check for running an FIR filter, including figuring out the filter length."""
+def compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
+    """Calculate and check the filter length for an FIR signal with specified parameters.
+
+    Parameters
+    ----------
+    sig_length : int
+        The length of the signal to be filtered.
+    fs : float
+        Sampling rate, in Hz.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which kind of filter to apply.
+    f_lo : float or None
+        xx
+    f_hi : float or None
+        xx
+    n_cycles : float, optional, default: 3
+        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
+    n_seconds : float, optional
+        Length of filter, in seconds.
+
+    Returns
+    -------
+    filt_len : int
+        The length of the specified filter.
+    """
 
     # Compute filter length if specified in seconds
     if n_seconds is not None:

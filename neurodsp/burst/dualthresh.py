@@ -112,7 +112,7 @@ def _dual_threshold_split(sig, thresh_hi, thresh_lo):
 
 
 def _rmv_short_periods(sig, n_samples):
-    """Remove periods that ==1 for less than n_samples."""
+    """Remove periods that == 1 for less than n_samples."""
 
     if np.sum(sig) == 0:
         return sig

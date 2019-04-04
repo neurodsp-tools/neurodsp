@@ -83,6 +83,7 @@ def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm=
 
     morlet_f = morlet(filt_len, w=n_cycles, s=scaling)
 
+    # ToDo: there is an inconsistency between these methods, and the docs.
     if norm == 'sss':
         morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
     elif norm == 'abs':
