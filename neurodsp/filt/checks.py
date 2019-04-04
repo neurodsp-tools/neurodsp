@@ -28,9 +28,9 @@ def check_filter_definition(pass_type, f_range):
     Returns
     -------
     f_lo : float or None
-        The lowpass frequency of the filter, if specified.
+        The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
-        The highpass frequency of the filter, if specified.
+        The higher frequency range of the filter, specifying the lowpass frequency, if specified.
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:

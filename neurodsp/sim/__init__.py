@@ -2,4 +2,5 @@
 
 from .periodic import *
 from .aperiodic import *
+from .transients import *
 from .combined import *

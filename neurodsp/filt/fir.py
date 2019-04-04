@@ -148,9 +148,9 @@ def compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
         Which kind of filter to apply.
     f_lo : float or None
-        xx
+        The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
-        xx
+        The higher frequency range of the filter, specifying the lowpass frequency, if specified.
     n_cycles : float, optional, default: 3
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
     n_seconds : float, optional

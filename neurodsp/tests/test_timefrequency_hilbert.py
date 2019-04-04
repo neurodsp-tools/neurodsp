@@ -1,4 +1,4 @@
-""".  """
+"""Test functions for timefrequency hilbert analyses."""
 
 from neurodsp.timefrequency.hilbert import *
 
@@ -19,3 +19,18 @@ def test_robust_hilbert():
     # Check has correct number of nans (not all nan), with increase_n
     hilb_sig = robust_hilbert(sig, True)
     assert sum(np.isnan(hilb_sig)) == n_nans
+
+def test_phase_by_time(tsig):
+
+    out = phase_by_time(tsig, 500, (8, 12))
+    assert True
+
+def test_amp_by_time(tsig):
+
+    out = amp_by_time(tsig, 500, (8, 12))
+    assert True
+
+def test_freq_by_time(tsig):
+
+    out = freq_by_time(tsig, 500, (8, 12))
+    assert True

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.timefrequency.tf import amp_by_time
+from neurodsp.timefrequency.hilbert import amp_by_time
 from neurodsp.utils.core import get_avg_func
 
 ###################################################################################################
