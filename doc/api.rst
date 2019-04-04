@@ -16,6 +16,8 @@ Table of Contents
 Filtering
 ---------
 
+Functions and utilities for filtering time series.
+
 General Filter Function
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -77,6 +79,8 @@ Filter Utilities
 Time-Frequency analysis
 -----------------------
 
+Functions and utilities for time-frequency analyses.
+
 Hilbert Methods
 ~~~~~~~~~~~~~~~
 
@@ -103,6 +107,8 @@ Wavelet Methods
 
 Spectral analysis
 -----------------
+
+Functions and utilities for spectral analyses.
 
 Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,6 +149,8 @@ Spectral Utilities
 Burst Detection
 ---------------
 
+Functions and utilities for detection bursts in time series.
+
 Burst Detection Algorithms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -166,6 +174,8 @@ Burst Utilities
 Rhythm Analysis
 ---------------
 
+Functions and utilities for finding and analyzing rhythmic and recurring patterns in time series.
+
 Sliding Window Matching
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -188,6 +198,8 @@ Lagged Coherence
 
 Simulations
 -----------
+
+Functions and utilities for simulating time series.
 
 Periodic Signals
 ~~~~~~~~~~~~~~~~
