@@ -5,25 +5,37 @@ The following is a glossary of neuroscience and digital processing related terms
 
 General
 -------
+
+.. glossary::
+
+    periodic
+        Properties or components of a signal that are rhythmic.
+    aperiodic
+        Properties or components of a signal that are arrhythmic, with no characteristic frequency.
+
+Digital Signal Processing
+-------------------------
+
+For a general introduction to digital signal processing, we recommend
+`Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
+by Jack Schaedler.
+
 .. glossary::
 
     time domain
         Signals that are represented as variations over time, and analyses of such signals.
     frequency domain
         Signals that are represented in terms of frequencies, and Analyses of such signals.
-    sampling rate
-        The rate at which samples are taken.
-    periodic
-        Properties or components of a signal that are rhythmic.
-    aperiodic
-        Properties or components of a signal that are arrhythmic, with no characteristic frequency.
     temporal resolution
         The precision of a measurement, in the time domain.
     frequency resolution
         The precision of a measurement, in the frequency domain.
+    sampling rate
+        The rate at which samples are taken.
 
 Units
 -----
+
 .. glossary::
 
     Hertz (Hz)
@@ -35,6 +47,13 @@ Units
 
 Filters
 -------
+
+For a guide on filtering, specific to electrophysiological data, check out this
+`paper <https://doi.org/10.1016/j.jneumeth.2014.08.002>`_ from the journal of neuroscience methods.
+
+For a more in depth tutorial, in code, check out the
+`MNE Filtering Tutorial <https://martinos.org/mne/stable/auto_tutorials/plot_background_filtering.html>`_.
+
 .. glossary::
 
     Impulse Response
@@ -61,6 +80,7 @@ Filters
 
 Rhythms & Bursts
 ----------------
+
 .. glossary::
 
     burst
@@ -68,6 +88,18 @@ Rhythms & Bursts
 
 Time Frequency
 --------------
+
+We currently have two general approaches to time frequency analyses:
+
+* those based on the Hilbert transform
+
+  * There is a scholarpedia article on using the
+    `Hilbert Transform for Brain Waves <http://www.scholarpedia.org/article/Hilbert_transform_for_brain_waves>`_
+  * See also this
+    `deep dive into Hilbert methods <http://www.rdgao.com/roemerhasit_Hilbert_Transform/>`_
+    from VoytekLab member Richard Gao.
+* wavelet based approaches.
+
 .. glossary::
 
     frequency
@@ -88,6 +120,13 @@ Time Frequency
 
 Spectral
 --------
+
+Many of the spectral methods available are based on the Fourier transform, for which there is an
+`interactive guide <https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/>`_
+by Better Explained and an
+`explainer video <https://www.youtube.com/watch?v=spUNpyF58BY>`_
+by 3Blue1Brown.
+
 .. glossary::
 
     fourier transform
@@ -101,17 +140,26 @@ Spectral
 
 Simulations
 -----------
+
+For an overview of the aperiodic signals avaible in terms of their 1/f characteristics, check out this
+`article <http://www.scholarpedia.org/article/1/f_noise>`_
+from scholarpedia.
+
 .. glossary::
 
     noise signal
         Formally, a noise signal is a signal produced by a stochastic (random) process.
         The aperiodic signals that are simulated in NeuroDSP are noise signals.
+    powerlaw
+        A relationship between two quantities, whereby one quantity varies as a power of another.
+        One-over-f relationships are powerlaw, as the spectral power varies by a power of the frequency.
+    1/f signal
+        A signal distributed signal is one in which the power spectrum of the signal can be described by a 1/f^chi powerlaw.
     coloured noise
         The 'colour' of noise refers the the power spectrum of a noise signal.
 
         * white noise: a signal with a flat power spectrum, with equal power at all frequencies.
-        * pink noise: a signal with a 1/f power spectrum.
+        * pink noise: a signal with a 1/f power spectrum. Pink noise can be considered to be a powerlaw with exponent of 1.
         * brown noise: a signal with a 1/f^2 power spectrum. Also called red noise.
     random walk
         A random process that describes a path of a succession of random steps.
-
