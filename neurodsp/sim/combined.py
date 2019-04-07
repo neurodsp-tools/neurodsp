@@ -2,9 +2,10 @@
 
 from itertools import repeat
 
+import numpy as np
+
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.info import get_sim_func
-from neurodsp.sim.utils import proportional_sum
 
 ###################################################################################################
 ###################################################################################################
