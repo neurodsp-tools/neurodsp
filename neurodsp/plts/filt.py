@@ -3,6 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from neurodsp.plts.utils import check_ax
+
 ###################################################################################################
 ###################################################################################################
 
@@ -38,8 +40,7 @@ def plot_frequency_response(f_db, db, ax=None):
         Figure axes upon which to plot.
     """
 
-    if not ax:
-        _, ax = plt.subplots(figsize=(5, 5))
+    ax = check_ax(ax, (5, 5)):
 
     ax.plot(f_db, db, 'k')
 
@@ -59,8 +60,7 @@ def plot_impulse_response(fs, impulse_response, ax=None):
         Figure axes upon which to plot.
     """
 
-    if not ax:
-        _, ax = plt.subplots(figsize=(5, 5))
+    ax = check_ax(ax, (5, 5)):
 
     # Create a samples vector, center to zero, and convert to time
     samples = np.arange(len(impulse_response))
