@@ -255,13 +255,13 @@ plt.ylabel('Power')
 osc_freq = 30
 n_seconds = 3
 fs = 1000
-prob_enter_burst = .1
-prob_leave_burst = .1
+enter_burst = .1
+leave_burst = .1
 
 # Simulate a bursty oscillation
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 prob_enter_burst=prob_enter_burst,
-                                 prob_leave_burst=prob_leave_burst)
+                                 enter_burst=enter_burst,
+                                 leave_burst=leave_burst)
 
 ###################################################################################################
 
@@ -280,10 +280,10 @@ plt.ylabel('Voltage')
 ###################################################################################################
 
 # Simulate a bursty oscillation, with a specified burst probability
-prob_leave_burst = .4
+leave_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 prob_enter_burst=prob_enter_burst,
-                                 prob_leave_burst=prob_leave_burst)
+                                 enter_burst=enter_burst,
+                                 leave_burst=leave_burst)
 
 ###################################################################################################
 
@@ -302,10 +302,10 @@ plt.ylabel('Voltage')
 ###################################################################################################
 
 # Simulate a bursty oscillation, with a specified burst probability
-prob_enter_burst = .4
+enter_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 prob_enter_burst=prob_enter_burst,
-                                 prob_leave_burst=prob_leave_burst)
+                                 enter_burst=enter_burst,
+                                 leave_burst=leave_burst)
 
 ###################################################################################################
 
@@ -343,10 +343,10 @@ plt.ylabel('Voltage')
 
 # Simulate a bursty oscillation, with specified cycle features
 cycle_features = {'amp_std': .5}
-osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 prob_enter_burst=prob_enter_burst,
-                                 prob_leave_burst=prob_leave_burst,
-                                 cycle_features=cycle_features)
+osc = sim.sim_bursty_oscillation_features(n_seconds, fs, osc_freq,
+                                          enter_burst=enter_burst,
+                                          leave_burst=leave_burst,
+                                          cycle_features=cycle_features)
 
 ###################################################################################################
 
@@ -375,7 +375,7 @@ components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
 
 ###################################################################################################
 
-# Simulate a noisy bursty oscillation
+# Simulate a bursty oscillation combined with aperiodic activity
 times = np.arange(0, n_seconds, 1/fs)
 osc = sim.combined.sim_combined(n_seconds, fs, components)
 

@@ -211,6 +211,7 @@ Periodic Signals
 
   sim_oscillation
   sim_bursty_oscillation
+  sim_bursty_oscillation_features
   sim_jittered_oscillation
 
 Aperiodic Signals
