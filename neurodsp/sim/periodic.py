@@ -11,7 +11,7 @@ from neurodsp.sim.transients import sim_osc_cycle
 ###################################################################################################
 
 @normalize
-def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
+def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     """Simulate an oscillation.
 
     Parameters
@@ -22,11 +22,11 @@ def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
         Signal sampling rate, in Hz.
     freq : float
         Oscillation frequency.
-    rdsym : float
-        Rise-decay symmetry of the oscillation, as fraction of the period in the rise time, where:
-        = 0.5 - symmetric (sine wave)
-        < 0.5 - shorter rise, longer decay
-        > 0.5 - longer rise, shorter decay
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+        What type of oscillation cycle to simulate.
+        See `sim_osc_cycle` for details on cycle types and parameters.
+    **cycle_params
+        Parameters for the simulated oscillation cycle.
 
     Returns
     -------
@@ -34,25 +34,11 @@ def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
         Oscillating time series.
     """
 
-    # Compute number of samples per cycle and number of cycles
-    n_samples_cycle = int(np.ceil(fs / freq))
     n_cycles = int(np.ceil(n_seconds * freq))
-    n_samples = int(fs * n_seconds)
+    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
-    # Determine number of samples in rise and decay periods
-    rise_samples = int(np.round(n_samples_cycle * rdsym))
-    decay_samples = n_samples_cycle - rise_samples
-
-    # Make phase array for a single cycle
-    pha_one_cycle = np.hstack([np.linspace(0, np.pi, decay_samples + 1),
-                               np.linspace(-np.pi, 0, rise_samples + 1)[1:-1]])
-
-    # Repeat the phase to make the full signal
-    phase_t = np.tile(pha_one_cycle, n_cycles)
-    phase_t = phase_t[:n_samples]
-
-    # Transform phase into an oscillation
-    osc = np.cos(phase_t)
+    osc_cycle = sim_osc_cycle(n_seconds_cycle , fs, cycle, **cycle_params)
+    osc = np.tile(osc_cycle, n_cycles)
 
     return osc
 
@@ -150,8 +136,8 @@ def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
 
 
 @normalize
-def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
-    """Simulate a jittered oscillation.
+def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle='sine', **cycle_params):
+    """Simulate an oscillation with jitter.
 
     Parameters
     ----------
@@ -163,14 +149,11 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0
         Frequency of simulated oscillation, in Hz.
     jitter : float
         Maximum jitter of oscillation period, in seconds.
-    cycle : tuple or 1d array
-        Oscillation cycle used in the simulation.
-        If array, it's used directly. If tuple, it is generated based on given parameters.
-        Possible values:
-
-        - ('gaussian', std): gaussian cycle, standard deviation in seconds
-        - ('exp', decay time): exponential decay, decay time constant in seconds
-        - ('2exp', rise time, decay time): exponential rise and decay
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+        What type of oscillation cycle to simulate.
+        See `sim_osc_cycle` for details on cycle types and parameters.
+    **cycle_params
+        Parameters for the simulated oscillation cycle.
 
     Returns
     -------
@@ -178,22 +161,12 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0
         Simulated oscillation with jitter.
     """
 
-    # If cycle is a tuple, generate the window with given params,
-    if isinstance(cycle, tuple):
+    # Create a single cycle of the oscillation
+    osc_cycle = sim_osc_cycle(1, fs, cycle, **cycle_params)
 
-        # Defaults to 1 second window for a cycle
-        #   If interested in longer period oscillations, pass in premade cycle
-        osc_cycle = sim_osc_cycle(1, fs, cycle)
-
-    # If cycle is an array, just use it to do the convolution
-    else:
-        osc_cycle = cycle
-
-    # Binary "spike-train" of when each cycle should occur
+    # Binary "spike-train" of when each cycle should occur & oscillation "event" indices
     spks = np.zeros(int(n_seconds * fs + len(osc_cycle)) - 1)
     osc_period = int(fs / freq)
-
-    # Generate oscillation "event" indices
     spk_indices = np.arange(osc_period, len(spks), osc_period)
 
     # Add jitter to "spike" indices
