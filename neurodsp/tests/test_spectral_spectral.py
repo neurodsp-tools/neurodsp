@@ -7,7 +7,9 @@ from neurodsp.spectral.spectral import *
 
 def test_compute_spectrum(tsig):
 
-    freqs, spectrum = compute_spectrum(tsig, fs=500)
+    freqs, spectrum = compute_spectrum(tsig, fs=500, method='welch')
+    freqs, spectrum = compute_spectrum(tsig, fs=500, method='wavelet', freqs=[5, 10, 15])
+    freqs, spectrum = compute_spectrum(tsig, fs=500, method='medfilt')
     assert True
 
 def test_compute_spectrum_welch(tsig):
@@ -19,7 +21,7 @@ def test_compute_spectrum_welch(tsig):
 def test_compute_spectrum_wavelet(tsig):
 
     freqs, spectrum = compute_spectrum_wavelet(tsig, fs=500, freqs=[5, 10, 15], avg_type='mean')
-    freqs, spectrum = compute_spectrum_wavelet(tsig, fs=500, freqs=[5, 10, 15], avg_type='mean')
+    freqs, spectrum = compute_spectrum_wavelet(tsig, fs=500, freqs=[5, 10, 15], avg_type='median')
     assert True
 
 def test_compute_spectrum_medfilt(tsig):

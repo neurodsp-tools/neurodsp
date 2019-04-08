@@ -30,7 +30,9 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     method : {'welch', 'wavelet', 'medfilt'}
         Method to use to estimate the power spectrum.
     avg_type : {'mean', 'median'}, optional
-        If relevant, the method to average across windows to create the spectrum:
+        If relevant, the method to average across windows to create the spectrum.
+    **kwargs
+        Keyword arguments to pass through to function that calculates the spectrum.
 
     Returns
     -------
@@ -43,14 +45,14 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     if method not in ('welch', 'medfilt', 'wavelet'):
         raise ValueError('Unknown power spectrum method: %s' % method)
 
-    if method in ('welch'):
+    if method == 'welch':
         return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
 
     elif method == 'wavelet':
         return compute_spectrum_wavelet(sig, fs, avg_type=avg_type, **kwargs)
 
     elif method == 'medfilt':
-        return compute_spectrum_medfilt(sig, fs, filt_len, f_lim)
+        return compute_spectrum_medfilt(sig, fs, **kwargs)
 
 
 def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
@@ -81,8 +83,9 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     return freqs, spectrum
 
 
-def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None,
-                           noverlap=None, f_lim=None, spg_outlier_pct=0.):
+def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
+                           nperseg=None, noverlap=None,
+                           f_range=None, outlier_pct=None):
     """Estimate the power spectral density using Welch's method.
 
     Parameters
@@ -107,12 +110,10 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
     noverlap : int, optional
         Number of points to overlap between segments.
         If None, noverlap = nperseg // 8.
-    f_lim : float, optional
-        Maximum frequency to keep, in Hz.
-        If None, keeps up to Nyquist.
-    spg_outlier_pct : float, optional, default: 0.
-        Percentage of spectrogram windows with the highest powers to discard prior to averaging.
-        Useful for quickly eliminating potential outliers to compute spectrum.
+    f_range : list of [float, float] optional
+        Frequency range to sub-select from the power spectrum.
+    outlier_pct : float, optional
+        Percentage of the windows with the lowest and highest total log power to discard.
         Must be between 0 and 100.
 
     Returns
@@ -132,20 +133,20 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
         sig = sig[np.newaxis :]
 
     # Throw out outliers if indicated
-    if spg_outlier_pct > 0.:
-        spg = discard_outliers(spg, spg_outlier_pct)
+    if outlier_pct is not None:
+        spg = discard_outliers(spg, outlier_pct)
 
     # Average across windows
     spectrum = get_avg_func(avg_type)(spg, axis=-1)
 
     # Trim spectrum, if requested
-    if f_lim:
-        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+    if f_range:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
 
     return freqs, spectrum
 
 
-def compute_spectrum_medfilt(sig, fs, filt_len=1., f_lim=None):
+def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     """Estimate the power spectral densitry as a smoothed FFT.
 
     Parameters
@@ -156,8 +157,8 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_lim=None):
         Sampling rate, in Hz.
     filt_len : float, optional, default: 1.
         Length of the median filter, in Hz.
-    f_lim : float, optional
-        Maximum frequency to keep, in Hz. If None, keeps up to Nyquist.
+    f_range : list of [float, float] optional
+        Frequency range to sub-select from the power spectrum.
 
     Returns
     -------
@@ -175,8 +176,8 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_lim=None):
     filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
     spectrum = medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
 
-    if f_lim:
-        freqs, spectrum = trim_spectrum(freqs, spectrum, [freqs[0], f_lim])
+    if f_range:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
 
     return freqs, spectrum
 
@@ -317,7 +318,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
 
 def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
-                          nbins=50, f_lim=(0., 100.), cutpct=(0., 100.)):
+                          nbins=50, f_range=[0., 100.], cut_pct=[0., 100.]):
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.
 
     Parameters
@@ -338,10 +339,10 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
         Number of points to overlap between segments. If None, noverlap = nperseg // 2.
     nbins : int, optional, default: 50
         Number of histogram bins to use.
-    f_lim : tuple, optional, default: (0, 100)
-        Frequency range of the spectrogram across which to compute the histograms, as (start, end), in Hz.
-    cutpct : tuple, optional, default: (0, 100)
-        Power percentile at which to draw the lower and upper bin limits, as (low, high).
+    f_range : list of [float, float], optional, default: [0, 100]
+        Frequency range of the spectrogram to compute the histograms, as [start, end], in Hz.
+    cut_pct : list of [float, float], optional, default: [0, 100]
+        Power percentile at which to draw the lower and upper bin limits, as [low, high], in Hz.
 
     Returns
     -------
@@ -362,12 +363,11 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
 
     # Get log10 power & limit to frequency range of interest before binning
-    # ToDo / Note: currently includes a hack to maintain test shape
     ps = np.transpose(np.log10(spg))
-    freqs, ps = trim_spectrum(freqs, ps, [f_lim[0], f_lim[1] - 1/fs])
+    freqs, ps = trim_spectrum(freqs, ps, f_range)
 
     # Prepare bins for power - min and max of bins determined by power cutoff percentage
-    power_min, power_max = np.percentile(np.ndarray.flatten(ps), cutpct)
+    power_min, power_max = np.percentile(np.ndarray.flatten(ps), cut_pct)
     power_bins = np.linspace(power_min, power_max, nbins + 1)
 
     # Compute histogram of power for each frequency
