@@ -37,7 +37,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     n_cycles = int(np.ceil(n_seconds * freq))
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
-    osc_cycle = sim_osc_cycle(n_seconds_cycle , fs, cycle, **cycle_params)
+    osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
     osc = np.tile(osc_cycle, n_cycles)
 
     return osc
@@ -81,12 +81,12 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     # Determine number of samples & cycles
     n_samples = int(n_seconds * fs)
-    n_cycles = int(np.floor(n_seconds * freq))
     n_seconds_cycle = (1/freq * fs)/fs
 
     # Make a single cycle of an oscillation
     osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
     n_samples_cycle = len(osc_cycle)
+    n_cycles = int(np.floor(n_samples / n_samples_cycle))
 
     # Determine which periods will be oscillating
     is_oscillating = _make_is_osc(n_cycles, enter_burst, leave_burst)
@@ -101,9 +101,8 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
 
 @normalize
-def sim_bursty_oscillation_features(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
-                                    prob_leave_burst=.2, cycle_features=None,
-                                    return_cycle_df=False, n_tries=5):
+def sim_bursty_oscillation_features(n_seconds, fs, freq, rdsym=.5, enter_burst=.2, leave_burst=.2,
+                                    cycle_features=None, return_cycle_df=False, n_tries=5):
     """Simulate a bursty oscillation, with defined cycle features.
 
     Parameters
@@ -120,9 +119,9 @@ def sim_bursty_oscillation_features(n_seconds, fs, freq, rdsym=.5, prob_enter_bu
         - = 0.5: symmetric (sine wave)
         - < 0.5: shorter rise, longer decay
         - > 0.5: longer rise, shorter decay
-    prob_enter_burst : float
+    enter_burst : float
         Probability of a cycle being oscillating given the last cycle is not oscillating.
-    prob_leave_burst : float
+    leave_burst : float
         Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle_features : dict
         Specifies the mean and standard deviations (within and across bursts) of each cycle's
@@ -171,7 +170,7 @@ def sim_bursty_oscillation_features(n_seconds, fs, freq, rdsym=.5, prob_enter_bu
     n_cycles_overestimate = int(np.ceil(n_samples / mean_period_samples * 2))
 
     # Determine which periods will be oscillating and the cycle properties for each cycle
-    is_oscillating = _make_is_osc(n_cycles_overestimate, prob_enter_burst, prob_leave_burst)
+    is_oscillating = _make_is_osc(n_cycles_overestimate, enter_burst, leave_burst)
     periods, amps, rdsyms = _determine_cycle_properties(is_oscillating, cycle_features_use, n_tries)
 
     # Set up the dataframe of parameters
@@ -239,7 +238,7 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle='sine', **cycl
 ###################################################################################################
 ###################################################################################################
 
-def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
+def _make_is_osc(n_cycles, enter_burst, leave_burst):
     """Create a vector describing if each cycle is oscillating, for bursting oscillations."""
 
     is_oscillating = [None] * (n_cycles)
@@ -250,9 +249,9 @@ def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
         rand_num = rand()
 
         if is_oscillating[ii-1]:
-            is_oscillating[ii] = rand_num > prob_leave_burst
+            is_oscillating[ii] = rand_num > leave_burst
         else:
-            is_oscillating[ii] = rand_num < prob_enter_burst
+            is_oscillating[ii] = rand_num < enter_burst
 
     return is_oscillating
 

@@ -19,7 +19,7 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
         that contains the cycle, which can be (and usually is) much shorter.
     fs : float
         Sampling frequency of the cycle simulation.
-    cycle_type : {'sine', 'asine', 'gaussian', 'exp', '2exp'}
+    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of cycle to simulate. Options:
 
         * sine: a sine wave cycle
@@ -30,18 +30,14 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
         * 2exp: a cycle with exponential rise and decay
 
     **cycle_params
-        Defines the parameters for the oscillation cycle, all as float, as:
+        Keyword arguments for parameters of the oscillation cycle, all as float:
 
         * sine: None
         * asine: 'rdsym', rise-decay symmetry, from 0-1
         * sawtooth: 'width', width of the rising ramp as a proportion of the total cycle
-        * gaussian: 'std', standard deviation of the gaussian kernel
+        * gaussian: 'std', standard deviation of the gaussian kernel, in seconds
         * exp: 'tau_d', decay time, in seconds
         * 2exp: 'tau_r' & 'tau_d' rise time, and decay time, in seconds
-
-        - ('gaussian', std): gaussian cycle, standard deviation in seconds
-        - ('exp', decay time): exponential decay, decay time constant in seconds
-        - ('2exp', rise time, decay time): exponential rise and decay
 
     Returns
     -------
@@ -103,9 +99,9 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
 
     # Make phase array for the cycle, and convert to signal
     #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
-    cycle = np.sin(np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_decay/2)) + 1),
-                              np.linspace(np.pi/2, -np.pi/2, n_rise + 1)[1:-1],
-                              np.linspace(-np.pi/2, 0, int(np.floor(n_decay/2)) + 1)[:-1]]))
+    cycle = np.sin(np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
+                              np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
+                              np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]]))
 
     return cycle
 

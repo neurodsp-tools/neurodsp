@@ -170,8 +170,8 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """
 
     # NOTE: current hack to add an extra sample, to account for skipping f=0 below
-    n_samps = int(n_seconds * fs) + 1
-    sig = np.random.randn(n_samps)
+    n_samples = int(n_seconds * fs) + 1
+    sig = np.random.randn(n_samples)
 
     # Compute the FFT
     fft_output = np.fft.fft(sig)
