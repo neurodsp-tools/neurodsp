@@ -53,13 +53,13 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
         raise ValueError('Did not recognize cycle type.')
 
     if cycle_type == 'sine':
-        cycle = np.sin(2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs))
+        cycle = np.sin(create_cycle_time(n_seconds, fs))
 
     elif cycle_type == 'asine':
         cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
 
     elif cycle_type == 'sawtooth':
-        cycle = sawtooth(2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs), cycle_params['width'])
+        cycle = sawtooth(create_cycle_time(n_seconds, fs), cycle_params['width'])
 
     elif cycle_type == 'gaussian':
         cycle = gaussian(n_seconds * fs, cycle_params['std'] * fs)
@@ -74,7 +74,27 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
 
 def sim_asine_cycle(n_seconds, fs, rdsym):
-    """Simulate a cycle of an asymmetric sine wave."""
+    """Simulate a cycle of an asymmetric sine wave.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+        Note that this is NOT the period of the cycle, but the length of the returned array
+        that contains the cycle, which can be (and usually is) much shorter.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    rdsym : float
+        Rise-decay symmetry of the oscillation, as fraction of the period in the rise time, where:
+        = 0.5 - symmetric (sine wave)
+        < 0.5 - shorter rise, longer decay
+        > 0.5 - longer rise, shorter decay
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated oscillation cycle.
+    """
 
     # Determine number of samples in rise and decay periods
     n_samples = int(n_seconds * fs)
@@ -143,3 +163,22 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     kernel = kernel / np.sum(kernel)
 
     return kernel
+
+
+def create_cycle_time(n_seconds, fs):
+    """Create a vector of time indices for a single cycle.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of simulated kernel in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz
+
+    Returns
+    -------
+    1d array
+        Time indices.
+    """
+
+    return 2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs)

@@ -41,4 +41,7 @@ def test_sim_make_synaptic_kernel():
     t_ker, tau_r, tau_d = 1., 0.02, 0.02
     assert np.all(sim_synaptic_kernel(t_ker, FS, tau_r, tau_d) >= 0.)
 
+def test_create_cycle_time():
 
+    times = create_cycle_time(N_SECONDS, FS)
+    assert True
