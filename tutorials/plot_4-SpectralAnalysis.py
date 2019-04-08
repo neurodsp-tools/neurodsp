@@ -68,10 +68,12 @@ plt.ylabel('Voltage')
 ###################################################################################################
 
 # Mean of spectrogram (Welch)
-freq_mean, psd_mean = spectral.compute_spectrum(sig, fs, method='mean', nperseg=fs*2)
+freq_mean, psd_mean = spectral.compute_spectrum(sig, fs, method='welch',
+                                                avg_type='mean', nperseg=fs*2)
 
 # Median of spectrogram ("median Welch")
-freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='median', nperseg=fs*2)
+freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch',
+                                              avg_type='median', nperseg=fs*2)
 
 # Median filtered spectrum
 freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
@@ -126,8 +128,8 @@ plt.ylabel('Power (V^2/Hz)')
 ###################################################################################################
 
 # Calculate the spectral histogram
-freqs, bins, spect_hist = spectral.spectral_hist(sig, fs, nbins=50, f_lim=(0, 80),
-                                                 cutpct=(0.1, 99.9))
+freqs, bins, spect_hist = spectral.compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
+                                                         cut_pct=(0.1, 99.9))
 
 # Plot the spectral histogram
 plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
@@ -227,7 +229,7 @@ plt.xlabel('Time (s)')
 
 ###################################################################################################
 
-psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_f=-1, f_rotation=35)
+psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
 plt.figure(figsize=(5, 5))
 plt.loglog(freq_med[:200], psd_med[:200], label='Original')
 plt.loglog(freq_med[:200], psd_rot[:200], label='Rotated')
