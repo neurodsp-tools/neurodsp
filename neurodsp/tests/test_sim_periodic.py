@@ -20,6 +20,11 @@ def test_sim_bursty_oscillation():
     sig = sim_bursty_oscillation(N_SECONDS, FS, FREQ)
     assert True
 
+def test_sim_bursty_oscillation_features():
+
+    sig = sim_bursty_oscillation_features(N_SECONDS, FS, FREQ)
+    assert True
+
 def test_sim_jittered_oscillation():
     pass
 

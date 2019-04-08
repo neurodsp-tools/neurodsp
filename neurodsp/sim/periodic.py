@@ -44,10 +44,67 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
 
 
 @normalize
-def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
-                           prob_leave_burst=.2, cycle_features=None,
-                           return_cycle_df=False, n_tries=5):
+def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
+                           cycle='sine', **cycle_params):
     """Simulate a bursty oscillation.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz
+    freq : float
+        Oscillation frequency, in Hz.
+    enter_burst : float
+        Probability of a cycle being oscillating given the last cycle is not oscillating.
+    leave_burst : float
+        Probability of a cycle not being oscillating given the last cycle is oscillating.
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+        What type of oscillation cycle to simulate.
+        See `sim_osc_cycle` for details on cycle types and parameters.
+    **cycle_params
+        Parameters for the simulated oscillation cycle.
+
+    Returns
+    -------
+    sig : 1d array
+        Bursty oscillation.
+
+    Notes
+    -----
+    * This function takes a 'tiled' approach to simulating cycles, with evenly spaced
+    and consistent cycles across the whole signal, that are either oscillating or not.
+    * If the cycle length does not fit evenly into the simulated data length,
+    then the last few cycle will be non-oscillating.
+    """
+
+    # Determine number of samples & cycles
+    n_samples = int(n_seconds * fs)
+    n_cycles = int(np.floor(n_seconds * freq))
+    n_seconds_cycle = (1/freq * fs)/fs
+
+    # Make a single cycle of an oscillation
+    osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    n_samples_cycle = len(osc_cycle)
+
+    # Determine which periods will be oscillating
+    is_oscillating = _make_is_osc(n_cycles, enter_burst, leave_burst)
+
+    # Fill in the signal with cycle oscillations, for all bursting cycles
+    sig = np.zeros([n_samples])
+    for is_osc, cycle_ind in zip(is_oscillating, range(0, n_samples, n_samples_cycle)):
+        if is_osc:
+            sig[cycle_ind:cycle_ind+n_samples_cycle] = osc_cycle
+
+    return sig
+
+
+@normalize
+def sim_bursty_oscillation_features(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
+                                    prob_leave_burst=.2, cycle_features=None,
+                                    return_cycle_df=False, n_tries=5):
+    """Simulate a bursty oscillation, with defined cycle features.
 
     Parameters
     ----------
