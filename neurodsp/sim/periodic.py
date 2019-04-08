@@ -36,16 +36,18 @@ def sim_oscillation(n_seconds, fs, freq, rdsym=.5):
 
     # Compute number of samples per cycle and number of cycles
     n_samples_cycle = int(np.ceil(fs / freq))
-    n_samples = int(fs * n_seconds)
     n_cycles = int(np.ceil(n_seconds * freq))
+    n_samples = int(fs * n_seconds)
 
     # Determine number of samples in rise and decay periods
     rise_samples = int(np.round(n_samples_cycle * rdsym))
     decay_samples = n_samples_cycle - rise_samples
 
-    # Make phase array for a single cycle, then repeat it
+    # Make phase array for a single cycle
     pha_one_cycle = np.hstack([np.linspace(0, np.pi, decay_samples + 1),
                                np.linspace(-np.pi, 0, rise_samples + 1)[1:-1]])
+
+    # Repeat the phase to make the full signal
     phase_t = np.tile(pha_one_cycle, n_cycles)
     phase_t = phase_t[:n_samples]
 
@@ -125,24 +127,22 @@ def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
     n_samples = int(n_seconds * fs)
     n_cycles_overestimate = int(np.ceil(n_samples / mean_period_samples * 2))
 
-    # Simulate if a series of cycles are oscillating or not oscillating
+    # Determine which periods will be oscillating and the cycle properties for each cycle
     is_oscillating = _make_is_osc(n_cycles_overestimate, prob_enter_burst, prob_leave_burst)
-
-    # Determine what the cycle properties shall be for each cycle
     periods, amps, rdsyms = _determine_cycle_properties(is_oscillating, cycle_features_use, n_tries)
 
     # Set up the dataframe of parameters
-    df = pd.DataFrame({'is_cycle': is_oscillating, 'period': periods, 'amp': amps, 'rdsym': rdsyms})
+    df = pd.DataFrame({'is_cycle': is_oscillating, 'period': periods,
+                       'amp': amps, 'rdsym': rdsyms})
     df['start_sample'] = np.insert(df['period'].cumsum().values[:-1], 0, 0)
     df = df[df['start_sample'] < n_samples]
-    # Shorten df to only cycles that are included in the data
 
     # Create the signal
     sig = _sim_cycles(df)
     sig = sig[:n_samples]
 
     if return_cycle_df:
-        # Remove last row of df
+        # Shorten df to only cycles that are included in the data
         df.drop(df.index[len(df) - 1], inplace=True)
         return sig, df
     else:
@@ -151,8 +151,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, rdsym=.5, prob_enter_burst=.2,
 
 @normalize
 def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0.01)):
-    """Simulate a jittered oscillation, as defined by the oscillation frequency,
-    the oscillation cycle, and how much (in time) to jitter each period.
+    """Simulate a jittered oscillation.
 
     Parameters
     ----------
@@ -182,8 +181,8 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0
     # If cycle is a tuple, generate the window with given params,
     if isinstance(cycle, tuple):
 
-        # defaults to 1 second window for a cycle, which is more than enough
-        # if interested in longer period oscillations, just pass in premade cycle
+        # Defaults to 1 second window for a cycle
+        #   If interested in longer period oscillations, pass in premade cycle
         osc_cycle = sim_osc_cycle(1, fs, cycle)
 
     # If cycle is an array, just use it to do the convolution
@@ -211,7 +210,7 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle=('gaussian', 0
 ###################################################################################################
 
 def _make_is_osc(n_cycles, prob_enter_burst, prob_leave_burst):
-    """Create a vector describing if each cycle is oscillating."""
+    """Create a vector describing if each cycle is oscillating, for bursting oscillations."""
 
     is_oscillating = [None] * (n_cycles)
     is_oscillating[0] = False
@@ -248,11 +247,15 @@ def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
 
             if np.isnan(cur_burst['period_mean']):
 
-                cur_burst['period_mean'] = cycle_features['period_mean'] + randn() * cycle_features['period_burst_std']
-                cur_burst['amp_mean'] = cycle_features['amp_mean'] + randn() * cycle_features['amp_burst_std']
-                cur_burst['rdsym_mean'] = cycle_features['rdsym_mean'] + randn() * cycle_features['rdsym_burst_std']
+                cur_burst['period_mean'] = cycle_features['period_mean'] + randn() \
+                    * cycle_features['period_burst_std']
+                cur_burst['amp_mean'] = cycle_features['amp_mean'] + randn() \
+                    * cycle_features['amp_burst_std']
+                cur_burst['rdsym_mean'] = cycle_features['rdsym_mean'] + randn() \
+                    * cycle_features['rdsym_burst_std']
 
-            # Simulate for n_tries to get valid features -  then if any params are still negative, raise error
+            # Simulate for n_tries to get valid features
+            #   After which, if any params are still negative, raise error
             for n_try in range(n_tries):
 
                 period = cur_burst['period_mean'] + randn() * cycle_features['period_std']
@@ -262,16 +265,17 @@ def _determine_cycle_properties(is_oscillating, cycle_features, n_tries):
                 if period > 0 and amp > 0 and rdsym > 0 and rdsym < 1:
                     break
 
-            # If did not break out of the for loop, no valid features were found (for/else construction)
+            # If did not break out of the for loop, no valid features were found
             else:
 
                 # Check which features are invalid - anything below 0, and rdsym above 1
                 features_invalid = [label for label in ['period', 'amp', 'rdsym'] if eval(label) < 0]
                 features_invalid = features_invalid + ['rdsym'] if rdsym > 1 else features_invalid
 
-                raise ValueError("""A cycle was repeatedly simulated with invalid feature(s) for: {}
-                                    (e.g. less than 0). Please change per-cycle distribution parameters
-                                    (mean & std) and restart simulation.""".format(', '.join(features_invalid)))
+                raise ValueError("""A cycle was repeatedly simulated with invalid feature(s)
+                                    for: {} (e.g. less than 0). Please change per-cycle
+                                    distribution parameters (mean & std) and restart
+                                    simulation.""".format(', '.join(features_invalid)))
 
         periods[ind] = int(period)
         amps[ind] = amp

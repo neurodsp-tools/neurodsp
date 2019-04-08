@@ -3,7 +3,7 @@
 from warnings import warn
 
 import numpy as np
-from scipy import signal
+from scipy.signal import gaussian
 
 ###################################################################################################
 ###################################################################################################
@@ -36,15 +36,12 @@ def sim_osc_cycle(n_seconds, fs, cycle_params):
         raise ValueError('Did not recognize cycle type.')
 
     if cycle_params[0] == 'gaussian':
-        # cycle_params defines std in seconds
-        cycle = signal.gaussian(n_seconds * fs, cycle_params[1] * fs)
+        cycle = gaussian(n_seconds * fs, cycle_params[1] * fs)
 
     elif cycle_params[0] == 'exp':
-        # cycle_params defines decay time constant in seconds
         cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params[1])
 
     elif cycle_params[0] == '2exp':
-        # cycle_params defines rise and decay time constant in seconds
         cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params[1], cycle_params[2])
 
     return cycle

@@ -157,9 +157,9 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float
-        Desired power-law exponent: beta in P(f)=f^beta.
-    f_range : 2-element array (lo, hi) or None, optional
-        Frequency range to filter simulated data.
+        Desired power-law exponent, of the form P(f)=f^exponent.
+    f_range : list of [float, float] or None, optional
+        Frequency range to filter simulated data, as [f_lo, f_hi], in Hz.
     **filter_kwargs : kwargs, optional
         Keyword arguments to pass to `filter_signal`.
 
@@ -176,8 +176,11 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     fft_output = np.fft.fft(sig)
     freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
-    # Rotate spectrum and invert, zscore to normalize
-    fft_output_rot = rotate_powerlaw(freqs, fft_output, exponent / 2.)
+    # Rotate spectrum and invert, zscore to normalize.
+    #   Note: skip frequency zero, as it causes a problem with rotation
+    #   ToDo: Figure out if there is a better way to deal with f=0.
+    #   Also - I don't understand why the delta_exponent needs to be divided by 2?
+    fft_output_rot = rotate_powerlaw(freqs[1:], fft_output[1:], -exponent/2)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
 
     if f_range is not None:
