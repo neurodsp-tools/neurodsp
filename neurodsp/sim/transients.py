@@ -3,7 +3,7 @@
 from warnings import warn
 
 import numpy as np
-from scipy.signal import gaussian
+from scipy.signal import gaussian, sawtooth
 
 ###################################################################################################
 ###################################################################################################
@@ -24,6 +24,7 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
         * sine: a sine wave cycle
         * asine: an asymmetric sine wave
+        * sawtooth: a sawtooth wave
         * gaussian: a gaussian cycle
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
@@ -33,6 +34,7 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
         * sine: None
         * asine: 'rdsym', rise-decay symmetry, from 0-1
+        * sawtooth: 'width', width of the rising ramp as a proportion of the total cycle
         * gaussian: 'std', standard deviation of the gaussian kernel
         * exp: 'tau_d', decay time, in seconds
         * 2exp: 'tau_r' & 'tau_d' rise time, and decay time, in seconds
@@ -47,7 +49,7 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
         Simulated oscillation cycle.
     """
 
-    if cycle_type not in ['sine', 'asine', 'gaussian', 'exp', '2exp']:
+    if cycle_type not in ['sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp']:
         raise ValueError('Did not recognize cycle type.')
 
     if cycle_type == 'sine':
@@ -55,6 +57,9 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
     elif cycle_type == 'asine':
         cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
+
+    elif cycle_type == 'sawtooth':
+        cycle = sawtooth(2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs), cycle_params['width'])
 
     elif cycle_type == 'gaussian':
         cycle = gaussian(n_seconds * fs, cycle_params['std'] * fs)

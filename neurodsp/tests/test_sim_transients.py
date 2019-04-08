@@ -14,6 +14,7 @@ def test_sim_osc_cycle():
 
     cycle = sim_osc_cycle(N_SECONDS, FS, 'sine')
     cycle = sim_osc_cycle(N_SECONDS, FS, 'asine', rdsym=0.75)
+    cycle = sim_osc_cycle(N_SECONDS, FS, 'sawtooth', width=0.5)
     cycle = sim_osc_cycle(N_SECONDS, FS, 'gaussian', std=2)
     cycle = sim_osc_cycle(N_SECONDS, FS, 'exp', tau_d=0.2)
     cycle = sim_osc_cycle(N_SECONDS, FS, '2exp', tau_r=0.2, tau_d=0.2)
