@@ -169,7 +169,8 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
         Time-series with the desired power-law exponent.
     """
 
-    n_samps = int(n_seconds * fs)
+    # NOTE: current hack to add an extra sample, to account for skipping f=0 below
+    n_samps = int(n_seconds * fs) + 1
     sig = np.random.randn(n_samps)
 
     # Compute the FFT
@@ -182,6 +183,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     #   Also - I don't understand why the delta_exponent needs to be divided by 2?
     fft_output_rot = rotate_powerlaw(freqs[1:], fft_output[1:], -exponent/2)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
+    # ^NOTE: do we need to zscore, if we apply our normalization afterwards?
 
     if f_range is not None:
         filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
