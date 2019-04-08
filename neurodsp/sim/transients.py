@@ -8,7 +8,7 @@ from scipy.signal import gaussian
 ###################################################################################################
 ###################################################################################################
 
-def sim_osc_cycle(n_seconds, fs, cycle_params):
+def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
     """Make one cycle of an oscillation.
 
     Parameters
@@ -19,8 +19,23 @@ def sim_osc_cycle(n_seconds, fs, cycle_params):
         that contains the cycle, which can be (and usually is) much shorter.
     fs : float
         Sampling frequency of the cycle simulation.
-    cycle_params : tuple
-        Defines the parameters for the oscillation cycle. Possible values:
+    cycle_type : {'sine', 'asine', 'gaussian', 'exp', '2exp'}
+        What type of cycle to simulate. Options:
+
+        * sine: a sine wave cycle
+        * asine: an asymmetric sine wave
+        * gaussian: a gaussian cycle
+        * exp: a cycle with exponential decay
+        * 2exp: a cycle with exponential rise and decay
+
+    **cycle_params
+        Defines the parameters for the oscillation cycle, all as float, as:
+
+        * sine: None
+        * asine: 'rdsym', rise-decay symmetry, from 0-1
+        * gaussian: 'std', standard deviation of the gaussian kernel
+        * exp: 'tau_d', decay time, in seconds
+        * 2exp: 'tau_r' & 'tau_d' rise time, and decay time, in seconds
 
         - ('gaussian', std): gaussian cycle, standard deviation in seconds
         - ('exp', decay time): exponential decay, decay time constant in seconds
@@ -32,17 +47,40 @@ def sim_osc_cycle(n_seconds, fs, cycle_params):
         Simulated oscillation cycle.
     """
 
-    if cycle_params[0] not in ['gaussian', 'exp', '2exp']:
+    if cycle_type not in ['sine', 'asine', 'gaussian', 'exp', '2exp']:
         raise ValueError('Did not recognize cycle type.')
 
-    if cycle_params[0] == 'gaussian':
-        cycle = gaussian(n_seconds * fs, cycle_params[1] * fs)
+    if cycle_type == 'sine':
+        cycle = np.sin(2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs))
 
-    elif cycle_params[0] == 'exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params[1])
+    elif cycle_type == 'asine':
+        cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
 
-    elif cycle_params[0] == '2exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params[1], cycle_params[2])
+    elif cycle_type == 'gaussian':
+        cycle = gaussian(n_seconds * fs, cycle_params['std'] * fs)
+
+    elif cycle_type == 'exp':
+        cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params['tau_d'])
+
+    elif cycle_type == '2exp':
+        cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params['tau_r'], cycle_params['tau_d'])
+
+    return cycle
+
+
+def sim_asine_cycle(n_seconds, fs, rdsym):
+    """Simulate a cycle of an asymmetric sine wave."""
+
+    # Determine number of samples in rise and decay periods
+    n_samples = int(n_seconds * fs)
+    n_rise = int(np.round(n_samples * rdsym))
+    n_decay = n_samples - n_rise
+
+    # Make phase array for the cycle, and convert to signal
+    #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
+    cycle = np.sin(np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_decay/2)) + 1),
+                              np.linspace(np.pi/2, -np.pi/2, n_rise + 1)[1:-1],
+                              np.linspace(-np.pi/2, 0, int(np.floor(n_decay/2)) + 1)[:-1]]))
 
     return cycle
 
