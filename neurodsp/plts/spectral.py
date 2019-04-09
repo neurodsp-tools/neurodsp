@@ -5,14 +5,14 @@ from itertools import repeat
 import numpy as np
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.style import plot_style
+from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
 @savefig
-@plot_style
+@style_plot
 def plot_power_spectra(freqs, powers, labels=None, ax=None):
     """Plot power spectra.
 
@@ -42,7 +42,7 @@ def plot_power_spectra(freqs, powers, labels=None, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_scv(freqs, scv, ax=None):
     """Plot the SCV.
 
@@ -65,7 +65,7 @@ def plot_scv(freqs, scv, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     """Plot the SCV, from the resampling method.
 
@@ -90,7 +90,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
     """Plot the SCV, from the resampling method.
 
@@ -115,7 +115,7 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spectrum=None):
     """Plot the spectral histogram.
 
@@ -137,8 +137,7 @@ def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spect
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freqs)))
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spect_hist, extent=[freqs[0], freqs[-1],
-               power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spect_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]], aspect='auto')
     plt.colorbar(label='Probability')
 
     plt.xlabel('Frequency (Hz)')

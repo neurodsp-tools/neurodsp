@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.style import plot_style
+from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
@@ -30,7 +30,7 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_frequency_response(f_db, db, ax=None):
     """Plot the frequency response of a filter.
 
@@ -54,7 +54,7 @@ def plot_frequency_response(f_db, db, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_impulse_response(fs, impulse_response, ax=None):
     """Plot the impulse response of a filter.
 

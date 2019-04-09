@@ -2,14 +2,14 @@
 
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.style import plot_style
+from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
 @savefig
-@plot_style
+@style_plot
 def plot_swm_pattern(pattern, ax=None):
     """Plot the resulting pattern from a sliding window matching analysis.
 
@@ -31,7 +31,7 @@ def plot_swm_pattern(pattern, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_lagged_coherence(freqs, lcs, ax=None):
     """Plot lagged coherence values across frequencies.
 

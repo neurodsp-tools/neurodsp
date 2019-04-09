@@ -6,14 +6,14 @@ import numpy as np
 import numpy.ma as ma
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.style import plot_style
+from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
 @savefig
-@plot_style
+@style_plot
 def plot_time_series(times, sigs, labels=None, ax=None):
     """Plot a neural time series.
 
@@ -44,7 +44,7 @@ def plot_time_series(times, sigs, labels=None, ax=None):
 
 
 @savefig
-@plot_style
+@style_plot
 def plot_bursts(times, sig, bursting, labels=None, ax=None):
     """Plot a neural time series, labelling detected bursts.
 

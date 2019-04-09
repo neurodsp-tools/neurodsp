@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-def style_plot(ax):
+def plot_style(ax):
     """Define plot style."""
 
     # Aesthetics and axis labels
@@ -22,14 +22,14 @@ def style_plot(ax):
     plt.tight_layout()
 
 
-def plot_style(func, *args, **kwargs):
+def style_plot(func, *args, **kwargs):
     """Decorator function to apply a plot style function, after plot generation."""
 
     @wraps(func)
     def decorated(*args, **kwargs):
 
-        plot_style = kwargs.pop('plot_style', style_plot)
+        style_func = kwargs.pop('plot_style', plot_style)
         func(*args, **kwargs)
-        plot_style(plt.gca())
+        style_func(plt.gca())
 
     return decorated
