@@ -6,19 +6,22 @@ import numpy as np
 import numpy.ma as ma
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.utils import check_ax
+from neurodsp.plts.style import plot_style
+from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
-def plot_time_series(times, sig, labels=None, ax=None):
+@savefig
+@plot_style
+def plot_time_series(times, sigs, labels=None, ax=None):
     """Plot a neural time series.
 
     Parameters
     ----------
     times : 1d array or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sig : 1d array or list of 1d array
+    sigs : 1d array or list of 1d array
         Time series to plot.
     labels : list of str, optional
         Labels for each time series.
@@ -29,9 +32,9 @@ def plot_time_series(times, sig, labels=None, ax=None):
     ax = check_ax(ax, (15, 3))
 
     times = repeat(times) if isinstance(times, np.ndarray) else times
-    sigs = repeat(sig) if isinstance(sig, np.ndarray) else sig
-    labels = repeat(labels) if not isinstance(labels, list) else labels
-    cols = ['k', 'r', 'b']
+    sigs = [sigs] if isinstance(sigs, np.ndarray) else sigs
+    labels = [labels] if not isinstance(labels, list) else labels
+    cols = ['k', 'r', 'b', 'g', 'm', 'c', 'y']
 
     for time, sig, col, label in zip(times, sigs, cols, labels):
         plt.plot(time, sig, col, label=label)
@@ -40,6 +43,8 @@ def plot_time_series(times, sig, labels=None, ax=None):
     plt.ylabel('Voltage (uV)')
 
 
+@savefig
+@plot_style
 def plot_bursts(times, sig, bursting, labels=None, ax=None):
     """Plot a neural time series, labelling detected bursts.
 

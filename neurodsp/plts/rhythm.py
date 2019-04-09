@@ -2,11 +2,14 @@
 
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.utils import check_ax
+from neurodsp.plts.style import plot_style
+from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
+@savefig
+@plot_style
 def plot_swm_pattern(pattern, ax=None):
     """Plot the resulting pattern from a sliding window matching analysis.
 
@@ -27,6 +30,8 @@ def plot_swm_pattern(pattern, ax=None):
     plt.ylabel('Voltage (a.u.)')
 
 
+@savefig
+@plot_style
 def plot_lagged_coherence(freqs, lcs, ax=None):
     """Plot lagged coherence values across frequencies.
 

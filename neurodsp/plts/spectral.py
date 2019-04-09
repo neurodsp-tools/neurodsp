@@ -1,11 +1,18 @@
 """Plotting functions for neurodsp.spectral."""
 
+from itertools import repeat
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+from neurodsp.plts.style import plot_style
+from neurodsp.plts.utils import check_ax, savefig
+
 ###################################################################################################
 ###################################################################################################
 
+@savefig
+@plot_style
 def plot_power_spectra(freqs, powers, labels=None, ax=None):
     """Plot power spectra.
 
@@ -34,6 +41,8 @@ def plot_power_spectra(freqs, powers, labels=None, ax=None):
     plt.ylabel('Power (V^2/Hz)')
 
 
+@savefig
+@plot_style
 def plot_scv(freqs, scv, ax=None):
     """Plot the SCV.
 
@@ -55,6 +64,8 @@ def plot_scv(freqs, scv, ax=None):
     plt.ylabel('SCV')
 
 
+@savefig
+@plot_style
 def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     """Plot the SCV, from the resampling method.
 
@@ -78,6 +89,8 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     plt.ylabel('SCV')
 
 
+@savefig
+@plot_style
 def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
     """Plot the SCV, from the resampling method.
 
@@ -103,6 +116,8 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
     plt.ylabel('Frequency (Hz)')
 
 
+@savefig
+@plot_style
 def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spectrum=None):
     """Plot the spectral histogram.
 

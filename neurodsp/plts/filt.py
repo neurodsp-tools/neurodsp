@@ -3,11 +3,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.utils import check_ax
+from neurodsp.plts.style import plot_style
+from neurodsp.plts.utils import check_ax, savefig
 
 ###################################################################################################
 ###################################################################################################
 
+@savefig
 def plot_filter_properties(f_db, db, fs, impulse_response):
     """Plot filter properties, including frequency response and filter kernel.
 
@@ -27,6 +29,8 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
     plot_impulse_response(fs, impulse_response, ax=ax[1])
 
 
+@savefig
+@plot_style
 def plot_frequency_response(f_db, db, ax=None):
     """Plot the frequency response of a filter.
 
@@ -49,6 +53,8 @@ def plot_frequency_response(f_db, db, ax=None):
     ax.set_ylabel('Attenuation (dB)')
 
 
+@savefig
+@plot_style
 def plot_impulse_response(fs, impulse_response, ax=None):
     """Plot the impulse response of a filter.
 
