@@ -10,7 +10,6 @@ This tutorial primarily covers :mod:`neurodsp.burst`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp.sim.combined import sim_combined
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats

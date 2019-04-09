@@ -22,7 +22,6 @@ This tutorial primarily covers :mod:`neurodsp.swm`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp.rhythm import sliding_window_matching
 from neurodsp.plts.rhythm import plot_swm_pattern

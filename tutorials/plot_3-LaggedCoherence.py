@@ -20,7 +20,6 @@ This tutorial primarily covers :mod:`neurodsp.laggedcoherence`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp.rhythm import lagged_coherence
 from neurodsp.plts.time_series import plot_time_series
