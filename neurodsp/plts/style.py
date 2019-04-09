@@ -17,7 +17,7 @@ def style_plot(ax):
 
     # If labels were provided, add a legend
     if ax.get_legend_handles_labels()[0]:
-        ax.legend(prop={'size': 14}, loc='best')
+        ax.legend(prop={'size': 12}, loc='best')
 
     plt.tight_layout()
 

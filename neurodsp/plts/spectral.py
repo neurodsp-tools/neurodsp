@@ -91,7 +91,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 
 @savefig
 @plot_style
-def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
+def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
     """Plot the SCV, from the resampling method.
 
     Parameters
@@ -102,14 +102,12 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
         Time indices
     scv_rs : 1d array
         Spectral coefficient of variation, from resampling procedure.
-    ax : matplotlib.Axes, optional
-        Figure axes upon which to plot.
     """
 
-    ax = check_ax(ax, (10, 5))
+    fig, ax = plt.subplots(figsize=(10, 5))
 
-    ax.imshow(np.log10(scv_rs), aspect='auto', extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
-
+    plt.imshow(np.log10(scv_rs), aspect='auto',
+               extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
     plt.colorbar(label='SCV')
 
     plt.xlabel('Time (s)')
@@ -141,9 +139,10 @@ def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spect
     # Plot histogram intensity as image and automatically adjust aspect ratio
     plt.imshow(spect_hist, extent=[freqs[0], freqs[-1],
                power_bins[0], power_bins[-1]], aspect='auto')
-    plt.xlabel('Frequency (Hz)', fontsize=15)
-    plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
+
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Log10 Power')
 
     # If a PSD is provided, plot over the histogram data
     if spectrum is not None:
