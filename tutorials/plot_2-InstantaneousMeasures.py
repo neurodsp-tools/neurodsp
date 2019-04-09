@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
+from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 #
@@ -30,11 +31,7 @@ sig_filt_true = np.load('./data/sample_data_1_filt.npy')
 ###################################################################################################
 
 # Plot signal
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k')
-plt.xlim((4, 5))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage (uV)')
+plot_time_series(times, sig)
 
 ###################################################################################################
 #

@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 from neurodsp.sim.combined import sim_combined
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
+from neurodsp.plts.time_series import plot_time_series, plot_bursts
+
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
@@ -41,9 +43,7 @@ times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
-plt.figure(figsize=(16, 3))
-plt.plot(times, sig, 'k', label='Simulated EEG')
-plt.xlim((0, n_seconds))
+plot_time_series(times, sig, 'Simulated EEG')
 
 ###################################################################################################
 #
@@ -75,10 +75,7 @@ f_range = (8, 12)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k', label='simulated EEG')
-plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best')
+plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -102,10 +99,7 @@ times = np.arange(0, len(sig)/fs, 1/fs)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k', label='simulated EEG')
-plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best')
+plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -120,10 +114,7 @@ plt.legend(loc='best')
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k', label='simulated EEG')
-plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best')
+plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -139,10 +130,7 @@ plt.legend(loc='best')
 bursting = detect_bursts_dual_threshold(sig, fs, (13, 30), dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k', label='simulated EEG')
-plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
-plt.legend(loc='best')
+plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
