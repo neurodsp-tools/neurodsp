@@ -28,11 +28,14 @@ def plot_power_spectra(freqs, powers, labels=None, ax=None):
         Figure axes upon which to plot.
     """
 
-    ax = check_ax(ax, (8, 8))
+    ax = check_ax(ax, (6, 6))
 
     freqs = repeat(freqs) if isinstance(freqs, np.ndarray) else freqs
     powers = [powers] if isinstance(powers, np.ndarray) else powers
-    labels = [labels] if not isinstance(labels, list) else labels
+    if labels is not None:
+        labels = [labels] if not isinstance(labels, list) else labels
+    else:
+        labels = repeat(labels)
 
     for freq, power, label in zip(freqs, powers, labels):
         ax.loglog(freq, power, label=label)

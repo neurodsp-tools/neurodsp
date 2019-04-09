@@ -33,7 +33,10 @@ def plot_time_series(times, sigs, labels=None, ax=None):
 
     times = repeat(times) if isinstance(times, np.ndarray) else times
     sigs = [sigs] if isinstance(sigs, np.ndarray) else sigs
-    labels = [labels] if not isinstance(labels, list) else labels
+    if labels is not None:
+        labels = [labels] if not isinstance(labels, list) else labels
+    else:
+        labels = repeat(labels)
     cols = ['k', 'r', 'b', 'g', 'm', 'c', 'y']
 
     for time, sig, col, label in zip(times, sigs, cols, labels):
