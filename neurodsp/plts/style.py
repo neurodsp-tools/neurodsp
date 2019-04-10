@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
-PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
+PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim', 'alpha', 'lw']
 
 def plot_style(ax, **kwargs):
     """Define plot style."""
@@ -37,10 +37,15 @@ def style_plot(func, *args, **kwargs):
     @wraps(func)
     def decorated(*args, **kwargs):
 
+        # Grab a custom style function, if provided, and grab any provided style arguments
+        style_func = kwargs.pop('plot_style', plot_style)
         style_kwargs = {key : kwargs.pop(key) for key in PLOT_STYLE_ARGS if key in kwargs}
 
-        style_func = kwargs.pop('plot_style', plot_style)
+        # Create the plot
         func(*args, **kwargs)
-        style_func(plt.gca(), **style_kwargs)
+
+        # Get plot axis, if a specific one was provided, or just grab current and apply style
+        cur_ax = kwargs['ax'] if 'ax' in kwargs and kwargs['ax'] is not None else plt.gca()
+        style_func(cur_ax, **style_kwargs)
 
     return decorated
