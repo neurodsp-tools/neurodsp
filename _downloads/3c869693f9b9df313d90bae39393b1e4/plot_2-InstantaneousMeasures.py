@@ -47,21 +47,8 @@ pha = phase_by_time(sig, fs, f_range)
 
 # Plot example signal
 _, axs = plt.subplots(2, 1, figsize=(15, 6))
-plot_time_series(times, sig, xlim=[4, 5], ax=axs[0])
+plot_time_series(times, sig, xlim=[4, 5], xlabel=None, ax=axs[0])
 plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
-
-
-# plt.figure(figsize=(12, 4))
-# plt.subplot(2, 1, 1)
-# plt.plot(times, sig, 'k')
-# plt.xlim((4, 5))
-# plt.ylabel('Voltage (uV)')
-# plt.subplot(2, 1, 2)
-# plt.plot(times, pha, 'k')
-# plt.xlim((4, 5))
-# plt.yticks([-np.pi, 0, np.pi], ['$\pi$', 0, '$\pi$'])
-# plt.xlabel('Time (s)')
-# plt.ylabel('Phase (rad)')
 
 ###################################################################################################
 #
@@ -76,20 +63,13 @@ amp = amp_by_time(sig, fs, f_range)
 ###################################################################################################
 
 # Plot example signal
-plt.figure(figsize=(12, 4))
-plt.subplot(2, 1, 1)
-plt.plot(times, sig, 'k', label='raw voltage')
-plt.plot(times, amp, 'r', label='amplitude')
-plt.legend(loc='best')
-plt.xlim((4, 5))
-plt.ylabel('Voltage (uV)')
-plt.subplot(2, 1, 2)
-plt.plot(times, sig_filt_true, 'b', label='beta-filtered voltage')
-plt.plot(times, amp, 'r', label='amplitude')
-plt.legend(loc='best')
-plt.xlim((4, 5))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage (uV)')
+_, axs = plt.subplots(2, 1, figsize=(15, 6))
+plot_instantaneous_measure(times, [sig, amp], 'amplitude',
+                           labels=['Raw Voltage', 'Amplitude'],
+                           xlim=[4, 5], xlabel=None, ax=axs[0])
+plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
+                           labels=['Raw Voltage', 'Amplitude'], colors=['b', 'r'],
+                           xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
 #
@@ -108,24 +88,13 @@ i_f = freq_by_time(sig, fs, f_range)
 ###################################################################################################
 
 # Plot example signal
-plt.figure(figsize=(12, 6))
-plt.subplot(3, 1, 1)
-plt.plot(times, sig, 'k', label='raw voltage')
-plt.legend(loc='best')
-plt.ylabel('Voltage (uV)')
-plt.xlim((4, 5))
-plt.subplot(3, 1, 2)
-plt.plot(times, sig_filt_true, 'b', label='beta-filtered voltage')
-plt.legend(loc='best')
-plt.ylabel('Voltage (uV)')
-plt.xlim((4, 5))
-plt.subplot(3, 1, 3)
-plt.plot(times, i_f, 'r')
-plt.legend(loc='best')
-plt.xlim((4, 5))
-plt.xlabel('Time (s)')
-plt.ylabel('Instantaneous\nFrequency (Hz)')
-plt.ylim((10, 30))
+_, axs = plt.subplots(3, 1, figsize=(15, 9))
+plot_time_series(times, sig, 'Raw Voltage', xlim=[4, 5], xlabel=None, ax=axs[0])
+plot_time_series(times, sig_filt_true,
+                 labels='Beta Filtered Voltage', colors='b',
+                 xlim=[4, 5], xlabel=None, ax=axs[1])
+plot_instantaneous_measure(times, i_f, 'frequency', colors='r',
+                           xlim=[4, 5], ylim=[10, 30], ax=axs[2])
 
 ###################################################################################################
 #

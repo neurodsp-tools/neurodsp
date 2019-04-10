@@ -74,7 +74,7 @@ f_range = (8, 12)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -98,7 +98,7 @@ times = np.arange(0, len(sig)/fs, 1/fs)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -113,7 +113,7 @@ plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -129,7 +129,7 @@ plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, (13, 30), dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 ###################################################################################################
 #

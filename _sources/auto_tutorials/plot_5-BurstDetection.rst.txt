@@ -118,7 +118,7 @@ keyword argument.
     bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
     # Plot original signal and burst activity
-    plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+    plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 
 
@@ -161,7 +161,7 @@ Burst detection applied to real recordings
     bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))
 
     # Plot original signal and burst activity
-    plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+    plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 
 
@@ -194,7 +194,7 @@ Let's try making the thresholds lower.
     bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(1, 2))
 
     # Plot original signal and burst activity
-    plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+    plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 
 
@@ -228,7 +228,7 @@ but the bursts in this data are *beta* bursts.
     bursting = detect_bursts_dual_threshold(sig, fs, (13, 30), dual_thresh=(1, 2))
 
     # Plot original signal and burst activity
-    plot_bursts(times, sig, bursting, ['Simulated EEG', 'Detected Burst'])
+    plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 
 
 
@@ -257,7 +257,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  0.321 seconds)
+**Total running time of the script:** ( 0 minutes  0.316 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_5-BurstDetection.py:
