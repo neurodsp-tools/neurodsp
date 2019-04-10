@@ -656,7 +656,7 @@ sphinx_gallery_thumbnail_number = 15
 
 
 
-**Total running time of the script:** ( 0 minutes  1.532 seconds)
+**Total running time of the script:** ( 0 minutes  1.538 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_7-SimulatingSignals.py:
