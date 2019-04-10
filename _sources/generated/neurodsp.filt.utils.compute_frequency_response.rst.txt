@@ -1,6 +1,0 @@
-neurodsp.filt.utils.compute\_frequency\_response
-================================================
-
-.. currentmodule:: neurodsp.filt.utils
-
-.. autofunction:: compute_frequency_response

@@ -1,6 +1,0 @@
-neurodsp.sim.periodic.sim\_oscillation
-======================================
-
-.. currentmodule:: neurodsp.sim.periodic
-
-.. autofunction:: sim_oscillation

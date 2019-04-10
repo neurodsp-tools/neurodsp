@@ -1,6 +1,0 @@
-neurodsp.filt.utils.compute\_pass\_band
-=======================================
-
-.. currentmodule:: neurodsp.filt.utils
-
-.. autofunction:: compute_pass_band

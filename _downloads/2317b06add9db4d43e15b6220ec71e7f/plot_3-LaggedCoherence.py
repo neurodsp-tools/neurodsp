@@ -20,10 +20,9 @@ This tutorial primarily covers :mod:`neurodsp.laggedcoherence`.
 ###################################################################################################
 
 import numpy as np
+import matplotlib.pyplot as plt
 
-from neurodsp.rhythm import lagged_coherence
-from neurodsp.plts.time_series import plot_time_series
-from neurodsp.plts.rhythm import plot_lagged_coherence
+from neurodsp.laggedcoherence import lagged_coherence
 
 ###################################################################################################
 
@@ -61,7 +60,8 @@ for ind in burst_starts:
 ###################################################################################################
 
 # Plot example signal
-plot_time_series(times, sig)
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k')
 
 ###################################################################################################
 #
@@ -85,7 +85,11 @@ print('Lagged coherence = ', lag_coh_alpha)
 lag_coh_by_f, freqs = lagged_coherence(sig, (1, 40), fs, return_spectrum=True)
 
 # Visualize lagged coherence as a function of frequency
-plot_lagged_coherence(freqs, lag_coh_by_f)
+plt.figure(figsize=(6, 3))
+plt.plot(freqs, lag_coh_by_f, 'k.-')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Lagged coherence')
+plt.tight_layout()
 
 ###################################################################################################
 #
@@ -121,7 +125,12 @@ f_range = (13, 30)
 ###################################################################################################
 
 # Plot example signal
-plot_time_series(times, sig)
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k')
+plt.xlim((0, 5))
+plt.xlabel('Time (s)')
+plt.ylabel('Voltage (uV)')
+plt.tight_layout()
 
 ###################################################################################################
 

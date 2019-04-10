@@ -33,9 +33,9 @@ This tutorial is broken down into the following sections:
 
 
     import numpy as np
+    import matplotlib.pyplot as plt
 
     from neurodsp import filt
-    from neurodsp.plts.time_series import plot_time_series
 
 
 
@@ -83,8 +83,8 @@ Extract signal within a specific frequency range (e.g. theta, 4-8 Hz).
 
 
     # Filter the data, across a frequency band of interest
-    f_range = (4, 8)
-    sig_filt = filt.filter_signal(sig, fs, 'bandpass', f_range)
+    fc = (4, 8)
+    sig_filt = filt.filter_signal(sig, fs, 'bandpass', fc)
 
 
 
@@ -105,7 +105,10 @@ Extract signal within a specific frequency range (e.g. theta, 4-8 Hz).
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.legend(loc='best')
 
 
 
@@ -154,8 +157,8 @@ Remove low frequency drift from the data
 
 
     # Filter the data
-    f_range = (2, None)
-    sig_filt = filt.filter_signal(sig, fs, 'highpass', f_range)
+    fc = 2
+    sig_filt = filt.filter_signal(sig, fs, 'highpass', (fc, None))
 
 
 
@@ -176,7 +179,10 @@ Remove low frequency drift from the data
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.legend(loc='best')
 
 
 
@@ -213,8 +219,8 @@ Remove high frequency activity from the data.
 
 
     # Filter the data
-    f_range = (None, 20)
-    sig_filt = filt.filter_signal(sig, fs, 'lowpass', f_range)
+    fc = 20
+    sig_filt = filt.filter_signal(sig, fs, 'lowpass', (None, fc))
 
 
 
@@ -235,7 +241,10 @@ Remove high frequency activity from the data.
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.legend(loc='best')
 
 
 
@@ -276,8 +285,8 @@ the 60Hz oscillation much (try this yourself!).
 
 
     # Filter the data
-    f_range = (58, 62)
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
+    fc = (58, 62)
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=0.5)
 
 
 
@@ -290,7 +299,10 @@ the 60Hz oscillation much (try this yourself!).
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.legend(loc='best')
 
 
 
@@ -308,8 +320,8 @@ the 60Hz oscillation much (try this yourself!).
     # Note the user warning above.
     # This is because in the computed frequency response (below),
     # the attenuation in the stopband does not go below 20dB.
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25,
-                                  plot_properties=True)
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=0.25,
+                                  plot_freq_response=True)
 
 
 
@@ -325,8 +337,8 @@ the 60Hz oscillation much (try this yourself!).
 
 
     # This user warning disappears if we elongate the filter
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1,
-                                  plot_properties=True)
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, n_seconds=1,
+                                  plot_freq_response=True)
 
 
 
@@ -385,7 +397,7 @@ but the short filter did not (i.e. better frequency resolution).
     sig[:fs] = 0
 
     # Define the frequency band of interest
-    f_range = (4, 8)
+    fc = (4, 8)
 
 
 
@@ -398,8 +410,8 @@ but the short filter did not (i.e. better frequency resolution).
 
 
     # Filter the data
-    sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1)
-    sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1)
+    sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=.1)
+    sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=1)
 
 
 
@@ -422,8 +434,11 @@ but the short filter did not (i.e. better frequency resolution).
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt_short, sig_filt_long],
-                     ['Raw', 'Short Filter', 'Long Filter'])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt_short, 'r', label='short filter')
+    plt.plot(times, sig_filt_long, 'b', label='long filter')
+    plt.legend(loc='best')
 
 
 
@@ -440,11 +455,11 @@ but the short filter did not (i.e. better frequency resolution).
 
     # Visualize the kernels and frequency responses
     print('Short filter')
-    sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1,
-                                        plot_properties=True)
+    sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=.1,
+                                        plot_freq_response=True)
     print('\n\nLong filter')
-    sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
-                                       plot_properties=True)
+    sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_seconds=1,
+                                       plot_freq_response=True)
 
 
 
@@ -516,7 +531,7 @@ Notice that some edge artifacts remain.
 
 
     # Low-pass filter the signal at 100Hz, just for fun.
-    sig = filt.filter_signal(sig, fs, 'lowpass', f_range=100)
+    sig = filt.filter_signal(sig, fs, 'lowpass', fc=100)
 
 
 
@@ -537,8 +552,8 @@ Notice that some edge artifacts remain.
 
 
     # Filter the data
-    f_range = (58, 62)
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filt_type='iir', butterworth_order=3)
+    fc = (58, 62)
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', fc=fc, iir=True, butterworth_order=3)
 
 
 
@@ -559,7 +574,11 @@ Notice that some edge artifacts remain.
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.legend(loc='best')
+    plt.xlim((0, .2))
 
 
 
@@ -595,9 +614,10 @@ Notice that some edge artifacts remain.
 
     # Filter the data
     # If you want to get rid of the transition band printouts, set verbose=False
-    f_range = (13, 30)
-    sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
-                                          plot_properties=True, return_filter=True)
+    fc = (13, 30)
+    sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', fc=fc, n_cycles=3,
+                                          plot_freq_response=True, return_kernel=True,
+                                          verbose=False)
 
 
 
@@ -621,7 +641,11 @@ Notice that some edge artifacts remain.
 
 
     # Plot filtered signal
-    plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
+    plt.figure(figsize=(15, 3))
+    plt.plot(times, sig, 'k', label='raw')
+    plt.plot(times, sig_filt, 'r', label='filtered')
+    plt.xlim((2, 5))
+    plt.legend(loc='best')
 
 
 
@@ -646,7 +670,7 @@ sphinx_gallery_thumbnail_number = 12
 
 
 
-**Total running time of the script:** ( 0 minutes  0.830 seconds)
+**Total running time of the script:** ( 0 minutes  0.269 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_1-Filtering.py:

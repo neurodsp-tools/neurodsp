@@ -1,6 +1,0 @@
-neurodsp.sim.transients.sim\_osc\_cycle
-=======================================
-
-.. currentmodule:: neurodsp.sim.transients
-
-.. autofunction:: sim_osc_cycle

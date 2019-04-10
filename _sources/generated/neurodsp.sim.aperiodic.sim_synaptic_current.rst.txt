@@ -1,6 +1,0 @@
-neurodsp.sim.aperiodic.sim\_synaptic\_current
-=============================================
-
-.. currentmodule:: neurodsp.sim.aperiodic
-
-.. autofunction:: sim_synaptic_current

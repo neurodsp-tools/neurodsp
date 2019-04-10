@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Simulating Signals &#8212; neurodsp 2.0.0 documentation</title>
+    <title>Simulating Signals &#8212; neurodsp 1.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -44,6 +44,7 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="index.html">Tutorial</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -92,11 +93,9 @@
 <p>Simulate periodic (oscillatory) and aperiodic (1/f-like) signals.</p>
 <p>This tutorial primarily covers <code class="xref py py-mod docutils literal notranslate"><span class="pre">neurodsp.sim</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp</span> <span class="kn">import</span> <span class="n">spectral</span><span class="p">,</span> <span class="n">sim</span>
-
-<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="n">plot_power_spectra</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
@@ -113,17 +112,23 @@ power decreases roughly linearly with frequency.</p>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
 <span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
-<span class="n">br_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
+<span class="n">br_noise</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_variable_powerlaw.html#neurodsp.sim.sim_variable_powerlaw" title="View documentation for neurodsp.sim.sim_variable_powerlaw"><span class="n">sim</span><span class="o">.</span><span class="n">sim_variable_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">br_noise</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">br_noise</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_001.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">br_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">br_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_002.png" />
@@ -139,22 +144,23 @@ low-frequency drift.</p>
 the cutoff frequency.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate highpass-filtered brown noise with a 1Hz cutoff frequency</span>
 <span class="n">f_hipass_brown</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">brown_filt</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="n">f_hipass_brown</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
-</pre></div>
-</div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition bandwidth is 1.0 Hz.
-Pass/stop bandwidth is 499.0 Hz.
+<span class="n">brown_filt</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_filtered_noise.html#neurodsp.sim.sim_filtered_noise" title="View documentation for neurodsp.sim.sim_filtered_noise"><span class="n">sim</span><span class="o">.</span><span class="n">sim_filtered_noise</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="p">(</span><span class="n">f_hipass_brown</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">brown_filt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">brown_filt</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_003.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">brown_filt</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">brown_filt</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_004.png" />
@@ -171,61 +177,69 @@ potential.</p>
 fixed exponent of -2. For more details on their usage in simulating neural
 signals, please see Destexhe et al., 2001 and Gao et al., 2017.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate aperiodic signals from OU process &amp; synaptic noise model</span>
-<span class="n">ou_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">syn_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_synaptic_current</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">ou_noise</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_ou_process.html#neurodsp.sim.sim_ou_process" title="View documentation for neurodsp.sim.sim_ou_process"><span class="n">sim</span><span class="o">.</span><span class="n">sim_ou_process</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">syn_noise</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_synaptic_noise.html#neurodsp.sim.sim_synaptic_noise" title="View documentation for neurodsp.sim.sim_synaptic_noise"><span class="n">sim</span><span class="o">.</span><span class="n">sim_synaptic_noise</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">ou_noise</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;OU Process&#39;</span><span class="p">)</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">syn_noise</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Synaptic Noise&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;OU Process&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">ou_noise</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Synaptic Noise&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">syn_noise</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img alt="../_images/sphx_glr_plot_7-SimulatingSignals_005.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_7-SimulatingSignals_005.png" />
-</li>
-<li><img alt="../_images/sphx_glr_plot_7-SimulatingSignals_006.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_7-SimulatingSignals_006.png" />
-</li>
-</ul>
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_005.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">ou_psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">ou_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">syn_psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">syn_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-
-<span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="p">[</span><span class="n">ou_psd</span><span class="p">,</span> <span class="n">syn_psd</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;OU&#39;</span><span class="p">,</span> <span class="s1">&#39;Synaptic&#39;</span><span class="p">])</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">ou_psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">ou_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">syn_psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">syn_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">ou_psd</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;OU&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">syn_psd</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Synaptic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_007.png" />
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_006.png" />
 </div>
 <div class="section" id="simulate-a-stationary-oscillator">
 <h2>Simulate a stationary oscillator<a class="headerlink" href="#simulate-a-stationary-oscillator" title="Permalink to this headline">¶</a></h2>
 <p>In addition to noise, you may also want to simulate an oscillatory process.
 We can do that with neurodsp, with arbitrary rise-decay symmetry.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate symmetric oscillator</span>
-<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">n_samples_cycle</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">osc_freq</span> <span class="o">=</span> <span class="mf">6.6</span>
-<span class="n">osc_a</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">osc_b</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="c1"># HACK: REMOVE WHEN SIM UPDATED</span>
-<span class="n">osc_a</span> <span class="o">=</span> <span class="n">osc_a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_seconds</span><span class="o">*</span><span class="n">fs</span><span class="p">]</span>
-<span class="n">osc_b</span> <span class="o">=</span> <span class="n">osc_b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_seconds</span><span class="o">*</span><span class="n">fs</span><span class="p">]</span>
-
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mf">6.5</span>
+<span class="n">osc_a</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_oscillator.html#neurodsp.sim.sim_oscillator" title="View documentation for neurodsp.sim.sim_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillator</span></a><span class="p">(</span><span class="n">n_samples_cycle</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">osc_b</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_oscillator.html#neurodsp.sim.sim_oscillator" title="View documentation for neurodsp.sim.sim_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillator</span></a><span class="p">(</span><span class="n">n_samples_cycle</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">osc_a</span><span class="p">,</span> <span class="n">osc_b</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">),</span> <span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">osc_a</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">osc_b</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (sample)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_007.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<span class="n">freqs_a</span><span class="p">,</span> <span class="n">psd_a</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">osc_a</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">freqs_b</span><span class="p">,</span> <span class="n">psd_b</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">osc_b</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs_a</span><span class="p">,</span> <span class="n">psd_a</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs_b</span><span class="p">,</span> <span class="n">psd_b</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_008.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_008.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs_a</span><span class="p">,</span> <span class="n">psd_a</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">osc_a</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">freqs_b</span><span class="p">,</span> <span class="n">psd_b</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">osc_b</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-
-<span class="n">plot_power_spectra</span><span class="p">([</span><span class="n">freqs_a</span><span class="p">,</span> <span class="n">freqs_b</span><span class="p">],</span> <span class="p">[</span><span class="n">psd_a</span><span class="p">,</span> <span class="n">psd_b</span><span class="p">])</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_009.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_009.png" />
 <p>Notice the strong harmonics resulting from the non-sinusoidal nature of
 the red oscillation.</p>
 </div>
@@ -239,34 +253,44 @@ power ratio between oscillation and noise.</p>
 noise by passing in its name (str argument) and the required model
 parameters as a dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for simulation</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-
-<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;firing_rate&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;t_ker&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span>
-                                        <span class="s1">&#39;tau_r&#39;</span><span class="p">:</span><span class="mf">0.002</span><span class="p">,</span> <span class="s1">&#39;tau_d&#39;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">},</span>
-              <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">}}</span>
+<span class="n">rdsym</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span>
+<span class="n">SNR</span> <span class="o">=</span> <span class="mf">1.</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate an oscillation over an aperiodic component &amp; associated times vector</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a noisy oscillation</span>
+<span class="n">noise_model</span> <span class="o">=</span> <span class="s1">&#39;synaptic&#39;</span>
+<span class="n">noise_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;firing_rate&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;t_ker&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span>
+              <span class="s1">&#39;tau_r&#39;</span><span class="p">:</span><span class="mf">0.002</span><span class="p">,</span> <span class="s1">&#39;tau_d&#39;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">}</span>
 <span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
-<span class="n">signal</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_noisy_oscillator.html#neurodsp.sim.sim_noisy_oscillator" title="View documentation for neurodsp.sim.sim_noisy_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_noisy_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">noise_model</span><span class="p">,</span> <span class="n">noise_args</span><span class="p">,</span>
+                                  <span class="n">ratio_osc_var</span><span class="o">=</span><span class="n">SNR</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 <span class="n">samps_plot</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">],</span> <span class="n">signal</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">],</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">times</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">],</span> <span class="n">signal</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">],</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">times</span><span class="p">[</span><span class="n">samps_plot</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_009.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_009.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_010.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_010.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
-</pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_011.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_011.png" />
-</div>
-<div class="section" id="simulate-a-bursting-oscillation">
-<h2>Simulate a Bursting Oscillation<a class="headerlink" href="#simulate-a-bursting-oscillation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="simulate-a-bursting-oscillator">
+<h2>Simulate a bursting oscillator<a class="headerlink" href="#simulate-a-bursting-oscillator" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes we want to study oscillations that come and go, so it can be
 useful to simulate oscillations with this property. We can do this by
 controlling the probability that a burst will start or stop with each new cycle.</p>
@@ -274,49 +298,58 @@ controlling the probability that a burst will start or stop with each new cycle.
 <span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
-<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+<span class="n">prob_enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+<span class="n">prob_leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
 
 <span class="c1"># Simulate a bursty oscillation</span>
-<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">osc</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="View documentation for neurodsp.sim.sim_bursty_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                <span class="n">prob_enter_burst</span><span class="o">=</span><span class="n">prob_enter_burst</span><span class="p">,</span>
+                                <span class="n">prob_leave_burst</span><span class="o">=</span><span class="n">prob_leave_burst</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">),</span> <span class="n">osc</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_011.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_011.png" />
+<p>We can shorten burst duration by increasing the probability to leave bursts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
+<span class="n">prob_leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
+<span class="n">osc</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="View documentation for neurodsp.sim.sim_bursty_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                <span class="n">prob_enter_burst</span><span class="o">=</span><span class="n">prob_enter_burst</span><span class="p">,</span>
+                                <span class="n">prob_leave_burst</span><span class="o">=</span><span class="n">prob_leave_burst</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">),</span> <span class="n">osc</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_012.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_012.png" />
-<p>We can shorten burst duration by increasing the probability to leave bursts.</p>
+<p>We can increase the number of bursts by increasing the probability to enter a burst.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
-<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
-<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">prob_enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
+<span class="n">osc</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="View documentation for neurodsp.sim.sim_bursty_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                <span class="n">prob_enter_burst</span><span class="o">=</span><span class="n">prob_enter_burst</span><span class="p">,</span>
+                                <span class="n">prob_leave_burst</span><span class="o">=</span><span class="n">prob_leave_burst</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">),</span> <span class="n">osc</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_013.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_013.png" />
-<p>We can increase the number of bursts by increasing the probability to enter a burst.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
-<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
-<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_014.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_014.png" />
 <p>We can also control the variance in amplitude, period, and rise-decay
 symmetry across cycles and bursts</p>
 <p>This is done in the <cite>cycle_features</cite> argument, which is a dictionary
@@ -335,47 +368,58 @@ that can take the following keys:
 <cite>amp_std</cite> (default = .1)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with specified cycle features</span>
 <span class="n">cycle_features</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;amp_std&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">}</span>
-<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation_features</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                                          <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                                          <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">,</span>
-                                          <span class="n">cycle_features</span><span class="o">=</span><span class="n">cycle_features</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">osc</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_bursty_oscillator.html#neurodsp.sim.sim_bursty_oscillator" title="View documentation for neurodsp.sim.sim_bursty_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                <span class="n">prob_enter_burst</span><span class="o">=</span><span class="n">prob_enter_burst</span><span class="p">,</span>
+                                <span class="n">prob_leave_burst</span><span class="o">=</span><span class="n">prob_leave_burst</span><span class="p">,</span>
+                                <span class="n">cycle_features</span><span class="o">=</span><span class="n">cycle_features</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">),</span> <span class="n">osc</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_015.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_015.png" />
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_014.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_014.png" />
 <p>As with the stationary oscillator, we can also simulate a bursting
 oscillator with brown noise.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for simulation</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;firing_rate&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-                                        <span class="s1">&#39;t_ker&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;tau_r&#39;</span><span class="p">:</span><span class="mf">0.002</span><span class="p">,</span> <span class="s1">&#39;tau_d&#39;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">},</span>
-              <span class="s1">&#39;sim_bursty_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
+<span class="n">SNR</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">noise_model</span> <span class="o">=</span> <span class="s1">&#39;synaptic&#39;</span>
+<span class="n">noise_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;firing_rate&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;t_ker&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;tau_r&#39;</span><span class="p">:</span><span class="mf">0.002</span><span class="p">,</span> <span class="s1">&#39;tau_d&#39;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">}</span>
+<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation combined with aperiodic activity</span>
-<span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
-<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a noisy bursty oscillation</span>
+<span class="n">osc</span> <span class="o">=</span> <a href="../generated/neurodsp.sim.sim_noisy_bursty_oscillator.html#neurodsp.sim.sim_noisy_bursty_oscillator" title="View documentation for neurodsp.sim.sim_noisy_bursty_oscillator"><span class="n">sim</span><span class="o">.</span><span class="n">sim_noisy_bursty_oscillator</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">noise_model</span><span class="p">,</span> <span class="n">noise_args</span><span class="p">,</span>
+                                      <span class="n">ratio_osc_var</span><span class="o">=</span><span class="n">SNR</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_015.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_015.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">osc</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_7-SimulatingSignals_016.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_016.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">osc</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="../_images/sphx_glr_plot_7-SimulatingSignals_017.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_7-SimulatingSignals_017.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 15</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.537 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.907 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-7-simulatingsignals-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/b52349e2ed4ed17a9944d2416e40393d/plot_7-SimulatingSignals.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_7-SimulatingSignals.py</span></code></a></div>

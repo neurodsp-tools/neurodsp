@@ -1,6 +1,0 @@
-neurodsp.sim.aperiodic.sim\_poisson\_pop
-========================================
-
-.. currentmodule:: neurodsp.sim.aperiodic
-
-.. autofunction:: sim_poisson_pop

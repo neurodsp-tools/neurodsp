@@ -1,6 +1,0 @@
-neurodsp.sim.combined.sim\_combined
-===================================
-
-.. currentmodule:: neurodsp.sim.combined
-
-.. autofunction:: sim_combined

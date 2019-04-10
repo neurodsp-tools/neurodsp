@@ -1,6 +1,0 @@
-neurodsp.sim.periodic.sim\_bursty\_oscillation\_features
-========================================================
-
-.. currentmodule:: neurodsp.sim.periodic
-
-.. autofunction:: sim_bursty_oscillation_features

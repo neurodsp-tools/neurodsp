@@ -1,6 +1,0 @@
-neurodsp.timefrequency.wavelets.morlet\_transform
-=================================================
-
-.. currentmodule:: neurodsp.timefrequency.wavelets
-
-.. autofunction:: morlet_transform

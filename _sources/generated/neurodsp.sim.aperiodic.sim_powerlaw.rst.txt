@@ -1,6 +1,0 @@
-neurodsp.sim.aperiodic.sim\_powerlaw
-====================================
-
-.. currentmodule:: neurodsp.sim.aperiodic
-
-.. autofunction:: sim_powerlaw

@@ -10,11 +10,10 @@ This tutorial primarily covers :mod:`neurodsp.burst`.
 ###################################################################################################
 
 import numpy as np
+import matplotlib.pyplot as plt
 
-from neurodsp.sim.combined import sim_combined
+from neurodsp.sim import sim_noisy_bursty_oscillator
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
-
-from neurodsp.plts.time_series import plot_time_series, plot_bursts
 
 ###################################################################################################
 
@@ -33,16 +32,23 @@ np.random.seed(0)
 
 n_seconds = 5
 fs = 1000
-components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
-              'sim_bursty_oscillation' : {'freq' : 10, 'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
+freq = 10
+f_range = (8, 12)
 
-# Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
-sig = sim_combined(n_seconds, fs, components)
+noise_model = 'synaptic'
+noise_args = {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02}
+
+###################################################################################################
+
+sig = sim_noisy_bursty_oscillator(n_seconds, fs, freq, noise_model, noise_args,
+                                  ratio_osc_var=2., prob_enter_burst=.2, prob_leave_burst=.2,)
 times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
-plot_time_series(times, sig, 'Simulated EEG')
+plt.figure(figsize=(16, 3))
+plt.plot(times, sig, 'k', label='Simulated EEG')
+plt.xlim((0, n_seconds))
 
 ###################################################################################################
 #
@@ -70,11 +76,13 @@ plot_time_series(times, sig, 'Simulated EEG')
 
 # Detect bursts using 'deviation' algorithm
 amp_dual_thresh = (1, 2)
-f_range = (8, 12)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -98,7 +106,10 @@ times = np.arange(0, len(sig)/fs, 1/fs)
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -113,7 +124,10 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #
@@ -129,7 +143,10 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, (13, 30), dual_thresh=(1, 2))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k', label='simulated EEG')
+plt.plot(times[bursting], sig[bursting], 'r', label='burst detected')
+plt.legend(loc='best')
 
 ###################################################################################################
 #

@@ -1,6 +1,0 @@
-neurodsp.spectral.spectral.compute\_spectral\_hist
-==================================================
-
-.. currentmodule:: neurodsp.spectral.spectral
-
-.. autofunction:: compute_spectral_hist

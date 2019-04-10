@@ -22,10 +22,9 @@ This tutorial primarily covers :mod:`neurodsp.swm`.
 ###################################################################################################
 
 import numpy as np
+import matplotlib.pyplot as plt
 
-from neurodsp.rhythm import sliding_window_matching
-from neurodsp.plts.rhythm import plot_swm_pattern
-from neurodsp.plts.time_series import plot_time_series
+from neurodsp.swm import sliding_window_matching
 
 ###################################################################################################
 
@@ -47,7 +46,12 @@ times = np.arange(0, len(sig)/fs, 1/fs)
 f_range = (13, 30)
 
 # Plot example signal
-plot_time_series(times, sig)
+plt.figure(figsize=(12, 3))
+plt.plot(times, sig, 'k')
+plt.xlim((4, 5))
+plt.xlabel('Time (s)')
+plt.ylabel('Voltage (uV)')
+plt.tight_layout()
 
 ###################################################################################################
 #
@@ -77,7 +81,12 @@ avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spa
 ###################################################################################################
 
 # Plot the discovered pattern
-plot_swm_pattern(avg_window)
+plt.figure(figsize=(4, 4))
+plt.plot(avg_window, 'k')
+plt.xlabel('Time (samples)')
+plt.ylabel('Voltage (a.u.)')
+plt.title('Average pattern in neural signal')
+plt.tight_layout()
 
 ###################################################################################################
 #

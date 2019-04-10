@@ -1,6 +1,0 @@
-neurodsp.sim.aperiodic.sim\_random\_walk
-========================================
-
-.. currentmodule:: neurodsp.sim.aperiodic
-
-.. autofunction:: sim_random_walk

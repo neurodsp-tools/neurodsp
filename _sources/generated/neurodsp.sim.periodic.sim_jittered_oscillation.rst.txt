@@ -1,6 +1,0 @@
-neurodsp.sim.periodic.sim\_jittered\_oscillation
-================================================
-
-.. currentmodule:: neurodsp.sim.periodic
-
-.. autofunction:: sim_jittered_oscillation
