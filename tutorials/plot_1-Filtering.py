@@ -24,7 +24,6 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp import filt
 from neurodsp.plts.time_series import plot_time_series
@@ -260,8 +259,7 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filt_type='iir', but
 ###################################################################################################
 
 # Plot filtered signal
-plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
-plt.xlim((0, .2))
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
 
 ###################################################################################################
 #
@@ -286,8 +284,7 @@ sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
 ###################################################################################################
 
 # Plot filtered signal
-plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
-plt.xlim((2, 5))
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
 
 ###################################################################################################
 #

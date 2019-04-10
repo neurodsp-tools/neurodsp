@@ -25,7 +25,6 @@ This tutorial primarily covers :mod:`neurodsp.spectral`.
 
 import numpy as np
 from scipy import io
-import matplotlib.pylab as plt
 
 from neurodsp import spectral
 from neurodsp.plts.time_series import plot_time_series
@@ -41,8 +40,7 @@ sig = data['x']
 fs = data['fs']
 times = np.arange(len(sig))/fs
 
-plot_time_series(times, sig)
-plt.xlim((0, 3))
+plot_time_series(times, sig, xlim=[0, 3])
 
 # Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
 
