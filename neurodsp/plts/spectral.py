@@ -125,7 +125,7 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
 
 @savefig
 @style_plot
-def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spectrum=None):
+def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, spectrum=None):
     """Plot the spectral histogram.
 
     Parameters
@@ -134,7 +134,7 @@ def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spect
         Frequencies over which the histogram is calculated.
     power_bins : 1d array
         Power bins within which histogram is aggregated.
-    spect_hist : 2d array
+    spectral_hist : 2d array
         Spectral histogram to be plotted.
     spectrum_freqs : 1d array, optional
         Frequency axis of the power spectrum to be plotted.
@@ -146,7 +146,9 @@ def plot_spectral_hist(freqs, power_bins, spect_hist, spectrum_freqs=None, spect
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freqs)))
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spect_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.xlabel('Frequency (Hz)', fontsize=15)
+    plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
 
     plt.xlabel('Frequency (Hz)')

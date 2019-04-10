@@ -209,7 +209,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     -------
     freqs : 1d array
         Array of sample frequencies.
-    spect_cv : 1d array
+    scv : 1d array
         Spectral coefficient of variation.
 
     Notes
@@ -224,9 +224,9 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     if outlier_pct is not None:
         spg = discard_outliers(spg, outlier_pct)
 
-    spect_cv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
+    scv = np.std(spg, axis=-1) / np.mean(spg, axis=-1)
 
-    return freqs, spect_cv
+    return freqs, scv
 
 
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
@@ -265,9 +265,9 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     -------
     freqs : 1d array
         Array of sample frequencies.
-    t_inds : 1d array
+    t_inds : 1d array or None
         Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
-    spect_cv_rs : 1d array
+    scv_rs : 2d array
         Resampled spectral coefficient of variation.
     """
 
@@ -283,12 +283,12 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
             rs_params = (int(spg.shape[1] / 10.), 100)
 
         nslices, ndraws = rs_params
-        spect_cv_rs = np.zeros((len(freqs), ndraws))
+        scv_rs = np.zeros((len(freqs), ndraws))
 
         # Repeated subsampling of spectrogram randomly, with replacement between draws
         for draw in range(ndraws):
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
-            spect_cv_rs[:, draw] = np.std(
+            scv_rs[:, draw] = np.std(
                 spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
         t_inds = None  # no time component, return nothing
@@ -302,10 +302,10 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
         nslices, nsteps = rs_params
         outlen = int(np.ceil((spg.shape[1] - nslices) / float(nsteps))) + 1
-        spect_cv_rs = np.zeros((len(freqs), outlen))
+        scv_rs = np.zeros((len(freqs), outlen))
         for ind in range(outlen):
             curblock = spg[:, nsteps * ind:nslices + nsteps * ind]
-            spect_cv_rs[:, ind] = np.std(
+            scv_rs[:, ind] = np.std(
                 curblock, axis=-1) / np.mean(curblock, axis=-1)
 
         # Grab the time indices from the spectrogram
@@ -314,7 +314,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     else:
         raise ValueError('Unknown resampling method: %s' % method)
 
-    return freqs, t_inds, spect_cv_rs
+    return freqs, t_inds, scv_rs
 
 
 def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
@@ -350,7 +350,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
         Array of frequencies.
     power_bins : 1d array
         Histogram bins used to compute the distribution.
-    spect_hist : 2d array
+    spectral_hist : 2d array
         Power distribution at every frequency, nbins x fs 2D matrix.
 
     Notes
@@ -371,13 +371,13 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     power_bins = np.linspace(power_min, power_max, nbins + 1)
 
     # Compute histogram of power for each frequency
-    spect_hist = np.zeros((len(ps[0]), nbins))
+    spectral_hist = np.zeros((len(ps[0]), nbins))
     for ind in range(len(ps[0])):
-        spect_hist[ind], _ = np.histogram(ps[:, ind], power_bins)
-        spect_hist[ind] = spect_hist[ind] / sum(spect_hist[ind])
+        spectral_hist[ind], _ = np.histogram(ps[:, ind], power_bins)
+        spectral_hist[ind] = spectral_hist[ind] / sum(spectral_hist[ind])
 
     # Flip output for more sensible plotting direction
-    spect_hist = np.transpose(spect_hist)
-    spect_hist = np.flipud(spect_hist)
+    spectral_hist = np.transpose(spectral_hist)
+    spectral_hist = np.flipud(spectral_hist)
 
-    return freqs, power_bins, spect_hist
+    return freqs, power_bins, spectral_hist
