@@ -13,7 +13,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_power_spectra(freqs, powers, labels=None, ax=None):
+def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
     """Plot power spectra.
 
     Parameters
@@ -24,6 +24,8 @@ def plot_power_spectra(freqs, powers, labels=None, ax=None):
         Power values.
     labels : str or list of str, optional
         Labels for each time series.
+    colors : str or list of str
+        Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     """
@@ -32,16 +34,20 @@ def plot_power_spectra(freqs, powers, labels=None, ax=None):
 
     freqs = repeat(freqs) if isinstance(freqs, np.ndarray) else freqs
     powers = [powers] if isinstance(powers, np.ndarray) else powers
+
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
     else:
         labels = repeat(labels)
 
+    if colors is not None:
+        colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
+
     for freq, power, label in zip(freqs, powers, labels):
         ax.loglog(freq, power, label=label)
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Power (V^2/Hz)')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('Power (V^2/Hz)')
 
 
 @savefig
@@ -63,8 +69,8 @@ def plot_scv(freqs, scv, ax=None):
 
     ax.loglog(freqs, scv)
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('SCV')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('SCV')
 
 
 @savefig
@@ -88,8 +94,8 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     ax.loglog(freqs, np.mean(scv_rs, axis=1), lw=2)
     ax.loglog(freqs, len(freqs)*[1.])
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('SCV')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('SCV')
 
 
 @savefig
