@@ -44,7 +44,7 @@ def test_compute_scv_rs(tsig):
 
 def test_compute_spectral_hist(tsig):
 
-    freqs, bins, spect_hist = compute_spectral_hist(tsig, fs=500)
+    freqs, bins, spectral_hist = compute_spectral_hist(tsig, fs=500)
     assert True
 
 ## PRIVATE FUNCTIONS
