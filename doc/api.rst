@@ -247,3 +247,57 @@ Combined Signals
   :toctree: generated/
 
   sim_combined
+
+Plots
+-----
+
+Functions for plotting time series and analysis outputs.
+
+Time Series
+~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.plts.time_series
+
+.. autosummary::
+  :toctree: generated/
+
+  plot_time_series
+  plot_instantaneous_measure
+  plot_bursts
+
+Spectral
+~~~~~~~~
+
+.. currentmodule:: neurodsp.plts.spectral
+
+.. autosummary::
+  :toctree: generated/
+
+  plot_power_spectra
+  plot_scv
+  plot_scv_rs_lines
+  plot_scv_rs_matrix
+  plot_spectral_hist
+
+Filter
+~~~~~~
+
+.. currentmodule:: neurodsp.plts.filt
+
+.. autosummary::
+  :toctree: generated/
+
+  plot_filter_properties
+  plot_frequency_response
+  plot_impulse_response
+
+Rhythm
+~~~~~~
+
+.. currentmodule:: neurodsp.plts.rhythm
+
+.. autosummary::
+  :toctree: generated/
+
+  plot_swm_pattern
+  plot_lagged_coherence
