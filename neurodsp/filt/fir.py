@@ -12,7 +12,7 @@ from neurodsp.filt.checks import check_filter_definition, check_filter_propertie
 ###################################################################################################
 
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
-                      print_transitions=True, plot_properties=False, return_filter=False):
+                      print_transitions=False, plot_properties=False, return_filter=False):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -40,8 +40,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         Length of filter, in seconds. This parameter overwrites `n_cycles`.
     remove_edges : bool, optional
         If True, replace samples within half the kernel length to be np.nan.
-    print_transitions : bool, optional
-        If True, computes the transition bandwidth, and prints this information.
+    print_transitions : bool, optional, default: False
+        If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
     return_filter : bool, optional, default: False
@@ -58,9 +58,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
     # Design filter
     filter_coefs = design_fir_filter(len(sig), fs, pass_type, f_range, n_cycles, n_seconds)
 
-    # Compute transition bandwidth
-    if print_transitions:
-        check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)
+    # Check filter properties: compute transition bandwidth & run checks
+    check_filter_properties(filter_coefs, 1, fs, pass_type, f_range, verbose=print_transitions)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)

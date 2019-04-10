@@ -10,7 +10,7 @@ from neurodsp.filt.iir import filter_signal_iir
 
 def filter_signal(sig, fs, pass_type, f_range, filt_type='fir',
                   n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
-                  print_transitions=True, plot_properties=False, return_filter=False):
+                  print_transitions=False, plot_properties=False, return_filter=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
@@ -47,7 +47,7 @@ def filter_signal(sig, fs, pass_type, f_range, filt_type='fir',
         Order of the butterworth filter, if using an IIR filter.
         See input 'N' in scipy.signal.butter.
     print_transitions : bool, optional, default: True
-        If True, computes the transition bandwidth(s), and prints this information.
+        If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
     return_filter : bool, optional, default: False
