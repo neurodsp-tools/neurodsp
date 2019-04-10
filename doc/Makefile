@@ -29,6 +29,7 @@ clean:
 ## make install:
 # Build the html site, and push it to gh-pages branch of repo to deploy
 install:
+	make clean
 	rm -rf _build/doctrees _build/tmp_html
 	# Clone, specifically, the gh-pages branch:
 	#   --no-checkout just fetches the root folder without content
