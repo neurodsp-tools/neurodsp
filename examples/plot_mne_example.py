@@ -36,7 +36,7 @@ from mne.viz import plot_topomap
 # Import some NeuroDSP functions to use with MNE
 from neurodsp.spectral import compute_spectrum, trim_spectrum
 from neurodsp.burst import detect_bursts_dual_threshold
-from neurodsp.laggedcoherence import lagged_coherence
+from neurodsp.rhythm import lagged_coherence
 
 ###################################################################################################
 # Load & Check MNE Data
@@ -101,7 +101,7 @@ plt.plot(times, sig, 'k')
 ###################################################################################################
 
 # Calculate the power spectrum, using a median welch & extract a frequency range of interest
-freqs, powers = compute_spectrum(sig, fs, method='median')
+freqs, powers = compute_spectrum(sig, fs, method='welch', avg_type='median')
 freqs, powers = trim_spectrum(freqs, powers, [3, 30])
 
 ###################################################################################################
