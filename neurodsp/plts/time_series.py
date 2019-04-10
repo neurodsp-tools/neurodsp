@@ -48,6 +48,35 @@ def plot_time_series(times, sigs, labels=None, ax=None):
 
 @savefig
 @style_plot
+def plot_instantaneous_measure(times, sigs, measure='phase', ax=None):
+    """Plot an instantaneous measure, of phase, amplitude or frequency.
+
+    Parameters
+    ----------
+    times : 1d array or list of 1d array
+        Time definition(s) for the time series to be plotted.
+    sigs : 1d array or list of 1d array
+        Time series to plot.
+    measure : {'phase', 'amplitude', 'frequency'}
+        Which kind of measure is being plotted.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    """
+
+    if measure not in ['phase', 'amplitude', 'frequency']:
+        raise ValueError('Measure not understood.')
+
+    if measure == 'phase':
+        plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)')
+        plt.yticks([-np.pi, 0, np.pi], ['-$\pi$', 0, '$\pi$'])
+    elif measure == 'amplitude':
+        plot_time_series(times, sigs, ax=ax, ylabel='Amplitude')
+    elif measure == 'frequency':
+        plot_time_series(times, sigs, ax=ax, ylabel='Instantaneous\nFrequency (Hz)')
+
+
+@savefig
+@style_plot
 def plot_bursts(times, sig, bursting, labels=None, ax=None):
     """Plot a neural time series, labelling detected bursts.
 
