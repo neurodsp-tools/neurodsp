@@ -1,6 +1,0 @@
-neurodsp.sim.sim\_noisy\_oscillator
-===================================
-
-.. currentmodule:: neurodsp.sim
-
-.. autofunction:: sim_noisy_oscillator

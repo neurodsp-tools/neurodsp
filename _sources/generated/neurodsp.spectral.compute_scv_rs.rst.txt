@@ -1,6 +1,0 @@
-neurodsp.spectral.compute\_scv\_rs
-==================================
-
-.. currentmodule:: neurodsp.spectral
-
-.. autofunction:: compute_scv_rs

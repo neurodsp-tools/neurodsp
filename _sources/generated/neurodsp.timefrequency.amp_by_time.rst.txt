@@ -1,6 +1,0 @@
-neurodsp.timefrequency.amp\_by\_time
-====================================
-
-.. currentmodule:: neurodsp.timefrequency
-
-.. autofunction:: amp_by_time

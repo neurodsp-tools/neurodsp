@@ -1,6 +1,0 @@
-neurodsp.filt.design\_iir\_filter
-=================================
-
-.. currentmodule:: neurodsp.filt
-
-.. autofunction:: design_iir_filter

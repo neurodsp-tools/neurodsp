@@ -1,6 +1,0 @@
-neurodsp.sim.sim\_ou\_process
-=============================
-
-.. currentmodule:: neurodsp.sim
-
-.. autofunction:: sim_ou_process

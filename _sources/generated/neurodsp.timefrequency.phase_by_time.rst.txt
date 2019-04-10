@@ -1,6 +1,0 @@
-neurodsp.timefrequency.phase\_by\_time
-======================================
-
-.. currentmodule:: neurodsp.timefrequency
-
-.. autofunction:: phase_by_time

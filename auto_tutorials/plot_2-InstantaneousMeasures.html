@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Time-frequency analysis &#8212; neurodsp 1.0.1 documentation</title>
+    <title>Time-frequency analysis &#8212; neurodsp 2.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -44,7 +44,6 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="index.html">Tutorial</a></li>
-                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -95,7 +94,8 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.timefrequency</span> <span class="kn">import</span> <a href="../generated/neurodsp.timefrequency.amp_by_time.html#neurodsp.timefrequency.amp_by_time" title="View documentation for neurodsp.timefrequency.amp_by_time"><span class="n">amp_by_time</span></a><span class="p">,</span> <a href="../generated/neurodsp.timefrequency.freq_by_time.html#neurodsp.timefrequency.freq_by_time" title="View documentation for neurodsp.timefrequency.freq_by_time"><span class="n">freq_by_time</span></a><span class="p">,</span> <a href="../generated/neurodsp.timefrequency.phase_by_time.html#neurodsp.timefrequency.phase_by_time" title="View documentation for neurodsp.timefrequency.phase_by_time"><span class="n">phase_by_time</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.timefrequency</span> <span class="kn">import</span> <span class="n">amp_by_time</span><span class="p">,</span> <span class="n">freq_by_time</span><span class="p">,</span> <span class="n">phase_by_time</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span><span class="p">,</span> <span class="n">plot_instantaneous_measure</span>
 </pre></div>
 </div>
 <div class="section" id="load-example-neural-signal">
@@ -110,11 +110,7 @@
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot signal</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (uV)&#39;</span><span class="p">)</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_2-InstantaneousMeasures_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_2-InstantaneousMeasures_001.png" />
@@ -122,7 +118,7 @@
 <div class="section" id="compute-and-plot-instantaneous-phase">
 <h2>Compute and plot instantaneous phase<a class="headerlink" href="#compute-and-plot-instantaneous-phase" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute instaneous phase from a signal</span>
-<span class="n">pha</span> <span class="o">=</span> <a href="../generated/neurodsp.timefrequency.phase_by_time.html#neurodsp.timefrequency.phase_by_time" title="View documentation for neurodsp.timefrequency.phase_by_time"><span class="n">phase_by_time</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="n">pha</span> <span class="o">=</span> <span class="n">phase_by_time</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -131,17 +127,22 @@ Pass/stop bandwidth is 17.0 Hz.
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (uV)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">pha</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Phase (rad)&#39;</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plot_instantaneous_measure</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">pha</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="c1"># plt.figure(figsize=(12, 4))</span>
+<span class="c1"># plt.subplot(2, 1, 1)</span>
+<span class="c1"># plt.plot(times, sig, &#39;k&#39;)</span>
+<span class="c1"># plt.xlim((4, 5))</span>
+<span class="c1"># plt.ylabel(&#39;Voltage (uV)&#39;)</span>
+<span class="c1"># plt.subplot(2, 1, 2)</span>
+<span class="c1"># plt.plot(times, pha, &#39;k&#39;)</span>
+<span class="c1"># plt.xlim((4, 5))</span>
+<span class="c1"># plt.yticks([-np.pi, 0, np.pi], [&#39;$\pi$&#39;, 0, &#39;$\pi$&#39;])</span>
+<span class="c1"># plt.xlabel(&#39;Time (s)&#39;)</span>
+<span class="c1"># plt.ylabel(&#39;Phase (rad)&#39;)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_2-InstantaneousMeasures_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_2-InstantaneousMeasures_002.png" />
@@ -149,7 +150,7 @@ Pass/stop bandwidth is 17.0 Hz.
 <div class="section" id="compute-and-plot-instantaneous-amplitude">
 <h2>Compute and plot instantaneous amplitude<a class="headerlink" href="#compute-and-plot-instantaneous-amplitude" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute instaneous amplitude from a signal</span>
-<span class="n">amp</span> <span class="o">=</span> <a href="../generated/neurodsp.timefrequency.amp_by_time.html#neurodsp.timefrequency.amp_by_time" title="View documentation for neurodsp.timefrequency.amp_by_time"><span class="n">amp_by_time</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="n">amp</span> <span class="o">=</span> <span class="n">amp_by_time</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -181,7 +182,7 @@ Pass/stop bandwidth is 17.0 Hz.
 <p>Note that some people apply median filters to this instantaneous frequency
 estimate in order to make it smoother (see e.g. Samaha &amp; Postle, 2015)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute instaneous frequency from a signal</span>
-<span class="n">i_f</span> <span class="o">=</span> <a href="../generated/neurodsp.timefrequency.freq_by_time.html#neurodsp.timefrequency.freq_by_time" title="View documentation for neurodsp.timefrequency.freq_by_time"><span class="n">freq_by_time</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="n">i_f</span> <span class="o">=</span> <span class="n">freq_by_time</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -213,7 +214,7 @@ Pass/stop bandwidth is 17.0 Hz.
 <img alt="../_images/sphx_glr_plot_2-InstantaneousMeasures_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_2-InstantaneousMeasures_004.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 3</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.143 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.362 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-2-instantaneousmeasures-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/3c869693f9b9df313d90bae39393b1e4/plot_2-InstantaneousMeasures.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_2-InstantaneousMeasures.py</span></code></a></div>

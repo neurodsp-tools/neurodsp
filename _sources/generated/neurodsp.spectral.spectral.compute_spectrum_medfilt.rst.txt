@@ -1,0 +1,6 @@
+neurodsp.spectral.spectral.compute\_spectrum\_medfilt
+=====================================================
+
+.. currentmodule:: neurodsp.spectral.spectral
+
+.. autofunction:: compute_spectrum_medfilt

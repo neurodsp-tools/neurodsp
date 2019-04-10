@@ -1,0 +1,6 @@
+neurodsp.spectral.spectral.compute\_spectrum
+============================================
+
+.. currentmodule:: neurodsp.spectral.spectral
+
+.. autofunction:: compute_spectrum

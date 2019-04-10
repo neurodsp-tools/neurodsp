@@ -1,0 +1,6 @@
+neurodsp.rhythm.lc.lagged\_coherence
+====================================
+
+.. currentmodule:: neurodsp.rhythm.lc
+
+.. autofunction:: lagged_coherence

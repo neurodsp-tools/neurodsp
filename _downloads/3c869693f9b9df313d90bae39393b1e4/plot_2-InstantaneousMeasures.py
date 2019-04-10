@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
+from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
 
 ###################################################################################################
 #
@@ -30,11 +31,7 @@ sig_filt_true = np.load('./data/sample_data_1_filt.npy')
 ###################################################################################################
 
 # Plot signal
-plt.figure(figsize=(12, 3))
-plt.plot(times, sig, 'k')
-plt.xlim((4, 5))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage (uV)')
+plot_time_series(times, sig)
 
 ###################################################################################################
 #
@@ -49,17 +46,22 @@ pha = phase_by_time(sig, fs, f_range)
 ###################################################################################################
 
 # Plot example signal
-plt.figure(figsize=(12, 4))
-plt.subplot(2, 1, 1)
-plt.plot(times, sig, 'k')
-plt.xlim((4, 5))
-plt.ylabel('Voltage (uV)')
-plt.subplot(2, 1, 2)
-plt.plot(times, pha, 'k')
-plt.xlim((4, 5))
-plt.yticks([-np.pi, 0, np.pi], ['$\pi$', 0, '$\pi$'])
-plt.xlabel('Time (s)')
-plt.ylabel('Phase (rad)')
+_, axs = plt.subplots(2, 1, figsize=(15, 6))
+plot_time_series(times, sig, xlim=[4, 5], ax=axs[0])
+plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
+
+
+# plt.figure(figsize=(12, 4))
+# plt.subplot(2, 1, 1)
+# plt.plot(times, sig, 'k')
+# plt.xlim((4, 5))
+# plt.ylabel('Voltage (uV)')
+# plt.subplot(2, 1, 2)
+# plt.plot(times, pha, 'k')
+# plt.xlim((4, 5))
+# plt.yticks([-np.pi, 0, np.pi], ['$\pi$', 0, '$\pi$'])
+# plt.xlabel('Time (s)')
+# plt.ylabel('Phase (rad)')
 
 ###################################################################################################
 #

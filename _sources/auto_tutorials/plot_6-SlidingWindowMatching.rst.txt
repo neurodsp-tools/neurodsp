@@ -31,9 +31,10 @@ For more details on Sliding Window Matching see Gips et al., 2017, J Neuro Metho
 
 
     import numpy as np
-    import matplotlib.pyplot as plt
 
-    from neurodsp.swm import sliding_window_matching
+    from neurodsp.rhythm import sliding_window_matching
+    from neurodsp.plts.rhythm import plot_swm_pattern
+    from neurodsp.plts.time_series import plot_time_series
 
 
 
@@ -70,12 +71,7 @@ Load neural signal
     f_range = (13, 30)
 
     # Plot example signal
-    plt.figure(figsize=(12, 3))
-    plt.plot(times, sig, 'k')
-    plt.xlim((4, 5))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Voltage (uV)')
-    plt.tight_layout()
+    plot_time_series(times, sig)
 
 
 
@@ -123,12 +119,7 @@ would help the robustness of the algorithm.
 
 
     # Plot the discovered pattern
-    plt.figure(figsize=(4, 4))
-    plt.plot(avg_window, 'k')
-    plt.xlabel('Time (samples)')
-    plt.ylabel('Voltage (a.u.)')
-    plt.title('Average pattern in neural signal')
-    plt.tight_layout()
+    plot_swm_pattern(avg_window)
 
 
 
@@ -144,7 +135,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  1.503 seconds)
+**Total running time of the script:** ( 0 minutes  1.205 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_6-SlidingWindowMatching.py:

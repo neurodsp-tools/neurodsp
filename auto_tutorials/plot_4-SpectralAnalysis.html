@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Spectral domain analysis &#8212; neurodsp 1.0.1 documentation</title>
+    <title>Spectral domain analysis &#8212; neurodsp 2.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -44,7 +44,6 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="index.html">Tutorial</a></li>
-                <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -103,10 +102,10 @@
 <p>Detailed explanations for each of the above concept are provided below as we come across them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">io</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="kn">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp</span> <span class="kn">import</span> <span class="n">spectral</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="n">plot_spectral_hist</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, we load the sample data, which is a segment of rat hippocampal LFP</span>
@@ -116,10 +115,8 @@
 <span class="n">sig</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fs&#39;</span><span class="p">]</span>
 <span class="n">times</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">))</span><span class="o">/</span><span class="n">fs</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage&#39;</span><span class="p">)</span>
+
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 
 <span class="c1"># Plotting the data, we observe a strong theta oscillation (~6-8 Hz)</span>
 </pre></div>
@@ -142,23 +139,21 @@ from signal artifacts.</li>
 <li>‘medfilt’ : median filtered of FFT magnitude squared.</li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mean of spectrogram (Welch)</span>
-<span class="n">freq_mean</span><span class="p">,</span> <span class="n">psd_mean</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">freq_mean</span><span class="p">,</span> <span class="n">psd_mean</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span>
+                                                <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Median of spectrogram (&quot;median Welch&quot;)</span>
-<span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span>
+                                              <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Median filtered spectrum</span>
-<span class="n">freq_mf</span><span class="p">,</span> <span class="n">psd_mf</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;medfilt&#39;</span><span class="p">)</span>
+<span class="n">freq_mf</span><span class="p">,</span> <span class="n">psd_mf</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;medfilt&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the power spectra</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_mean</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_mean</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Welch&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Median Welch&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_mf</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">10000</span><span class="p">],</span> <span class="n">psd_mf</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">10000</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Median Filter FFT&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power (V^2/Hz)&#39;</span><span class="p">)</span>
+<span class="n">plot_power_spectra</span><span class="p">([</span><span class="n">freq_mean</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">freq_mf</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">10000</span><span class="p">]],</span>
+                   <span class="p">[</span><span class="n">psd_mean</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_mf</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">10000</span><span class="p">]],</span>
+                   <span class="p">[</span><span class="s1">&#39;Welch&#39;</span><span class="p">,</span> <span class="s1">&#39;Median Welch&#39;</span><span class="p">,</span> <span class="s1">&#39;Median Filter FFT&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_002.png" />
@@ -189,8 +184,8 @@ reveal non-stationarities in the data or particular frequencies that are
 not like the rest. Here, we simply bin the log-power values across time,
 in a histogram, to observe the noise distribution at each frequency.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the spectral histogram</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.spectral_hist.html#neurodsp.spectral.spectral_hist" title="View documentation for neurodsp.spectral.spectral_hist"><span class="n">spectral</span><span class="o">.</span><span class="n">spectral_hist</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_lim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-                                                 <span class="n">cutpct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">))</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectral_hist</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+                                                         <span class="n">cut_pct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">))</span>
 
 <span class="c1"># Plot the spectral histogram</span>
 <span class="n">plot_spectral_hist</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span><span class="p">,</span> <span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">)</span>
@@ -209,14 +204,10 @@ quite constant across the entire frequency axis (homoscedasticity). To quantify
 that, we compute the coefficient of variation (standard deviation/mean) as a
 normalized estimate of variance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="View documentation for neurodsp.spectral.compute_scv"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Plot the SCV</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;SCV&#39;</span><span class="p">)</span>
+<span class="n">plot_scv</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_004.png" />
@@ -225,17 +216,11 @@ noise due to the single estimate of mean and standard deviation. To overcome
 this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 slices from the non-overlapping spectrogram and taking their average.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="View documentation for neurodsp.spectral.compute_scv_rs"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span>
                                                 <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
 
 <span class="c1"># Plot the SCV, from the resampling method</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">scv_rs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="mf">1.</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;SCV&#39;</span><span class="p">)</span>
+<span class="n">plot_scv_rs_lines</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_005.png" />
@@ -243,15 +228,10 @@ slices from the non-overlapping spectrogram and taking their average.</p>
 essentially smoothing over consecutive slices of the spectrogram to compute
 the mean and std estimates.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="View documentation for neurodsp.spectral.compute_scv_rs"><span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
 <span class="c1"># Plot the SCV, from the resampling method</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.log10" title="View documentation for numpy.log10"><span class="n">np</span><span class="o">.</span><span class="n">log10</span></a><span class="p">(</span><span class="n">scv_rs</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">t_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t_inds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">freqs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;SCV&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+<span class="n">plot_scv_rs_matrix</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_006.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_006.png" />
@@ -267,17 +247,17 @@ by the exponent (negative is clockwise, positive is counterclockwise).</p>
 the spectrum in frequency domain on the time domain signal. Effectively,
 this performs a very specific type of filtering with an ultra long filter kernel.</p>
 <p>For complete details, see the <strong>Simulation</strong> tutorial.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">psd_rot</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.rotate_powerlaw.html#neurodsp.spectral.rotate_powerlaw" title="View documentation for neurodsp.spectral.rotate_powerlaw"><span class="n">spectral</span><span class="o">.</span><span class="n">rotate_powerlaw</span></a><span class="p">(</span><span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">,</span> <span class="n">delta_f</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_rot</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Rotated&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">psd_rot</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">rotate_powerlaw</span><span class="p">(</span><span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">,</span> <span class="n">delta_exponent</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
+
+<span class="n">plot_power_spectra</span><span class="p">([</span><span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">freq_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">]],</span>
+                   <span class="p">[</span><span class="n">psd_med</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">psd_rot</span><span class="p">[:</span><span class="mi">200</span><span class="p">]],</span>
+                   <span class="p">[</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="s1">&#39;Rotated&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_4-SpectralAnalysis_007.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_4-SpectralAnalysis_007.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 2</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  1.522 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  1.599 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-plot-4-spectralanalysis-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/6beb788292810fb612f365994abc96ea/plot_4-SpectralAnalysis.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_4-SpectralAnalysis.py</span></code></a></div>
