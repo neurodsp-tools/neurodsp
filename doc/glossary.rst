@@ -157,8 +157,8 @@ from scholarpedia.
         A relationship between two quantities, whereby one quantity varies as a power of another.
         One-over-f relationships are powerlaw, as the spectral power varies by a power of the frequency.
     1/f signal
-        A one-over-f distributed signal is one in which the power spectrum of the signal can be
-        described by a 1/f^chi powerlaw, where `chi` refers to the exponent of the powerlaw.
+        A signal for which the power spectrum can be described by a 1/f^chi powerlaw,
+        where `chi` refers to the exponent of the powerlaw.
     coloured noise
         The 'colour' of noise refers to the 1/f exponent of the power spectrum of a noise signal.
 
