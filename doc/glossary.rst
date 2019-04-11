@@ -25,13 +25,15 @@ by Jack Schaedler.
     time domain
         Signals that are represented as variations over time, and analyses of such signals.
     frequency domain
-        Signals that are represented in terms of frequencies, and Analyses of such signals.
-    temporal resolution
-        The precision of a measurement, in the time domain.
-    frequency resolution
-        The precision of a measurement, in the frequency domain.
+        Signals that are represented in terms of frequencies, and analyses of such signals.
     sampling rate
         The rate at which samples are taken.
+    temporal resolution
+        The precision of a measurement, in the time domain.
+        This is set by the magnitude of time between successive measurements (e.g. 0.01 seconds between samples).
+    frequency resolution
+        The precision of a measurement, in the frequency domain.
+        This is set by the magnitude of frequency between successive measurements (e.g. 0.5 Hz between measurements).
 
 Units
 -----
@@ -57,13 +59,13 @@ For a more in depth tutorial, in code, check out the
 .. glossary::
 
     Impulse Response
-        The response of a fitler when presented with an impulse; a single, brief input.
+        The response of a filter when presented with an impulse; a single, brief input.
     FIR
-        A Finite Impulse Response filter, meaning the response to a single input is finite, settling to zero.
+        A Finite Impulse Response filter, meaning its impulse response settles to zero in finite time.
     IIR
-        An Infinite Impulse Response filter, meaning the response to a single input continue infinitely.
+        An Infinite Impulse Response filter, meaning the filter is recursive, and its impulse response continues infinitely.
     passband
-        The range (band) of frequencies that can pass through a filter.
+        The range (band) of frequencies that are unattenuated by a filter.
     stopband
         The range (band) of frequencies that are attenuated (stopped) by a filter.
     passtype
@@ -84,7 +86,7 @@ Rhythms & Bursts
 .. glossary::
 
     burst
-        Periodic activity that lasts for a finite time , as in a 'burst of oscillatory activity'.
+        Periodic activity that lasts for a short or transient amount of time , as in a 'burst of oscillatory activity'.
 
 Time Frequency
 --------------
@@ -103,17 +105,18 @@ We currently have two general approaches to time frequency analyses:
 .. glossary::
 
     frequency
-        The number of occurences over a unit of time.
+        The number of occurences over a unit of time, typically referred to as cycles per second, and measured in Hz.
     phase
         The position, at a point in time, on a waveform cycle.
     amplitude
         The magnitude of a signal, as the peak-to-trough.
+    power
+        The squared magnitude of a signal.
     period
         A single cycle of a rhythm, defined as the time between two consecutive troughs (or peaks).
     hilbert transform
-        A mathematical transform that derives the analyic representation of a signal, where the
-        analytic representation is complex-valued representation that can be used to find the
-        analytic amplitude and phase of a signal.
+        A mathematical transform that computes the 'analytic signal', a complex-valued representation
+        of a time-series (signal) that can be used to find its analytic amplitude and phase.
     wavelet
         A wave-like signal, or 'brief oscillation', that starts at zero amplitude, increases
         in amplitude to some value, and then decays back to zero.
@@ -154,12 +157,13 @@ from scholarpedia.
         A relationship between two quantities, whereby one quantity varies as a power of another.
         One-over-f relationships are powerlaw, as the spectral power varies by a power of the frequency.
     1/f signal
-        A signal distributed signal is one in which the power spectrum of the signal can be described by a 1/f^chi powerlaw.
+        A one-over-f distributed signal is one in which the power spectrum of the signal can be
+        described by a 1/f^chi powerlaw, where `chi` refers to the exponent of the powerlaw.
     coloured noise
-        The 'colour' of noise refers the the power spectrum of a noise signal.
+        The 'colour' of noise refers to the 1/f exponent of the power spectrum of a noise signal.
 
-        * white noise: a signal with a flat power spectrum, with equal power at all frequencies.
-        * pink noise: a signal with a 1/f power spectrum. Pink noise can be considered to be a powerlaw with exponent of 1.
+        * white noise: a signal with a flat power spectrum, with equal power at all frequencies. White noise has an exponent of 0.
+        * pink noise: a signal with a 1/f power spectrum. Pink noise has an exponent of 1.
         * brown noise: a signal with a 1/f^2 power spectrum. Also called red noise.
     random walk
         A random process that describes a path of a succession of random steps.
