@@ -217,8 +217,11 @@ def sim_jittered_oscillation(n_seconds, fs, freq, jitter=0, cycle='sine', **cycl
         Simulated oscillation with jitter.
     """
 
+    n_cycles = int(np.ceil(n_seconds * freq))
+    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+
     # Create a single cycle of the oscillation
-    osc_cycle = sim_osc_cycle(1, fs, cycle, **cycle_params)
+    osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
 
     # Binary "spike-train" of when each cycle should occur & oscillation "event" indices
     spks = np.zeros(int(n_seconds * fs + len(osc_cycle)) - 1)
