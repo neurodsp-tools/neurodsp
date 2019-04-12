@@ -1,4 +1,4 @@
-"""neurodsp setup script"""
+"""NeuroDSP setup script."""
 
 import os
 from setuptools import setup, find_packages
@@ -15,9 +15,11 @@ long_description = \
 ========
 Neurodsp
 ========
-A package of modules to process and analyze neural recordings as individual voltage time series.
+
+A package for digital signal processing of neural time series.
 
 Neurodsp contains several modules:
+
 - burst : Detect bursting oscillators in neural signals
 - filt : Filter data with bandpass, highpass, lowpass, or notch filters
 - laggedcoherence : Estimate rhythmicity using the lagged coherence measure
@@ -30,7 +32,8 @@ Neurodsp contains several modules:
 setup(
     name = 'neurodsp',
     version = __version__,
-    description = long_description,
+    description = 'Digital Signal Processing for Neural time series',
+    long_description = long_description,
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
     url = 'https://github.com/neurodsp-tools/neurodsp',
@@ -51,6 +54,7 @@ setup(
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6'
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7'
         ]
 )
