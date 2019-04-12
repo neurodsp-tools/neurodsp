@@ -244,7 +244,7 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-**Total running time of the script:** ( 0 minutes  0.132 seconds)
+**Total running time of the script:** ( 0 minutes  0.086 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_plot_2-InstantaneousMeasures.py:

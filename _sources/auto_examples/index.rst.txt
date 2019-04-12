@@ -15,7 +15,7 @@ Examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example explores some example analyses using NeuroDSP in combination with `MNE &lt;https://mn...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example explores some example analyses using NeuroDSP in combination with MNE.">
 
 .. only:: html
 

@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using NeuroDSP with MNE &#8212; neurodsp 1.0.1 documentation</title>
+    <title>Using NeuroDSP with MNE &#8212; neurodsp 1.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,13 +36,14 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
             
                 <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorial</a></li>
                 <li><a href="index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
@@ -90,16 +91,16 @@
 </div>
 <div class="sphx-glr-example-title section" id="using-neurodsp-with-mne">
 <span id="sphx-glr-auto-examples-plot-mne-example-py"></span><h1>Using NeuroDSP with MNE<a class="headerlink" href="#using-neurodsp-with-mne" title="Permalink to this headline">¶</a></h1>
-<p>This example explores some example analyses using NeuroDSP in combination with <a class="reference external" href="https://mne-tools.github.io/">MNE</a>.</p>
+<p>This example explores some example analyses using NeuroDSP in combination with MNE.</p>
 <p>NeuroDSP is a library designed to offer a large selection of methods and analyses
-that can be applied to neural time series. NeuroDSP itself does not offering
+that can be applied to neural time series. NeuroDSP itself does not offer
 functionality for managing multi-channel data and metadata, but can be used with
-tools that do, such as MNE. Here, we explore an example of how analyses from NeuroDSP
-can be applied to data that is managed and processed by another module, such as the
-MNE module for managing and processing M/EEG data.</p>
-<p>In particular, it explores applying some methods for finding rhythmic properties
-in an example electroencephalography (EEG) dataset, including calculating power spectra,
-running burst detection, and applying lagged coherence.</p>
+tools that do, such as <a class="reference external" href="https://mne-tools.github.io/">MNE</a>.</p>
+<p>Here, we explore an example of how analyses from NeuroDSP can be applied to data
+that is managed and processed by MNE. In particular, it explores applying some
+methods for finding rhythmic properties in an example electroencephalography (EEG)
+dataset, including calculating power spectra, running burst detection,
+and applying lagged coherence.</p>
 <p>This tutorial does require that you have MNE installed. If you don’t already have
 MNE, you can follow instructions to get it <a class="reference external" href="https://mne-tools.github.io/stable/getting_started.html">here</a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># General imports</span>
@@ -126,6 +127,8 @@ MNE, you can follow instructions to get it <a class="reference external" href="h
 described <a class="reference external" href="https://martinos.org/mne/stable/manual/sample_dataset.html">here</a>.</p>
 <p>For the current example, we are going to sub-select only the EEG data,
 and analyze it as continuous (non-epoched) data.</p>
+<p>Note that if you don’t already have the data, the <cite>data_path</cite> command
+will download the MNE sample dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the data path for the MNE example data</span>
 <span class="n">raw_fname</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">data_path</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis_filt-0-40_raw.fif&#39;</span>
 
@@ -161,7 +164,7 @@ and analyze it as continuous (non-epoched) data.</p>
 </div>
 <div class="section" id="calculate-power-spectra">
 <h2>Calculate Power Spectra<a class="headerlink" href="#calculate-power-spectra" title="Permalink to this headline">¶</a></h2>
-<p>Next let’s check the data in the frequency domain, calculating a power spectrum
+<p>Next lets check the data in the frequency domain, calculating a power spectrum
 with the median welch’s procedure that is available in NeuroDSP.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the power spectrum, using a median welch &amp; extract a frequency range of interest</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="View documentation for neurodsp.spectral.compute_spectrum"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span>
@@ -329,7 +332,7 @@ are rhythmic in the alpha range, as well as there being a central cluster of bet
 Using a similar approach, you can also apply these and other analyses to epoched data,
 by managing and pre-processing data in MNE, selecting the data of interest, and then
 applying NeuroDSP functions to the data.</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  8.598 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  8.263 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-mne-example-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/248ee85711a78c145b843c7df7a99acc/plot_mne_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mne_example.py</span></code></a></div>

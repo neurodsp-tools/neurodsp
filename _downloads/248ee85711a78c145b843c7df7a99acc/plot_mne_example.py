@@ -2,19 +2,18 @@
 Using NeuroDSP with MNE
 =======================
 
-This example explores some example analyses using NeuroDSP in combination with `MNE
-<https://mne-tools.github.io/>`_.
+This example explores some example analyses using NeuroDSP in combination with MNE.
 
 NeuroDSP is a library designed to offer a large selection of methods and analyses
-that can be applied to neural time series. NeuroDSP itself does not offering
+that can be applied to neural time series. NeuroDSP itself does not offer
 functionality for managing multi-channel data and metadata, but can be used with
-tools that do, such as MNE. Here, we explore an example of how analyses from NeuroDSP
-can be applied to data that is managed and processed by another module, such as the
-MNE module for managing and processing M/EEG data.
+tools that do, such as `MNE <https://mne-tools.github.io/>`_.
 
-In particular, it explores applying some methods for finding rhythmic properties
-in an example electroencephalography (EEG) dataset, including calculating power spectra,
-running burst detection, and applying lagged coherence.
+Here, we explore an example of how analyses from NeuroDSP can be applied to data
+that is managed and processed by MNE. In particular, it explores applying some
+methods for finding rhythmic properties in an example electroencephalography (EEG)
+dataset, including calculating power spectra, running burst detection,
+and applying lagged coherence.
 
 This tutorial does require that you have MNE installed. If you don't already have
 MNE, you can follow instructions to get it `here
@@ -50,6 +49,9 @@ from neurodsp.laggedcoherence import lagged_coherence
 #
 # For the current example, we are going to sub-select only the EEG data,
 # and analyze it as continuous (non-epoched) data.
+#
+# Note that if you don't already have the data, the `data_path` command
+# will download the MNE sample dataset.
 #
 
 ###################################################################################################
@@ -92,7 +94,7 @@ plt.plot(times, sig, 'k')
 # Calculate Power Spectra
 # -----------------------
 #
-# Next let's check the data in the frequency domain, calculating a power spectrum
+# Next lets check the data in the frequency domain, calculating a power spectrum
 # with the median welch's procedure that is available in NeuroDSP.
 #
 
