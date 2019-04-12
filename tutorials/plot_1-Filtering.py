@@ -24,9 +24,9 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp import filt
+from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 
@@ -57,10 +57,7 @@ sig_filt = filt.filter_signal(sig, fs, 'bandpass', f_range)
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 #
@@ -98,10 +95,7 @@ sig_filt = filt.filter_signal(sig, fs, 'highpass', f_range)
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 #
@@ -126,10 +120,7 @@ sig_filt = filt.filter_signal(sig, fs, 'lowpass', f_range)
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 #
@@ -158,10 +149,7 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 
@@ -219,11 +207,8 @@ sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1)
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt_short, 'r', label='short filter')
-plt.plot(times, sig_filt_long, 'b', label='long filter')
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt_short, sig_filt_long],
+                 ['Raw', 'Short Filter', 'Long Filter'])
 
 ###################################################################################################
 
@@ -274,11 +259,7 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filt_type='iir', but
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.legend(loc='best')
-plt.xlim((0, .2))
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
 
 ###################################################################################################
 #
@@ -303,11 +284,7 @@ sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
 ###################################################################################################
 
 # Plot filtered signal
-plt.figure(figsize=(15, 3))
-plt.plot(times, sig, 'k', label='raw')
-plt.plot(times, sig_filt, 'r', label='filtered')
-plt.xlim((2, 5))
-plt.legend(loc='best')
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
 
 ###################################################################################################
 #

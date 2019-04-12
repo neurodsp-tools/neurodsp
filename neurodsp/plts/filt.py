@@ -3,9 +3,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from neurodsp.plts.style import style_plot
+from neurodsp.plts.utils import check_ax, savefig
+
 ###################################################################################################
 ###################################################################################################
 
+@savefig
 def plot_filter_properties(f_db, db, fs, impulse_response):
     """Plot filter properties, including frequency response and filter kernel.
 
@@ -25,6 +29,8 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
     plot_impulse_response(fs, impulse_response, ax=ax[1])
 
 
+@savefig
+@style_plot
 def plot_frequency_response(f_db, db, ax=None):
     """Plot the frequency response of a filter.
 
@@ -38,8 +44,7 @@ def plot_frequency_response(f_db, db, ax=None):
         Figure axes upon which to plot.
     """
 
-    if not ax:
-        _, ax = plt.subplots(figsize=(5, 5))
+    ax = check_ax(ax, (5, 5))
 
     ax.plot(f_db, db, 'k')
 
@@ -48,6 +53,8 @@ def plot_frequency_response(f_db, db, ax=None):
     ax.set_ylabel('Attenuation (dB)')
 
 
+@savefig
+@style_plot
 def plot_impulse_response(fs, impulse_response, ax=None):
     """Plot the impulse response of a filter.
 
@@ -59,8 +66,7 @@ def plot_impulse_response(fs, impulse_response, ax=None):
         Figure axes upon which to plot.
     """
 
-    if not ax:
-        _, ax = plt.subplots(figsize=(5, 5))
+    ax = check_ax(ax, (5, 5))
 
     # Create a samples vector, center to zero, and convert to time
     samples = np.arange(len(impulse_response))

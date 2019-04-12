@@ -10,9 +10,11 @@ This tutorial primarily covers :mod:`neurodsp.sim`.
 ###################################################################################################
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp import spectral, sim
+
+from neurodsp.plts.spectral import plot_power_spectra
+from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 
@@ -41,19 +43,13 @@ br_noise = sim.sim_powerlaw(n_seconds, fs, exponent)
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(times, br_noise, 'k')
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, br_noise)
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
 freqs, psd = spectral.compute_spectrum(br_noise, fs)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, psd, 'k')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #
@@ -79,19 +75,13 @@ brown_filt = sim.sim_powerlaw(n_seconds, fs, exponent, f_range=(f_hipass_brown, 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(times, brown_filt, 'k')
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, brown_filt)
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
 freqs, psd = spectral.compute_spectrum(brown_filt, fs)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, psd, 'k')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #
@@ -123,25 +113,16 @@ syn_noise = sim.sim_synaptic_current(n_seconds, fs)
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 6))
-plt.subplot(2, 1, 1, title='OU Process')
-plt.plot(times, ou_noise, 'k')
-plt.subplot(2, 1, 2, title='Synaptic Noise')
-plt.plot(times, syn_noise, 'r')
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, ou_noise, title='OU Process')
+plot_time_series(times, syn_noise, title='Synaptic Noise')
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
 freqs, ou_psd = spectral.compute_spectrum(ou_noise, fs)
 freqs, syn_psd = spectral.compute_spectrum(syn_noise, fs)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, ou_psd, 'k', label='OU')
-plt.loglog(freqs, syn_psd, 'r', label='Synaptic')
-plt.legend()
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+
+plot_power_spectra(freqs, [ou_psd, syn_psd], ['OU', 'Synaptic'])
 
 ###################################################################################################
 #
@@ -155,34 +136,30 @@ plt.ylabel('Power')
 ###################################################################################################
 
 # Simulate symmetric oscillator
-n_samples_cycle = 100
+n_seconds = 1
 fs = 1000
-osc_freq = 6.5
-osc_a = sim.sim_oscillation(n_samples_cycle, fs, osc_freq, rdsym=.5)
-osc_b = sim.sim_oscillation(n_samples_cycle, fs, osc_freq, rdsym=.2)
+osc_freq = 6.6
+osc_a = sim.sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.5)
+osc_b = sim.sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.2)
+
+# HACK: REMOVE WHEN SIM UPDATED
+osc_a = osc_a[0:n_seconds*fs]
+osc_b = osc_b[0:n_seconds*fs]
+
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(osc_a, 'k', label='rdsym='+str(.5), alpha=.8)
-plt.plot(osc_b, 'r', label='rdsym='+str(.3), alpha=.8)
-plt.ylim((-1.1, 1.7))
-plt.xlim((0, 1000))
-plt.legend()
-plt.xlabel('Time (sample)')
-plt.ylabel('Voltage')
+plot_time_series(times, [osc_a, osc_b], ['rdsym='+str(.5), 'rdsym='+str(.3)])
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs_a, psd_a = spectral.compute_spectrum(osc_a, 1000)
-freqs_b, psd_b = spectral.compute_spectrum(osc_b, 1000)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs_a, psd_a, 'k', alpha=.5)
-plt.loglog(freqs_b, psd_b, 'r', alpha=.5)
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+freqs_a, psd_a = spectral.compute_spectrum(osc_a, fs)
+freqs_b, psd_b = spectral.compute_spectrum(osc_b, fs)
+
+plot_power_spectra([freqs_a, freqs_b], [psd_a, psd_b])
 
 ###################################################################################################
 #
@@ -223,21 +200,14 @@ signal = sim.combined.sim_combined(n_seconds, fs, components)
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
 samps_plot = np.arange(1000)
-plt.plot(times[samps_plot], signal[samps_plot], 'k')
-plt.xlim((0, times[samps_plot[-1]]))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times[samps_plot], signal[samps_plot], xlim=[0, times[samps_plot[-1]]])
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
 freqs, psd = spectral.compute_spectrum(signal, fs)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, psd, 'k')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #
@@ -262,15 +232,12 @@ leave_burst = .1
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(np.arange(0, n_seconds, 1/fs), osc, 'k')
-plt.xlim((0, n_seconds))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
@@ -284,15 +251,12 @@ leave_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(np.arange(0, n_seconds, 1/fs), osc, 'k')
-plt.xlim((0, n_seconds))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
@@ -306,15 +270,12 @@ enter_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(np.arange(0, n_seconds, 1/fs), osc, 'k')
-plt.xlim((0, n_seconds))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
@@ -347,15 +308,12 @@ osc = sim.sim_bursty_oscillation_features(n_seconds, fs, osc_freq,
                                           enter_burst=enter_burst,
                                           leave_burst=leave_burst,
                                           cycle_features=cycle_features)
+times = np.arange(0, n_seconds, 1/fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(np.arange(0, n_seconds, 1/fs), osc, 'k')
-plt.xlim((0, n_seconds))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
@@ -382,20 +340,13 @@ osc = sim.combined.sim_combined(n_seconds, fs, components)
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plt.figure(figsize=(12, 3))
-plt.plot(times, osc, 'k')
-plt.xlim((0, n_seconds))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
 freqs, psd = spectral.compute_spectrum(osc, fs)
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, psd, 'k')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power')
+plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #

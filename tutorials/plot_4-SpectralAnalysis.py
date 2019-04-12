@@ -25,10 +25,10 @@ This tutorial primarily covers :mod:`neurodsp.spectral`.
 
 import numpy as np
 from scipy import io
-import matplotlib.pylab as plt
 
 from neurodsp import spectral
-from neurodsp.plts.spectral import plot_spectral_hist
+from neurodsp.plts.time_series import plot_time_series
+from neurodsp.plts.spectral import *
 
 ###################################################################################################
 
@@ -39,10 +39,8 @@ data = io.loadmat('./data/sample_data_2.mat', squeeze_me=True)
 sig = data['x']
 fs = data['fs']
 times = np.arange(len(sig))/fs
-plt.plot(times, sig)
-plt.xlim((0, 3))
-plt.xlabel('Time (s)')
-plt.ylabel('Voltage')
+
+plot_time_series(times, sig, xlim=[0, 3])
 
 # Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
 
@@ -81,13 +79,9 @@ freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
 ###################################################################################################
 
 # Plot the power spectra
-plt.figure(figsize=(8, 8))
-plt.loglog(freq_mean[:200], psd_mean[:200], label='Welch')
-plt.loglog(freq_med[:200], psd_med[:200], label='Median Welch')
-plt.loglog(freq_mf[100:10000], psd_mf[100:10000], label='Median Filter FFT')
-plt.legend()
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power (V^2/Hz)')
+plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
+                   [psd_mean[:200], psd_med[:200], psd_mf[100:10000]],
+                   ['Welch', 'Median Welch', 'Median Filter FFT'])
 
 ###################################################################################################
 # Aside: Fitting 1/f and oscillations in power spectra
@@ -157,11 +151,7 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 freqs, scv = spectral.compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
 
 # Plot the SCV
-plt.figure(figsize=(5, 5))
-plt.loglog(freqs, scv)
-plt.xlim([1, 200])
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('SCV')
+plot_scv(freqs, scv)
 
 ###################################################################################################
 #
@@ -178,13 +168,7 @@ freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, nperseg=fs, method='boo
                                                 rs_params=(20, 200))
 
 # Plot the SCV, from the resampling method
-plt.figure(figsize=(8, 8))
-plt.loglog(freqs, scv_rs, 'k', alpha=0.1)
-plt.loglog(freqs, np.mean(scv_rs, axis=1), lw=2)
-plt.loglog(freqs, len(freqs)*[1.])
-plt.xlim((1, 200))
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('SCV')
+plot_scv_rs_lines(freqs, scv_rs)
 
 ###################################################################################################
 #
@@ -199,12 +183,7 @@ plt.ylabel('SCV')
 freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
 
 # Plot the SCV, from the resampling method
-plt.figure(figsize=(10, 5))
-plt.imshow(np.log10(scv_rs), aspect='auto', extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
-plt.colorbar(label='SCV')
-plt.ylim((100, 0))
-plt.ylabel('Frequency (Hz)')
-plt.xlabel('Time (s)')
+plot_scv_rs_matrix(freqs, t_inds, scv_rs)
 
 ###################################################################################################
 #
@@ -230,10 +209,10 @@ plt.xlabel('Time (s)')
 ###################################################################################################
 
 psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
-plt.figure(figsize=(5, 5))
-plt.loglog(freq_med[:200], psd_med[:200], label='Original')
-plt.loglog(freq_med[:200], psd_rot[:200], label='Rotated')
-plt.legend()
+
+plot_power_spectra([freq_med[:200], freq_med[:200]],
+                   [psd_med[:200], psd_rot[:200]],
+                   ['Original', 'Rotated'])
 
 ###################################################################################################
 #

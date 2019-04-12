@@ -38,6 +38,9 @@ from neurodsp.spectral import compute_spectrum, trim_spectrum
 from neurodsp.burst import detect_bursts_dual_threshold
 from neurodsp.rhythm import lagged_coherence
 
+# Import NeuroDSP plotting functions
+from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plot_lagged_coherence
+
 ###################################################################################################
 # Load & Check MNE Data
 # ---------------------
@@ -87,8 +90,7 @@ sig = np.squeeze(sig)
 ###################################################################################################
 
 # Plot a segment of the extracted time series data
-plt.figure(figsize=(16, 3))
-plt.plot(times, sig, 'k')
+plot_time_series(times, sig)
 
 ###################################################################################################
 # Calculate Power Spectra
@@ -112,9 +114,8 @@ print(peak_cf)
 
 ###################################################################################################
 
-# Plot the power spectra
-plt.figure(figsize=(8, 8))
-plt.semilogy(freqs, powers)
+# Plot the power spectra, and note the peak power
+plot_power_spectra(freqs, powers)
 plt.plot(freqs[np.argmax(powers)], np.max(powers), '.r', ms=12)
 
 ###################################################################################################
@@ -139,10 +140,7 @@ bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
 ###################################################################################################
 
 # Plot original signal and burst activity
-plt.figure(figsize=(16, 3))
-plt.plot(times, sig, 'k', label='Raw Data')
-plt.plot(times[bursting], sig[bursting], 'r', label='Detected Bursts')
-plt.legend(loc='best')
+plot_bursts(times, sig, bursting, labels=['Raw Data', 'Detected Bursts'])
 
 ###################################################################################################
 # Measure Rhythmicity with Lagged Coherence
@@ -174,11 +172,7 @@ lcs, freqs = lagged_coherence(sig, f_range, fs, return_spectrum=True)
 ###################################################################################################
 
 # Visualize lagged coherence across all frequencies
-plt.figure(figsize=(6, 3))
-plt.plot(freqs, lcs, 'k.-')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Lagged coherence')
-plt.tight_layout()
+plot_lagged_coherence(freqs, lcs)
 
 ###################################################################################################
 
