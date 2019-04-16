@@ -4,6 +4,7 @@ import numpy as np
 from scipy.signal import firwin
 
 from neurodsp.utils import remove_nans, restore_nans
+from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
 from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, remove_filter_edges
 from neurodsp.filt.checks import check_filter_definition, check_filter_properties
@@ -11,6 +12,7 @@ from neurodsp.filt.checks import check_filter_definition, check_filter_propertie
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
                       print_transitions=False, plot_properties=False, return_filter=False):
     """Apply an FIR filter to a signal.

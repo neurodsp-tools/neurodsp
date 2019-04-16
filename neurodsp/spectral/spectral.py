@@ -11,6 +11,7 @@ from scipy.signal import spectrogram, medfilt
 
 from neurodsp.utils import discard_outliers
 from neurodsp.utils.core import get_avg_func
+from neurodsp.utils.decorators import multidim
 from neurodsp.timefrequency.wavelets import morlet_transform
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_spg_settings
@@ -18,6 +19,7 @@ from neurodsp.spectral.checks import check_spg_settings
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     """Estimate the power spectral density (PSD) of a time series.
 
@@ -55,6 +57,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         return compute_spectrum_medfilt(sig, fs, **kwargs)
 
 
+@multidim
 def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     """Estimate the power spectral densitry using wavelets.
 
@@ -83,6 +86,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     return freqs, spectrum
 
 
+@multidim
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
                            nperseg=None, noverlap=None,
                            f_range=None, outlier_pct=None):
@@ -146,6 +150,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     return freqs, spectrum
 
 
+@multidim
 def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     """Estimate the power spectral densitry as a smoothed FFT.
 
@@ -182,6 +187,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     return freqs, spectrum
 
 
+@multidim
 def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
     """Compute the spectral coefficient of variation (SCV) at each frequency.
 
@@ -229,6 +235,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     return freqs, scv
 
 
+@multidim
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
                    method='bootstrap', rs_params=None):
     """Resampled version of scv: instead of a single estimate of mean and standard deviation,
@@ -317,6 +324,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     return freqs, t_inds, scv_rs
 
 
+@multidim
 def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
                           nbins=50, f_range=[0., 100.], cut_pct=[0., 100.]):
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.

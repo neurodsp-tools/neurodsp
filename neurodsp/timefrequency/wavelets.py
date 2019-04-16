@@ -3,9 +3,12 @@
 import numpy as np
 from scipy.signal import morlet
 
+from neurodsp.utils.decorators import multidim
+
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     """Calculate the time-frequency representation of a signal using morlet wavelets.
 
@@ -39,6 +42,7 @@ def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     return mwt
 
 
+@multidim
 def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
     """Convolve a signal with a complex wavelet.
 

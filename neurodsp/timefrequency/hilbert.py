@@ -4,12 +4,14 @@ import numpy as np
 from scipy.signal import hilbert
 
 from neurodsp.filt import filter_signal
+from neurodsp.utils.decorators import multidim
 from neurodsp.utils.utils import remove_nans, restore_nans
 from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def robust_hilbert(sig, increase_n=False):
     """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN.
 
@@ -44,6 +46,7 @@ def robust_hilbert(sig, increase_n=False):
     return sig_hilb
 
 
+@multidim
 def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Calculate the phase time series of a neural oscillation.
 
@@ -81,6 +84,7 @@ def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True,
     return pha
 
 
+@multidim
 def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Calculate the amplitude time series.
 
@@ -118,6 +122,7 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
     return amp
 
 
+@multidim
 def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Estimate the instantaneous frequency at each sample.
 

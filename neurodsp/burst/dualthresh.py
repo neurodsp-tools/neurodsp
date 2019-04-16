@@ -2,12 +2,14 @@
 
 import numpy as np
 
-from neurodsp.timefrequency.hilbert import amp_by_time
 from neurodsp.utils.core import get_avg_func
+from neurodsp.utils.decorators import multidim
+from neurodsp.timefrequency.hilbert import amp_by_time
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):

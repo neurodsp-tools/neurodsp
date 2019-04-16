@@ -5,6 +5,7 @@ from warnings import warn
 from scipy.signal import butter, filtfilt
 
 from neurodsp.utils import remove_nans, restore_nans
+from neurodsp.utils.decorators import multidim
 from neurodsp.filt.utils import compute_nyquist, compute_frequency_response
 from neurodsp.filt.checks import check_filter_definition, check_filter_properties
 from neurodsp.plts.filt import plot_frequency_response
@@ -12,6 +13,7 @@ from neurodsp.plts.filt import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                       print_transitions=False, plot_properties=False, return_filter=False):
     """Apply an IIR filter to a signal.

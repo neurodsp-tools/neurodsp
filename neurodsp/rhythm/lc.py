@@ -3,10 +3,12 @@
 import numpy as np
 
 from scipy.signal.windows import hann
+from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim
 def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False):
     """Quantify the rhythmicity of an oscillation using lagged coherence.
 
