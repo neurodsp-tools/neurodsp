@@ -8,7 +8,7 @@
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/neurodsp-tools/neurodsp/master)
 
-A package of tools to process, analyze, and simulate neural recordings as individual voltage time series, with specific focus on time and frequency domain analyses.
+A package of tools to process, analyze, and simulate neural time series, with specific focus on time and frequency domain analyses.
 
 ## Documentation
 
@@ -64,15 +64,14 @@ Please use the [Github issue tracker](https://github.com/neurodsp-tools/neurodsp
 
 ## Modules
 
-NeuroDSP includes the following modules:
+Available modules in NeuroDSP include:
 
 - ```filt``` : Filter data with bandpass, highpass, lowpass, or notch filters
 - ```burst``` : Detect bursting oscillations in neural signals
-- ```laggedcoherence``` : Estimate rhythmicity using the lagged coherence measure
+- ```rhythm``` : Find and analyze rhythmic and recurrent patterns in time series
 - ```spectral``` : Compute spectral domain features such as power spectra
-- ```swm``` : Identify recurrent patterns in signals using sliding window matching
 - ```timefrequency``` : Estimate instantaneous measures of oscillatory activity
-- ```sim``` : Simulate periodic and aperiodic signal components
+- ```sim``` : Simulate time series, including periodic and aperiodic signal components
 - ```plts``` : Plotting functions
 
 ## Contribute

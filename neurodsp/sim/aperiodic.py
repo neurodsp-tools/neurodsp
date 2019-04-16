@@ -1,17 +1,18 @@
 """Simulating time series, with aperiodic activity."""
 
 import numpy as np
-from scipy import signal
 from scipy.stats import zscore
 
-from neurodsp.filt import filter_signal_fir
+from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.spectral import rotate_powerlaw
-from neurodsp.sim.transients import make_synaptic_kernel
+from neurodsp.utils.decorators import normalize
+from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
 ###################################################################################################
 
-def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
+@normalize
+def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     """Simulates a poisson population.
 
     Parameters
@@ -54,9 +55,10 @@ def sim_poisson_pop(n_seconds, fs, n_neurons, firing_rate):
     return sig
 
 
-def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
-                       tau_r=0, tau_d=0.01, t_ker=None):
-    """Simulate a neural signal with 1/f characteristics beyond a knee frequency.
+@normalize
+def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
+                         tau_r=0, tau_d=0.01, t_ker=None):
+    """Simulate a neural signal as synaptic current, which has 1/f characteristics with a knee.
 
     Parameters
     ----------
@@ -87,16 +89,16 @@ def sim_synaptic_noise(n_seconds, fs, n_neurons=1000, firing_rate=2,
     if t_ker is None:
         t_ker = 5. * tau_d
 
-    # Simulate an extra bit because the convolution will snip it
-    sig = sim_poisson_pop(n_seconds=(n_seconds + t_ker),
-                          fs=fs, n_neurons=n_neurons, firing_rate=firing_rate)
-    ker = make_synaptic_kernel(t_ker=t_ker, fs=fs, tau_r=tau_r, tau_d=tau_d)
+    # Simulate an extra bit because the convolution will snip it. Turn off normalization for this sig
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate, mean=None, variance=None)
+    ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
     return sig
 
 
-def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
+@normalize
+def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
@@ -144,7 +146,8 @@ def sim_ou_process(n_seconds, fs, theta=1., mu=0., sigma=5.):
     return sig
 
 
-def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
+@normalize
+def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """Generate a power law time series with specified exponent by spectrally rotating white noise.
 
     Parameters
@@ -154,7 +157,11 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float
-        Desired power-law exponent: beta in P(f)=f^beta.
+        Desired power-law exponent, of the form P(f)=f^exponent.
+    f_range : list of [float, float] or None, optional
+        Frequency range to filter simulated data, as [f_lo, f_hi], in Hz.
+    **filter_kwargs : kwargs, optional
+        Keyword arguments to pass to `filter_signal`.
 
     Returns
     -------
@@ -162,104 +169,21 @@ def sim_variable_powerlaw(n_seconds, fs, exponent=-2.0):
         Time-series with the desired power-law exponent.
     """
 
-    n_samps = int(n_seconds * fs)
-    sig = np.random.randn(n_samps)
+    # NOTE: current hack to add an extra sample, to account for skipping f=0 below
+    n_samples = int(n_seconds * fs)
+    sig = np.random.randn(n_samples)
 
     # Compute the FFT
-    fc = np.fft.fft(sig)
-    f_axis = np.fft.fftfreq(len(sig), 1. / fs)
+    fft_output = np.fft.fft(sig)
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
-    # Rotate spectrum and invert, zscore to normalize
-    fc_rot = rotate_powerlaw(
-        f_axis, fc, exponent / 2., f_rotation=None)
-    sig = zscore(np.real(np.fft.ifft(fc_rot)))
+    # Rotate spectrum and invert, zscore to normalize.
+    #   Note: the delta exponent to be applied is divided by two, as
+    #     the FFT output is in units of amplitude not power
+    fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)
+    sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
+
+    if f_range is not None:
+        filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
 
     return sig
-
-
-def sim_filtered_noise(n_seconds, fs, exponent=-2., f_range=(0.5, None), filter_order=None):
-    """Simulate colored noise that is highpass or bandpass filtered.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Simulation time, in seconds.
-    fs : float
-        Sampling rate of simulated signal, in Hz.
-    exponent : float, optional, default=-2
-        Desired power-law exponent: beta in P(f)=f^beta. Negative exponent
-        denotes decay (i.e., negative slope in log-log spectrum).
-    f_range : 2-element array (lo, hi) or None, optional
-        Frequency range of simulated data. If not provided, default to a highpass at 0.5 Hz.
-    filter_order : int, optional
-        Order of filter. If not provided, defaults to 3 times the highpass filter cycle length.
-
-    Returns
-    -------
-    noise : 1d array
-        Filtered noise.
-    """
-
-    # Simulate colored noise
-    noise = sim_variable_powerlaw(n_seconds, fs, exponent)
-
-    nyq = fs / 2.
-
-    # Determine order of highpass filter (3 cycles of f_hipass)
-    if filter_order is None:
-        filter_order = int(3 * fs / f_range[0])
-
-    # High pass filtered
-    if f_range[1] is None:
-        # Make filter order odd if necessary
-        if filter_order % 2 == 0:
-            #print('NOTE: Increased high-pass filter order by 1 in order to be odd')
-            filter_order += 1
-
-        # High pass filter
-        taps = signal.firwin(filter_order, f_range[0] / nyq, pass_zero=False)
-        noise = signal.filtfilt(taps, [1], noise)
-
-    # Band pass filtered
-    else:
-        taps = signal.firwin(filter_order, np.array(
-            f_range) / nyq, pass_zero=False)
-        noise = signal.filtfilt(taps, [1], noise)
-
-    return noise
-
-
-def _return_noise_sim(n_seconds, fs, noise_generator, noise_args):
-    """   """
-
-    if isinstance(noise_generator, str):
-
-        # Check that the specified noise generator is valid
-        valid_noise_generators = ['filtered_powerlaw', 'powerlaw', 'synaptic', 'lorentzian', 'ou_process']
-        if noise_generator not in valid_noise_generators:
-            raise ValueError('Did not recognize noise type. Please check doc for acceptable function names.')
-
-
-        if noise_generator == 'filtered_powerlaw':
-            noise = sim_filtered_noise(n_seconds, fs, **noise_args)
-
-        elif noise_generator == 'powerlaw':
-            noise = sim_variable_powerlaw(n_seconds, fs, **noise_args)
-
-        elif noise_generator == 'synaptic' or noise_generator == 'lorentzian':
-            noise = sim_synaptic_noise(n_seconds, fs, **noise_args)
-
-        elif noise_generator == 'ou_process':
-            noise = sim_ou_process(n_seconds, fs, **noise_args)
-
-
-    elif isinstance(noise_generator, np.ndarray):
-        if len(noise_generator) != int(n_seconds * fs):
-            raise ValueError('Custom noise is not of same length as required oscillation length.')
-        else:
-            noise = noise_generator
-
-    else:
-        raise ValueError('Unsupported noise type: must be np.ndarray or str.')
-
-    return noise
