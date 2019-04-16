@@ -170,7 +170,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """
 
     # NOTE: current hack to add an extra sample, to account for skipping f=0 below
-    n_samples = int(n_seconds * fs) + 1
+    n_samples = int(n_seconds * fs)
     sig = np.random.randn(n_samples)
 
     # Compute the FFT
@@ -178,12 +178,10 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
     # Rotate spectrum and invert, zscore to normalize.
-    #   Note: skip frequency zero, as it causes a problem with rotation
-    #   ToDo: Figure out if there is a better way to deal with f=0.
-    #   Also - I don't understand why the delta_exponent needs to be divided by 2?
-    fft_output_rot = rotate_powerlaw(freqs[1:], fft_output[1:], -exponent/2)
+    #   Note: the delta exponent to be applied is divided by two, as
+    #     the FFT output is in units of amplitude not power
+    fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
-    # ^NOTE: do we need to zscore, if we apply our normalization afterwards?
 
     if f_range is not None:
         filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
