@@ -28,7 +28,6 @@ It has the following dependencies:
 - numpy
 - scipy
 - matplotlib
-- scikit-learn
 - pandas
 - pytest (optional)
 

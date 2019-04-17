@@ -41,7 +41,7 @@ setup(
     license = 'MIT',
     download_url = 'https://github.com/neurodsp-tools/neurodsp/releases',
     keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
-    install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn'],
+    install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas'],
     tests_require = ['pytest'],
     classifiers = [
         'Development Status :: 4 - Beta',
