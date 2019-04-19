@@ -11,6 +11,7 @@ This tutorial primarily covers :mod:`neurodsp.burst`.
 
 import numpy as np
 
+from neurodsp.utils import create_times
 from neurodsp.sim.combined import sim_combined
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
@@ -33,12 +34,14 @@ np.random.seed(0)
 
 n_seconds = 5
 fs = 1000
-components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2, 't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
-              'sim_bursty_oscillation' : {'freq' : 10, 'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
+components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
+                                        't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
+              'sim_bursty_oscillation' : {'freq' : 10,
+                                          'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
 
 # Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
 sig = sim_combined(n_seconds, fs, components)
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
@@ -92,7 +95,7 @@ sig = np.load('./data/sample_data_1.npy')
 fs = 1000
 
 # Same code as earlier
-times = np.arange(0, len(sig)/fs, 1/fs)
+times = create_times(len(sig)/fs, fs)
 
 # Detect bursts using 'deviation' algorithm
 bursting = detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh=(3, 3))

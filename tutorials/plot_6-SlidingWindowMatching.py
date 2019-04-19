@@ -22,6 +22,7 @@ This tutorial primarily covers :mod:`neurodsp.rhythm.swm`.
 
 import numpy as np
 
+from neurodsp.utils import create_times
 from neurodsp.rhythm import sliding_window_matching
 from neurodsp.plts.rhythm import plot_swm_pattern
 from neurodsp.plts.time_series import plot_time_series
@@ -42,7 +43,7 @@ np.random.seed(0)
 # Load example data
 sig = np.load('./data/sample_data_1.npy')
 fs = 1000
-times = np.arange(0, len(sig)/fs, 1/fs)
+times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 # Plot example signal

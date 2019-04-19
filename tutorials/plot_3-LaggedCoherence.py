@@ -22,7 +22,7 @@ This tutorial primarily covers :mod:`neurodsp.rhythm.laggedcoherence`.
 import numpy as np
 
 from neurodsp.rhythm import lagged_coherence
-from neurodsp.sim.utils import create_times
+from neurodsp.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
 
@@ -50,11 +50,11 @@ burst_samples = burst_seconds*fs
 ###################################################################################################
 
 # Design burst kernel
-burst_kernel_t = np.arange(0, burst_seconds, 1/fs)
+burst_kernel_t = create_times(burst_seconds, fs)
 burst_kernel = 2*np.sin(burst_kernel_t*2*np.pi*burst_freq)
 
 # Generate random signal with bursts
-times = np.arange(0, n_samples/fs, 1/fs)
+times = create_times(n_samples/fs, fs)
 sig = np.random.randn(n_samples)
 for ind in burst_starts:
     sig[ind:ind+burst_samples] += burst_kernel
@@ -116,7 +116,7 @@ sig = np.load('./data/sample_data_1.npy')
 sig_filt_true = np.load('./data/sample_data_1_filt.npy')
 fs = 1000
 
-times = np.arange(0, len(sig)/fs, 1/fs)
+times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 ###################################################################################################

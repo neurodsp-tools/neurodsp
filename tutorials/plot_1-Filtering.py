@@ -26,6 +26,7 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 import numpy as np
 
 from neurodsp import filt
+from neurodsp.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
@@ -44,9 +45,9 @@ np.random.seed(0)
 ###################################################################################################
 
 # Generate an oscillation with noise
-times = np.arange(0, 4, .001)
-sig = np.random.randn(len(times)) + 5*np.sin(times*2*np.pi*6)
 fs = 1000
+times = create_times(4, 1000)
+sig = np.random.randn(len(times)) + 5*np.sin(times*2*np.pi*6)
 
 ###################################################################################################
 
@@ -83,7 +84,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-times = np.arange(0, 6, .001)
+times = create_times(6, fs)
 sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
 
 ###################################################################################################
@@ -108,7 +109,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-times = np.arange(0, 6, .001)
+times = create_times(6, fs)
 sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
 
 ###################################################################################################
@@ -137,7 +138,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-times = np.arange(0, 8, .001)
+times = create_times(8, fs)
 sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
 ###################################################################################################
@@ -186,9 +187,9 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1,
 ###################################################################################################
 
 # Generate an oscillation with noise
-times = np.arange(0, 3, .01)
-sig = np.random.randn(len(times)) * .3 + 5 * np.sin(times*2*np.pi*6) + 4 * np.sin(times*2*np.pi*1)
 fs = 100
+times = create_times(3, fs)
+sig = np.random.randn(len(times)) * .3 + 5 * np.sin(times*2*np.pi*6) + 4 * np.sin(times*2*np.pi*1)
 
 ###################################################################################################
 
@@ -241,9 +242,9 @@ sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-times = np.arange(0, 2, .001)
-sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 fs = 1000
+times = create_times(2, fs)
+sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
 ###################################################################################################
 
@@ -271,7 +272,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
 # Generate a signal with a low-frequency drift
 sig = np.load('./data/sample_data_1.npy')
 fs = 1000
-times = np.arange(0, len(sig)/fs, 1/fs)
+times = create_times(len(sig)/fs, fs)
 
 ###################################################################################################
 
