@@ -280,44 +280,6 @@ plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
-# We can also control the variance in amplitude, period, and rise-decay
-# symmetry across cycles and bursts
-#
-# This is done in the `cycle_features` argument, which is a dictionary
-# that can take the following keys:
-# * amp_mean: mean cycle amplitude
-# * amp_std: standard deviation of cycle amplitude
-# * amp_burst_std: std. of mean amplitude for each burst
-# * period_mean: mean period (computed from `freq`)
-# * period_std: standard deviation of period (samples)
-# * period_burst_std: standard deviation of mean period for each burst
-# * rdsym_mean: mean rise-decay symmetry
-# * rdsym_std: standard deviation of rdsym
-# * rdsym_burst_std: standard deviation of mean rdsym for each burst
-#
-# See the source code for the defaults used.
-#
-# For example, we can increase the variability in amplitude by increasing
-# `amp_std` (default = .1)
-#
-
-###################################################################################################
-
-# Simulate a bursty oscillation, with specified cycle features
-cycle_features = {'amp_std': .5}
-osc = sim.sim_bursty_oscillation_features(n_seconds, fs, osc_freq,
-                                          enter_burst=enter_burst,
-                                          leave_burst=leave_burst,
-                                          cycle_features=cycle_features)
-times = create_times(n_seconds, fs)
-
-###################################################################################################
-
-# Plot the simulated data, in the time domain
-plot_time_series(times, osc, xlim=[0, n_seconds])
-
-###################################################################################################
-#
 # As with the stationary oscillator, we can also simulate a bursting
 # oscillator with brown noise.
 #

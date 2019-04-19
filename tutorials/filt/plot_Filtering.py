@@ -270,7 +270,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
 ###################################################################################################
 
 # Generate a signal with a low-frequency drift
-sig = np.load('./data/sample_data_1.npy')
+sig = np.load('../data/sample_data_1.npy')
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 

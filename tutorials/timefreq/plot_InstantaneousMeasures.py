@@ -21,14 +21,14 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 # Load example neural signal
 # --------------------------
 
-sig = np.load('./data/sample_data_1.npy')
+sig = np.load('../data/sample_data_1.npy')
 fs = 1000
 
 times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 # Load filtered version of signal
-sig_filt_true = np.load('./data/sample_data_1_filt.npy')
+sig_filt_true = np.load('../data/sample_data_1_filt.npy')
 
 ###################################################################################################
 

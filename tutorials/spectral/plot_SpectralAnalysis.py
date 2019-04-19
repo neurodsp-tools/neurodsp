@@ -36,7 +36,7 @@ from neurodsp.plts.spectral import *
 # First, we load the sample data, which is a segment of rat hippocampal LFP
 # taken from the publicly available neuro database CRCNS (hc2).
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
-data = io.loadmat('./data/sample_data_2.mat', squeeze_me=True)
+data = io.loadmat('../data/sample_data_2.mat', squeeze_me=True)
 sig = data['x']
 fs = data['fs']
 

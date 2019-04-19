@@ -112,8 +112,8 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 #
 
 # Load signal
-sig = np.load('./data/sample_data_1.npy')
-sig_filt_true = np.load('./data/sample_data_1_filt.npy')
+sig = np.load('../data/sample_data_1.npy')
+sig_filt_true = np.load('../data/sample_data_1_filt.npy')
 fs = 1000
 
 times = create_times(len(sig)/fs, fs)

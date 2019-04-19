@@ -91,7 +91,7 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 # ------------------------------------------
 
 # Load data
-sig = np.load('./data/sample_data_1.npy')
+sig = np.load('../data/sample_data_1.npy')
 fs = 1000
 
 # Same code as earlier

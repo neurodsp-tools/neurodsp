@@ -41,7 +41,7 @@ np.random.seed(0)
 ###################################################################################################
 
 # Load example data
-sig = np.load('./data/sample_data_1.npy')
+sig = np.load('../data/sample_data_1.npy')
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
