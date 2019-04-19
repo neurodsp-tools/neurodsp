@@ -4,7 +4,7 @@ from functools import wraps
 
 import numpy as np
 
-from neurodsp.utils.utils import demean, normalize_variance
+from neurodsp.utils.norm import demean, normalize_variance
 
 ###################################################################################################
 ###################################################################################################
