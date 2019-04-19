@@ -4,7 +4,7 @@ Sliding Window Matching
 
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
-This tutorial primarily covers :mod:`neurodsp.swm`.
+This tutorial primarily covers :mod:`neurodsp.rhythm.swm`.
 """
 
 ###################################################################################################
@@ -12,9 +12,8 @@ This tutorial primarily covers :mod:`neurodsp.swm`.
 # Overview
 # --------
 #
-# This notebook shows how to implement sliding window matching (SWM) for
-# identifying recurring patterns in a neural signal, like the shape of an
-# oscillatory waveform.
+# This notebook shows how to use sliding window matching (SWM) for identifying recurring
+# patterns in a neural signal, like the shape of an oscillatory waveform.
 #
 # For more details on Sliding Window Matching see Gips et al., 2017, J Neuro Methods.
 #
@@ -54,14 +53,12 @@ plot_time_series(times, sig)
 # Apply sliding window matching to neural signal
 # ----------------------------------------------
 #
-# Because we define the window length to be about 1 cycle, this should
-# roughly extract the waveform shape of the neural oscillation. Notice
-# that the beta cycles have sharper troughs than peaks, and the average
-# window is a beta cycle with a sharp trough.
+# Because we define the window length to be about 1 cycle, this should roughly extract
+# the waveform shape of the neural oscillation. Notice that the beta cycles have sharper
+# troughs than peaks, and the average window is a beta cycle with a sharp trough.
 #
-# However, notice that these results change dramatically by changing the
-# random seed. Using more data and increasing the number of iterations
-# would help the robustness of the algorithm.
+# However, notice that these results change dramatically by changing the random seed.
+# Using more data and increasing the number of iterations helps the robustness of the algorithm.
 #
 
 ###################################################################################################

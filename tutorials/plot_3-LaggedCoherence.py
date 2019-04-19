@@ -4,7 +4,7 @@ Lagged Coherence
 
 Compute lagged coherence on neural signals.
 
-This tutorial primarily covers :mod:`neurodsp.laggedcoherence`.
+This tutorial primarily covers :mod:`neurodsp.rhythm.laggedcoherence`.
 """
 
 ###################################################################################################
@@ -22,6 +22,7 @@ This tutorial primarily covers :mod:`neurodsp.laggedcoherence`.
 import numpy as np
 
 from neurodsp.rhythm import lagged_coherence
+from neurodsp.sim.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
 
@@ -92,9 +93,8 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 # Compute lagged coherence for time segments with and without burst
 # -----------------------------------------------------------------
 #
-# Note that lagged coherence is greater when analyzing a neural signal that
-# has a burst in the frequency range of interest, compared to a signal that
-# does not have an oscillator.
+# Note that lagged coherence is greater when analyzing a neural signal that has a burst in
+# the frequency range of interest, compared to a signal that does not have an oscillation.
 #
 
 samp_burst = np.arange(1000)
@@ -115,6 +115,7 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 sig = np.load('./data/sample_data_1.npy')
 sig_filt_true = np.load('./data/sample_data_1_filt.npy')
 fs = 1000
+
 times = np.arange(0, len(sig)/fs, 1/fs)
 f_range = (13, 30)
 
