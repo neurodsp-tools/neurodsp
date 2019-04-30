@@ -1,8 +1,7 @@
 """Simulating time series, with periodic activity."""
 
 import numpy as np
-from numpy.random import rand, randn, randint
-import pandas as pd
+#from numpy.random import rand, randn, randint
 
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_osc_cycle
@@ -110,7 +109,7 @@ def _make_is_osc(n_cycles, enter_burst, leave_burst):
 
     for ii in range(1, n_cycles):
 
-        rand_num = rand()
+        rand_num = np.random.rand()
 
         if is_oscillating[ii-1]:
             is_oscillating[ii] = rand_num > leave_burst
