@@ -75,7 +75,7 @@ Available modules in NeuroDSP include:
 
 ## Contribute
 
-`NeuroDSP` welcomes and encourages contributions from the community, as long as contributors follow the [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/add-code-of-conduct-1/CODE_OF_CONDUCT.md).
+`NeuroDSP` welcomes and encourages contributions from the community, as long as contributors follow the [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
 
 If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
 
