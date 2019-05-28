@@ -12,6 +12,7 @@ This tutorial primarily covers :mod:`neurodsp.timefrequency`.
 import numpy as np
 import matplotlib.pyplot as plt
 
+from neurodsp.utils import create_times
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
 from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
 
@@ -20,13 +21,14 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 # Load example neural signal
 # --------------------------
 
-sig = np.load('./data/sample_data_1.npy')
+sig = np.load('../data/sample_data_1.npy')
 fs = 1000
-times = np.arange(0, len(sig)/fs, 1/fs)
+
+times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 # Load filtered version of signal
-sig_filt_true = np.load('./data/sample_data_1_filt.npy')
+sig_filt_true = np.load('../data/sample_data_1_filt.npy')
 
 ###################################################################################################
 

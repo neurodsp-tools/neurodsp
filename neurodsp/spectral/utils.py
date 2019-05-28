@@ -74,7 +74,7 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     rotated_spectrum = mask * spectrum
 
     if skipped_zero:
-        freqs = np.insert(freqs, 0, f_0),
-        rotated_spectrum =  np.insert(rotated_spectrum, 0, p_0)
+        freqs = np.insert(freqs, 0, f_0)
+        rotated_spectrum = np.insert(rotated_spectrum, 0, p_0)
 
     return rotated_spectrum

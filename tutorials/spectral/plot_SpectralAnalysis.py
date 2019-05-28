@@ -27,6 +27,7 @@ import numpy as np
 from scipy import io
 
 from neurodsp import spectral
+from neurodsp.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.spectral import *
 
@@ -35,11 +36,11 @@ from neurodsp.plts.spectral import *
 # First, we load the sample data, which is a segment of rat hippocampal LFP
 # taken from the publicly available neuro database CRCNS (hc2).
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
-data = io.loadmat('./data/sample_data_2.mat', squeeze_me=True)
+data = io.loadmat('../data/sample_data_2.mat', squeeze_me=True)
 sig = data['x']
 fs = data['fs']
-times = np.arange(len(sig))/fs
 
+times = create_times(len(sig)/fs, fs)
 plot_time_series(times, sig, xlim=[0, 3])
 
 # Plotting the data, we observe a strong theta oscillation (~6-8 Hz)

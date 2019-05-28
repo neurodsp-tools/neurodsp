@@ -1,4 +1,5 @@
 """Utility functions."""
 
-from .utils import demean, normalize_variance
-from .utils import remove_nans, restore_nans, discard_outliers
+from .data import create_times
+from .norm import demean, normalize_variance
+from .outliers import remove_nans, restore_nans, discard_outliers

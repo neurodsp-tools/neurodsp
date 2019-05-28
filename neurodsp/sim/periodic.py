@@ -1,8 +1,6 @@
 """Simulating time series, with periodic activity."""
 
 import numpy as np
-from numpy.random import rand, randn, randint
-import pandas as pd
 
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_osc_cycle
@@ -34,11 +32,17 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
         Oscillating time series.
     """
 
+    # Figure out how many cycles are needed for the signal, & length of each cycle
     n_cycles = int(np.ceil(n_seconds * freq))
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
+    # Create oscillation by tiling a single cycle of the desired oscillation
     osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
     osc = np.tile(osc_cycle, n_cycles)
+
+    # Truncate the length of the signal to be the number of expected samples
+    n_samps = n_seconds * fs
+    osc = osc[:n_samps]
 
     return osc
 
@@ -110,7 +114,7 @@ def _make_is_osc(n_cycles, enter_burst, leave_burst):
 
     for ii in range(1, n_cycles):
 
-        rand_num = rand()
+        rand_num = np.random.rand()
 
         if is_oscillating[ii-1]:
             is_oscillating[ii] = rand_num > leave_burst

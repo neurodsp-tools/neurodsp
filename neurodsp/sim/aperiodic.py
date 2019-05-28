@@ -169,7 +169,6 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
         Time-series with the desired power-law exponent.
     """
 
-    # NOTE: current hack to add an extra sample, to account for skipping f=0 below
     n_samples = int(n_seconds * fs)
     sig = np.random.randn(n_samples)
 

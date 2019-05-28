@@ -16,7 +16,7 @@ Table of Contents
 Filtering
 ---------
 
-Functions and utilities for filtering time series.
+Functions and utilities for the :mod:`filt` module, for filtering time series.
 
 General Filter Function
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,10 +76,10 @@ Filter Utilities
   compute_nyquist
   remove_filter_edges
 
-Time-Frequency analysis
+Time-Frequency Analyses
 -----------------------
 
-Functions and utilities for time-frequency analyses.
+Functions and utilities in the :mod:`timefreq` module, for time-frequency analyses.
 
 Hilbert Methods
 ~~~~~~~~~~~~~~~
@@ -105,10 +105,10 @@ Wavelet Methods
   morlet_transform
   morlet_convolve
 
-Spectral analysis
+Spectral Analyses
 -----------------
 
-Functions and utilities for spectral analyses.
+Functions and utilities in the :mod:`spectral` module, for spectral analyses.
 
 Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,7 +149,7 @@ Spectral Utilities
 Burst Detection
 ---------------
 
-Functions and utilities for detection bursts in time series.
+Functions and utilities in the :mod:`burst` module, for detection bursts in time series.
 
 Burst Detection Algorithms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,10 +171,10 @@ Burst Utilities
 
   compute_burst_stats
 
-Rhythm Analysis
+Rhythm Analyses
 ---------------
 
-Functions and utilities for finding and analyzing rhythmic and recurring patterns in time series.
+Functions and utilities in the :mod:`rhythm` module, for finding and analyzing rhythmic and recurring patterns in time series.
 
 Sliding Window Matching
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -199,7 +199,7 @@ Lagged Coherence
 Simulations
 -----------
 
-Functions and utilities for simulating time series.
+Functions and utilities in the :mod:`sim` module, for simulating time series.
 
 Periodic Signals
 ~~~~~~~~~~~~~~~~
@@ -211,8 +211,6 @@ Periodic Signals
 
   sim_oscillation
   sim_bursty_oscillation
-  sim_bursty_oscillation_features
-  sim_jittered_oscillation
 
 Aperiodic Signals
 ~~~~~~~~~~~~~~~~~
@@ -251,7 +249,7 @@ Combined Signals
 Plots
 -----
 
-Functions for plotting time series and analysis outputs.
+Functions for in the :mod:`plts` module, for plotting time series and analysis outputs.
 
 Time Series
 ~~~~~~~~~~~

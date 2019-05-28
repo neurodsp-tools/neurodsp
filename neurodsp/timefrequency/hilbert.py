@@ -5,7 +5,7 @@ from scipy.signal import hilbert
 
 from neurodsp.filt import filter_signal
 from neurodsp.utils.decorators import multidim
-from neurodsp.utils.utils import remove_nans, restore_nans
+from neurodsp.utils.outliers import remove_nans, restore_nans
 from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 ###################################################################################################

@@ -12,6 +12,7 @@ This tutorial primarily covers :mod:`neurodsp.sim`.
 import numpy as np
 
 from neurodsp import spectral, sim
+from neurodsp.utils import create_times
 
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
@@ -37,7 +38,7 @@ np.random.seed(0)
 n_seconds = 10
 fs = 1000
 exponent = -2
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 br_noise = sim.sim_powerlaw(n_seconds, fs, exponent)
 
 ###################################################################################################
@@ -106,23 +107,23 @@ plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 
-# Simulate aperiodic signals from OU process & synaptic noise model
-ou_noise = sim.sim_random_walk(n_seconds, fs)
+# Simulate aperiodic signals from a random walk process & synaptic noise model
+rw_noise = sim.sim_random_walk(n_seconds, fs)
 syn_noise = sim.sim_synaptic_current(n_seconds, fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plot_time_series(times, ou_noise, title='OU Process')
+plot_time_series(times, rw_noise, title='RW Process')
 plot_time_series(times, syn_noise, title='Synaptic Noise')
 
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, ou_psd = spectral.compute_spectrum(ou_noise, fs)
+freqs, rw_psd = spectral.compute_spectrum(rw_noise, fs)
 freqs, syn_psd = spectral.compute_spectrum(syn_noise, fs)
 
-plot_power_spectra(freqs, [ou_psd, syn_psd], ['OU', 'Synaptic'])
+plot_power_spectra(freqs, [rw_psd, syn_psd], ['RW', 'Synaptic'])
 
 ###################################################################################################
 #
@@ -146,7 +147,7 @@ osc_b = sim.sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.2)
 osc_a = osc_a[0:n_seconds*fs]
 osc_b = osc_b[0:n_seconds*fs]
 
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
@@ -194,7 +195,7 @@ components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2, 't_ke
 ###################################################################################################
 
 # Simulate an oscillation over an aperiodic component & associated times vector
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 signal = sim.combined.sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
@@ -232,7 +233,7 @@ leave_burst = .1
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
@@ -251,7 +252,7 @@ leave_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
@@ -270,45 +271,7 @@ enter_burst = .4
 osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
                                  enter_burst=enter_burst,
                                  leave_burst=leave_burst)
-times = np.arange(0, n_seconds, 1/fs)
-
-###################################################################################################
-
-# Plot the simulated data, in the time domain
-plot_time_series(times, osc, xlim=[0, n_seconds])
-
-###################################################################################################
-#
-# We can also control the variance in amplitude, period, and rise-decay
-# symmetry across cycles and bursts
-#
-# This is done in the `cycle_features` argument, which is a dictionary
-# that can take the following keys:
-# * amp_mean: mean cycle amplitude
-# * amp_std: standard deviation of cycle amplitude
-# * amp_burst_std: std. of mean amplitude for each burst
-# * period_mean: mean period (computed from `freq`)
-# * period_std: standard deviation of period (samples)
-# * period_burst_std: standard deviation of mean period for each burst
-# * rdsym_mean: mean rise-decay symmetry
-# * rdsym_std: standard deviation of rdsym
-# * rdsym_burst_std: standard deviation of mean rdsym for each burst
-#
-# See the source code for the defaults used.
-#
-# For example, we can increase the variability in amplitude by increasing
-# `amp_std` (default = .1)
-#
-
-###################################################################################################
-
-# Simulate a bursty oscillation, with specified cycle features
-cycle_features = {'amp_std': .5}
-osc = sim.sim_bursty_oscillation_features(n_seconds, fs, osc_freq,
-                                          enter_burst=enter_burst,
-                                          leave_burst=leave_burst,
-                                          cycle_features=cycle_features)
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
@@ -334,7 +297,7 @@ components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
 ###################################################################################################
 
 # Simulate a bursty oscillation combined with aperiodic activity
-times = np.arange(0, n_seconds, 1/fs)
+times = create_times(n_seconds, fs)
 osc = sim.combined.sim_combined(n_seconds, fs, components)
 
 ###################################################################################################

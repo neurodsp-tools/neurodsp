@@ -1,8 +1,8 @@
-"""Tests for sim utils."""
+"""Tests for data related utility functions."""
 
 from numpy.testing import assert_equal
 
-from neurodsp.sim.utils import *
+from neurodsp.utils.data import *
 
 ###################################################################################################
 ###################################################################################################
