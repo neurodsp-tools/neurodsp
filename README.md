@@ -80,3 +80,11 @@ Available modules in NeuroDSP include:
 If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
 
 When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md).
+
+## Reference
+
+If you use this code in your project, please cite:
+
+    Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for neural digital signal processing. Journal of Open Source Software, 4(36), 1272. https://doi.org/10.21105/joss.01272
+
+Direct Link: https://doi.org/10.21105/joss.01272
