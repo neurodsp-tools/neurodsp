@@ -5,10 +5,10 @@
 [![Build Status](https://travis-ci.org/neurodsp-tools/neurodsp.svg)](https://travis-ci.org/neurodsp-tools/neurodsp)
 [![codecov](https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg)](https://codecov.io/gh/neurodsp-tools/neurodsp)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
-[![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 
-A package of tools to process, analyze, and simulate neural time series, with specific focus on time and frequency domain analyses.
+A package of tools to simulat and analyze neural time series, focused on time and frequency domain analyses.
 
 ## Documentation
 
@@ -35,7 +35,7 @@ We recommend using the [Anaconda](https://www.continuum.io/downloads) distributi
 
 ## Install
 
-**Stable Version**
+**Stable Release Version**
 
 To install the latest release of neurodsp, you can install from pip:
 
@@ -75,11 +75,12 @@ Available modules in NeuroDSP include:
 
 ## Contribute
 
-`NeuroDSP` welcomes and encourages contributions from the community, as long as contributors follow the [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
+`NeuroDSP` welcomes and encourages contributions from the community!
 
 If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
 
-When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md).
+When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md), and also make sure to follow our
+[Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
 
 ## Reference
 
@@ -96,14 +97,14 @@ Direct Link: https://doi.org/10.21105/joss.01272
 Bibtex:
 ```
 @article{cole_neurodsp:_2019,
-	title = {NeuroDSP: A package for neural digital signal processing},
-    author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
-    journal = {Journal of Open Source Software},
-    year = {2019},
-	volume = {4},
-    number = {36},
-	issn = {2475-9066},
-	url = {http://joss.theoj.org/papers/10.21105/joss.01272},
-	doi = {10.21105/joss.01272},
+	 title = {NeuroDSP: A package for neural digital signal processing},
+	 author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
+    	 journal = {Journal of Open Source Software},
+	 year = {2019},
+	 volume = {4},
+    	 number = {36},
+	 issn = {2475-9066},
+	 url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+	 doi = {10.21105/joss.01272},
 }
 ```
