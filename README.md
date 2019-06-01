@@ -5,8 +5,8 @@
 [![Build Status](https://travis-ci.org/neurodsp-tools/neurodsp.svg)](https://travis-ci.org/neurodsp-tools/neurodsp)
 [![codecov](https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg)](https://codecov.io/gh/neurodsp-tools/neurodsp)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/neurodsp-tools/neurodsp/master)
 
 A package of tools to process, analyze, and simulate neural time series, with specific focus on time and frequency domain analyses.
 
@@ -85,6 +85,25 @@ When writing code to add to NeuroDSP, please follow the [Contribution Guidelines
 
 If you use this code in your project, please cite:
 
-    Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for neural digital signal processing. Journal of Open Source Software, 4(36), 1272. https://doi.org/10.21105/joss.01272
+```
+Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for
+neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
+https://doi.org/10.21105/joss.01272
+```
 
 Direct Link: https://doi.org/10.21105/joss.01272
+
+Bibtex:
+```
+@article{cole_neurodsp:_2019,
+	title = {NeuroDSP: A package for neural digital signal processing},
+    author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
+    journal = {Journal of Open Source Software},
+    year = {2019},
+	volume = {4},
+    number = {36},
+	issn = {2475-9066},
+	url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+	doi = {10.21105/joss.01272},
+}
+```
