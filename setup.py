@@ -16,17 +16,17 @@ long_description = \
 Neurodsp
 ========
 
-A package for digital signal processing of neural time series.
+A package of tools to analyze and simulate neural time series, using digital signal processing.
 
-Neurodsp contains several modules:
+Available modules in NeuroDSP include:
 
-- burst : Detect bursting oscillators in neural signals
 - filt : Filter data with bandpass, highpass, lowpass, or notch filters
-- laggedcoherence : Estimate rhythmicity using the lagged coherence measure
-- sim : Simulate bursting or stationary oscillators with brown noise
-- spectral : Compute spectral domain features (PSD and 1/f slope, etc)
-- swm : Identify recurrent patterns in a signal using sliding window matching
+- burst : Detect bursting oscillations in neural signals
+- rhythm : Find and analyze rhythmic and recurrent patterns in time series
+- spectral : Compute spectral domain features such as power spectra
 - timefrequency : Estimate instantaneous measures of oscillatory activity
+- sim : Simulate time series, including periodic and aperiodic signal components
+- plts : Plotting functions
 """
 
 setup(
@@ -41,7 +41,7 @@ setup(
     license = 'MIT',
     download_url = 'https://github.com/neurodsp-tools/neurodsp/releases',
     keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
-    install_requires = ['numpy', 'scipy', 'matplotlib', 'pandas'],
+    install_requires = ['numpy', 'scipy', 'matplotlib'],
     tests_require = ['pytest'],
     classifiers = [
         'Development Status :: 4 - Beta',

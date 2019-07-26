@@ -8,7 +8,7 @@
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 
-A package of tools to simulat and analyze neural time series, focused on time and frequency domain analyses.
+A package of tools to analyze and simulate neural time series, using digital signal processing.
 
 ## Documentation
 
@@ -28,7 +28,6 @@ It has the following dependencies:
 - numpy
 - scipy
 - matplotlib
-- pandas
 - pytest (optional)
 
 We recommend using the [Anaconda](https://www.continuum.io/downloads) distribution to manage these requirements.
