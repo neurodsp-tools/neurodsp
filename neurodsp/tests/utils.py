@@ -8,6 +8,23 @@ import matplotlib.pyplot as plt
 ###################################################################################################
 ###################################################################################################
 
+# Some default settings for the sim tests
+FS = 100
+N_SECONDS = 1
+FREQ = 10
+
+###################################################################################################
+###################################################################################################
+
+def check_sim_output(sig):
+    """Helper function to check some basic properties of simualated signals."""
+
+    exp_n_samples = FS * N_SECONDS
+
+    assert isinstance(sig, np.ndarray)
+    assert len(sig) == exp_n_samples
+    assert sum(np.isnan(sig)) == 0
+
 def get_random_signal(len_sig=1000, seed=0):
     """Generate a random time series for testing."""
 
@@ -15,7 +32,6 @@ def get_random_signal(len_sig=1000, seed=0):
     sig = np.random.randn(len_sig)
 
     return sig
-
 
 def plot_test(func):
     """Decorator for simple testing of plotting functions.

@@ -2,22 +2,33 @@
 
 from pytest import raises
 
+from neurodsp.tests.utils import FS, N_SECONDS
+from neurodsp.tests.utils import check_sim_output
+
 from neurodsp.sim.transients import *
 
 ###################################################################################################
 ###################################################################################################
 
-N_SECONDS = 1
-FS = 100
-
 def test_sim_osc_cycle():
 
     cycle = sim_osc_cycle(N_SECONDS, FS, 'sine')
+    check_sim_output(cycle)
+
     cycle = sim_osc_cycle(N_SECONDS, FS, 'asine', rdsym=0.75)
+    check_sim_output(cycle)
+
     cycle = sim_osc_cycle(N_SECONDS, FS, 'sawtooth', width=0.5)
+    check_sim_output(cycle)
+
     cycle = sim_osc_cycle(N_SECONDS, FS, 'gaussian', std=2)
+    check_sim_output(cycle)
+
     cycle = sim_osc_cycle(N_SECONDS, FS, 'exp', tau_d=0.2)
+    check_sim_output(cycle)
+
     cycle = sim_osc_cycle(N_SECONDS, FS, '2exp', tau_r=0.2, tau_d=0.2)
+    check_sim_output(cycle)
 
     with raises(ValueError):
         sim_osc_cycle(N_SECONDS, FS, 'not_a_cycle')
@@ -25,7 +36,7 @@ def test_sim_osc_cycle():
 def test_asine_cycle():
 
     cycle = sim_asine_cycle(N_SECONDS, FS, 0.25)
-    assert True
+    check_sim_output(cycle)
 
 def test_sim_make_synaptic_kernel():
 
@@ -44,4 +55,4 @@ def test_sim_make_synaptic_kernel():
 def test_create_cycle_time():
 
     times = create_cycle_time(N_SECONDS, FS)
-    assert True
+    check_sim_output(times)

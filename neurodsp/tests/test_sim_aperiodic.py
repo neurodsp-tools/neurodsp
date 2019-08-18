@@ -1,29 +1,41 @@
 """Test aperiodic simulation functions."""
 
+import numpy as np
+
+from neurodsp.tests.utils import FS, N_SECONDS
+from neurodsp.tests.utils import check_sim_output
+
 from neurodsp.sim.aperiodic import *
+from neurodsp.sim.aperiodic import _create_powerlaw
 
 ###################################################################################################
 ###################################################################################################
-
-FS = 100
-N_SECONDS = 1
 
 def test_sim_poisson_pop():
 
     sig = sim_poisson_pop(N_SECONDS, FS)
-    assert True
+    check_sim_output(sig)
 
 def test_sim_synaptic_current():
 
     sig = sim_synaptic_current(N_SECONDS, FS)
-    assert True
+    check_sim_output(sig)
 
 def test_sim_random_walk():
 
     sig = sim_random_walk(N_SECONDS, FS)
-    assert True
+    check_sim_output(sig)
 
-def test_powerlaw():
+def test_sim_powerlaw():
 
     sig = sim_powerlaw(N_SECONDS, FS)
-    assert True
+    check_sim_output(sig)
+
+    # Test with a filter applied
+    sig = sim_powerlaw(N_SECONDS, FS, f_range=(2, None))
+    check_sim_output(sig)
+
+def test_create_powerlaw():
+
+    sig = _create_powerlaw(N_SECONDS*FS, FS, -2)
+    check_sim_output(sig)
