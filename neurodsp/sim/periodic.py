@@ -29,7 +29,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     Returns
     -------
     osc : 1d array
-        Oscillating time series.
+        Simulated oscillation.
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
@@ -57,7 +57,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
     n_seconds : float
         Simulation time, in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     freq : float
         Oscillation frequency, in Hz.
     enter_burst : float
@@ -73,14 +73,14 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
     Returns
     -------
     sig : 1d array
-        Bursty oscillation.
+        Simulated bursty oscillation.
 
     Notes
     -----
     * This function takes a 'tiled' approach to simulating cycles, with evenly spaced
     and consistent cycles across the whole signal, that are either oscillating or not.
     * If the cycle length does not fit evenly into the simulated data length,
-    then the last few cycle will be non-oscillating.
+    then the last few samples will be non-oscillating.
     """
 
     # Determine number of samples & cycles

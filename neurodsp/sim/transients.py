@@ -9,7 +9,7 @@ from scipy.signal import gaussian, sawtooth
 ###################################################################################################
 
 def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
-    """Make one cycle of an oscillation.
+    """Simulate a single cycle of an oscillation.
 
     Parameters
     ----------
@@ -107,14 +107,14 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
 
 
 def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
-    """Creates synaptic kernels that with specified time constants.
+    """Simulate a synaptic kernel with specified time constants.
 
     Parameters
     ----------
     n_seconds : float
         Length of simulated kernel in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
     tau_r : float
         Rise time of synaptic kernel, in seconds.
     tau_d : float
@@ -123,7 +123,7 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     Returns
     -------
     kernel : 1d array
-        Computed synaptic kernel with length equal to t
+        Simulated synaptic kernel.
 
     Notes
     -----
@@ -169,7 +169,7 @@ def create_cycle_time(n_seconds, fs):
     n_seconds : float
         Length of simulated kernel in seconds.
     fs : float
-        Sampling rate of simulated signal, in Hz
+        Sampling rate of simulated signal, in Hz.
 
     Returns
     -------

@@ -12,7 +12,7 @@ from neurodsp.sim.info import get_sim_func
 
 @normalize
 def sim_combined(n_seconds, fs, simulations, variances=1):
-    """Sim multiple component signals and combine them.
+    """Simulate a complex signal by combining multiple component signals.
 
     Parameters
     ----------

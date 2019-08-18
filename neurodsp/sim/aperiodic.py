@@ -13,7 +13,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 
 @normalize
 def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
-    """Simulates a poisson population.
+    """Simulate a poisson population.
 
     Parameters
     ----------
@@ -72,13 +72,15 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
         Firing rate of individual neurons in the population.
     tau_r : float
         Rise time of synaptic kernel, in seconds.
-    tau_d : fload
+    tau_d : float
         Decay time of synaptic kernel, in seconds.
+    t_ker : float
+        Length of time of the simulated synaptic kernel, in seconds.
 
     Returns
     -------
     sig : 1d array
-        Simulated signal.
+        Simulated synaptic current.
 
     Notes
     -----
@@ -110,14 +112,14 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     theta : float
         Memory scale - larger theta = faster fluctuation.
     mu : float
-        Mean.
+        Mean of the random walk.
     sigma : float
-        Standard deviation.
+        Standard deviation of the random walk.
 
     Returns
     -------
     sig: 1d array
-        Simulated signal.
+        Simulated random walk signal.
 
     Notes
     -----
@@ -148,7 +150,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
 @normalize
 def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
-    """Generate a power law time series with specified exponent by spectrally rotating white noise.
+    """Simulate a power law time series, with a specified exponent.
 
     Parameters
     ----------
@@ -166,7 +168,11 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     Returns
     -------
     sig: 1d array
-        Time-series with the desired power-law exponent.
+        Time-series with the desired power law exponent.
+
+    Notes
+    -----
+    This function works to create variable exponents by spectrally rotating white noise.
     """
 
     n_samples = int(n_seconds * fs)
