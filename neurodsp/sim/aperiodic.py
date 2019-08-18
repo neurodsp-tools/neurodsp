@@ -189,6 +189,6 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
 
     if f_range is not None:
-        filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
+        sig = filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
 
     return sig
