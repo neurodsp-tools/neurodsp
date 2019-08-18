@@ -82,7 +82,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     ----------
     freqs : 1d array
         Frequency vector.
-    scv_rs :
+    scv_rs : 2d array
         Spectral coefficient of variation, from resampling procedure.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.

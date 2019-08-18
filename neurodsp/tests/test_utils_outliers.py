@@ -31,4 +31,10 @@ def test_restore_nans():
     assert_equal(arr_restored, np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN]))
 
 def test_discard_outliers():
-    pass
+
+    dat = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 10],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 10]])
+    new_dat = discard_outliers(dat, 0.10)
+
+    assert_equal(new_dat, np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                    [1, 1, 1, 1, 1, 1, 1, 1, 1]]))
