@@ -4,7 +4,11 @@ import numpy as np
 from scipy.stats import zscore
 
 from neurodsp.filt import filter_signal, infer_passtype
+from neurodsp.filt.fir import compute_filter_length
+from neurodsp.filt.checks import check_filter_definition
+from neurodsp.utils import remove_nans
 from neurodsp.spectral import rotate_powerlaw
+from neurodsp.utils.data import create_times
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_synaptic_kernel
 
@@ -135,13 +139,14 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     See for integral solution:
         https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
     """
+    times = create_times(n_seconds, fs)
 
-    times = np.arange(0, n_seconds, 1 / fs)
     x0 = mu
     dt = times[1] - times[0]
     ws = np.random.normal(size=len(times))
     ex = np.exp(-theta * times)
     ws[0] = 0.
+
     sig = x0 * ex + mu * (1. - ex) + sigma * ex * \
         np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
 
@@ -169,13 +174,58 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     -------
     sig: 1d array
         Time-series with the desired power law exponent.
+    """
+
+    # Get the number of samples to simulate for the signal
+    #   If filter is to be filtered, with FIR, add extra to compensate for edges
+    if f_range and filter_kwargs.get('filt_type', None) != 'iir':
+
+        pass_type = infer_passtype(f_range)
+        filt_len = compute_filter_length(fs, pass_type,
+                                         *check_filter_definition(pass_type, f_range),
+                                         n_seconds=filter_kwargs.get('n_seconds', None),
+                                         n_cycles=filter_kwargs.get('n_cycles', 3))
+
+        n_samples = int(n_seconds * fs) + filt_len + 1
+
+    else:
+        n_samples = int(n_seconds * fs)
+
+    sig = _create_powerlaw(n_samples, fs, exponent)
+
+    if f_range is not None:
+        sig = filter_signal(sig, fs, infer_passtype(f_range), f_range,
+                            remove_edges=True, **filter_kwargs)
+        # Drop the edges, that were compensated for, if not using IIR (using FIR)
+        if not filter_kwargs.get('filt_type', None) == 'iir':
+            sig, _ = remove_nans(sig)
+
+    return sig
+
+
+def _create_powerlaw(n_samples, fs, exponent):
+    """Create a power law time series.
+
+    Parameters
+    ----------
+    n_samples : int
+        The number of samples to simulate
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    exponent : float
+        Desired power-law exponent, of the form P(f)=f^exponent.
+
+    Returns
+    -------
+    sig: 1d array
+        Time-series with the desired power law exponent.
 
     Notes
     -----
-    This function works to create variable exponents by spectrally rotating white noise.
+    This function create variable powerlaw exponents by spectrally rotating white noise.
     """
 
-    n_samples = int(n_seconds * fs)
+    # Start with white noise signal, that we will rotate, in frequency space
     sig = np.random.randn(n_samples)
 
     # Compute the FFT
@@ -187,8 +237,5 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     #     the FFT output is in units of amplitude not power
     fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
-
-    if f_range is not None:
-        sig = filter_signal(sig, fs, infer_passtype(f_range), f_range, **filter_kwargs)
 
     return sig
