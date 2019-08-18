@@ -31,6 +31,11 @@ def check_filter_definition(pass_type, f_range):
         The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
         The higher frequency range of the filter, specifying the lowpass frequency, if specified.
+
+    Raises
+    ------
+    ValueError
+        If the filter passtype it not understood, or cutoff frequncies are incompatible.
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
@@ -144,3 +149,27 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
         print('Pass/stop bandwidth is {:.1f} Hz.'.format(pass_bw))
 
     return passes
+
+
+def check_filter_length(sig_length, filt_len):
+    """Check the length of a filter against the length of a signal.
+
+    Parameters
+    ----------
+    sig_length : int
+        The length of the signal to be filtered.
+    filt_len : int
+        The length of the filter.
+
+    Raises
+    ------
+    ValueError
+        If the signal length is too short for the filter length.
+    """
+
+    if filt_len >= sig_length:
+        raise ValueError(
+            'The designed filter (length: {:d}) is longer than the signal '\
+            '(length: {:d}). The filter needs to be shortened by decreasing '\
+            'the n_cycles or n_seconds parameter. However, this will decrease '\
+            'the frequency resolution of the filter.'.format(filt_len, sig_length))

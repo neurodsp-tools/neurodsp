@@ -7,7 +7,7 @@ from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
 from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, remove_filter_edges
-from neurodsp.filt.checks import check_filter_definition, check_filter_properties
+from neurodsp.filt.checks import check_filter_definition, check_filter_properties, check_filter_length
 
 ###################################################################################################
 ###################################################################################################
@@ -122,7 +122,8 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
 
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
-    filt_len = compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
+    filt_len = compute_filt_len(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
+    check_filter_length(sig_length, filt_len)
 
     f_nyq = compute_nyquist(fs)
     if pass_type == 'bandpass':
@@ -137,13 +138,11 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
     return filter_coefs
 
 
-def compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
+def compute_filt_len(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
     """Calculate and check the filter length for an FIR signal with specified parameters.
 
     Parameters
     ----------
-    sig_length : int
-        The length of the signal to be filtered.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -166,6 +165,7 @@ def compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
     # Compute filter length if specified in seconds
     if n_seconds is not None:
         filt_len = fs * n_seconds
+    # Otherwise, calculate filter length based on number of cycles
     else:
         if pass_type == 'lowpass':
             filt_len = fs * n_cycles / f_hi
@@ -178,13 +178,5 @@ def compute_filt_len(sig_length, fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
     # Force filter length to be odd
     if filt_len % 2 == 0:
         filt_len = filt_len + 1
-
-    # Raise an error if the filter is longer than the signal
-    if filt_len >= sig_length:
-        raise ValueError(
-            'The designed filter (length: {:d}) is longer than the signal '\
-            '(length: {:d}). The filter needs to be shortened by decreasing '\
-            'the n_cycles or n_seconds parameter. However, this will decrease '\
-            'the frequency resolution of the filter.'.format(filt_len, sig_length))
 
     return filt_len
