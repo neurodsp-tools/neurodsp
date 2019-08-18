@@ -122,7 +122,7 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
 
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
-    filt_len = compute_filt_len(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
+    filt_len = compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
     check_filter_length(sig_length, filt_len)
 
     f_nyq = compute_nyquist(fs)
@@ -138,8 +138,8 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
     return filter_coefs
 
 
-def compute_filt_len(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
-    """Calculate and check the filter length for an FIR signal with specified parameters.
+def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=None):
+    """Compute the filter length for an FIR signal given specified parameters.
 
     Parameters
     ----------
@@ -166,16 +166,16 @@ def compute_filt_len(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds):
     if n_seconds is not None:
         filt_len = fs * n_seconds
     # Otherwise, calculate filter length based on number of cycles
-    else:
+    elif n_cycles is not None:
         if pass_type == 'lowpass':
             filt_len = fs * n_cycles / f_hi
         else:
             filt_len = fs * n_cycles / f_lo
+    else:
+        raise ValueError('Either `n_cycles` or `n_seconds` needs to be defined.')
 
-    # Typecast filter length to an integer, rounding up
+    # Typecast filter length to an integer, rounding up & force length to be odd
     filt_len = int(np.ceil(filt_len))
-
-    # Force filter length to be odd
     if filt_len % 2 == 0:
         filt_len = filt_len + 1
 

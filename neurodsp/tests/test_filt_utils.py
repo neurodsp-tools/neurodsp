@@ -1,7 +1,7 @@
 """Tests for filter utilities."""
 
 from neurodsp.filt.utils import *
-from neurodsp.filt.fir import design_fir_filter, compute_filt_len
+from neurodsp.filt.fir import design_fir_filter, compute_filter_length
 
 ###################################################################################################
 ###################################################################################################
@@ -43,7 +43,7 @@ def test_remove_filter_edges():
     sig_len = 1000
     fs = 500
     sig = np.ones([1, sig_len])
-    filt_len = compute_filt_len(fs, 'bandpass', f_lo=4, f_hi=8, n_cycles=3, n_seconds=None)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo=4, f_hi=8, n_cycles=3, n_seconds=None)
     n_rmv = int(np.ceil(filt_len / 2))
 
     dropped_sig = remove_filter_edges(sig, filt_len)
