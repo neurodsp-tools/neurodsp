@@ -20,7 +20,7 @@ def robust_hilbert(sig, increase_n=False):
     sig : 1d array
         Time series.
     increase_n : bool, optional, default: False
-        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
+        If True, zeropad the signal to length the next power of 2 for the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x.
 
     Returns
@@ -47,8 +47,8 @@ def robust_hilbert(sig, increase_n=False):
 
 
 @multidim
-def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
-    """Calculate the phase time series of a neural oscillation.
+def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
+    """Compute the instantaneous phase of a time series.
 
     Parameters
     ----------
@@ -56,8 +56,8 @@ def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True,
         Time series.
     fs : float
         Sampling rate, in Hz.
-    f_range : tuple of float
-        Frequency range, in Hz, as (low, high).
+    f_range : tuple of float or None, optional default: None
+        Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x.
@@ -70,13 +70,14 @@ def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True,
     Returns
     -------
     pha : 1d array
-        Time series of phase.
+        Instantaneous phase time series.
     """
 
-    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
-                                     remove_edges=False, return_filter=True, **filter_kwargs)
+    if f_range:
+        sig, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
+                                    remove_edges=False, return_filter=True, **filter_kwargs)
 
-    pha = np.angle(robust_hilbert(sig_filt, increase_n=hilbert_increase_n))
+    pha = np.angle(robust_hilbert(sig, increase_n=hilbert_increase_n))
 
     if remove_edges:
         pha = remove_filter_edges(pha, len(kernel))
@@ -86,7 +87,7 @@ def phase_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True,
 
 @multidim
 def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
-    """Calculate the amplitude time series.
+    """Compute the instantaneous amplitude of a time series.
 
     Parameters
     ----------
@@ -94,8 +95,8 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
         Time series.
     fs : float
         Sampling rate, in Hz.
-    f_range : tuple of float
-        The frequency filtering range, in Hz, as (low, high).
+    f_range : tuple of float or None, optional default: None
+        Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of sig.
@@ -108,13 +109,14 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
     Returns
     -------
     amp : 1d array
-        Time series of amplitude.
+        Instantaneous amplitude time series.
     """
 
-    sig_filt, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
-                                     remove_edges=False, return_filter=True, **filter_kwargs)
+    if f_range:
+        sig, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
+                                    remove_edges=False, return_filter=True, **filter_kwargs)
 
-    amp = np.abs(robust_hilbert(sig_filt, increase_n=hilbert_increase_n))
+    amp = np.abs(robust_hilbert(sig, increase_n=hilbert_increase_n))
 
     if remove_edges:
         amp = remove_filter_edges(amp, len(kernel))
@@ -124,16 +126,16 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
 
 @multidim
 def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
-    """Estimate the instantaneous frequency at each sample.
+    """Compute the instantaneous frequency of a time series.
 
     Parameters
     ----------
     sig : 1d array
-        Voltage time series.
+        Time series.
     fs : float
         Sampling rate, in Hz.
-    f_range : tuple of float
-        Frequency range for filtering, in Hz, as (low, high).
+    f_range : tuple of float or None, optional default: None
+        Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of sig.
@@ -146,7 +148,7 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
     Returns
     -------
     i_f : float
-        Estimated instantaneous frequency for each sample in 'sig'.
+        Instantaneous frequency time series.
 
     Notes
     -----
