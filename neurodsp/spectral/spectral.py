@@ -21,7 +21,7 @@ from neurodsp.spectral.checks import check_spg_settings
 
 @multidim
 def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
-    """Estimate the power spectral density (PSD) of a time series.
+    """Compute the power spectral density (PSD) of a time series.
 
     Parameters
     -----------
@@ -59,7 +59,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
 @multidim
 def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
-    """Estimate the power spectral densitry using wavelets.
+    """Compute the power spectral densitry using wavelets.
 
     Parameters
     ----------
@@ -90,7 +90,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
                            nperseg=None, noverlap=None,
                            f_range=None, outlier_pct=None):
-    """Estimate the power spectral density using Welch's method.
+    """Compute the power spectral density using Welch's method.
 
     Parameters
     -----------
@@ -152,7 +152,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
 @multidim
 def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
-    """Estimate the power spectral densitry as a smoothed FFT.
+    """Compute the power spectral densitry as a smoothed FFT.
 
     Parameters
     ----------
@@ -175,10 +175,13 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     # Take the positive half of the spectrum since it's symmetrical
     ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
-    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]  # get freq axis
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
 
-    # Convert median filter length from Hz to samples
-    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])) / 2 * 2 + 1)
+    # Convert median filter length from Hz to samples, and make sure it is odd
+    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])))
+    if filt_len_samp % 2 == 0:
+        filt_len_samp += 1
+
     spectrum = medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
 
     if f_range:
