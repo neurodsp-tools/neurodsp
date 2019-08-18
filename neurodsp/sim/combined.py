@@ -17,7 +17,7 @@ def sim_combined(n_seconds, fs, simulations, variances=1):
     Parameters
     ----------
     n_seconds : float
-        Signal duration, in seconds.
+        Simulation time, in seconds.
     fs : float
         Signal sampling rate, in Hz.
     simulations : dictionary
@@ -42,20 +42,20 @@ def sim_combined(n_seconds, fs, simulations, variances=1):
     # Collect the sim function to use, and repeat variance if is set to 1
     simulations = {(get_sim_func(name) if isinstance(name, str) else name) : params \
                    for name, params in simulations.items()}
-    variances = repeat(variances) if isinstance(variances, int) else variances
+    variances = repeat(variances) if isinstance(variances, int) else iter(variances)
 
-    # Simulate each component, specifying the variance for each
+    # Simulate each component of the signal
     components = []
-    for (func, params), variance in zip(simulations.items(), variances):
+    for func, params in simulations.items():
 
         # If list, params should be a list of separate parameters for each fucntion call
         if isinstance(params, list):
-            components.extend([func(n_seconds, fs, **cur_params, variance=variance) \
+            components.extend([func(n_seconds, fs, **cur_params, variance=next(variances)) \
                 for cur_params in params])
 
         # Otherwise, params should be a dictionary of parameters for single call
         else:
-            components.append(func(n_seconds, fs, **params, variance=variance))
+            components.append(func(n_seconds, fs, **params, variance=next(variances)))
 
     # Combine total signal across all simulated components
     sig = np.sum(components, axis=0)

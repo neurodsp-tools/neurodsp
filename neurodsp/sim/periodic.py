@@ -15,7 +15,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     Parameters
     ----------
     n_seconds : float
-        Signal duration, in seconds.
+        Simulation time, in seconds.
     fs : float
         Signal sampling rate, in Hz.
     freq : float
