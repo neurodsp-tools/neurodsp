@@ -10,7 +10,7 @@ from neurodsp.filt.iir import filter_signal_iir
 ###################################################################################################
 
 @multidim
-def filter_signal(sig, fs, pass_type, f_range, filt_type='fir',
+def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
                   n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
                   print_transitions=False, plot_properties=False, return_filter=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
@@ -39,7 +39,7 @@ def filter_signal(sig, fs, pass_type, f_range, filt_type='fir',
     n_seconds : float, optional
         Length of filter, in seconds, if using an FIR filter.
         This parameter overwrites `n_cycles`.
-    filt_type : {'fir', 'iir'}, optional
+    filter_type : {'fir', 'iir'}, optional
         Whether to use an FIR or IIR filter.
         The only IIR filter offered is a butterworth filter.
     remove_edges : bool, optional, default: True
@@ -63,11 +63,11 @@ def filter_signal(sig, fs, pass_type, f_range, filt_type='fir',
         Filter coefficients. Only returned if `return_filter` is True.
     """
 
-    if filt_type == 'fir':
+    if filter_type == 'fir':
         return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
                                  remove_edges, print_transitions,
                                  plot_properties, return_filter)
-    elif filt_type == 'iir':
+    elif filter_type == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edges)
         return filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                                  print_transitions, plot_properties,

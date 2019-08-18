@@ -178,7 +178,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     # Get the number of samples to simulate for the signal
     #   If filter is to be filtered, with FIR, add extra to compensate for edges
-    if f_range and filter_kwargs.get('filt_type', None) != 'iir':
+    if f_range and filter_kwargs.get('filter_type', None) != 'iir':
 
         pass_type = infer_passtype(f_range)
         filt_len = compute_filter_length(fs, pass_type,
@@ -197,7 +197,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
         sig = filter_signal(sig, fs, infer_passtype(f_range), f_range,
                             remove_edges=True, **filter_kwargs)
         # Drop the edges, that were compensated for, if not using IIR (using FIR)
-        if not filter_kwargs.get('filt_type', None) == 'iir':
+        if not filter_kwargs.get('filter_type', None) == 'iir':
             sig, _ = remove_nans(sig)
 
     return sig

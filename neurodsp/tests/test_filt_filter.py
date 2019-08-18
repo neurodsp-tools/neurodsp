@@ -10,10 +10,10 @@ from neurodsp.filt.filter import _iir_checks
 
 def test_filter_signal(tsig):
 
-    out = filter_signal(tsig, 500, 'bandpass', (8, 12), filt_type='fir')
-    out = filter_signal(tsig, 500, 'bandpass', (8, 12), filt_type='iir', butterworth_order=3)
+    out = filter_signal(tsig, 500, 'bandpass', (8, 12), filter_type='fir')
+    out = filter_signal(tsig, 500, 'bandpass', (8, 12), filter_type='iir', butterworth_order=3)
     with raises(ValueError):
-        out = filter_signal(tsig, 500, 'bandpass', (8, 12), filt_type='bad')
+        out = filter_signal(tsig, 500, 'bandpass', (8, 12), filter_type='bad')
     assert True
 
 def test_iir_checks():

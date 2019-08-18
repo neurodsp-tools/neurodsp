@@ -14,19 +14,18 @@ def test_filter_signal_fir(tsig):
 
 def test_design_fir_filter():
 
-    sig_length, fs = 1000, 100
+    fs = 100
     test_filts = {'bandpass' : (5, 10), 'bandstop' : (5, 6),
                   'lowpass' : (None, 5), 'highpass' : (5, None)}
 
     for pass_type, f_range in test_filts.items():
-        filter_coefs = design_fir_filter(sig_length, fs, pass_type, f_range)
+        filter_coefs = design_fir_filter(fs, pass_type, f_range)
     assert True
 
 def test_compute_filter_length():
 
     # Settings for checks
     fs = 500
-    sig_length = 2000
     f_lo, f_hi = 4, 8
 
     # Check filt_len, if defined using n_seconds

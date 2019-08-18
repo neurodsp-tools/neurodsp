@@ -57,8 +57,9 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         Filter coefficients of the FIR filter. Only returned if `return_filter` is True.
     """
 
-    # Design filter
-    filter_coefs = design_fir_filter(len(sig), fs, pass_type, f_range, n_cycles, n_seconds)
+    # Design filter & check that the length is okay with signal
+    filter_coefs = design_fir_filter(fs, pass_type, f_range, n_cycles, n_seconds)
+    check_filter_length(len(sig), len(filter_coefs))
 
     # Check filter properties: compute transition bandwidth & run checks
     check_filter_properties(filter_coefs, 1, fs, pass_type, f_range, verbose=print_transitions)
@@ -87,13 +88,11 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         return sig_filt
 
 
-def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=None):
+def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     """Design an FIR filter.
 
     Parameters
     ----------
-    sig_length : int
-        The length of the signal to be filtered.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -123,7 +122,6 @@ def design_fir_filter(sig_length, fs, pass_type, f_range, n_cycles=3, n_seconds=
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
     filt_len = compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
-    check_filter_length(sig_length, filt_len)
 
     f_nyq = compute_nyquist(fs)
     if pass_type == 'bandpass':
