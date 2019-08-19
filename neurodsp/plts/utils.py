@@ -1,4 +1,4 @@
-"""Utility functions for NeuroDSP plots."""
+"""Utility functions for plots."""
 
 from functools import wraps
 from os.path import join as pjoin

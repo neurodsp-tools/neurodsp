@@ -1,4 +1,4 @@
-"""Outlier & missing data related utility functions for NeuroDSP."""
+"""Outlier & missing data related utility functions."""
 
 import numpy as np
 

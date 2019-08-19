@@ -1,4 +1,4 @@
-"""Normalization related utility functions for neurodsp."""
+"""Normalization related utility functions."""
 
 import numpy as np
 

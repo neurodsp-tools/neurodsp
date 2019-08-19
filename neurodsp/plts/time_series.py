@@ -1,4 +1,4 @@
-"""Plots for time series, for NeuroDSP."""
+"""Plots for time series."""
 
 from itertools import repeat, cycle
 
@@ -15,7 +15,7 @@ from neurodsp.plts.utils import check_ax, savefig
 @savefig
 @style_plot
 def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
-    """Plot a neural time series.
+    """Plot a time series.
 
     Parameters
     ----------
@@ -87,7 +87,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
 @savefig
 @style_plot
 def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
-    """Plot a neural time series, labelling detected bursts.
+    """Plot a time series, with labelled bursts.
 
     Parameters
     ----------

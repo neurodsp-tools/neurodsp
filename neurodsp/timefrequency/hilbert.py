@@ -13,7 +13,7 @@ from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 @multidim
 def robust_hilbert(sig, increase_n=False):
-    """Compute the hilbert transform, ignoring the boundaries of that are filled with NaN.
+    """Compute the hilbert transform, ignoring any boundaries that are NaN.
 
     Parameters
     ----------
@@ -62,8 +62,7 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
-        If True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan.
+        If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
@@ -101,8 +100,7 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan.
+        If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
@@ -140,8 +138,7 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because scipy.signal.hilbert can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace the samples that are within half a kernel's length to
-        the signal edge with np.nan.
+        If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
@@ -152,8 +149,7 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
 
     Notes
     -----
-    This function assumes monotonic phase, so a phase slip will
-    be processed as a very high frequency.
+    This function assumes monotonic phase, so phase slips will be processed as high frequencies.
     """
 
     pha = phase_by_time(sig, fs, f_range, hilbert_increase_n,

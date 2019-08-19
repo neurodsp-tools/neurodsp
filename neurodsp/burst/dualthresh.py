@@ -13,16 +13,16 @@ from neurodsp.timefrequency.hilbert import amp_by_time
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):
-    """Detect bursts in a neural signal using the dual threshold algorithm.
+    """Detect bursts in a signal using the dual threshold algorithm.
 
     Parameters
     ----------
     sig : 1d array
-        Voltage time series.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     f_range : tuple of (float, float)
-        Frequency range, in Hz, for narrowband signal of interest.
+        Frequency range, for narrowband signal of interest, in Hz.
     dual_thresh : tuple of (float, float)
         Low and high threshold values for burst detection.
         Units are normalized by the average signal magnitude.
@@ -68,9 +68,7 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
 
 
 def _dual_threshold_split(sig, thresh_hi, thresh_lo):
-    """Identify periods of a time series that are above thresh_lo and
-    have at least one value above thresh_hi.
-    """
+    """Identify periods that are above thresh_lo and have at least one value above thresh_hi."""
 
     # Find all values above thresh_hi
     # To avoid bug in later loop, do not allow first or last index to start off as 1
@@ -114,7 +112,7 @@ def _dual_threshold_split(sig, thresh_hi, thresh_lo):
 
 
 def _rmv_short_periods(sig, n_samples):
-    """Remove periods that == 1 for less than n_samples."""
+    """Remove periods that are equal to 1 for less than n_samples."""
 
     if np.sum(sig) == 0:
         return sig

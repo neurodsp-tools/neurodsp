@@ -11,7 +11,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 
 @multidim
-def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False, verbose=True):
+def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False):
     """Quantify the rhythmicity of a frequency range using lagged coherence.
 
     Parameters
@@ -29,8 +29,6 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     return_spectrum : bool, optional, default: False
         If True, return the lagged coherence for all frequency values.
         Otherwise, only the mean lagged coherence value across the frequency range is returned.
-    verbose : bool, optional, default: True
-        Whether to print out warnings about calculated values.
 
     Returns
     -------
@@ -55,12 +53,12 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
         lc[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
 
     # Check if all values were properly estimated
-    if sum(np.isnan(lc)) > 0 and verbose:
-        print("NEURODSP - LAGGED COHERENCE WARNING:"
-              "\nLagged coherence could not be estimated for at least some requested frequencies."
-              "\nThis happens, especially with low frequencies, when there are not enough samples "
-              "per segment and/or not enough segments available to estimate the measure."
-              "\nTry using a greater number of cycles, a longer signal length, and/or adjust the frequency range.")
+    if sum(np.isnan(lc)) > 0:
+        warn("NEURODSP - LAGGED COHERENCE WARNING:"
+             "\nLagged coherence could not be estimated for at least some requested frequencies."
+             "\nThis happens, especially with low frequencies, when there are not enough samples "
+             "per segment and/or not enough segments available to estimate the measure."
+             "\nTry using a greater number of cycles and/or a longer signal length, and/or adjust the frequency range.")
 
     # Return desired measure of lagged coherence
     if return_spectrum:

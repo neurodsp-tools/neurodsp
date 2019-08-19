@@ -1,4 +1,4 @@
-"""Data related utility functions for NeuroDSP."""
+"""Data related utility functions."""
 
 import numpy as np
 

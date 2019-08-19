@@ -62,7 +62,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
 @normalize
 def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
                          tau_r=0, tau_d=0.01, t_ker=None):
-    """Simulate a neural signal as synaptic current, which has 1/f characteristics with a knee.
+    """Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.
 
     Parameters
     ----------
@@ -105,7 +105,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
 
 @normalize
 def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
-    """Simulate mean-reverting random walk, as an Ornstein-Uhlenbeck process.
+    """Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
     ----------

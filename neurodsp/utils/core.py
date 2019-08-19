@@ -1,4 +1,4 @@
-"""Core (internal) utility functions for NeuroDSP."""
+"""Core / internal utility functions."""
 
 import numpy as np
 

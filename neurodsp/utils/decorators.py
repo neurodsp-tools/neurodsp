@@ -1,4 +1,4 @@
-"""Decorators for neurodsp.sim."""
+"""Decorators."""
 
 from functools import wraps
 

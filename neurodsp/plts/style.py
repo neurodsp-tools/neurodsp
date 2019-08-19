@@ -1,4 +1,4 @@
-"""Style helpers and utilities for NeuroDSP plots."""
+"""Style helpers and utilities for plots."""
 
 from functools import wraps
 

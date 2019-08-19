@@ -6,7 +6,7 @@ import numpy as np
 ###################################################################################################
 
 def compute_burst_stats(bursting, fs):
-    """Get statistics of bursts.
+    """Compute statistics of bursts.
 
     Parameters
     ----------
@@ -29,7 +29,6 @@ def compute_burst_stats(bursting, fs):
 
     tot_time = len(bursting) / fs
 
-    # Find burst starts and ends
     starts = np.array([])
     ends = np.array([])
 
@@ -40,7 +39,6 @@ def compute_burst_stats(bursting, fs):
         else:
             ends = np.append(ends, index)
 
-    # Duration of each burst
     durations = (ends - starts) / fs
 
     stats_dict = {'n_bursts': len(starts),

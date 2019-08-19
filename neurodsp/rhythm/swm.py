@@ -15,7 +15,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     Parameters
     ----------
     sig : 1d array
-        Voltage time series.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     win_len : float
@@ -26,8 +26,8 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         Maximum number of iterations of potential changes in window placement.
     temperature : float
         Temperature parameter. Controls probability of accepting a new window.
-    window_starts_custom : np.ndarray (1d), optional
-        Pre-set locations of initial windows (instead of evenly spaced by 2G).
+    window_starts_custom : 1d array, optional
+        Custom pre-set locations of initial windows.
 
     Returns
     -------
@@ -58,7 +58,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     win_n_samps = int(win_len * fs)
     spacing_n_samps = int(win_spacing * fs)
 
-    # Initialize window positions, separated by 2*G
+    # Initialize window positions
     if window_starts_custom is None:
         window_starts = np.arange(0, len(sig) - win_n_samps, 2 * spacing_n_samps)
     else:
