@@ -1,6 +1,6 @@
-"""Test functions in the spectral domain analysis module."""
+"""Test spectral power functions."""
 
-from neurodsp.spectral.spectral import *
+from neurodsp.spectral.power import *
 
 ###################################################################################################
 ###################################################################################################
@@ -31,22 +31,5 @@ def test_compute_spectrum_medfilt(tsig):
     freqs, spectrum = compute_spectrum_medfilt(tsig, fs=500)
     assert True
 
-def test_compute_scv(tsig):
 
-    freqs, spect_cv = compute_scv(tsig, fs=500)
-    assert True
 
-def test_compute_scv_rs(tsig):
-
-    freqs, t_inds, spect_cv = compute_scv_rs(tsig, fs=500, method='bootstrap')
-    freqs, t_inds, spect_cv = compute_scv_rs(tsig, fs=500, method='rolling')
-    assert True
-
-def test_compute_spectral_hist(tsig):
-
-    freqs, bins, spectral_hist = compute_spectral_hist(tsig, fs=500)
-    assert True
-
-## PRIVATE FUNCTIONS
-def test_spg_settings():
-    pass

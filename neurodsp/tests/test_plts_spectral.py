@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.spectral.spectral import compute_spectral_hist
+from neurodsp.spectral.variance import compute_spectral_hist
 from neurodsp.tests.utils import plot_test
 
 from neurodsp.plts.spectral import *

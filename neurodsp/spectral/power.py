@@ -1,0 +1,190 @@
+"""Compute spectral measures that measure spectral power.
+
+Notes
+-----
+Mostly relies on scipy.signal.spectrogram and numpy.fft
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.html
+"""
+
+import numpy as np
+from scipy.signal import spectrogram, medfilt
+
+from neurodsp.utils import discard_outliers
+from neurodsp.utils.core import get_avg_func
+from neurodsp.utils.decorators import multidim
+from neurodsp.timefrequency.wavelets import morlet_transform
+from neurodsp.spectral.utils import trim_spectrum
+from neurodsp.spectral.checks import check_spg_settings
+
+###################################################################################################
+###################################################################################################
+
+@multidim
+def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
+    """Compute the power spectral density (PSD) of a time series.
+
+    Parameters
+    -----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    method : {'welch', 'wavelet', 'medfilt'}
+        Method to use to estimate the power spectrum.
+    avg_type : {'mean', 'median'}, optional
+        If relevant, the method to average across windows to create the spectrum.
+    **kwargs
+        Keyword arguments to pass through to function that calculates the spectrum.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    if method not in ('welch', 'medfilt', 'wavelet'):
+        raise ValueError('Unknown power spectrum method: %s' % method)
+
+    if method == 'welch':
+        return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
+
+    elif method == 'wavelet':
+        return compute_spectrum_wavelet(sig, fs, avg_type=avg_type, **kwargs)
+
+    elif method == 'medfilt':
+        return compute_spectrum_medfilt(sig, fs, **kwargs)
+
+
+@multidim
+def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
+    """Compute the power spectral densitry using wavelets.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    avg_type : {'mean', 'median'}, optional
+        Method to average across the windows.
+    **kwargs
+        Optional inputs for using wavelets.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    mwt = morlet_transform(sig, fs, freqs, **kwargs)
+    spectrum = get_avg_func(avg_type)(mwt, axis=0)
+
+    return freqs, spectrum
+
+
+@multidim
+def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
+                           nperseg=None, noverlap=None,
+                           f_range=None, outlier_pct=None):
+    """Compute the power spectral density using Welch's method.
+
+    Parameters
+    -----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    avg_type : {'mean', 'median'}, optional
+        Method to average across the windows:
+
+        * 'mean' is the same as Welch's method, taking the mean across FFT windows.
+        * 'median' uses median across FFT windows instead of the mean, to minimize outlier effect.
+    window : str or tuple or array_like, optional, default: 'hann'
+        Desired window to use. Defaults to a Hann window.
+        See scipy.signal.get_window for a list of windows and required parameters.
+        If array_like, the array will be used as the window and its length must be nperseg.
+    nperseg : int, optional
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional
+        Number of points to overlap between segments.
+        If None, noverlap = nperseg // 8.
+    f_range : list of [float, float] optional
+        Frequency range to sub-select from the power spectrum.
+    outlier_pct : float, optional
+        Percentage of the windows with the lowest and highest total log power to discard.
+        Must be between 0 and 100.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Calculate the short time fourier transform with signal.spectrogram
+    nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+    freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
+
+    # Pad data to 2D
+    if len(sig.shape) == 1:
+        sig = sig[np.newaxis :]
+
+    # Throw out outliers if indicated
+    if outlier_pct is not None:
+        spg = discard_outliers(spg, outlier_pct)
+
+    # Average across windows
+    spectrum = get_avg_func(avg_type)(spg, axis=-1)
+
+    # Trim spectrum, if requested
+    if f_range:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
+
+    return freqs, spectrum
+
+
+@multidim
+def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
+    """Compute the power spectral densitry as a smoothed FFT.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series of measurement values.
+    fs : float
+        Sampling rate, in Hz.
+    filt_len : float, optional, default: 1.
+        Length of the median filter, in Hz.
+    f_range : list of [float, float] optional
+        Frequency range to sub-select from the power spectrum.
+
+    Returns
+    -------
+    freqs : 1d array
+        Array of sample frequencies.
+    spectrum : 1d or 2d array
+        Power spectral density.
+    """
+
+    # Take the positive half of the spectrum since it's symmetrical
+    ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
+
+    # Convert median filter length from Hz to samples, and make sure it is odd
+    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])))
+    if filt_len_samp % 2 == 0:
+        filt_len_samp += 1
+
+    spectrum = medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
+
+    if f_range:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
+
+    return freqs, spectrum
