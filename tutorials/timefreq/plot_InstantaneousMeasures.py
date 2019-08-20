@@ -20,15 +20,22 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 #
 # Load example neural signal
 # --------------------------
+#
+# First, we will load an example neural signal to use for our time-frequency measures.
+#
 
+###################################################################################################
+
+# Load a neural signal, as well as a filtered version of the same signal
 sig = np.load('../data/sample_data_1.npy')
-fs = 1000
-
-times = create_times(len(sig)/fs, fs)
-f_range = (13, 30)
-
-# Load filtered version of signal
 sig_filt_true = np.load('../data/sample_data_1_filt.npy')
+
+# Set the sampling rate and create a times vector for the signal
+fs = 1000
+times = create_times(len(sig)/fs, fs)
+
+# Set the frequency range to be used
+f_range = (13, 30)
 
 ###################################################################################################
 
@@ -37,8 +44,11 @@ plot_time_series(times, sig)
 
 ###################################################################################################
 #
-# Compute and plot instantaneous phase
-# ------------------------------------
+# Instantaneous Phase
+# -------------------
+#
+# Instantaneous phase is a measure of the phase of a signal, over time.
+#
 
 ###################################################################################################
 
@@ -54,8 +64,11 @@ plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
 #
-# Compute and plot instantaneous amplitude
-# ----------------------------------------
+# Instantaneous Amplitude
+# -----------------------
+#
+# Instantaneous amplitude is a measure of the amplitude of a signal, over time.
+#
 
 ###################################################################################################
 
@@ -75,11 +88,17 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
 
 ###################################################################################################
 #
-# Compute and plot instantaneous frequency
-# ----------------------------------------
+# Instantaneous Frequency
+# -----------------------
 #
-# Note that some people apply median filters to this instantaneous frequency
-# estimate in order to make it smoother (see e.g. Samaha & Postle, 2015)
+# Instantaneous frequency is a measure of frequency across time.
+#
+# It is measured as the temporal derivative of the instantaneous phase.
+#
+# Intstantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
+# such as appling a median filter, is used to make it smoother.
+#
+# For example of this, see Samaha & Postle, 2015.
 #
 
 ###################################################################################################

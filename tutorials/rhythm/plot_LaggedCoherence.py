@@ -33,8 +33,8 @@ np.random.seed(0)
 
 ###################################################################################################
 #
-# Simulate signal with oscillatory bursts
-# ---------------------------------------
+# Simulate a Signal with a Bursty Oscillation
+# -------------------------------------------
 #
 
 ###################################################################################################
@@ -80,7 +80,7 @@ print('Lagged coherence = ', lag_coh_alpha)
 # ------------------------------------------------------
 #
 # Notice that lagged coherence peaks around 10Hz (the frequency of our
-# oscillator), but it is not very specific to that frequency.
+# oscillation), but it is not very specific to that frequency.
 #
 
 lag_coh_by_f, freqs = lagged_coherence(sig, (1, 40), fs, return_spectrum=True)

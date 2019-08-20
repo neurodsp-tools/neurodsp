@@ -14,7 +14,7 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 #
 # This tutorial is broken down into the following sections:
 #
-# 1. Bandpass filter: extract a single oscillator from your signal
+# 1. Bandpass filter: extract a single oscillation from a signal
 # 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
 # 3. Time-frequency resolution tradeoff: Change the filter length
 # 4. Infinite-impulse-response (IIR) filter option.
@@ -255,7 +255,7 @@ sig = filt.filter_signal(sig, fs, 'lowpass', f_range=100)
 
 # Filter the data
 f_range = (58, 62)
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filt_type='iir', butterworth_order=3)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filter_type='iir', butterworth_order=3)
 
 ###################################################################################################
 
