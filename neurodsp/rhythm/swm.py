@@ -80,7 +80,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
         # Find a new allowed position for the window
         window_starts_temp = np.copy(window_starts)
-        window_starts_temp[window_idx_replace] = _find_new_windowidx(
+        window_starts_temp[window_idx_replace] = _find_new_window_idx(
             window_starts, spacing_n_samps, len(sig) - win_n_samps)
 
         # Calculate the cost & the change in the cost function
@@ -136,7 +136,7 @@ def _compute_cost(sig, window_starts, win_n_samps):
     return cost
 
 
-def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
+def _find_new_window_idx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
     """Find a new sample for the starting window."""
 
     for n_try in range(tries_limit):

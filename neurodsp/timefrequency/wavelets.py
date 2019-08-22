@@ -4,13 +4,14 @@ import numpy as np
 from scipy.signal import morlet
 
 from neurodsp.utils.data import create_freqs
+from neurodsp.utils.core import check_n_cycles
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
 @multidim
-def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
+def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     """Calculate the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
@@ -36,16 +37,17 @@ def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
 
     if isinstance(freqs, (tuple, list)):
         freqs = create_freqs(*freqs)
+    n_cycles = check_n_cycles(n_cycles, len(freqs))
 
     mwt = np.zeros([len(sig), len(freqs)], dtype=complex)
-    for f_ind, freq in enumerate(freqs):
-        mwt[:, f_ind] = morlet_convolve(sig, fs, freq, n_cycles, scaling)
+    for ind, (freq, n_cycle) in enumerate(zip(freqs, n_cycles)):
+        mwt[:, ind] = convolve_wavelet(sig, fs, freq, n_cycle, scaling)
 
     return mwt
 
 
 @multidim
-def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
+def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
     """Convolve a signal with a complex wavelet.
 
     Parameters
@@ -80,9 +82,6 @@ def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm=
     * Taking np.abs() of output gives the analytic amplitude.
     * Taking np.angle() of output gives the analytic phase.
     """
-
-    if n_cycles <= 0:
-        raise ValueError('Number of cycles for morlet wavelets must be a positive number.')
 
     if filt_len is None:
         filt_len = n_cycles * fs / freq

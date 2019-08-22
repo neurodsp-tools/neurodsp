@@ -10,9 +10,10 @@ import numpy as np
 from scipy.signal import spectrogram, medfilt
 
 from neurodsp.utils.core import get_avg_func
+from neurodsp.utils.data import create_freqs
 from neurodsp.utils.decorators import multidim
 from neurodsp.utils.outliers import discard_outliers
-from neurodsp.timefrequency.wavelets import morlet_transform
+from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_spg_settings
 
@@ -84,7 +85,10 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         Power spectral density.
     """
 
-    mwt = morlet_transform(sig, fs, freqs, **kwargs)
+    if isinstance(freqs, (tuple, list)):
+        freqs = create_freqs(*freqs)
+
+    mwt = compute_wavelet_transform(sig, fs, freqs, **kwargs)
     spectrum = get_avg_func(avg_type)(mwt, axis=0)
 
     return freqs, spectrum

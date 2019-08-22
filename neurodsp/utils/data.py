@@ -64,3 +64,31 @@ def create_samples(n_samples, start_val=0):
     """
 
     return np.arange(start_val, n_samples, 1)
+
+
+def split_signal(sig, n_samples):
+    """Split a signal into non-overlapping chunks.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series.
+    n_samples : int
+        The chunk size to split the signal into, in samples.
+
+    Returns
+    -------
+    chunks : 2d array
+        The signal, split into chunks, with shape [n_chunks, chunk_size].
+
+    Notes
+    -----
+    If the signal does not divide evenly into the number of chunks, this approach
+    will truncate the signal, returning the maximum number of chunks, and dropping
+    any leftover samples.
+    """
+
+    n_chunks = int(np.floor(len(sig) / float(n_samples)))
+    chunks = np.reshape(sig[:int(n_chunks * n_samples)], (n_chunks, int(n_samples)))
+
+    return chunks

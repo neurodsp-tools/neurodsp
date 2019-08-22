@@ -3,18 +3,18 @@
 from warnings import warn
 
 import numpy as np
-
 from scipy.signal.windows import hann
 
-from neurodsp.utils.data import create_freqs
+from neurodsp.utils.core import check_n_cycles
+from neurodsp.utils.data import create_freqs, split_signal
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
 @multidim
-def lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
-    """Quantify the rhythmicity of a frequency range using lagged coherence.
+def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
+    """Compute lagged coherence, reflecting the rhythmicity across a frequency range.
 
     Parameters
     ----------
@@ -26,20 +26,22 @@ def lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
         If array, frequency values to estimate with morlet wavelets.
         If list, define the frequency range, as [freq_start, freq_stop, freq_step].
         The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
-    n_cycles : float, optional, default: 3
+    n_cycles : float or list of float, default: 3
         Number of cycles of each frequency to use to compute lagged coherence.
+        If a single value, the same number of cycles is used for each frequency value.
+        If a list or list_like, then should be a n_cycles corresponding to each frequency.
     return_spectrum : bool, optional, default: False
         If True, return the lagged coherence for all frequency values.
         Otherwise, only the mean lagged coherence value across the frequency range is returned.
 
     Returns
     -------
-    lc : float or 1d array
-        If return_spectrum is False: mean lagged coherence value in the frequency range of interest.
-        If return_spectrum is True: lagged coherence value for each frequency across the range.
+    lcs : float or 1d array
+        If `return_spectrum` is False: mean lagged coherence value across the frequency range.
+        If `return_spectrum` is True: lagged coherence values for all frequencies.
     freqs : 1d array
         Frequencies, corresponding to the lagged coherence values, in Hz.
-        Only returned if return_spectrum is True.
+        Only returned if `return_spectrum` is True.
 
     References
     ----------
@@ -50,14 +52,15 @@ def lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     if isinstance(freqs, (tuple, list)):
         freqs = create_freqs(*freqs)
+    n_cycles = check_n_cycles(n_cycles, len(freqs))
 
     # Calculate lagged coherence for each frequency
-    lc = np.zeros(len(freqs))
-    for ind, freq in enumerate(freqs):
-        lc[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)
+    lcs = np.zeros(len(freqs))
+    for ind, (freq, n_cycle) in enumerate(zip(freqs, n_cycles)):
+        lcs[ind] = lagged_coherence_1freq(sig, fs, freq, n_cycles=n_cycle)
 
     # Check if all values were properly estimated
-    if sum(np.isnan(lc)) > 0:
+    if sum(np.isnan(lcs)) > 0:
         warn("NEURODSP - LAGGED COHERENCE WARNING:"
              "\nLagged coherence could not be estimated for at least some requested frequencies."
              "\nThis happens, especially with low frequencies, when there are not enough samples "
@@ -66,19 +69,36 @@ def lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     # Return desired measure of lagged coherence
     if return_spectrum:
-        return lc, freqs
+        return lcs, freqs
     else:
-        return np.mean(lc)
+        return np.mean(lcs)
 
 
-def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
-    """Calculate lagged coherence of a specific frequency using the hanning-taper FFT method"""
+def lagged_coherence_1freq(sig, fs, freq, n_cycles):
+    """Compute the lagged coherence of a frequency using the hanning-taper FFT method.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    freq : float
+        The frequency at which to estimate lagged coherence.
+    n_cycles : float
+        Number of cycles at the examined frequency to use to compute lagged coherence.
+
+    Returns
+    -------
+    float
+        The computed lagged coherence value.
+    """
 
     # Determine number of samples to be used in each window to compute lagged coherence
     n_samps = int(np.ceil(n_cycles * fs / freq))
 
     # Split the signal into chunks
-    chunks = _nonoverlapping_chunks(sig, n_samps)
+    chunks = split_signal(sig, n_samps)
     n_chunks = len(chunks)
 
     # For each chunk, calculate the fourier coefficients at the frequency of interest
@@ -98,12 +118,3 @@ def _lagged_coherence_1freq(sig, freq, fs, n_cycles=3):
     lcs_denom = np.sqrt(np.sum(np.abs(fft_coefs[:-1])**2) * np.sum(np.abs(fft_coefs[1:])**2))
 
     return np.abs(lcs_num / lcs_denom)
-
-
-def _nonoverlapping_chunks(sig, n_samples):
-    """Split a signal into non-overlapping chunks."""
-
-    n_chunks = int(np.floor(len(sig) / float(n_samples)))
-    chunks = np.reshape(sig[:int(n_chunks * n_samples)], (n_chunks, int(n_samples)))
-
-    return chunks
