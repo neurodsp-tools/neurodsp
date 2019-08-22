@@ -37,5 +37,5 @@ def test_sim_powerlaw():
 
 def test_create_powerlaw():
 
-    sig = _create_powerlaw(N_SECONDS*FS, FS, -2)
+    sig = _create_powerlaw(int(N_SECONDS*FS), FS, -2)
     check_sim_output(sig)

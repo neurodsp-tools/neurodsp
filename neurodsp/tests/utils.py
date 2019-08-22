@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 # Some default settings for the sim tests
 FS = 100
-N_SECONDS = 1
+N_SECONDS = 0.75
 FREQ = 10
 
 ###################################################################################################
@@ -19,7 +19,7 @@ FREQ = 10
 def check_sim_output(sig):
     """Helper function to check some basic properties of simualated signals."""
 
-    exp_n_samples = FS * N_SECONDS
+    exp_n_samples = int(FS * N_SECONDS)
 
     assert isinstance(sig, np.ndarray)
     assert len(sig) == exp_n_samples

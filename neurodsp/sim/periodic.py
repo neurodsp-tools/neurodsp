@@ -41,7 +41,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     osc = np.tile(osc_cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
-    n_samps = n_seconds * fs
+    n_samps = int(n_seconds * fs)
     osc = osc[:n_samps]
 
     return osc
