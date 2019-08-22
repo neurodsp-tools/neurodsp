@@ -112,7 +112,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
 
 def _compute_cost(sig, window_starts, win_n_samps):
-    """Compute the cost, which is proportional to the difference between pairs of windows"""
+    """Compute the cost, which is proportional to the difference between pairs of windows."""
 
     # Get all windows and zscore them
     n_windows = len(window_starts)
@@ -137,7 +137,7 @@ def _compute_cost(sig, window_starts, win_n_samps):
 
 
 def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
-    """Find a new sample for the starting window"""
+    """Find a new sample for the starting window."""
 
     for n_try in range(tries_limit):
 
@@ -150,6 +150,6 @@ def _find_new_windowidx(window_starts, spacing_n_samps, n_samp, tries_limit=1000
 
     else:
         raise RuntimeError('SWM algorithm has difficulty finding a new window. \
-                            Increase the spacing parameter, G.')
+                            Try increasing the spacing parameter.')
 
     return new_samp

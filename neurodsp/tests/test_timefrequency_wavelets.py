@@ -7,7 +7,7 @@ from neurodsp.timefrequency.wavelets import *
 
 def test_morlet_transform(tsig):
 
-    out = morlet_transform(tsig, 500, [5, 10, 15])
+    out = morlet_transform(tsig, 500, np.array([5, 10, 15]))
     assert True
 
 def test_morlet_convolve(tsig):

@@ -9,9 +9,9 @@ https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.ht
 import numpy as np
 from scipy.signal import spectrogram, medfilt
 
-from neurodsp.utils import discard_outliers
 from neurodsp.utils.core import get_avg_func
 from neurodsp.utils.decorators import multidim
+from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import morlet_transform
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_spg_settings
@@ -67,6 +67,10 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
+    freqs : 1d array or list of float
+        If array, frequency values to estimate with morlet wavelets.
+        If list, define the frequency range, as [freq_start, freq_stop, freq_step].
+        The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
     avg_type : {'mean', 'median'}, optional
         Method to average across the windows.
     **kwargs

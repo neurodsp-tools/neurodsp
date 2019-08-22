@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.signal import morlet
 
+from neurodsp.utils.data import create_freqs
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
@@ -18,24 +19,25 @@ def morlet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    freqs : 1d array
-        Frequency values to estimate with morlet wavelets.
+    freqs : 1d array or list of float
+        If array, frequency values to estimate with morlet wavelets.
+        If list, define the frequency range, as [freq_start, freq_stop, freq_step].
+        The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
     n_cycles : float
-        Length of the filter, as the number of cycles of the oscillation
-        whose frequency is the center of the bandpass filter.
+        Length of the filter, as the number of cycles for each frequency.
     scaling : float
         Scaling factor.
 
     Returns
     -------
     mwt : 2d array
-        Time-frequency representation of signal sig.
+        Time frequency representation of the input signal.
     """
 
-    sig_len = len(sig)
-    freqs_len = len(freqs)
-    mwt = np.zeros([sig_len, freqs_len], dtype=complex)
+    if isinstance(freqs, (tuple, list)):
+        freqs = create_freqs(*freqs)
 
+    mwt = np.zeros([len(sig), len(freqs)], dtype=complex)
     for f_ind, freq in enumerate(freqs):
         mwt[:, f_ind] = morlet_convolve(sig, fs, freq, n_cycles, scaling)
 
@@ -63,7 +65,7 @@ def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm=
     norm : {'sss', 'amp'}, optional
         Normalization method:
 
-        * 'sss' - divide by the sqrt of the sum of squares of points
+        * 'sss' - divide by the square root of the sum of squares
         * 'amp' - divide by the sum of amplitudes divided by 2
 
     Returns
@@ -87,10 +89,9 @@ def morlet_convolve(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm=
 
     morlet_f = morlet(filt_len, w=n_cycles, s=scaling)
 
-    # ToDo: there is an inconsistency between these methods, and the docs.
     if norm == 'sss':
         morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
-    elif norm == 'abs':
+    elif norm == 'amp':
         morlet_f = morlet_f / np.sum(np.abs(morlet_f))
     else:
         raise ValueError('Not a valid wavelet normalization method.')

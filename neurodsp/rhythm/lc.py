@@ -5,27 +5,29 @@ from warnings import warn
 import numpy as np
 
 from scipy.signal.windows import hann
+
+from neurodsp.utils.data import create_freqs
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
 @multidim
-def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=False):
+def lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     """Quantify the rhythmicity of a frequency range using lagged coherence.
 
     Parameters
     ----------
     sig : 1d array
         Time series.
-    f_range : list of float
-        Frequency range to compute lagged coherence across, as [low, high], in Hz.
     fs : float
         Sampling rate, in Hz.
+    freqs : 1d array or list of float
+        If array, frequency values to estimate with morlet wavelets.
+        If list, define the frequency range, as [freq_start, freq_stop, freq_step].
+        The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
     n_cycles : float, optional, default: 3
         Number of cycles of each frequency to use to compute lagged coherence.
-    f_step : float, optional, default: 1
-        Step size across the frequency range, to calculate lagged coherence, in Hz.
     return_spectrum : bool, optional, default: False
         If True, return the lagged coherence for all frequency values.
         Otherwise, only the mean lagged coherence value across the frequency range is returned.
@@ -46,8 +48,10 @@ def lagged_coherence(sig, f_range, fs, n_cycles=3, f_step=1, return_spectrum=Fal
     Neuroimage, 118, 256-267.
     """
 
+    if isinstance(freqs, (tuple, list)):
+        freqs = create_freqs(*freqs)
+
     # Calculate lagged coherence for each frequency
-    freqs = np.arange(f_range[0], f_range[1] + f_step, f_step)
     lc = np.zeros(len(freqs))
     for ind, freq in enumerate(freqs):
         lc[ind] = _lagged_coherence_1freq(sig, freq, fs, n_cycles=n_cycles)

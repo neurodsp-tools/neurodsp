@@ -5,6 +5,27 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
+def create_freqs(freq_start, freq_stop, freq_step=1):
+    """Create an array of frequencies.
+
+    Parameters
+    ----------
+    freq_start : float
+        Starting value for the frequency definition.
+    freq_stop : float
+        Stopping value for the frequency definition, inclusive.
+    freq_step : float, optional, default=1
+        Step value, for linearly spaced values between start and stop.
+
+    Returns
+    -------
+    1d array
+        Frequency indices.
+    """
+
+    return np.arange(freq_start, freq_stop + freq_step, freq_step)
+
+
 def create_times(n_seconds, fs, start_val=0.):
     """Create an array of time indices.
 
