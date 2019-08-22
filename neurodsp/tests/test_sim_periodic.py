@@ -20,4 +20,6 @@ def test_sim_bursty_oscillation():
     check_sim_output(sig)
 
 def test_make_is_osc():
-    pass
+
+    is_osc = _make_is_osc(10, 0.5, 0.5)
+    assert isinstance(is_osc[0], bool)

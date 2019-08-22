@@ -13,6 +13,10 @@ def test_get_sim_funcs():
         funcs = get_sim_funcs(module)
         assert isinstance(funcs, dict)
 
+    # Check the error for requesting non-existing function
+    with raises(ValueError):
+        get_sim_func('bad_mod')
+
 def test_get_sim_names():
 
     for module in SIM_MODULES:
