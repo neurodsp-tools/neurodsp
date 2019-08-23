@@ -1,19 +1,32 @@
-"""Test function to compute lagged coherence."""
+"""Test lagged coherence code."""
+
+from pytest import warns
+
+import numpy as np
+
+from neurodsp.tests.settings import FS, FREQ1, FREQS_ARR, FREQS_LST
 
 from neurodsp.rhythm.lc import *
 
 ###################################################################################################
 ###################################################################################################
 
-def test_lagged_coherence(tsig):
+def test_compute_lagged_coherence(tsig):
 
-    lcs = lagged_coherence(tsig, fs=500, freqs=[8, 12])
-    assert True
+    lc = compute_lagged_coherence(tsig, FS, FREQS_ARR)
+    assert isinstance(lc, float)
 
-## PRIVATE FUNCTIONS
+    lcs, freqs = compute_lagged_coherence(tsig, FS, FREQS_LST, return_spectrum=True)
+    assert sum(np.isnan(lcs)) == 0
 
-def test_lagged_coherence_1freq():
-    pass
+    # Check using a list of n_cycles defintions
+    lc = compute_lagged_coherence(tsig, FS, FREQS_ARR, n_cycles=[3, 4, 5])
 
-def test_nonoverlapping_chunks():
-    pass
+    # Test the warning if can't estimate some values
+    with warns(UserWarning):
+        compute_lagged_coherence(tsig, 100, np.array([1, 2]), n_cycles=10)
+
+def test_lagged_coherence_1freq(tsig):
+
+    lc = lagged_coherence_1freq(tsig, FS, FREQ1, n_cycles=3)
+    assert isinstance(lc, float)

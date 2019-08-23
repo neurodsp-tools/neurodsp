@@ -1,6 +1,6 @@
 """Tests for FIR filters."""
 
-from pytest import raises
+from neurodsp.tests.settings import FS
 
 from neurodsp.filt.fir import *
 
@@ -9,18 +9,16 @@ from neurodsp.filt.fir import *
 
 def test_filter_signal_fir(tsig):
 
-    sig = filter_signal_fir(tsig, 500, 'bandpass', (8, 12))
-    assert True
+    sig = filter_signal_fir(tsig, FS, 'bandpass', (8, 12))
+    assert sig.shape == tsig.shape
 
 def test_design_fir_filter():
 
-    fs = 100
     test_filts = {'bandpass' : (5, 10), 'bandstop' : (5, 6),
                   'lowpass' : (None, 5), 'highpass' : (5, None)}
 
     for pass_type, f_range in test_filts.items():
-        filter_coefs = design_fir_filter(fs, pass_type, f_range)
-    assert True
+        filter_coefs = design_fir_filter(FS, pass_type, f_range)
 
 def test_compute_filter_length():
 

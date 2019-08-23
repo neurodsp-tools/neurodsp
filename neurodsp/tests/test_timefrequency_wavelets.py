@@ -1,17 +1,20 @@
 """Tests for timefrequency estimations using wavelets."""
 
+from neurodsp.tests.settings import FS, FREQ1, FREQS_ARR
+
 from neurodsp.timefrequency.wavelets import *
 
 ###################################################################################################
 ###################################################################################################
 
-def test_morlet_transform(tsig):
+def test_compute_wavelet_transform(tsig):
 
-    out = morlet_transform(tsig, 500, np.array([5, 10, 15]))
-    assert True
+    out = compute_wavelet_transform(tsig, FS, FREQS_ARR)
 
-def test_morlet_convolve(tsig):
+    # Check using a list of n_cycles defintions
+    out = compute_wavelet_transform(tsig, FS, FREQS_ARR, n_cycles=[3, 4, 5])
 
-    out = morlet_convolve(tsig, 500, 10)
-    #out = morlet_convolve(tsig, 500, 10, norm='amp')
-    assert True
+def test_convolve_wavelet(tsig):
+
+    out = convolve_wavelet(tsig, FS, FREQ1)
+    out = convolve_wavelet(tsig, FS, FREQ1, norm='amp')

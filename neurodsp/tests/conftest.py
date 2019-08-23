@@ -2,11 +2,18 @@
 
 import pytest
 
-from neurodsp.tests.utils import get_random_signal
+import numpy as np
+
+from neurodsp.utils.sim import set_random_seed
 
 ###################################################################################################
 ###################################################################################################
+
+def pytest_configure(config):
+
+    set_random_seed(42)
 
 @pytest.fixture(scope='session')
 def tsig():
-    yield get_random_signal()
+
+    yield np.random.randn(1000)

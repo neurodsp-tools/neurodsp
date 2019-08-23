@@ -23,14 +23,14 @@ def test_robust_hilbert():
 def test_phase_by_time(tsig):
 
     out = phase_by_time(tsig, 500, (8, 12))
-    assert True
+    assert out.shape == tsig.shape
 
 def test_amp_by_time(tsig):
 
     out = amp_by_time(tsig, 500, (8, 12))
-    assert True
+    assert out.shape == tsig.shape
 
 def test_freq_by_time(tsig):
 
     out = freq_by_time(tsig, 500, (8, 12))
-    assert True
+    assert out.shape == tsig.shape

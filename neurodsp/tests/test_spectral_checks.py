@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from neurodsp.tests.settings import FS
+
 from neurodsp.spectral.checks import *
 
 ###################################################################################################
@@ -9,13 +11,12 @@ from neurodsp.spectral.checks import *
 
 def test_spg_settings():
 
-    fs = 500
-    nperseg, noverlap = check_spg_settings(fs, 'hann', None, None)
-    assert nperseg == fs
+    nperseg, noverlap = check_spg_settings(FS, 'hann', None, None)
+    assert nperseg == FS
     assert noverlap == None
 
     window = np.array([1, 2, 3, 4])
-    noverlap = 20
-    nperseg, noverlap = check_spg_settings(fs, window, None, noverlap)
+    noverlap_in = 20
+    nperseg, noverlap_out = check_spg_settings(FS, window, None, noverlap_in)
     assert nperseg == len(window)
-    assert noverlap == noverlap
+    assert noverlap_out == noverlap_in

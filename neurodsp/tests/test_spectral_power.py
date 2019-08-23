@@ -1,6 +1,6 @@
 """Test spectral power functions."""
 
-import numpy as np
+from neurodsp.tests.settings import FS, FREQS_LST, FREQS_ARR
 
 from neurodsp.spectral.power import *
 
@@ -9,29 +9,32 @@ from neurodsp.spectral.power import *
 
 def test_compute_spectrum(tsig):
 
-    freqs, spectrum = compute_spectrum(tsig, fs=500, method='welch')
-    freqs, spectrum = compute_spectrum(tsig, fs=500, method='wavelet', freqs=[5, 10, 15])
-    freqs, spectrum = compute_spectrum(tsig, fs=500, method='medfilt')
-    assert True
+    freqs, spectrum = compute_spectrum(tsig, FS, method='welch')
+    assert freqs.shape == spectrum.shape
+
+    freqs, spectrum = compute_spectrum(tsig, FS, method='wavelet', freqs=FREQS_ARR)
+    assert freqs.shape == spectrum.shape
+
+    freqs, spectrum = compute_spectrum(tsig, FS, method='medfilt')
+    assert freqs.shape == spectrum.shape
 
 def test_compute_spectrum_welch(tsig):
 
-    freqs, spectrum = compute_spectrum_welch(tsig, fs=500, avg_type='mean')
-    freqs, spectrum = compute_spectrum_welch(tsig, fs=500, avg_type='median')
-    assert True
+    freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')
+    assert freqs.shape == spectrum.shape
+
+    freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='median')
+    assert freqs.shape == spectrum.shape
 
 def test_compute_spectrum_wavelet(tsig):
 
-    freqs, spectrum = compute_spectrum_wavelet(tsig, fs=500, freqs=np.array([5, 10, 15]), avg_type='mean')
-    freqs, spectrum = compute_spectrum_wavelet(tsig, fs=500, freqs=np.array([5, 10, 15]), avg_type='median')
-    assert True
+    freqs, spectrum = compute_spectrum_wavelet(tsig, FS, freqs=FREQS_ARR, avg_type='mean')
+    assert freqs.shape == spectrum.shape
+
+    freqs, spectrum = compute_spectrum_wavelet(tsig, FS, freqs=FREQS_LST, avg_type='median')
+    assert freqs.shape == spectrum.shape
 
 def test_compute_spectrum_medfilt(tsig):
 
-    # NOTE: this test fails uninformatively if fs is 1000 (for siglength 1000). Something to check
-
-    freqs, spectrum = compute_spectrum_medfilt(tsig, fs=500)
-    assert True
-
-
-
+    freqs, spectrum = compute_spectrum_medfilt(tsig, FS)
+    assert freqs.shape == spectrum.shape

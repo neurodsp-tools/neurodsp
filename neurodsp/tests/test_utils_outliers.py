@@ -25,7 +25,7 @@ def test_remove_nans():
 def test_restore_nans():
 
     arr_no_nans = np.array([1, 2, 3])
-    arr_nans =  np.array([True, True, False, False, False, True])
+    arr_nans = np.array([True, True, False, False, False, True])
 
     arr_restored = restore_nans(arr_no_nans, arr_nans)
     assert_equal(arr_restored, np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN]))

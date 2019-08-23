@@ -1,8 +1,6 @@
 """Test aperiodic simulation functions."""
 
-import numpy as np
-
-from neurodsp.tests.utils import FS, N_SECONDS
+from neurodsp.tests.settings import FS, N_SECONDS
 from neurodsp.tests.utils import check_sim_output
 
 from neurodsp.sim.aperiodic import *

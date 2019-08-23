@@ -2,6 +2,8 @@
 
 from pytest import raises
 
+from neurodsp.tests.settings import FS
+
 from neurodsp.filt.fir import design_fir_filter
 from neurodsp.filt.checks import *
 
@@ -43,9 +45,8 @@ def test_check_filter_definition():
 
 def test_check_filter_properties():
 
-    fs = 500
-    filter_coefs = design_fir_filter(fs, 'bandpass', (8, 12))
-    check_filter_properties(filter_coefs, 1, fs, 'bandpass', (8, 12))
+    filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
+    check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert True
 
 def test_check_filter_length():
