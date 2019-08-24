@@ -102,8 +102,8 @@ Wavelet Methods
 .. autosummary::
   :toctree: generated/
 
-  morlet_transform
-  morlet_convolve
+  compute_wavelet_transform
+  convolve_wavelet
 
 Spectral Analyses
 -----------------
@@ -113,7 +113,7 @@ Functions and utilities in the :mod:`spectral` module, for spectral analyses.
 Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.spectral.spectral
+.. currentmodule:: neurodsp.spectral.power
 
 .. autosummary::
    :toctree: generated/
@@ -126,7 +126,7 @@ Spectral Power Measures
 Spectral Variance Measures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.spectral.spectral
+.. currentmodule:: neurodsp.spectral.variance
 
 .. autosummary::
    :toctree: generated/
@@ -194,7 +194,7 @@ Lagged Coherence
 .. autosummary::
   :toctree: generated/
 
-  lagged_coherence
+  compute_lagged_coherence
 
 Simulations
 -----------
@@ -233,7 +233,7 @@ Transients
 .. autosummary::
   :toctree: generated/
 
-  sim_osc_cycle
+  sim_cycle
   sim_synaptic_kernel
 
 Combined Signals
