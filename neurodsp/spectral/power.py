@@ -112,8 +112,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         * 'mean' is the same as Welch's method, taking the mean across FFT windows.
         * 'median' uses median across FFT windows instead of the mean, to minimize outlier effect.
     window : str or tuple or array_like, optional, default: 'hann'
-        Desired window to use. Defaults to a Hann window.
-        See scipy.signal.get_window for a list of windows and required parameters.
+        Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.

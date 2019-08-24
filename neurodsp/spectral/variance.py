@@ -22,8 +22,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     fs : float
         Sampling rate, in Hz.
     window : str or tuple or array_like, optional, default='hann'
-        Desired window to use. Defaults to a Hann window.
-        See scipy.signal.get_window for a list of windows and required parameters.
+        Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
@@ -62,8 +61,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 @multidim
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
                    method='bootstrap', rs_params=None):
-    """Resampled version of scv: instead of a single estimate of mean and standard deviation,
-    the spectrogram is resampled, either randomly (bootstrap) or time-stepped (rolling).
+    """Compute a resampled version of the the spectral coefficient of variation (SCV).
 
     Parameters
     -----------
@@ -72,8 +70,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     fs : float
         Sampling rate, in Hz.
     window : str or tuple or array_like, optional, default='hann'
-        Desired window to use. Defaults to a Hann window.
-        See scipy.signal.get_window for a list of windows and required parameters.
+        Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
@@ -82,15 +79,21 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     noverlap : int, optional, default: 0
         Number of points to overlap between segments.
     method : {'bootstrap', 'rolling'}, optional
-        Method of resampling.
-        'bootstrap' randomly samples a subset of the spectrogram repeatedly.
-        'rolling' takes the rolling window scv.
+        Method of resampling:
+
+        * 'bootstrap' randomly samples a subset of the spectrogram repeatedly.
+        * 'rolling' takes the rolling window scv.
     rs_params : tuple, (int, int), optional
-        Parameters for resampling algorithm, depending on the method used.
-        If 'bootstrap', rs_params = (nslices, ndraws), defaults to (10% of slices, 100 draws).
-        This specifies the number of slices per draw, and number of random draws.
-        If 'rolling', rs_params = (nslices, nsteps), defaults to (10, 5).
-        This specifies the number of slices per draw, and number of slices to step forward.
+        Parameters for resampling algorithm, depending on the method used:
+
+        * If 'bootstrap', rs_params = (n_slices, n_draws), defaults to (10% of slices, 100 draws).
+        * If 'rolling', rs_params = (n_slices, n_steps), defaults to (10, 5).
+
+        Where:
+
+        * `n_slices` is the number of slices per draw
+        * `n_draws` is the number of random draws
+        * `n_steps` is the number of slices to step forward.
 
     Returns
     -------
@@ -100,6 +103,14 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
     scv_rs : 2d array
         Resampled spectral coefficient of variation.
+
+    Notes
+    -----
+    In the resampled verion, instead of a single estimate of mean and standard deviation,
+    the spectrogram is resampled.
+
+    Resampling can be done either randomly (method='bootstrap') or in a time-stepped
+    manner (method='rolling').
     """
 
     # Compute spectrogram of data
@@ -160,8 +171,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     fs : float
         Sampling rate, in Hz.
     window : str or tuple or array_like, optional, default='hann'
-        Desired window to use. Defaults to a Hann window.
-        See scipy.signal.get_window for a list of windows and required parameters.
+        Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
         Length of each segment, in number of samples.
@@ -183,7 +193,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     power_bins : 1d array
         Histogram bins used to compute the distribution.
     spectral_hist : 2d array
-        Power distribution at every frequency, nbins x fs 2D matrix.
+        Power distribution at every frequency, as [n_bins, freqs].
 
     Notes
     -----

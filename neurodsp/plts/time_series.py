@@ -68,7 +68,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
         Which kind of measure is being plotted.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
-    **kwargs
+    **plt_kwargs
         Keyword arguments to pass into `plot_time_series`.
     """
 
@@ -99,7 +99,7 @@ def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
         A boolean array which indicates identified bursts.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
-    **kwargs
+    **plt_kwargs
         Keyword arguments to pass into `plot_time_series`.
     """
 

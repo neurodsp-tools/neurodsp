@@ -12,7 +12,7 @@ from neurodsp.utils.decorators import multidim
 
 @multidim
 def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
-    """Calculate the time-frequency representation of a signal using morlet wavelets.
+    """Compute the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
     ----------

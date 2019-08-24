@@ -40,18 +40,17 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     References
     ----------
-    Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P.,
-    Jensen, O., & van der Eerden, J. (2017). Discovering recurring
-    patterns in electrophysiological recordings.
-    Journal of Neuroscience Methods, 275, 66-79.
-    MATLAB code: https://github.com/bartgips/SWM
+    .. [1] Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &
+           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological recordings.
+           Journal of Neuroscience Methods, 275, 66-79. DOI: 10.1016/j.jneumeth.2016.11.001
+           Matlab Code: https://github.com/bartgips/SWM
 
     Notes
     -----
-    * Apply a highpass filter if looking at high frequency activity,
-      so that it does not converge on a low frequency motif.
-    * win_len and win_spacing should be chosen to be about the size of the motif of
-      interest, and the N derived should be about the number of occurrences.
+    * Apply a highpass filter if looking at high frequency activity, so that it does
+      not converge on a low frequency motif.
+    * Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
+      motif of interest, and the N derived should be about the number of occurrences.
     """
 
     # Compute window length and spacing in samples

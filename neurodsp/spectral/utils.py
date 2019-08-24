@@ -11,11 +11,11 @@ def trim_spectrum(freqs, power_spectra, f_range):
     Parameters
     ----------
     freqs : 1d array
-        Frequency values for the PSD.
+        Frequency values for the power spectrum.
     power_spectra : 1d or 2d array
         Power spectral density values.
     f_range: list of [float, float]
-        Frequency range to restrict to.
+        Frequency range to restrict to, as [f_low, f_high].
 
     Returns
     -------
@@ -42,7 +42,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
 
 
 def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
-    """Rotate the power law exponent of a power spectrum about an axis frequency.
+    """Rotate the power law exponent of a power spectrum.
 
     Parameters
     ----------

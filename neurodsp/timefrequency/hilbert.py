@@ -21,7 +21,7 @@ def robust_hilbert(sig, increase_n=False):
         Time series.
     increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 for the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of x.
+        This is because :func:`scipy.signal.hilbert` can be very slow for some signal lengths.
 
     Returns
     -------
@@ -60,7 +60,7 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of x.
+        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
@@ -98,7 +98,7 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of sig.
+        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
@@ -136,7 +136,7 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because scipy.signal.hilbert can be very slow for some lengths of sig.
+        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half a kernel's length to the edge with np.nan.
     **filter_kwargs
@@ -144,7 +144,7 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
 
     Returns
     -------
-    i_f : float
+    i_f : 1d array
         Instantaneous frequency time series.
 
     Notes

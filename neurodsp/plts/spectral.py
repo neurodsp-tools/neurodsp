@@ -53,7 +53,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
 @savefig
 @style_plot
 def plot_scv(freqs, scv, ax=None):
-    """Plot the SCV.
+    """Plot spectral coefficient of variation.
 
     Parameters
     ----------
@@ -76,7 +76,7 @@ def plot_scv(freqs, scv, ax=None):
 @savefig
 @style_plot
 def plot_scv_rs_lines(freqs, scv_rs, ax=None):
-    """Plot the SCV, from the resampling method.
+    """Plot spectral coefficient of variation, from the resampling method, as lines.
 
     Parameters
     ----------
@@ -101,14 +101,14 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 @savefig
 @style_plot
 def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
-    """Plot the SCV, from the resampling method.
+    """Plot spectral coefficient of variation, from the resampling method, as a matrix.
 
     Parameters
     ----------
     freqs : 1d array
         Frequency vector.
     t_inds : 1d array
-        Time indices
+        Time indices.
     scv_rs : 1d array
         Spectral coefficient of variation, from resampling procedure.
     """
@@ -126,7 +126,7 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
 @savefig
 @style_plot
 def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, spectrum=None):
-    """Plot the spectral histogram.
+    """Plot spectral histogram.
 
     Parameters
     ----------

@@ -56,7 +56,7 @@ def compute_frequency_response(b_vals, a_vals, fs):
     f_db : 1d array
         Frequency vector corresponding to attenuation decibels, in Hz.
     db : 1d array
-        Degree of attenuation for each frequency specified in f_db, in dB.
+        Degree of attenuation for each frequency specified in `f_db`, in dB.
     """
 
     w_vals, h_vals = freqz(b_vals, a_vals, worN=fs * 2)
@@ -111,7 +111,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     f_db : 1d array
         Frequency vector corresponding to attenuation decibels, in Hz.
     db : 1d array
-        Degree of attenuation for each frequency specified in f_db, in dB.
+        Degree of attenuation for each frequency specified in `f_db`, in dB.
     low : float, optional, default: -20
         The lower limit that defines the transition band, in dB.
     high : float, optional, default: -3

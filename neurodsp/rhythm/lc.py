@@ -45,9 +45,9 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     References
     ----------
-    Fransen, A. M., van Ede, F., & Maris, E. (2015).
-    Identifying neuronal oscillations using rhythmicity.
-    Neuroimage, 118, 256-267.
+    .. [1] Fransen, A. M., van Ede, F., & Maris, E. (2015).
+           Identifying neuronal oscillations using rhythmicity.
+           Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003
     """
 
     if isinstance(freqs, (tuple, list)):

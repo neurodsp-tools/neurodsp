@@ -19,6 +19,8 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
         Frequency vector corresponding to attenuation decibels, in Hz.
     db : 1d array
         Degree of attenuation for each frequency specified in f_db, in dB.
+    fs : float
+        Sampling rate, in Hz.
     impulse_response : 1d array
         The impulse response of a filter. For an FIR filter, these are the filter coefficients.
     """
@@ -60,6 +62,8 @@ def plot_impulse_response(fs, impulse_response, ax=None):
 
     Parameters
     ----------
+    fs : float
+        Sampling rate, in Hz.
     impulse_response : 1d array
         The impulse response of a filter.
     ax : matplotlib.Axes, optional

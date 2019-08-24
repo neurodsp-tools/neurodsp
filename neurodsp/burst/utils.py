@@ -20,11 +20,11 @@ def compute_burst_stats(bursting, fs):
     stats_dict : dict
         Contains the following keys:
 
-        * 'n_bursts': the number of bursts
-        * 'duration_mean': mean duration of bursts, in seconds
-        * 'duration_std': standard deviation of burst durations, in seconds
-        * 'percent_burst': percent time in bursts
-        * 'burst_rate': bursts/sec
+        * `n_bursts`: the number of bursts
+        * `duration_mean`: mean duration of bursts, in seconds
+        * `duration_std`: standard deviation of burst durations, in seconds
+        * `percent_burst`: percent time in bursts
+        * `burst_rate`: bursts/sec
     """
 
     tot_time = len(bursting) / fs
