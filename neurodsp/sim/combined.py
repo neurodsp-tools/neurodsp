@@ -12,7 +12,7 @@ from neurodsp.utils.decorators import normalize
 
 @normalize
 def sim_combined(n_seconds, fs, components, component_variances=1):
-    """Simulate a complex signal by combining multiple component signals.
+    """Simulate a signal by combining multiple component signals.
 
     Parameters
     ----------
@@ -30,6 +30,18 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
     -------
     sig : 1d array
         Simulated combined signal.
+
+    Examples
+    --------
+    Simulate a combined signal with an aperiodic and periodic component:
+
+    >>> sim_components = {'sim_powerlaw' : {'exponent' : -2}, 'sim_oscillation' : {'freq' : 10}}
+    >>> sim_combined(1, 500, sim_components)
+
+    Simulate a combined signal with multiple periodic components:
+
+    >>> sim_components = {'sim_powerlaw' : {'exponent' : -2}, 'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
+    >>> sim_combined(1, 500, sim_components)
     """
 
     # Check how simulation components are specified, in terms of number of parameter sets
@@ -50,7 +62,7 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
     sig_components = []
     for func, params in components.items():
 
-        # If list, params should be a list of separate parameters for each fucntion call
+        # If list, params should be a list of separate parameters for each function call
         if isinstance(params, list):
             sig_components.extend([func(n_seconds, fs, **cur_params, variance=next(variances)) \
                 for cur_params in params])

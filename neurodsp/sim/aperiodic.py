@@ -37,7 +37,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
 
     Notes
     -----
-    It is essentially white noise, but satisfies the Poisson property, i.e. mean(X) = var(X).
+    The simulated signal is essentially white noise, but satisfies the Poisson
+    property, i.e. mean(X) = var(X).
 
     The lambda parameter of the Poisson process (total rate) is determined as
     firing rate * number of neurons, i.e. summation of poisson processes is still
@@ -114,7 +115,8 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     fs : float
         Sampling rate of simulated signal, in Hz.
     theta : float
-        Memory scale - larger theta = faster fluctuation.
+        Memory scale parameter.
+        Larger theta values create faster fluctuations.
     mu : float
         Mean of the random walk.
     sigma : float
@@ -127,18 +129,24 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
     Notes
     -----
-    Discretized Ornstein-Uhlenbeck process:
-    dx = theta*(x-mu)*dt + sigma*dWt
-    dWt : increments of Wiener process, i.e. white noise
-    theta : memory scale (higher = faster fluc)
-    mu : mean
-    sigma : std
+    The random walk is simulated as a discretized Ornstein-Uhlenbeck process:
+
+    `dx = theta*(x-mu)*dt + sigma*dWt`
+
+    Where:
+
+    - mu : mean
+    - sigma : standard deviation
+    - theta : memory scale
+    - dWt : increments of Wiener process, i.e. white noise
 
     References
     ----------
-    See for integral solution:
-        https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
+    See the wikipedia page for the integral solution:
+
+    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
     """
+
     times = create_times(n_seconds, fs)
 
     x0 = mu

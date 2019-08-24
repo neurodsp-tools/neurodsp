@@ -8,15 +8,14 @@ from scipy.signal import gaussian, sawtooth
 ###################################################################################################
 ###################################################################################################
 
-def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
-    """Simulate a single cycle of an oscillation.
+def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
+    """Simulate a single cycle of a periodic pattern.
 
     Parameters
     ----------
     n_seconds : float
         Length of cycle window in seconds.
-        Note that this is NOT the period of the cycle, but the length of the returned array
-        that contains the cycle, which can be (and usually is) much shorter.
+        This is NOT the period of the cycle, but the length of the returned array of the cycle.
     fs : float
         Sampling frequency of the cycle simulation.
     cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
@@ -30,19 +29,19 @@ def sim_osc_cycle(n_seconds, fs, cycle_type, **cycle_params):
         * 2exp: a cycle with exponential rise and decay
 
     **cycle_params
-        Keyword arguments for parameters of the oscillation cycle, all as float:
+        Keyword arguments for parameters of the cycle, all as float:
 
         * sine: None
-        * asine: 'rdsym', rise-decay symmetry, from 0-1
-        * sawtooth: 'width', width of the rising ramp as a proportion of the total cycle
-        * gaussian: 'std', standard deviation of the gaussian kernel, in seconds
-        * exp: 'tau_d', decay time, in seconds
-        * 2exp: 'tau_r' & 'tau_d' rise time, and decay time, in seconds
+        * asine: `rdsym`, rise-decay symmetry, from 0-1
+        * sawtooth: `width`, width of the rising ramp as a proportion of the total cycle
+        * gaussian: `std`, standard deviation of the gaussian kernel, in seconds
+        * exp: `tau_d`, decay time, in seconds
+        * 2exp: `tau_r` & `tau_d` rise time, and decay time, in seconds
 
     Returns
     -------
     cycle: 1d array
-        Simulated oscillation cycle.
+        Simulated cycle.
     """
 
     if cycle_type not in ['sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp']:
@@ -81,7 +80,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     fs : float
         Sampling frequency of the cycle simulation.
     rdsym : float
-        Rise-decay symmetry of the oscillation, as fraction of the period in the rise time, where:
+        Rise-decay symmetry of the cycle, as fraction of the period in the rise time, where:
         = 0.5 - symmetric (sine wave)
         < 0.5 - shorter rise, longer decay
         > 0.5 - longer rise, shorter decay
@@ -89,7 +88,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     Returns
     -------
     cycle : 1d array
-        Simulated oscillation cycle.
+        Simulated asymmetric cycle.
     """
 
     # Determine number of samples in rise and decay periods
@@ -127,10 +126,11 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
 
     Notes
     -----
-    3 types of kernels are available, based on combinations of time constants:
-    - tau_r == tau_d  : alpha (function) synapse
-    - tau_r = 0       : instantaneous rise, (single) exponential decay
-    - tau_r!=tau_d!=0 : double-exponential (rise and decay)
+    Three types of kernels are available, based on combinations of time constants:
+
+    - tau_r == tau_d      : alpha synapse
+    - tau_r = 0           : instantaneous rise, with single exponential decay
+    - tau_r != tau_d != 0 : double-exponential, with exponential rise and decay
     """
 
     # NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or

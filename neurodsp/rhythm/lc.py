@@ -65,9 +65,9 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
              "\nLagged coherence could not be estimated for at least some requested frequencies."
              "\nThis happens, especially with low frequencies, when there are not enough samples "
              "per segment and/or not enough segments available to estimate the measure."
-             "\nTry using a greater number of cycles and/or a longer signal length, and/or adjust the frequency range.")
+             "\nTry using a greater number of cycles and/or a longer signal length, and/or "
+             "adjust the frequency range.")
 
-    # Return desired measure of lagged coherence
     if return_spectrum:
         return lcs, freqs
     else:

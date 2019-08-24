@@ -10,28 +10,28 @@ from neurodsp.sim.transients import *
 ###################################################################################################
 ###################################################################################################
 
-def test_sim_osc_cycle():
+def test_sim_cycle():
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, 'sine')
+    cycle = sim_cycle(N_SECONDS, FS, 'sine')
     check_sim_output(cycle)
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, 'asine', rdsym=0.75)
+    cycle = sim_cycle(N_SECONDS, FS, 'asine', rdsym=0.75)
     check_sim_output(cycle)
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, 'sawtooth', width=0.5)
+    cycle = sim_cycle(N_SECONDS, FS, 'sawtooth', width=0.5)
     check_sim_output(cycle)
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, 'gaussian', std=2)
+    cycle = sim_cycle(N_SECONDS, FS, 'gaussian', std=2)
     check_sim_output(cycle)
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, 'exp', tau_d=0.2)
+    cycle = sim_cycle(N_SECONDS, FS, 'exp', tau_d=0.2)
     check_sim_output(cycle)
 
-    cycle = sim_osc_cycle(N_SECONDS, FS, '2exp', tau_r=0.2, tau_d=0.2)
+    cycle = sim_cycle(N_SECONDS, FS, '2exp', tau_r=0.2, tau_d=0.2)
     check_sim_output(cycle)
 
     with raises(ValueError):
-        sim_osc_cycle(N_SECONDS, FS, 'not_a_cycle')
+        sim_cycle(N_SECONDS, FS, 'not_a_cycle')
 
 def test_asine_cycle():
 

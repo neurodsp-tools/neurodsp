@@ -3,7 +3,7 @@
 import numpy as np
 
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_osc_cycle
+from neurodsp.sim.transients import sim_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -22,13 +22,13 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
         Oscillation frequency.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
-        See `sim_osc_cycle` for details on cycle types and parameters.
+        See `sim_cycle` for details on cycle types and parameters.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
     Returns
     -------
-    osc : 1d array
+    sig : 1d array
         Simulated oscillation.
     """
 
@@ -37,14 +37,14 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
     # Create oscillation by tiling a single cycle of the desired oscillation
-    osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-    osc = np.tile(osc_cycle, n_cycles)
+    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    sig = np.tile(osc_cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
     n_samps = int(n_seconds * fs)
-    osc = osc[:n_samps]
+    sig = sig[:n_samps]
 
-    return osc
+    return sig
 
 
 @normalize
@@ -66,7 +66,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
         Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
-        See `sim_osc_cycle` for details on cycle types and parameters.
+        See `sim_cycle` for details on cycle types and parameters.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -77,9 +77,10 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     Notes
     -----
-    * This function takes a 'tiled' approach to simulating cycles, with evenly spaced
+    This function takes a 'tiled' approach to simulating cycles, with evenly spaced
     and consistent cycles across the whole signal, that are either oscillating or not.
-    * If the cycle length does not fit evenly into the simulated data length,
+
+    If the cycle length does not fit evenly into the simulated data length,
     then the last few samples will be non-oscillating.
     """
 
@@ -88,7 +89,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
     n_seconds_cycle = (1/freq * fs)/fs
 
     # Make a single cycle of an oscillation
-    osc_cycle = sim_osc_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
     n_samples_cycle = len(osc_cycle)
     n_cycles = int(np.floor(n_samples / n_samples_cycle))
 
