@@ -6,45 +6,67 @@ import numpy as np
 ###################################################################################################
 
 def remove_nans(sig):
-    """Drop any NaNs on the edges of a 1d array.
+    """Drop any NaNs on the edges of an array.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Signal to be checked for edge NaNs.
 
     Returns
     -------
-    sig_removed : 1d array
+    sig_removed : 1d or 2d array
         Signal with NaN edges removed.
     sig_nans : 1d array
         Boolean array indicating where NaNs were in the original array.
+
+    Notes
+    -----
+    For 2d arrays, this function assumes the same columns to be NaN across all rows.
     """
 
     sig_nans = np.isnan(sig)
-    sig_removed = sig[np.where(~np.isnan(sig))]
+
+    if sig.ndim == 1:
+        sig_removed = sig[np.where(~sig_nans)]
+    elif sig.ndim == 2:
+        sig_removed = sig[~sig_nans].reshape(sig_nans.shape[0], sum(~sig_nans[0, :]))
+        sig_nans = sig_nans[0, :]
+    else:
+        raise ValueError('Only 1d or 2d arrays supported.')
 
     return sig_removed, sig_nans
 
 
 def restore_nans(sig, sig_nans, dtype=float):
-    """Restore NaN values to the edges of a 1d array.
+    """Restore NaN values to the edges of an array.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Signal that has had NaN edges removed.
     sig_nans : 1d array
         Boolean array indicating where NaNs were in the original array.
 
     Returns
     -------
-    sig_restored : 1d array
+    sig_restored : 1d or 2d array
         Signal with NaN edges restored.
+
+    Notes
+    -----
+    If sig is 2d, the sig_nans input should reflect the values for a row.
+    This function assumes the same columns to be NaN across all rows.
     """
 
-    sig_restored = np.ones(len(sig_nans), dtype=dtype) * np.nan
-    sig_restored[~sig_nans] = sig
+    if sig.ndim == 1:
+        sig_restored = np.ones(len(sig_nans), dtype=dtype) * np.nan
+        sig_restored[~sig_nans] = sig
+    elif sig.ndim == 2:
+        sig_restored = np.ones([sig.shape[0], len(sig_nans)], dtype=dtype) * np.nan
+        sig_restored[:, np.where(sig_nans == False)[0]] = sig
+    else:
+        raise ValueError('Only 1d or 2d arrays supported.')
 
     return sig_restored
 
@@ -54,14 +76,14 @@ def discard_outliers(data, outlier_percent):
 
     Parameters
     ----------
-    data : nd array
+    data : array
         Array to remove outliers from.
     outlier_percent : float
         The percentage of outlier values to be removed.
 
     Returns
     -------
-    data : nd array
+    data : array
         Array after removing outliers.
     """
 
