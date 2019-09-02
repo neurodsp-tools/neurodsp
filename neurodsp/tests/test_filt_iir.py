@@ -1,5 +1,7 @@
 """Tests for IIR filters."""
 
+import numpy as np
+
 from neurodsp.tests.settings import FS
 
 from neurodsp.filt.iir import *
@@ -9,8 +11,19 @@ from neurodsp.filt.iir import *
 
 def test_filter_signal_iir(tsig):
 
-    sig = filter_signal_iir(tsig, FS, 'bandpass', (8, 12), 3)
-    assert sig.shape == tsig.shape
+    out = filter_signal_iir(tsig, FS, 'bandpass', (8, 12), 3)
+    assert out.shape == tsig.shape
+
+def test_filter_signal_iir_2d(tsig2d):
+
+   out = filter_signal_iir(tsig2d, FS, 'bandpass', (8, 12), 3)
+   assert out.shape == tsig2d.shape
+   assert sum(~np.isnan(out[0, :])) > 0
+
+def test_apply_iir_filter(tsig):
+
+    out = apply_iir_filter(tsig, np.array([1, 1, 1, 1, 1]), np.array([1, 1, 1, 1, 1]))
+    assert out.shape == tsig.shape
 
 def test_design_iir_filter():
 

@@ -40,7 +40,7 @@ def test_remove_filter_edges():
 
     # Get the length for a possible filter & calc # of values should be dropped for it
     sig_len = 1000
-    sig = np.ones([1, sig_len])
+    sig = np.ones(sig_len)
     filt_len = compute_filter_length(FS, 'bandpass', f_lo=4, f_hi=8, n_cycles=3, n_seconds=None)
     n_rmv = int(np.ceil(filt_len / 2))
 

@@ -12,14 +12,13 @@ from neurodsp.filt.checks import check_filter_definition, check_filter_propertie
 ###################################################################################################
 ###################################################################################################
 
-@multidim
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
                       print_transitions=False, plot_properties=False, return_filter=False):
     """Apply an FIR filter to a signal.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series to be filtered.
     fs : float
         Sampling rate, in Hz.
@@ -59,7 +58,7 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
 
     # Design filter & check that the length is okay with signal
     filter_coefs = design_fir_filter(fs, pass_type, f_range, n_cycles, n_seconds)
-    check_filter_length(len(sig), len(filter_coefs))
+    check_filter_length(sig.shape[-1], len(filter_coefs))
 
     # Check filter properties: compute transition bandwidth & run checks
     check_filter_properties(filter_coefs, 1, fs, pass_type, f_range, verbose=print_transitions)
@@ -68,7 +67,7 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
     sig, sig_nans = remove_nans(sig)
 
     # Apply filter
-    sig_filt = np.convolve(filter_coefs, sig, 'same')
+    sig_filt = apply_fir_filter(sig, filter_coefs)
 
     # Remove edge artifacts
     if remove_edges:
@@ -86,6 +85,26 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         return sig_filt, filter_coefs
     else:
         return sig_filt
+
+
+@multidim
+def apply_fir_filter(sig, filter_coefs):
+    """Apply an FIR filter to a signal.
+
+    Parameters
+    ----------
+    sig : array
+        Time series to be filtered.
+    filter_coefs : 1d array
+        Filter coefficients of the FIR filter.
+
+    Returns
+    -------
+    array
+        Filtered time series.
+    """
+
+    return np.convolve(filter_coefs, sig, 'same')
 
 
 def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):

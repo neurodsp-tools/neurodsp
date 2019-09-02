@@ -17,3 +17,8 @@ def pytest_configure(config):
 def tsig():
 
     yield np.random.randn(1000)
+
+@pytest.fixture(scope='session')
+def tsig2d():
+
+    yield np.random.randn(2, 1000)

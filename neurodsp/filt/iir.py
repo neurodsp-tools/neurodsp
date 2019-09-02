@@ -5,7 +5,6 @@ from warnings import warn
 from scipy.signal import butter, filtfilt
 
 from neurodsp.utils import remove_nans, restore_nans
-from neurodsp.utils.decorators import multidim
 from neurodsp.filt.utils import compute_nyquist, compute_frequency_response
 from neurodsp.filt.checks import check_filter_definition, check_filter_properties
 from neurodsp.plts.filt import plot_frequency_response
@@ -13,14 +12,13 @@ from neurodsp.plts.filt import plot_frequency_response
 ###################################################################################################
 ###################################################################################################
 
-@multidim
 def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                       print_transitions=False, plot_properties=False, return_filter=False):
     """Apply an IIR filter to a signal.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series to be filtered.
     fs : float
         Sampling rate, in Hz.
@@ -65,7 +63,7 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     sig, sig_nans = remove_nans(sig)
 
     # Apply filter
-    sig_filt = filtfilt(b_vals, a_vals, sig)
+    sig_filt = apply_iir_filter(sig, b_vals, a_vals)
 
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = restore_nans(sig_filt, sig_nans)
@@ -79,6 +77,27 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
         return sig_filt, (b_vals, a_vals)
     else:
         return sig_filt
+
+
+def apply_iir_filter(sig, b_vals, a_vals):
+    """Apply an IIR filter to a signal.
+
+    Parameters
+    ----------
+    sig : array
+        Time series to be filtered.
+    b_vals : 1d array
+        B value filter coefficients for an IIR filter.
+    a_vals : 1d array
+        A value filter coefficients for an IIR filter.
+
+    Returns
+    -------
+    array
+        Filtered time series.
+    """
+
+    return filtfilt(b_vals, a_vals, sig)
 
 
 def design_iir_filter(fs, pass_type, f_range, butterworth_order):
