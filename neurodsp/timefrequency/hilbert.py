@@ -62,7 +62,8 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half a kernel's length to the edge with np.nan.
+        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
@@ -73,13 +74,13 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
     """
 
     if f_range:
-        sig, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
-                                    remove_edges=False, return_filter=True, **filter_kwargs)
+        sig, filter_kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
+                                           remove_edges=False, return_filter=True, **filter_kwargs)
 
     pha = np.angle(robust_hilbert(sig, increase_n=hilbert_increase_n))
 
-    if remove_edges:
-        pha = remove_filter_edges(pha, len(kernel))
+    if f_range and remove_edges:
+        pha = remove_filter_edges(pha, len(filter_kernel))
 
     return pha
 
@@ -100,7 +101,8 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half a kernel's length to the edge with np.nan.
+        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
@@ -111,13 +113,13 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
     """
 
     if f_range:
-        sig, kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
-                                    remove_edges=False, return_filter=True, **filter_kwargs)
+        sig, filter_kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
+                                           remove_edges=False, return_filter=True, **filter_kwargs)
 
     amp = np.abs(robust_hilbert(sig, increase_n=hilbert_increase_n))
 
-    if remove_edges:
-        amp = remove_filter_edges(amp, len(kernel))
+    if f_range and remove_edges:
+        amp = remove_filter_edges(amp, len(filter_kernel))
 
     return amp
 
@@ -138,7 +140,8 @@ def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, 
         If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
         This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half a kernel's length to the edge with np.nan.
+        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
 
