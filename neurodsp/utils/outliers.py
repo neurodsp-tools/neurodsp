@@ -76,19 +76,28 @@ def discard_outliers(data, outlier_percent):
 
     Parameters
     ----------
-    data : array
+    data : 2d or 3d array
         Array to remove outliers from.
     outlier_percent : float
-        The percentage of outlier values to be removed.
+        The percentage of outlier values to be removed. Must be between 0 and 100.
 
     Returns
     -------
     data : array
         Array after removing outliers.
+
+    Notes
+    -----
+    This function drops entries across the last dimension.
+    Values are dropped based on being an outlier in log10 spacing.
     """
 
     # Get the number of arrays to discard - round up so it doesn't get a zero.
     n_discard = int(np.ceil(data.shape[-1] / 100. * outlier_percent))
+
+    # Check discard settings compared to data size
+    if n_discard >= data.shape[-1]:
+        raise ValueError('Outlier removal would discard all data. Can not proceed.')
 
     # Make 2D -> 3D for looping across array
     data = data[np.newaxis, :, :] if data.ndim == 2 else data
@@ -98,5 +107,9 @@ def discard_outliers(data, outlier_percent):
 
     # Reshape array and squeeze to drop back to 2D if that was original shape
     data = np.squeeze(np.stack(data))
+
+    # Ensure output maintains the correct shape, keeping 2D if ends up as 1D
+    if data.ndim == 1:
+        data = data[:, np.newaxis]
 
     return data
