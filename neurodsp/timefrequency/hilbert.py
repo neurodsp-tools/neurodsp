@@ -47,7 +47,8 @@ def robust_hilbert(sig, increase_n=False):
 
 
 @multidim()
-def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
+def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
+                  remove_edges=True, **filter_kwargs):
     """Compute the instantaneous phase of a time series.
 
     Parameters
@@ -86,7 +87,8 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
 
 
 @multidim()
-def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
+def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
+                remove_edges=True, **filter_kwargs):
     """Compute the instantaneous amplitude of a time series.
 
     Parameters
@@ -125,7 +127,8 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
 
 
 @multidim()
-def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
+def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
+                 remove_edges=True, **filter_kwargs):
     """Compute the instantaneous frequency of a time series.
 
     Parameters

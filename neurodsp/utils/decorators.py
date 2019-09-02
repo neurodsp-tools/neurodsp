@@ -35,31 +35,6 @@ def normalize(func, **kwargs):
     return decorated
 
 
-# def multidim(func, *args, **kwargs):
-#     """Decorator function to apply the wrapped function across dimensions."""
-
-#     @wraps(func)
-#     def decorated(sig, *args, **kwargs):
-
-#         if sig.ndim == 1:
-#             out = func(sig, *args, **kwargs)
-
-#         elif sig.ndim == 2:
-
-#             # Apply func across rows of the input data
-#             outs = [func(dat, *args, **kwargs) for dat in sig]
-
-#             # Collect together associated outputs from each, in case there are multiple outputs
-#             if isinstance(outs[0], tuple):
-#                 out = [np.stack([dat[n_out] for dat in outs]) for n_out in range(len(outs[0]))]
-#             else:
-#                 out = np.stack(outs)
-
-#         return out
-
-#     return decorated
-
-
 def multidim(select=[]):
     """Decorator function to apply the wrapped function across dimensions.
 

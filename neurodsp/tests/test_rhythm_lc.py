@@ -26,6 +26,15 @@ def test_compute_lagged_coherence(tsig):
     with warns(UserWarning):
         compute_lagged_coherence(tsig, 100, np.array([1, 2]), n_cycles=10)
 
+def test_compute_lagged_coherence_2d(tsig2d):
+
+    lc = compute_lagged_coherence(tsig2d, FS, FREQS_ARR)
+    assert len(lc) == tsig2d.shape[0]
+
+    lcs, freqs = compute_lagged_coherence(tsig2d, FS, FREQS_ARR, return_spectrum=True)
+    assert lcs.shape[0] == tsig2d.shape[0]
+    assert freqs.ndim == 1
+
 def test_lagged_coherence_1freq(tsig):
 
     lc = lagged_coherence_1freq(tsig, FS, FREQ1, n_cycles=3)

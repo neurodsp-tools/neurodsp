@@ -1,5 +1,7 @@
 """Test functions for timefrequency hilbert analyses."""
 
+from neurodsp.tests.settings import FS
+
 from neurodsp.timefrequency.hilbert import *
 
 ###################################################################################################
@@ -22,15 +24,37 @@ def test_robust_hilbert():
 
 def test_phase_by_time(tsig):
 
-    out = phase_by_time(tsig, 500, (8, 12))
+    out = phase_by_time(tsig, FS, (8, 12))
     assert out.shape == tsig.shape
 
 def test_amp_by_time(tsig):
 
-    out = amp_by_time(tsig, 500, (8, 12))
+    out = amp_by_time(tsig, FS, (8, 12))
     assert out.shape == tsig.shape
 
 def test_freq_by_time(tsig):
 
-    out = freq_by_time(tsig, 500, (8, 12))
+    out = freq_by_time(tsig, FS, (8, 12))
     assert out.shape == tsig.shape
+
+def test_no_filters(tsig):
+
+    out = phase_by_time(tsig, FS)
+    assert out.shape == tsig.shape
+
+    out = amp_by_time(tsig, FS)
+    assert out.shape == tsig.shape
+
+    out = freq_by_time(tsig, FS)
+    assert out.shape == tsig.shape
+
+def test_2d(tsig2d):
+
+    out = phase_by_time(tsig2d, FS, (8, 12))
+    assert out.shape == tsig2d.shape
+
+    out = amp_by_time(tsig2d, FS, (8, 12))
+    assert out.shape == tsig2d.shape
+
+    out = freq_by_time(tsig2d, FS, (8, 12))
+    assert out.shape == tsig2d.shape

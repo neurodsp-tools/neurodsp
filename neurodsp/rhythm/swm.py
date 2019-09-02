@@ -7,7 +7,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim()
 def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
                             temperature=1, window_starts_custom=None):
     """Find recurring patterns in a time series using the sliding window matching algorithm.
