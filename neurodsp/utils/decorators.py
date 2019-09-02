@@ -45,7 +45,15 @@ def multidim(func, *args, **kwargs):
             out = func(sig, *args, **kwargs)
 
         elif sig.ndim == 2:
-            out = np.vstack([func(dat, *args, **kwargs) for dat in sig])
+
+            # Apply func across rows of the input data
+            outs = [func(dat, *args, **kwargs) for dat in sig]
+
+            # Collect together associated outputs from each, in case there are multiple outputs
+            if isinstance(outs[0], tuple):
+                out = [np.vstack([dat[n_out] for dat in outs]) for n_out in range(len(outs[0]))]
+            else:
+                out = np.vstack(outs)
 
         return out
 
