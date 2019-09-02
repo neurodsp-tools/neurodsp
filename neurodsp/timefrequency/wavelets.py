@@ -47,7 +47,7 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
 
 
 @multidim
-def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm='sss'):
+def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, norm='sss'):
     """Convolve a signal with a complex wavelet.
 
     Parameters
@@ -62,8 +62,8 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
     scaling : float, optional, default=0.5
         Scaling factor for the morlet wavelet.
-    filt_len : integer, optional
-        Length of the filter. If not None, this overrides the freq and n_cycles inputs.
+    wavelet_len : integer, optional
+        Length of the wavelet. If defined, this overrides the freq and n_cycles inputs.
     norm : {'sss', 'amp'}, optional
         Normalization method:
 
@@ -83,10 +83,13 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, filt_len=None, norm
     * Taking np.angle() of output gives the analytic phase.
     """
 
-    if filt_len is None:
-        filt_len = n_cycles * fs / freq
+    if wavelet_len is None:
+        wavelet_len = n_cycles * fs / freq
 
-    morlet_f = morlet(filt_len, w=n_cycles, s=scaling)
+    if wavelet_len > sig.shape[-1]:
+        raise ValueError('The length of the wavelet is greater than the signal. Can not proceed.')
+
+    morlet_f = morlet(wavelet_len, w=n_cycles, s=scaling)
 
     if norm == 'sss':
         morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
