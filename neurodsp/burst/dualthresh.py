@@ -10,7 +10,7 @@ from neurodsp.timefrequency.hilbert import amp_by_time
 ###################################################################################################
 
 @multidim()
-def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
+def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None, min_cycles=3,
                                  avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):
     """Detect bursts in a signal using the dual threshold algorithm.
@@ -21,11 +21,12 @@ def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
         Time series.
     fs : float
         Sampling rate, in Hz.
-    f_range : tuple of (float, float)
-        Frequency range, for narrowband signal of interest, in Hz.
     dual_thresh : tuple of (float, float)
         Low and high threshold values for burst detection.
         Units are normalized by the average signal magnitude.
+    f_range : tuple of (float, float), optional
+        Frequency range, to filter signal to, before running burst detection.
+        If f_range is None, then no filtering is applied prior to running burst detection.
     min_cycles : float, optional, default=3
         Minimum burst duration in terms of number of cycles of f_range[0].
     avg_type : {'median', 'mean'}, optional

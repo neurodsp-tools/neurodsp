@@ -138,7 +138,7 @@ f_range = (peak_cf-2, peak_cf+2)
 ###################################################################################################
 
 # Detect bursts of high amplitude oscillations in the extracted signal
-bursting = detect_bursts_dual_threshold(sig, fs, f_range, amp_dual_thresh)
+bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
 
 ###################################################################################################
 
