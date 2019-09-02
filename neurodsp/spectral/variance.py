@@ -11,7 +11,7 @@ from neurodsp.spectral.checks import check_spg_settings
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim(select=[0])
 def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=None):
     """Compute the spectral coefficient of variation (SCV) at each frequency.
 
@@ -37,7 +37,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     scv : 1d array
         Spectral coefficient of variation.
 
@@ -58,7 +58,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     return freqs, scv
 
 
-@multidim
+@multidim(select=[0, 1])
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
                    method='bootstrap', rs_params=None):
     """Compute a resampled version of the the spectral coefficient of variation (SCV).
@@ -98,9 +98,10 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     t_inds : 1d array or None
-        Array of time indices, for 'rolling' resampling. If 'bootstrap', t_inds = None.
+        Time indices at which the measure was calculated.
+        This is only returnd for 'rolling' resampling. If 'bootstrap', t_inds = None.
     scv_rs : 2d array
         Resampled spectral coefficient of variation.
 
@@ -159,7 +160,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     return freqs, t_inds, scv_rs
 
 
-@multidim
+@multidim(select=[0, 1])
 def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
                           nbins=50, f_range=[0., 100.], cut_pct=[0., 100.]):
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.
@@ -189,7 +190,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     Returns
     -------
     freqs : 1d array
-        Array of frequencies.
+        Frequencies at which the measure was calculated.
     power_bins : 1d array
         Histogram bins used to compute the distribution.
     spectral_hist : 2d array

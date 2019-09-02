@@ -20,14 +20,13 @@ from neurodsp.spectral.checks import check_spg_settings
 ###################################################################################################
 ###################################################################################################
 
-@multidim
 def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
-    """Compute the power spectral density (PSD) of a time series.
+    """Compute the power spectral density of a time series.
 
     Parameters
     -----------
     sig : 1d or 2d array
-        Time series of measurement values.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     method : {'welch', 'wavelet', 'medfilt'}
@@ -35,18 +34,15 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     avg_type : {'mean', 'median'}, optional
         If relevant, the method to average across windows to create the spectrum.
     **kwargs
-        Keyword arguments to pass through to function that calculates the spectrum.
+        Keyword arguments to pass through to the function that calculates the spectrum.
 
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
     """
-
-    if method not in ('welch', 'medfilt', 'wavelet'):
-        raise ValueError('Unknown power spectrum method: %s' % method)
 
     if method == 'welch':
         return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
@@ -57,15 +53,18 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     elif method == 'medfilt':
         return compute_spectrum_medfilt(sig, fs, **kwargs)
 
+    else:
+        raise ValueError('Unknown power spectrum method: %s' % method)
 
-@multidim
+
+@multidim(select=[0])
 def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
-    """Compute the power spectral densitry using wavelets.
+    """Compute the power spectral density using wavelets.
 
     Parameters
     ----------
     sig : 1d or 2d array
-        Time series of measurement values.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     freqs : 1d array or list of float
@@ -80,7 +79,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
     """
@@ -94,16 +93,15 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     return freqs, spectrum
 
 
-@multidim
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
                            nperseg=None, noverlap=None,
-                           f_range=None, outlier_pct=None):
+                           f_range=None, outlier_percent=None):
     """Compute the power spectral density using Welch's method.
 
     Parameters
     -----------
     sig : 1d or 2d array
-        Time series of measurement values.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     avg_type : {'mean', 'median'}, optional
@@ -123,14 +121,13 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         If None, noverlap = nperseg // 8.
     f_range : list of [float, float] optional
         Frequency range to sub-select from the power spectrum.
-    outlier_pct : float, optional
-        Percentage of the windows with the lowest and highest total log power to discard.
-        Must be between 0 and 100.
+    outlier_percent : float, optional
+        The percentage of outlier values to be removed. Must be between 0 and 100.
 
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
     """
@@ -139,13 +136,9 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
-    # Pad data to 2D
-    if len(sig.shape) == 1:
-        sig = sig[np.newaxis :]
-
     # Throw out outliers if indicated
-    if outlier_pct is not None:
-        spg = discard_outliers(spg, outlier_pct)
+    if outlier_percent is not None:
+        spg = discard_outliers(spg, outlier_percent)
 
     # Average across windows
     spectrum = get_avg_func(avg_type)(spg, axis=-1)
@@ -157,14 +150,14 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     return freqs, spectrum
 
 
-@multidim
+@multidim(select=[0])
 def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     """Compute the power spectral densitry as a smoothed FFT.
 
     Parameters
     ----------
     sig : 1d or 2d array
-        Time series of measurement values.
+        Time series.
     fs : float
         Sampling rate, in Hz.
     filt_len : float, optional, default: 1.
@@ -175,7 +168,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     Returns
     -------
     freqs : 1d array
-        Array of sample frequencies.
+        Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
     """

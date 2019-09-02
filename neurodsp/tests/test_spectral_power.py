@@ -18,6 +18,20 @@ def test_compute_spectrum(tsig):
     freqs, spectrum = compute_spectrum(tsig, FS, method='medfilt')
     assert freqs.shape == spectrum.shape
 
+def test_compute_spectrum_2d(tsig2d):
+
+    freqs, spectrum = compute_spectrum(tsig2d, FS, method='welch')
+    assert freqs.shape[-1] == spectrum.shape[-1]
+    assert spectrum.ndim == 2
+
+    freqs, spectrum = compute_spectrum(tsig2d, FS, method='wavelet', freqs=FREQS_ARR)
+    assert freqs.shape[-1] == spectrum.shape[-1]
+    assert spectrum.ndim == 2
+
+    freqs, spectrum = compute_spectrum(tsig2d, FS, method='medfilt')
+    assert freqs.shape[-1] == spectrum.shape[-1]
+    assert spectrum.ndim == 2
+
 def test_compute_spectrum_welch(tsig):
 
     freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')
