@@ -21,7 +21,7 @@ This tutorial primarily covers :mod:`neurodsp.rhythm.laggedcoherence`.
 
 import numpy as np
 
-from neurodsp.rhythm import lagged_coherence
+from neurodsp.rhythm import compute_lagged_coherence
 from neurodsp.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
@@ -71,7 +71,7 @@ plot_time_series(times, sig)
 #
 
 f_range = (8, 12)
-lag_coh_alpha = lagged_coherence(sig, f_range, fs)
+lag_coh_alpha = compute_lagged_coherence(sig, fs, f_range)
 print('Lagged coherence = ', lag_coh_alpha)
 
 ###################################################################################################
@@ -83,7 +83,7 @@ print('Lagged coherence = ', lag_coh_alpha)
 # oscillation), but it is not very specific to that frequency.
 #
 
-lag_coh_by_f, freqs = lagged_coherence(sig, (1, 40), fs, return_spectrum=True)
+lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (1, 40), return_spectrum=True)
 
 # Visualize lagged coherence as a function of frequency
 plot_lagged_coherence(freqs, lag_coh_by_f)
@@ -100,8 +100,8 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 samp_burst = np.arange(1000)
 samp_noburst = np.arange(1000, 2000)
 
-lag_coh_burst = lagged_coherence(sig[samp_burst], f_range, fs)
-lag_coh_noburst = lagged_coherence(sig[samp_noburst], f_range, fs)
+lag_coh_burst = compute_lagged_coherence(sig[samp_burst], fs, f_range)
+lag_coh_noburst = compute_lagged_coherence(sig[samp_noburst], fs, f_range)
 print('Lagged coherence, bursting = ', lag_coh_burst)
 print('Lagged coherence, not bursting = ', lag_coh_noburst)
 
@@ -127,7 +127,7 @@ plot_time_series(times, sig)
 ###################################################################################################
 
 f_range = (13, 30)
-lag_coh_beta = lagged_coherence(sig, f_range, fs)
+lag_coh_beta = compute_lagged_coherence(sig, fs, f_range)
 print('Lagged coherence = ', lag_coh_beta)
 
 ###################################################################################################

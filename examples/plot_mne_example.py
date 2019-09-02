@@ -165,13 +165,13 @@ plot_bursts(times, sig, bursting, labels=['Raw Data', 'Detected Bursts'])
 
 ###################################################################################################
 
-# Settings for lagged coherence
-f_range = (5, 25)
+# Settings for lagged coherence, as frequency range (start, stop, step)
+f_range = (5, 25, 0.25)
 
 ###################################################################################################
 
 # Calculate lagged coherence on our example channel data
-lcs, freqs = compute_xlagged_coherence(sig, f_range, fs, return_spectrum=True)
+lcs, freqs = compute_lagged_coherence(sig, fs, f_range, return_spectrum=True)
 
 ###################################################################################################
 
@@ -205,7 +205,7 @@ for ind, ch_label in enumerate(raw.ch_names):
                                       start=t_start, stop=t_stop))
 
     # Calculate lagged coherence on current channel data
-    cur_lcs, cur_freqs = lagged_coherence(cur_sig, f_range, fs, f_step=0.25, return_spectrum=True)
+    cur_lcs, cur_freqs = compute_lagged_coherence(cur_sig, fs, f_range, return_spectrum=True)
 
     # Collect data of interest: frequency of max rhymiticity & associated rhythmicity value
     max_freq[ind] = cur_freqs[np.argmax(cur_lcs)]
