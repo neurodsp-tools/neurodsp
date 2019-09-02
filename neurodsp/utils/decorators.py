@@ -51,9 +51,9 @@ def multidim(func, *args, **kwargs):
 
             # Collect together associated outputs from each, in case there are multiple outputs
             if isinstance(outs[0], tuple):
-                out = [np.vstack([dat[n_out] for dat in outs]) for n_out in range(len(outs[0]))]
+                out = [np.stack([dat[n_out] for dat in outs]) for n_out in range(len(outs[0]))]
             else:
-                out = np.vstack(outs)
+                out = np.stack(outs)
 
         return out
 
