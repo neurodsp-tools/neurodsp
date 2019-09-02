@@ -17,6 +17,9 @@ def test_detect_bursts_dual_threshold(tsig):
     bursts = detect_bursts_dual_threshold(tsig, FS, (1, 2), (8, 12),
                                           avg_type='mean', magnitude_type='power')
 
+    # Test without explicitly filtering
+    bursts = detect_bursts_dual_threshold(tsig, FS, (1, 2), min_burst_duration=0.1)
+
 def test_detect_bursts_dual_threshold_2d(tsig2d):
 
     bursts = detect_bursts_dual_threshold(tsig2d, FS, (1, 2), (8, 12))

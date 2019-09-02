@@ -152,12 +152,14 @@ def compute_nyquist(fs):
 @multidim()
 def remove_filter_edges(sig, filt_len):
     """Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.
+
     Parameters
     ----------
     sig : 1d array
         Filtered signal to have edge artifacts removed from.
     filt_len : int
         Length of the filter that was applied.
+
     Returns
     -------
     sig : 1d array

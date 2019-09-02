@@ -10,7 +10,8 @@ from neurodsp.timefrequency.hilbert import amp_by_time
 ###################################################################################################
 
 @multidim()
-def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None, min_cycles=3,
+def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
+                                 min_n_cycles=3, min_burst_duration=None,
                                  avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):
     """Detect bursts in a signal using the dual threshold algorithm.
@@ -27,8 +28,12 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None, min_cycles=
     f_range : tuple of (float, float), optional
         Frequency range, to filter signal to, before running burst detection.
         If f_range is None, then no filtering is applied prior to running burst detection.
-    min_cycles : float, optional, default=3
-        Minimum burst duration in terms of number of cycles of f_range[0].
+    min_n_cycles : float, optional, default=3
+        Minimum burst duration in to keep.
+        Only used if `f_range` is defined, and is used as the number of cycles at f_range[0].
+    min_burst_duration : float, optional, default=None
+        Minimum length of a burst, in seconds. Must be defined if not filtering.
+        Only used if `f_range` is not defined, or if `min_n_cycles` is set to None.
     avg_type : {'median', 'mean'}, optional
         Averaging method to use to normalize the magnitude that is used for thresholding.
     magnitude_type : {'amplitude', 'power'}, optional
@@ -62,8 +67,17 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None, min_cycles=
     is_burst = _dual_threshold_split(sig_magnitude, dual_thresh[1], dual_thresh[0])
 
     # Remove bursts detected that are too short
-    min_period_length = int(np.ceil(min_cycles * fs / f_range[0]))
-    is_burst = _rmv_short_periods(is_burst, min_period_length)
+    # Use a number of cycles defined on the frequency range, if available
+    if f_range and min_n_cycles:
+        min_burst_samples = int(np.ceil(min_n_cycles * fs / f_range[0]))
+    # Otherwise, make sure minimum duration is set, and use that
+    else:
+        if min_burst_duration is None:
+            raise ValueError("Minimum burst duration must be defined if not filtering"
+                             "and using a number of cycles threshold.")
+        min_burst_samples = int(np.ceil(min_burst_duration * fs))
+
+    is_burst = _rmv_short_periods(is_burst, min_burst_samples)
 
     return is_burst.astype(bool)
 
