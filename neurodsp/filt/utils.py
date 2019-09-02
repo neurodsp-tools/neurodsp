@@ -60,7 +60,7 @@ def compute_frequency_response(b_vals, a_vals, fs):
         Degree of attenuation for each frequency specified in `f_db`, in dB.
     """
 
-    w_vals, h_vals = freqz(b_vals, a_vals, worN=fs * 2)
+    w_vals, h_vals = freqz(b_vals, a_vals, worN=int(fs * 2))
     f_db = w_vals * fs / (2. * np.pi)
     db = 20 * np.log10(abs(h_vals))
 
