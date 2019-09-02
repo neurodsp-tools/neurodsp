@@ -12,7 +12,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim()
 def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     """Compute lagged coherence, reflecting the rhythmicity across a frequency range.
 

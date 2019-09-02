@@ -11,7 +11,7 @@ from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim()
 def robust_hilbert(sig, increase_n=False):
     """Compute the hilbert transform, ignoring any boundaries that are NaN.
 
@@ -46,7 +46,7 @@ def robust_hilbert(sig, increase_n=False):
     return sig_hilb
 
 
-@multidim
+@multidim()
 def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Compute the instantaneous phase of a time series.
 
@@ -85,7 +85,7 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False, remove_edges=
     return pha
 
 
-@multidim
+@multidim()
 def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Compute the instantaneous amplitude of a time series.
 
@@ -124,7 +124,7 @@ def amp_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, *
     return amp
 
 
-@multidim
+@multidim()
 def freq_by_time(sig, fs, f_range, hilbert_increase_n=False, remove_edges=True, **filter_kwargs):
     """Compute the instantaneous frequency of a time series.
 

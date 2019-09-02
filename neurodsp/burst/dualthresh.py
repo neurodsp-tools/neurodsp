@@ -9,7 +9,7 @@ from neurodsp.timefrequency.hilbert import amp_by_time
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim()
 def detect_bursts_dual_threshold(sig, fs, f_range, dual_thresh, min_cycles=3,
                                  avg_type='median', magnitude_type='amplitude',
                                  **filter_kwargs):

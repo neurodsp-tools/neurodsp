@@ -87,7 +87,7 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         return sig_filt
 
 
-@multidim
+@multidim()
 def apply_fir_filter(sig, filter_coefs):
     """Apply an FIR filter to a signal.
 

@@ -10,7 +10,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 ###################################################################################################
 
-@multidim
+@multidim()
 def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     """Compute the time-frequency representation of a signal using morlet wavelets.
 
@@ -46,7 +46,7 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     return mwt
 
 
-@multidim
+@multidim()
 def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, norm='sss'):
     """Convolve a signal with a complex wavelet.
 
