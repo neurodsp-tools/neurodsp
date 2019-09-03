@@ -68,7 +68,7 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
         Normalization method:
 
         * 'sss' - divide by the square root of the sum of squares
-        * 'amp' - divide by the sum of amplitudes divided by 2
+        * 'amp' - divide by the sum of amplitudes
 
     Returns
     -------
