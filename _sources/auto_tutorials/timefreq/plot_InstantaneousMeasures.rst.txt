@@ -1,0 +1,241 @@
+.. note::
+    :class: sphx-glr-download-link-note
+
+    Click :ref:`here <sphx_glr_download_auto_tutorials_timefreq_plot_InstantaneousMeasures.py>` to download the full example code
+.. rst-class:: sphx-glr-example-title
+
+.. _sphx_glr_auto_tutorials_timefreq_plot_InstantaneousMeasures.py:
+
+
+Time-frequency analysis
+=======================
+
+Estimate instantaneous measures of phase, amplitude, and frequency.
+
+This tutorial primarily covers :mod:`neurodsp.timefrequency`.
+
+
+
+.. code-block:: python
+
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    from neurodsp.utils import create_times
+    from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
+    from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
+
+
+
+
+
+
+
+Load example neural signal
+--------------------------
+
+First, we will load an example neural signal to use for our time-frequency measures.
+
+
+
+
+.. code-block:: python
+
+
+    # Load a neural signal, as well as a filtered version of the same signal
+    sig = np.load('../data/sample_data_1.npy')
+    sig_filt_true = np.load('../data/sample_data_1_filt.npy')
+
+    # Set the sampling rate and create a times vector for the signal
+    fs = 1000
+    times = create_times(len(sig)/fs, fs)
+
+    # Set the frequency range to be used
+    f_range = (13, 30)
+
+
+
+
+
+
+
+
+.. code-block:: python
+
+
+    # Plot signal
+    plot_time_series(times, sig)
+
+
+
+
+.. image:: /auto_tutorials/timefreq/images/sphx_glr_plot_InstantaneousMeasures_001.png
+    :class: sphx-glr-single-img
+
+
+
+
+Instantaneous Phase
+-------------------
+
+Instantaneous phase is a measure of the phase of a signal, over time.
+
+
+
+
+.. code-block:: python
+
+
+    # Compute instaneous phase from a signal
+    pha = phase_by_time(sig, fs, f_range)
+
+
+
+
+
+
+
+
+.. code-block:: python
+
+
+    # Plot example signal
+    _, axs = plt.subplots(2, 1, figsize=(15, 6))
+    plot_time_series(times, sig, xlim=[4, 5], xlabel=None, ax=axs[0])
+    plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
+
+
+
+
+.. image:: /auto_tutorials/timefreq/images/sphx_glr_plot_InstantaneousMeasures_002.png
+    :class: sphx-glr-single-img
+
+
+
+
+Instantaneous Amplitude
+-----------------------
+
+Instantaneous amplitude is a measure of the amplitude of a signal, over time.
+
+
+
+
+.. code-block:: python
+
+
+    # Compute instaneous amplitude from a signal
+    amp = amp_by_time(sig, fs, f_range)
+
+
+
+
+
+
+
+
+.. code-block:: python
+
+
+    # Plot example signal
+    _, axs = plt.subplots(2, 1, figsize=(15, 6))
+    plot_instantaneous_measure(times, [sig, amp], 'amplitude',
+                               labels=['Raw Voltage', 'Amplitude'],
+                               xlim=[4, 5], xlabel=None, ax=axs[0])
+    plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
+                               labels=['Raw Voltage', 'Amplitude'], colors=['b', 'r'],
+                               xlim=[4, 5], ax=axs[1])
+
+
+
+
+.. image:: /auto_tutorials/timefreq/images/sphx_glr_plot_InstantaneousMeasures_003.png
+    :class: sphx-glr-single-img
+
+
+
+
+Instantaneous Frequency
+-----------------------
+
+Instantaneous frequency is a measure of frequency across time.
+
+It is measured as the temporal derivative of the instantaneous phase.
+
+Intstantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
+such as appling a median filter, is used to make it smoother.
+
+For example of this, see Samaha & Postle, 2015.
+
+
+
+
+.. code-block:: python
+
+
+    # Compute instaneous frequency from a signal
+    i_f = freq_by_time(sig, fs, f_range)
+
+
+
+
+
+
+
+
+.. code-block:: python
+
+
+    # Plot example signal
+    _, axs = plt.subplots(3, 1, figsize=(15, 9))
+    plot_time_series(times, sig, 'Raw Voltage', xlim=[4, 5], xlabel=None, ax=axs[0])
+    plot_time_series(times, sig_filt_true,
+                     labels='Beta Filtered Voltage', colors='b',
+                     xlim=[4, 5], xlabel=None, ax=axs[1])
+    plot_instantaneous_measure(times, i_f, 'frequency', colors='r',
+                               xlim=[4, 5], ylim=[10, 30], ax=axs[2])
+
+
+
+
+.. image:: /auto_tutorials/timefreq/images/sphx_glr_plot_InstantaneousMeasures_004.png
+    :class: sphx-glr-single-img
+
+
+
+
+Sphinx settings:
+sphinx_gallery_thumbnail_number = 3
+
+
+
+**Total running time of the script:** ( 0 minutes  0.531 seconds)
+
+
+.. _sphx_glr_download_auto_tutorials_timefreq_plot_InstantaneousMeasures.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: plot_InstantaneousMeasures.py <plot_InstantaneousMeasures.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: plot_InstantaneousMeasures.ipynb <plot_InstantaneousMeasures.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

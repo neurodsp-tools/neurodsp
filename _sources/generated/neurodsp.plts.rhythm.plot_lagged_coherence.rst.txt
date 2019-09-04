@@ -1,0 +1,6 @@
+neurodsp.plts.rhythm.plot\_lagged\_coherence
+============================================
+
+.. currentmodule:: neurodsp.plts.rhythm
+
+.. autofunction:: plot_lagged_coherence

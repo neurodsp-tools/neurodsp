@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 1.1.2 documentation</title>
+    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -12,6 +12,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -36,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.1.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -44,7 +45,7 @@
             
                 <li><a href="../api.html">API</a></li>
                 <li><a href="../glossary.html">Glossary</a></li>
-                <li><a href="../auto_tutorials/index.html">Tutorial</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="../auto_examples/index.html">Examples</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
@@ -89,40 +90,43 @@
 <h1>neurodsp.burst.detect_bursts_dual_threshold<a class="headerlink" href="#neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="neurodsp.burst.detect_bursts_dual_threshold">
-<code class="descclassname">neurodsp.burst.</code><code class="descname">detect_bursts_dual_threshold</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>f_range</em>, <em>dual_thresh</em>, <em>min_cycles=3</em>, <em>average_method='median'</em>, <em>magnitude_type='amplitude'</em>, <em>filter_kwargs=None</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.burst.detect_bursts_dual_threshold" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect periods of oscillatory bursting in a neural signal.</p>
+<code class="descclassname">neurodsp.burst.</code><code class="descname">detect_bursts_dual_threshold</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>dual_thresh</em>, <em>f_range=None</em>, <em>min_n_cycles=3</em>, <em>min_burst_duration=None</em>, <em>avg_type='median'</em>, <em>magnitude_type='amplitude'</em>, <em>**filter_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.burst.detect_bursts_dual_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect bursts in a signal using the dual threshold algorithm.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
-<dd><p class="first last">Voltage time series.</p>
+<dd><p class="first last">Time series.</p>
 </dd>
 <dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
 <dd><p class="first last">Sampling rate, in Hz.</p>
-</dd>
-<dt><strong>f_range</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple of (float, float)</span></dt>
-<dd><p class="first last">Frequency range, in Hz, for narrowband signal of interest.</p>
 </dd>
 <dt><strong>dual_thresh</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple of (float, float)</span></dt>
 <dd><p class="first last">Low and high threshold values for burst detection.
 Units are normalized by the average signal magnitude.</p>
 </dd>
-<dt><strong>min_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Minimum burst duration in terms of number of cycles of f_range[0].</p>
+<dt><strong>f_range</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple of (float, float), optional</span></dt>
+<dd><p class="first last">Frequency range, to filter signal to, before running burst detection.
+If f_range is None, then no filtering is applied prior to running burst detection.</p>
 </dd>
-<dt><strong>average_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘median’, ‘mean’}, optional</span></dt>
-<dd><p class="first last">Metric to normalize magnitude used for thresholding.</p>
+<dt><strong>min_n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default=3</span></dt>
+<dd><p class="first last">Minimum burst duration in to keep.
+Only used if <cite>f_range</cite> is defined, and is used as the number of cycles at f_range[0].</p>
 </dd>
-<dt><strong>magnitude_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘power’, ‘amplitude’}, optional</span></dt>
+<dt><strong>min_burst_duration</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default=None</span></dt>
+<dd><p class="first last">Minimum length of a burst, in seconds. Must be defined if not filtering.
+Only used if <cite>f_range</cite> is not defined, or if <cite>min_n_cycles</cite> is set to None.</p>
+</dd>
+<dt><strong>avg_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘median’, ‘mean’}, optional</span></dt>
+<dd><p class="first last">Averaging method to use to normalize the magnitude that is used for thresholding.</p>
+</dd>
+<dt><strong>magnitude_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘amplitude’, ‘power’}, optional</span></dt>
 <dd><p class="first last">Metric of magnitude used for thresholding.</p>
 </dd>
-<dt><strong>filter_kwargs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict, optional</span></dt>
-<dd><p class="first last">Keyword arguments to the neurodsp.filt.filter_signal().</p>
-</dd>
-<dt><strong>verbose</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optiona, default: True</span></dt>
-<dd><p class="first last">If True, print filter transition band and any other prints.</p>
+<dt><strong>**filter_kwargs</strong></dt>
+<dd><p class="first last">Keyword parameters to pass to <cite>filter_signal</cite>.</p>
 </dd>
 </dl>
 </td>
@@ -154,7 +158,7 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
     </p>
     <p>
         &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
     </p>
   </div>
 </footer>

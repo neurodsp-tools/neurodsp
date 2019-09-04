@@ -1,6 +1,0 @@
-neurodsp.sim.sim\_synaptic\_noise
-=================================
-
-.. currentmodule:: neurodsp.sim
-
-.. autofunction:: sim_synaptic_noise

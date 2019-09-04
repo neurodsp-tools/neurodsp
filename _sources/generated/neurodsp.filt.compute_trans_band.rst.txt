@@ -1,6 +1,0 @@
-neurodsp.filt.compute\_trans\_band
-==================================
-
-.. currentmodule:: neurodsp.filt
-
-.. autofunction:: compute_trans_band

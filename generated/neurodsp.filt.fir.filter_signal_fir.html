@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>neurodsp.filt.fir.filter_signal_fir &#8212; neurodsp 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="neurodsp-filt-fir-filter-signal-fir">
+<h1>neurodsp.filt.fir.filter_signal_fir<a class="headerlink" href="#neurodsp-filt-fir-filter-signal-fir" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="neurodsp.filt.fir.filter_signal_fir">
+<code class="descclassname">neurodsp.filt.fir.</code><code class="descname">filter_signal_fir</code><span class="sig-paren">(</span><em>sig</em>, <em>fs</em>, <em>pass_type</em>, <em>f_range</em>, <em>n_cycles=3</em>, <em>n_seconds=None</em>, <em>remove_edges=True</em>, <em>print_transitions=False</em>, <em>plot_properties=False</em>, <em>return_filter=False</em><span class="sig-paren">)</span><a class="headerlink" href="#neurodsp.filt.fir.filter_signal_fir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply an FIR filter to a signal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>sig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">Time series to be filtered.</p>
+</dd>
+<dt><strong>fs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Sampling rate, in Hz.</p>
+</dd>
+<dt><strong>pass_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘bandpass’, ‘bandstop’, ‘lowpass’, ‘highpass’}</span></dt>
+<dd><p class="first">Which kind of filter to apply:</p>
+<ul class="last simple">
+<li>‘bandpass’: apply a bandpass filter</li>
+<li>‘bandstop’: apply a bandstop (notch) filter</li>
+<li>‘lowpass’: apply a lowpass filter</li>
+<li>‘highpass’ : apply a highpass filter</li>
+</ul>
+</dd>
+<dt><strong>f_range</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple of (float, float) or float</span></dt>
+<dd><p class="first last">Cutoff frequency(ies) used for filter, specified as f_lo &amp; f_hi.
+For ‘bandpass’ &amp; ‘bandstop’, must be a tuple.
+For ‘lowpass’ or ‘highpass’, can be a float that specifies pass frequency, or can be
+a tuple and is assumed to be (None, f_hi) for ‘lowpass’, and (f_lo, None) for ‘highpass’.</p>
+</dd>
+<dt><strong>n_cycles</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional, default: 3</span></dt>
+<dd><p class="first last">Length of filter, in number of cycles, defined at the ‘f_lo’ frequency.
+This parameter is overwritten by <cite>n_seconds</cite>, if provided.</p>
+</dd>
+<dt><strong>n_seconds</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd><p class="first last">Length of filter, in seconds. This parameter overwrites <cite>n_cycles</cite>.</p>
+</dd>
+<dt><strong>remove_edges</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">If True, replace samples within half the kernel length to be np.nan.</p>
+</dd>
+<dt><strong>print_transitions</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
+<dd><p class="first last">If True, print out the transition and pass bandwidths.</p>
+</dd>
+<dt><strong>plot_properties</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
+<dd><p class="first last">If True, plot the properties of the filter, including frequency response and/or kernel.</p>
+</dd>
+<dt><strong>return_filter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional, default: False</span></dt>
+<dd><p class="first last">If True, return the filter coefficients of the FIR filter.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>sig_filt</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
+<dd><p class="first last">Filtered time series.</p>
+</dd>
+<dt><strong>filter_coefs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1d array</span></dt>
+<dd><p class="first last">Filter coefficients of the FIR filter. Only returned if <cite>return_filter</cite> is True.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018 - VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

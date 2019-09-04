@@ -1,0 +1,6 @@
+neurodsp.timefrequency.hilbert.freq\_by\_time
+=============================================
+
+.. currentmodule:: neurodsp.timefrequency.hilbert
+
+.. autofunction:: freq_by_time

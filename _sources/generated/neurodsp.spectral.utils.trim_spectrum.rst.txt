@@ -1,0 +1,6 @@
+neurodsp.spectral.utils.trim\_spectrum
+======================================
+
+.. currentmodule:: neurodsp.spectral.utils
+
+.. autofunction:: trim_spectrum

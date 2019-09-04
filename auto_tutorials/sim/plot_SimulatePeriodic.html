@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Simulating Periodic Signals &#8212; neurodsp 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="simulating-periodic-signals">
+<span id="sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"></span><h1>Simulating Periodic Signals<a class="headerlink" href="#simulating-periodic-signals" title="Permalink to this headline">¶</a></h1>
+<p>Simulate periodic, or oscillatory, signals.</p>
+<p>This tutorial covers <code class="xref py py-mod docutils literal notranslate"><span class="pre">neurodsp.sim.periodic</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neurodsp</span> <span class="kn">import</span> <span class="n">sim</span><span class="p">,</span> <span class="n">spectral</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">create_times</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="n">plot_power_spectra</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Set some general settings, to be used across all simulations</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+<div class="section" id="simulate-a-stationary-oscillation">
+<h2>Simulate a Stationary Oscillation<a class="headerlink" href="#simulate-a-stationary-oscillation" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start by simulating an oscillation - in this case, a simple, sinuisoidal oscillation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mf">6.6</span>
+
+<span class="c1"># Simulate a sinusoidal oscillation</span>
+<span class="n">osc_sine</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create a times vector for our simulation</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc_sine</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_001.png" />
+</div>
+<div class="section" id="cycle-kernels">
+<h2>Cycle Kernels<a class="headerlink" href="#cycle-kernels" title="Permalink to this headline">¶</a></h2>
+<p>To simulate oscillations, we can use a sinuisoidal kernel, as above, or any of a selection
+of other cycle kernals, that represent different shapes and properties that may be useful
+to simulate different aspects of periodic neural activity.</p>
+<p>Cycle kernel options include:</p>
+<ul class="simple">
+<li>sine: a sine wave cycle</li>
+<li>asine: an asymmetric sine wave</li>
+<li>sawtooth: a sawtooth wave</li>
+<li>gaussian: a gaussian cycle</li>
+<li>exp: a cycle with exponential decay</li>
+<li>2exp: a cycle with exponential rise and decay</li>
+</ul>
+</div>
+<div class="section" id="simulate-a-shapely-oscillation">
+<h2>Simulate a Shapely Oscillation<a class="headerlink" href="#simulate-a-shapely-oscillation" title="Permalink to this headline">¶</a></h2>
+<p>Next let’s simulate an aymmetric oscillation, using the <cite>asine</cite> cycle kernel,
+which stands for ‘asymmetric sinuisoidal’. Using the <cite>asine</cite> kernel, you
+can simulate arbitrary rise-decay symmetry of oscillations.</p>
+<p>We’ll plot it over our original sinuisoidal oscillation, so we can compare them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a shape-y oscillations</span>
+<span class="n">osc_shape</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">osc_sine</span><span class="p">,</span> <span class="n">osc_shape</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">),</span> <span class="s1">&#39;rdsym=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="o">.</span><span class="mi">3</span><span class="p">)])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_002.png" />
+<p>We can also compare these signals in the frequency.</p>
+<p>Notice that the asymmetric oscillation has strong harmonics resulting from the
+non-sinusoidal nature of the oscillation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<span class="n">freqs_sine</span><span class="p">,</span> <span class="n">psd_sine</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">osc_sine</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">freqs_shape</span><span class="p">,</span> <span class="n">psd_shape</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">osc_shape</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="n">plot_power_spectra</span><span class="p">([</span><span class="n">freqs_sine</span><span class="p">,</span> <span class="n">freqs_shape</span><span class="p">],</span> <span class="p">[</span><span class="n">psd_sine</span><span class="p">,</span> <span class="n">psd_shape</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_003.png" />
+</div>
+<div class="section" id="simulate-a-bursty-oscillation">
+<h2>Simulate a Bursty Oscillation<a class="headerlink" href="#simulate-a-bursty-oscillation" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes we want to study oscillations that come and go, so it can be useful to simulate
+oscillations with this property. We can do this by controlling the probability that a burst
+will start or stop with each new cycle.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for simulation</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+
+<span class="c1"># Simulate a bursty oscillation</span>
+<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
+                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_004.png" />
+<p>We can shorten burst duration by increasing the probability to leave bursts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
+<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
+<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
+                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" />
+<p>We can increase the number of bursts by increasing the probability to enter a burst</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
+<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
+<span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                 <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
+                                 <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" />
+<p>Sphinx settings:
+sphinx_gallery_thumbnail_number = 1</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.303 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/e94738087df9a5d6647d8dad65c08d50/plot_SimulatePeriodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulatePeriodic.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/526241b78d788da82e92f5f49eaa8aa6/plot_SimulatePeriodic.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_SimulatePeriodic.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018 - VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

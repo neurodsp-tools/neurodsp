@@ -1,0 +1,6 @@
+neurodsp.filt.utils.remove\_filter\_edges
+=========================================
+
+.. currentmodule:: neurodsp.filt.utils
+
+.. autofunction:: remove_filter_edges

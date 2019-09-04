@@ -1,0 +1,6 @@
+neurodsp.timefrequency.wavelets.compute\_wavelet\_transform
+===========================================================
+
+.. currentmodule:: neurodsp.timefrequency.wavelets
+
+.. autofunction:: compute_wavelet_transform

@@ -1,0 +1,6 @@
+neurodsp.plts.filt.plot\_filter\_properties
+===========================================
+
+.. currentmodule:: neurodsp.plts.filt
+
+.. autofunction:: plot_filter_properties

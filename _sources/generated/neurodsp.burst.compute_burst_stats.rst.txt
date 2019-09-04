@@ -1,6 +1,0 @@
-neurodsp.burst.compute\_burst\_stats
-====================================
-
-.. currentmodule:: neurodsp.burst
-
-.. autofunction:: compute_burst_stats

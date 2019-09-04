@@ -1,0 +1,6 @@
+neurodsp.spectral.variance.compute\_spectral\_hist
+==================================================
+
+.. currentmodule:: neurodsp.spectral.variance
+
+.. autofunction:: compute_spectral_hist

@@ -1,6 +1,0 @@
-neurodsp.filt.check\_filter\_properties
-=======================================
-
-.. currentmodule:: neurodsp.filt
-
-.. autofunction:: check_filter_properties

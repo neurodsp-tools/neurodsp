@@ -1,0 +1,6 @@
+neurodsp.filt.utils.compute\_nyquist
+====================================
+
+.. currentmodule:: neurodsp.filt.utils
+
+.. autofunction:: compute_nyquist

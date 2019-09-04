@@ -1,6 +1,0 @@
-neurodsp.filt.filter\_signal\_fir
-=================================
-
-.. currentmodule:: neurodsp.filt
-
-.. autofunction:: filter_signal_fir

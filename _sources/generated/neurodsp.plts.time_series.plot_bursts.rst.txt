@@ -1,0 +1,6 @@
+neurodsp.plts.time\_series.plot\_bursts
+=======================================
+
+.. currentmodule:: neurodsp.plts.time_series
+
+.. autofunction:: plot_bursts

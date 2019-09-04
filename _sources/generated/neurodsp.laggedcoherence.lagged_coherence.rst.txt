@@ -1,6 +1,0 @@
-neurodsp.laggedcoherence.lagged\_coherence
-==========================================
-
-.. currentmodule:: neurodsp.laggedcoherence
-
-.. autofunction:: lagged_coherence

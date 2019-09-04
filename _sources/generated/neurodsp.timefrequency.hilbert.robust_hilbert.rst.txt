@@ -1,0 +1,6 @@
+neurodsp.timefrequency.hilbert.robust\_hilbert
+==============================================
+
+.. currentmodule:: neurodsp.timefrequency.hilbert
+
+.. autofunction:: robust_hilbert
