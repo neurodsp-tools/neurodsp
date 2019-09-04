@@ -4,7 +4,7 @@
 [![Latest Version](https://img.shields.io/pypi/v/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
 [![Build Status](https://travis-ci.org/neurodsp-tools/neurodsp.svg)](https://travis-ci.org/neurodsp-tools/neurodsp)
 [![codecov](https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg)](https://codecov.io/gh/neurodsp-tools/neurodsp)
-[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![License](https://img.shields.io/pypi/l/neurodsp.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 
@@ -14,8 +14,9 @@ A package of tools to analyze and simulate neural time series, using digital sig
 
 Documentation for the NeuroDSP module is available [here](https://neurodsp-tools.github.io/neurodsp/).
 
-The documentation also includes a full set of [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html)
-covering the functionality of NeuroDSP.
+The documentation also includes a set of [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html)
+describing each module in NeuroDSP, as well as a set of [examples](https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html)
+of applications of NeuroDSP.
 
 If you have a question about using NeuroDSP that doesn't seem to be covered by the documentation, feel free to
 open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
@@ -36,23 +37,23 @@ We recommend using the [Anaconda](https://www.continuum.io/downloads) distributi
 
 **Stable Release Version**
 
-To install the latest release of neurodsp, you can install from pip:
+To install the latest stable release, use pip:
 
 `$ pip install neurodsp`
 
 **Development Version**
 
-To get the development version (updates that are not yet published to pip), you can clone this repo.
+To get the current development version, first clone this repository:
 
 `$ git clone https://github.com/neurodsp-tools/neurodsp`
 
-To install this cloned copy of neurodsp, move into the directory you just cloned, and run:
+To install this cloned copy, move into the directory you just cloned, and run:
 
 `$ pip install .`
 
 **Editable Version**
 
-If you want to install an editable version, for making contributions, download the development version as above, and run:
+To install an editable version, download the development version as above, and run:
 
 `$ pip install -e .`
 

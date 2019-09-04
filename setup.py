@@ -16,7 +16,7 @@ long_description = \
 Neurodsp
 ========
 
-A package of tools to analyze and simulate neural time series, using digital signal processing.
+NeuroDSP is package of tools to analyze and simulate neural time series, using digital signal processing.
 
 Available modules in NeuroDSP include:
 
@@ -27,27 +27,36 @@ Available modules in NeuroDSP include:
 - timefrequency : Estimate instantaneous measures of oscillatory activity
 - sim : Simulate time series, including periodic and aperiodic signal components
 - plts : Plotting functions
+
+If you use this code in your project, please cite:
+
+Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for
+neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
+https://doi.org/10.21105/joss.01272
+
+Direct Link: https://doi.org/10.21105/joss.01272
 """
 
 setup(
     name = 'neurodsp',
     version = __version__,
-    description = 'Digital Signal Processing for Neural time series',
+    description = 'Digital signal processing for neural time series.',
     long_description = long_description,
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
     url = 'https://github.com/neurodsp-tools/neurodsp',
     packages = find_packages(),
-    license = 'MIT',
+    license = 'Apache License, 2.0',
     download_url = 'https://github.com/neurodsp-tools/neurodsp/releases',
-    keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'spectral analysis', 'LFP'],
+    keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'local field potentials',
+                'spectral analysis', 'time frequency analysis', 'electrophysiology'],
     install_requires = ['numpy', 'scipy', 'matplotlib'],
     tests_require = ['pytest'],
     classifiers = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache Software License',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',

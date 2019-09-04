@@ -110,7 +110,7 @@ html_theme_options = {
     'navbar_links': [
         ("API", "api"),
         ("Glossary", "glossary"),
-        ("Tutorial", "auto_tutorials/index"),
+        ("Tutorials", "auto_tutorials/index"),
         ("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
