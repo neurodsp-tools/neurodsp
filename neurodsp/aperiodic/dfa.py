@@ -1,109 +1,145 @@
+"""Fluctuation analyses to measure fractal properties of time series."""
+
 import numpy as np
 import scipy as sp
 
-def dfa(data, fs, n_scales=10, min_scale=0.01, max_scale=1.0, deg=1, method='dfa'):
-    """ Perform Detrended Fluctuation Analysis (DFA) on a given time series by
-    dividing the data into non-overlapping windows at log-spaced scales and
-    computing the mean RMS of fits over all window at each scale.
+###################################################################################################
+###################################################################################################
+
+def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, deg=1, method='dfa'):
+    """Compute a fluctuation analysis on a signal.
 
     Parameters
     ----------
-    data : array, 1-D
-        Data to compute DFA over.
+    sig : 1d array
+        Time series.
     fs : float, Hz
-        Sampling frequency of data.
-    n_scales : int (default=10)
+        Sampling rate, in Hz.
+    n_scales : int, optional, default=10
         Number of scales to estimate fluctuations over.
-    min_scale : float, seconds (default=0.01s)
-        Shortest scale to compute DFA over.
-    max_scale : float, seconds (default=1.0s)
-        Longest scale to compute DFA over.
-    deg : int (default=1)
-        Polynomial degree for detrending. 1 for regular DFA, 2 or higher for
-        generalized DFA.
-    method : str (default='dfa')
-        Method to compute per-window fluctuation.
-        'dfa' : detrended fluctuation (OLS fit of data window). Empirically, DFA
-            seems to work for a larger range of exponent values.
-        'rs' : rescaled range (range divided by std)
+    min_scale : float, optional, default=0.01
+        Shortest scale to compute over, in seconds.
+    max_scale : float, optional, default=1.0
+        Longest scale to compute over, in seconds.
+    deg : int, optional, default=1
+        Polynomial degree for detrending. Only used for DFA.
+
+        - 1 for regular DFA
+        - 2 or higher for generalized DFA
+    method : {'dfa', 'rs'}
+        Method to use to compute fluctuations:
+
+        - 'dfa' : detrended fluctuation
+        - 'rs' : rescaled range
 
     Returns
     -------
-    t_scales : array, 1-D
-        Time-scales over which detrended fluctuations was performedself.
-    DFs : array, 1-D
-        Mean RMS (fluctuations) at each scale.
-    alpha : float
-        Slope of line in loglog when plotting t_scales against DFs (Hurst exp.).
+    t_scales : 1d array
+        Time-scales over which fluctuation measures were computed.
+    fluctuations : 1d array
+        Average fluctuation at each scale.
+    exp : float
+        Slope of line in loglog when plotting t_scales against fluctuations.
+        This is the alpha value for DFA, or the Hurst exponent for rescaled range.
+
+    Notes
+    -----
+    These analysis compute fractal properties by analyzing fluctuations across windows.
+
+    Overall, these approaches involve dividing the time-series into non-overlapping
+    windows at log-spaced scales and computing a fluctuation measure across windows.
+    The relationship of this fluctuation measure across window sizes provides
+    information on the fractal properties of a signal.
+
+    Measures available are:
+    - DFA: detrended fluctuation analysis
+        - computes ordinary least squares fits across signal windows
+    - RS: rescaled range
+        - computes the range of signal windows, divided by the standard deviation
+
+    Empirically, DFA seems to work for a larger range of exponent values.
     """
-    # get log10 equi-spaced scales and translate that into window lengths
+
+    # Get log10 equi-spaced scales and translate that into window lengths
     t_scales = np.logspace(np.log10(min_scale), np.log10(max_scale), n_scales)
     win_lens = np.round(t_scales * fs).astype('int')
-    # get culmulative sum
-    data_walk = sp.cumsum(data - np.mean(data))
-    DFs = np.zeros_like(t_scales)
-    # step through each scale and get RMS
+
+    # Calculate culmulative sum of the signal
+    sig_walk = sp.cumsum(sig - np.mean(sig))
+
+    # Step through each scale and get RMS
+    fluctuations = np.zeros_like(t_scales)
     for idx, win_len in enumerate(win_lens):
         if method is 'dfa':
-            DFs[idx] = compute_DF(data_walk, win_len=win_len, deg=deg)
+            fluctuations[idx] = compute_detrended_fluctuation(sig_walk, win_len=win_len, deg=deg)
         elif method is 'rs':
-            DFs[idx] = compute_RS(data_walk, win_len=win_len)
+            fluctuations[idx] = compute_rescaled_range(sig_walk, win_len=win_len)
+        else:
+            raise ValueError('Fluctuation method not understood.')
 
-    # get DFA exponent
-    alpha = np.polyfit(np.log10(t_scales), np.log10(DFs), deg=1)[0]
-    return t_scales, DFs, alpha
+    # Calculate the relationship between between fluctuations & time scales
+    exp = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
 
-def compute_RS(data, win_len):
+    return t_scales, fluctuations, exp
+
+
+def compute_rescaled_range(sig, win_len):
     """Compute rescaled range of a given time-series at a given scale.
 
     Parameters
     ----------
-    data : array, 1-D
-        Data to compute R/S over.
+    sig : 1d array
+        Time series.
     win_len : int
-        Window length for each R/S computation.
+        Window length for each rescaled range computation.
 
     Returns
     -------
-    x : float
-        Mean R/S over all sub-windows of data.
-
+    rs : float
+        Average rescaled range over windows.
     """
-    # gather all windows
-    n_win = int(np.floor(len(data) / win_len))
-    # vectorize the data so we can call math functions in one go
-    Z_rect = np.reshape(data[:n_win * win_len], (n_win, win_len)).T
-    # get back the data by taking the derivative of data_walk
-    X = np.concatenate((data[:1],np.diff(data)))
+
+    # Gather windows & vectorize, so we can call math functions in one go
+    n_win = int(np.floor(len(sig) / win_len))
+    sig_rect = np.reshape(sig[:n_win * win_len], (n_win, win_len)).T
+
+    # get back the sig by taking the derivative of sig_walk
+    X = np.concatenate((sig[:1], np.diff(sig)))
     X_rect = np.reshape(X[:n_win * win_len], (n_win, win_len)).T
 
-    RS_seg = np.ptp(Z_rect, axis=0)/np.std(X_rect, axis=0)
-    return np.mean(RS_seg)
+    # Calculate rescaled range as range divided by std, and take mean across windows
+    rs_win = np.ptp(sig_rect, axis=0) / np.std(X_rect, axis=0)
+    rs = np.mean(rs_win)
+
+    return rs
 
 
-def compute_DF(data, win_len, deg=1):
-    """ Compute detrended fluctuation of the data at the given window length.
+def compute_detrended_fluctuation(sig, win_len, deg=1):
+    """Compute detrended fluctuation of a time-series at the given window length.
 
     Parameters
     ----------
-    data : array, 1-D
-        Data to compute DFA over.
+    sig : 1d array
+        Time series.
     win_len : int
-        Window length for each DF fit.
-    deg : int (default=1)
+        Window length for each detrended fluctuation fit.
+    deg : int, optional, default=1
         Polynomial degree for detrending.
 
     Returns
     -------
-    x : float
-        mean RMS across fits.
+    det_fluc : float
+        Measured detrended fluctuaiton, as the average error fits of the window.
     """
-    # gather all windows
-    n_win = int(np.floor(len(data) / win_len))
-    # vectorize the data so we can call np.polyfit in one go
-    data_rect = np.reshape(data[:n_win * win_len], (n_win, win_len)).T
-    # fitting
-    coef, fluc, _, _, _ = np.polyfit(
-        np.arange(win_len), data_rect, deg=deg, full=True)
-    # fluc cntains sum of squared error, we want mean RMS across fits
-    return np.mean((fluc / win_len)**0.5)
+
+    # Gather windows & vectorize, so we can call math functions in one go
+    n_win = int(np.floor(len(sig) / win_len))
+    sig_rect = np.reshape(sig[:n_win * win_len], (n_win, win_len)).T
+
+    # Calculate local trend, as the line of best fit within the time window
+    _, fluc, _, _, _ = np.polyfit(np.arange(win_len), sig_rect, deg=deg, full=True)
+
+    # Convert to root-mean squared error, from squared error
+    det_fluc = np.mean((fluc / win_len)**0.5)
+
+    return det_fluc
