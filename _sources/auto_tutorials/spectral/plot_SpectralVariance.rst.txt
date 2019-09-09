@@ -153,9 +153,10 @@ normalized estimate of variance.
 
 
 As shown above, SCV calculated from the entire segment of data is quite noise due to the
-single estimate of mean and standard deviation. To overcome this, we can compute a
-bootstrap-resampled estimate of SCV, by randomly drawing slices from the non-overlapping
-spectrogram and taking their average.
+single estimate of mean and standard deviation.
+
+To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
+slices from the non-overlapping spectrogram and taking their average.
 
 
 
@@ -214,7 +215,7 @@ sphinx_gallery_thumbnail_number = 4
 
 
 
-**Total running time of the script:** ( 0 minutes  0.534 seconds)
+**Total running time of the script:** ( 0 minutes  0.541 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_spectral_plot_SpectralVariance.py:

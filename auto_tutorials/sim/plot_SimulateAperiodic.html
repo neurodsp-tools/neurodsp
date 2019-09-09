@@ -112,8 +112,8 @@
 <div class="section" id="simulate-1-f-activity">
 <h2>Simulate 1/f Activity<a class="headerlink" href="#simulate-1-f-activity" title="Permalink to this headline">¶</a></h2>
 <p>Often, we want to simulate noise that is comparable to what we see in neural recordings.</p>
-<p>Neural signals display 1/f like activity, whereby power decreases linearly across
-increasing frequencies, when plotting in log-log.</p>
+<p>Neural signals display 1/f-like activity, whereby power decreases linearly across
+increasing frequencies, when plotted in log-log.</p>
 <p>Let’s start with a powerlaw signal, specifically a brown noise process, or a signal
 for which the power spectrum is distributed as 1/f^2.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting for the simulation</span>
@@ -160,7 +160,7 @@ be applied to the simulated data before being returned. Here we will apply a hig
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" />
-<p>Note: the <code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code> function can simualate power law exponents,
+<p>Note: the <code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code> function can simulate arbitrary power law exponents,
 such as pink noise (-1), or any other exponent.</p>
 </div>
 <div class="section" id="random-walk-activity">
@@ -180,7 +180,7 @@ such as pink noise (-1), or any other exponent.</p>
 <h2>Simulate Synaptic Activity<a class="headerlink" href="#simulate-synaptic-activity" title="Permalink to this headline">¶</a></h2>
 <p>Another model for simulating aperiodic, neurally plausible activity, is to simulate
 synaptic current activity, as a Lorentzian function.</p>
-<p>The synaptic current moedel is a poisson activity convoled with exponential kernels
+<p>The synaptic current moedel is poisson activity convolved with exponential kernels
 that mimic the shape of post-synaptic potentials.</p>
 <p>For more details on the usage of such models for simulating neural signals,
 see Destexhe et al., 2001 and/or Gao et al., 2017.</p>
@@ -205,7 +205,7 @@ fixed exponent of -2, as we can see in the power spectra plot below.</p>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 3</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.712 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.704 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/7fd0d08f479c303f3db38485b6051041/plot_SimulateAperiodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulateAperiodic.py</span></code></a></div>

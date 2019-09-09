@@ -50,7 +50,7 @@ This tutorial covers :mod:`neurodsp.sim.periodic`.
 Simulate a Stationary Oscillation
 ---------------------------------
 
-Let's start by simulating an oscillation - in this case, a simple, sinuisoidal oscillation.
+Let's start by simulating an oscillation. We'll start with a simple, sinuisoidal, oscillation.
 
 
 
@@ -84,8 +84,10 @@ Cycle Kernels
 -------------
 
 To simulate oscillations, we can use a sinuisoidal kernel, as above, or any of a selection
-of other cycle kernals, that represent different shapes and properties that may be useful
-to simulate different aspects of periodic neural activity.
+of other cycle kernels.
+
+Different kernels represent different shapes and properties that may be useful to simulate
+different aspects of periodic neural activity.
 
 Cycle kernel options include:
 
@@ -102,8 +104,9 @@ Simulate a Shapely Oscillation
 ------------------------------
 
 Next let's simulate an aymmetric oscillation, using the `asine` cycle kernel,
-which stands for 'asymmetric sinuisoidal'. Using the `asine` kernel, you
-can simulate arbitrary rise-decay symmetry of oscillations.
+which stands for 'asymmetric sinuisoidal'.
+
+Using the `asine` kernel, we can simulate arbitrary rise-decay symmetry of oscillations.
 
 We'll plot it over our original sinuisoidal oscillation, so we can compare them.
 
@@ -168,8 +171,10 @@ Simulate a Bursty Oscillation
 -----------------------------
 
 Sometimes we want to study oscillations that come and go, so it can be useful to simulate
-oscillations with this property. We can do this by controlling the probability that a burst
-will start or stop with each new cycle.
+oscillations with this property.
+
+We can do this by controlling the probability that a burst will start or stop with
+each new cycle.
 
 
 
@@ -248,7 +253,7 @@ We can shorten burst duration by increasing the probability to leave bursts.
 
 
 
-We can increase the number of bursts by increasing the probability to enter a burst
+We can increase the number of bursts by increasing the probability to enter a burst.
 
 
 
@@ -290,7 +295,7 @@ sphinx_gallery_thumbnail_number = 1
 
 
 
-**Total running time of the script:** ( 0 minutes  0.303 seconds)
+**Total running time of the script:** ( 0 minutes  0.312 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_sim_plot_SimulatePeriodic.py:

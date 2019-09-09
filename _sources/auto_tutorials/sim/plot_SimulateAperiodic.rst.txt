@@ -53,8 +53,8 @@ Simulate 1/f Activity
 
 Often, we want to simulate noise that is comparable to what we see in neural recordings.
 
-Neural signals display 1/f like activity, whereby power decreases linearly across
-increasing frequencies, when plotting in log-log.
+Neural signals display 1/f-like activity, whereby power decreases linearly across
+increasing frequencies, when plotted in log-log.
 
 Let's start with a powerlaw signal, specifically a brown noise process, or a signal
 for which the power spectrum is distributed as 1/f^2.
@@ -172,7 +172,7 @@ We can see that the resulting signal has much less low-frequency drift than the 
 
 
 
-Note: the :func:`sim_powerlaw` function can simualate power law exponents,
+Note: the :func:`sim_powerlaw` function can simulate arbitrary power law exponents,
 such as pink noise (-1), or any other exponent.
 
 
@@ -219,7 +219,7 @@ Simulate Synaptic Activity
 Another model for simulating aperiodic, neurally plausible activity, is to simulate
 synaptic current activity, as a Lorentzian function.
 
-The synaptic current moedel is a poisson activity convoled with exponential kernels
+The synaptic current moedel is poisson activity convolved with exponential kernels
 that mimic the shape of post-synaptic potentials.
 
 For more details on the usage of such models for simulating neural signals,
@@ -285,7 +285,7 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-**Total running time of the script:** ( 0 minutes  0.712 seconds)
+**Total running time of the script:** ( 0 minutes  0.704 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_sim_plot_SimulateAperiodic.py:

@@ -28,7 +28,7 @@ fs = 1000
 # Simulate a Stationary Oscillation
 # ---------------------------------
 #
-# Let's start by simulating an oscillation - in this case, a simple, sinuisoidal oscillation.
+# Let's start by simulating an oscillation. We'll start with a simple, sinuisoidal, oscillation.
 #
 
 ###################################################################################################
@@ -52,8 +52,10 @@ plot_time_series(times, osc_sine)
 # -------------
 #
 # To simulate oscillations, we can use a sinuisoidal kernel, as above, or any of a selection
-# of other cycle kernals, that represent different shapes and properties that may be useful
-# to simulate different aspects of periodic neural activity.
+# of other cycle kernels.
+#
+# Different kernels represent different shapes and properties that may be useful to simulate
+# different aspects of periodic neural activity.
 #
 # Cycle kernel options include:
 #
@@ -71,8 +73,9 @@ plot_time_series(times, osc_sine)
 # ------------------------------
 #
 # Next let's simulate an aymmetric oscillation, using the `asine` cycle kernel,
-# which stands for 'asymmetric sinuisoidal'. Using the `asine` kernel, you
-# can simulate arbitrary rise-decay symmetry of oscillations.
+# which stands for 'asymmetric sinuisoidal'.
+#
+# Using the `asine` kernel, we can simulate arbitrary rise-decay symmetry of oscillations.
 #
 # We'll plot it over our original sinuisoidal oscillation, so we can compare them.
 #
@@ -109,8 +112,10 @@ plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 # -----------------------------
 #
 # Sometimes we want to study oscillations that come and go, so it can be useful to simulate
-# oscillations with this property. We can do this by controlling the probability that a burst
-# will start or stop with each new cycle.
+# oscillations with this property.
+#
+# We can do this by controlling the probability that a burst will start or stop with
+# each new cycle.
 #
 
 ###################################################################################################
@@ -153,7 +158,7 @@ plot_time_series(times, osc, xlim=[0, n_seconds])
 
 ###################################################################################################
 #
-# We can increase the number of bursts by increasing the probability to enter a burst
+# We can increase the number of bursts by increasing the probability to enter a burst.
 #
 
 ###################################################################################################

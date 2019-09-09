@@ -114,7 +114,7 @@ Notice that the edges of the filtered signal are clipped (no red).
 Edge artifact removal is done by default in :func:`filter_signal`, because
 the signal samples at the edges only experienced part of the filter.
 
-To bypass this feature, set `remove_edge_artifacts=False`, but at your own risk!
+To bypass this feature, set `remove_edges=False`, but at your own risk!
 
 
 
@@ -226,7 +226,7 @@ Remove high frequency activity from the data.
 2c. Bandstop filter
 ~~~~~~~~~~~~~~~~~~~
 
-Remove 60Hz noise from the data
+Next let's try a bandstop filter, for the example usecase of removing 60Hz noise from data.
 
 Notice that it is necessary to set a nondefault filter length because
 a filter of length 3 cycles of a 58Hz oscillation would not attenuate
@@ -238,7 +238,7 @@ the 60Hz oscillation much (try this yourself!).
 .. code-block:: python
 
 
-    # Generate a signal with a low-frequency drift
+    # Generate a signal, with a low frequency oscillation and 60 Hz line noise
     times = create_times(8, fs)
     sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
@@ -278,15 +278,21 @@ the 60Hz oscillation much (try this yourself!).
 
 
 
+You might sometimes see a user warning that warns about the level of attenuation.
+
+You will see this warning whenever the filter you construct has a frequency response does
+not hit a certain level of attenuation in the stopband.By default, if it does not go below 20dB.
+
+You can check filter properties by plotting the frequency response when you apply a filter.
+
+
+
 
 .. code-block:: python
 
 
-    # Note the user warning above.
-    # This is because in the computed frequency response (below),
-    # the attenuation in the stopband does not go below 20dB.
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25,
-                                  plot_properties=True)
+    # Apply a short filter. In this case, we won't achieve our desird attenuation
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
 
 
 
@@ -302,8 +308,7 @@ the 60Hz oscillation much (try this yourself!).
 
 
     # This user warning disappears if we elongate the filter
-    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1,
-                                  plot_properties=True)
+    sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_properties=True)
 
 
 
@@ -323,11 +328,11 @@ but worse time resolution.
 Two bandpass filters (one long and one short)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Notice that the short filter preserves the start of the oscillation
-better than the long filter (i.e. better time resolution).
+Notice that the short filter preserves the start of the oscillation better than the
+long filter (i.e. better time resolution).
 
-Notice that the long filter correctly removed the 1Hz oscillation,
-but the short filter did not (i.e. better frequency resolution).
+Notice that the long filter correctly removed the 1Hz oscillation, but the short filter
+did not (i.e. better frequency resolution).
 
 
 
@@ -437,16 +442,18 @@ but the short filter did not (i.e. better frequency resolution).
 4. Infinite impulse response (IIR) filter option
 ------------------------------------------------
 
-So far, the filters that we've been using are finite impulse response
-(FIR) filters. These filters are nice because we have good control over
-their properties (by manipulating the time-frequency resolution tradeoff
-through the filter length).
+So far, the filters that we've been using are finite impulse response (FIR) filters.
 
-However, sometimes we may not be as concerned with the precise filter
-properties, and so there is a faster option: IIR filters. We often use
-these filters when removing 60Hz line noise.
+These filters are nice because we have good control over their properties,
+by manipulating the time-frequency resolution tradeoff through the filter length.
+
+However, sometimes we may not be as concerned with the precise filter properties,
+and so there is a faster option: IIR filters.
+
+We often use these filters when removing 60 Hz line noise.
 
 Here we apply a 3rd order butterworth filter to remove 60Hz noise.
+
 Notice that some edge artifacts remain.
 
 
@@ -577,7 +584,7 @@ sphinx_gallery_thumbnail_number = 12
 
 
 
-**Total running time of the script:** ( 0 minutes  0.739 seconds)
+**Total running time of the script:** ( 0 minutes  0.753 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_filt_plot_Filtering.py:

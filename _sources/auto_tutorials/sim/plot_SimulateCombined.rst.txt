@@ -55,10 +55,10 @@ Simulate Combined Periodic & Aperiodic Signals
 In order to simulate a signal that looks more like a brain signal, you may want
 to simulate an oscillation together with aperiodic activity.
 
-We can do this with the `sim_combined` function, in which you specify a set of
+We can do this with the :func:`sim_combined` function, in which you specify a set of
 components that you want to add together to create a complex signal.
 
-You can use `sim_combined` with any combination of any of the other simulation functions.
+You can use :func:`sim_combined` with any combination of any of the other simulation functions.
 
 Each component is indicated as a string label, indicating the desired function to use,
 in a dictionary, with an associated dictionary of any and all parameters to use for that
@@ -247,7 +247,7 @@ sphinx_gallery_thumbnail_number = 1
 
 
 
-**Total running time of the script:** ( 0 minutes  0.447 seconds)
+**Total running time of the script:** ( 0 minutes  0.449 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_sim_plot_SimulateCombined.py:

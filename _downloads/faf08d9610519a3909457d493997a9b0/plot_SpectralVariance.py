@@ -112,9 +112,10 @@ plot_scv(freqs, scv)
 ###################################################################################################
 #
 # As shown above, SCV calculated from the entire segment of data is quite noise due to the
-# single estimate of mean and standard deviation. To overcome this, we can compute a
-# bootstrap-resampled estimate of SCV, by randomly drawing slices from the non-overlapping
-# spectrogram and taking their average.
+# single estimate of mean and standard deviation.
+#
+# To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
+# slices from the non-overlapping spectrogram and taking their average.
 #
 
 ###################################################################################################

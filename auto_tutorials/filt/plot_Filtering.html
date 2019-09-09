@@ -138,7 +138,7 @@
 <p>Notice that the edges of the filtered signal are clipped (no red).</p>
 <p>Edge artifact removal is done by default in <code class="xref py py-func docutils literal notranslate"><span class="pre">filter_signal()</span></code>, because
 the signal samples at the edges only experienced part of the filter.</p>
-<p>To bypass this feature, set <cite>remove_edge_artifacts=False</cite>, but at your own risk!</p>
+<p>To bypass this feature, set <cite>remove_edges=False</cite>, but at your own risk!</p>
 </div>
 <div class="section" id="highpass-lowpass-and-bandstop-filters">
 <h2>2. Highpass, lowpass, and bandstop filters<a class="headerlink" href="#highpass-lowpass-and-bandstop-filters" title="Permalink to this headline">¶</a></h2>
@@ -182,11 +182,11 @@ the signal samples at the edges only experienced part of the filter.</p>
 </div>
 <div class="section" id="c-bandstop-filter">
 <h3>2c. Bandstop filter<a class="headerlink" href="#c-bandstop-filter" title="Permalink to this headline">¶</a></h3>
-<p>Remove 60Hz noise from the data</p>
+<p>Next let’s try a bandstop filter, for the example usecase of removing 60Hz noise from data.</p>
 <p>Notice that it is necessary to set a nondefault filter length because
 a filter of length 3 cycles of a 58Hz oscillation would not attenuate
 the 60Hz oscillation much (try this yourself!).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal with a low-frequency drift</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal, with a low frequency oscillation and 60 Hz line noise</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">times</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">times</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
 </pre></div>
@@ -201,17 +201,17 @@ the 60Hz oscillation much (try this yourself!).</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_Filtering_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Filtering_004.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note the user warning above.</span>
-<span class="c1"># This is because in the computed frequency response (below),</span>
-<span class="c1"># the attenuation in the stopband does not go below 20dB.</span>
-<span class="n">sig_filt</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">filter_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
-                              <span class="n">plot_properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<p>You might sometimes see a user warning that warns about the level of attenuation.</p>
+<p>You will see this warning whenever the filter you construct has a frequency response does
+not hit a certain level of attenuation in the stopband.By default, if it does not go below 20dB.</p>
+<p>You can check filter properties by plotting the frequency response when you apply a filter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply a short filter. In this case, we won&#39;t achieve our desird attenuation</span>
+<span class="n">sig_filt</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">filter_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_Filtering_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Filtering_005.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This user warning disappears if we elongate the filter</span>
-<span class="n">sig_filt</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">filter_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">plot_properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">sig_filt</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">filter_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_Filtering_006.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Filtering_006.png" />
@@ -223,10 +223,10 @@ the 60Hz oscillation much (try this yourself!).</p>
 but worse time resolution.</p>
 <div class="section" id="two-bandpass-filters-one-long-and-one-short">
 <h3>Two bandpass filters (one long and one short)<a class="headerlink" href="#two-bandpass-filters-one-long-and-one-short" title="Permalink to this headline">¶</a></h3>
-<p>Notice that the short filter preserves the start of the oscillation
-better than the long filter (i.e. better time resolution).</p>
-<p>Notice that the long filter correctly removed the 1Hz oscillation,
-but the short filter did not (i.e. better frequency resolution).</p>
+<p>Notice that the short filter preserves the start of the oscillation better than the
+long filter (i.e. better time resolution).</p>
+<p>Notice that the long filter correctly removed the 1Hz oscillation, but the short filter
+did not (i.e. better frequency resolution).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate an oscillation with noise</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
@@ -277,15 +277,14 @@ Long filter
 </div>
 <div class="section" id="infinite-impulse-response-iir-filter-option">
 <h2>4. Infinite impulse response (IIR) filter option<a class="headerlink" href="#infinite-impulse-response-iir-filter-option" title="Permalink to this headline">¶</a></h2>
-<p>So far, the filters that we’ve been using are finite impulse response
-(FIR) filters. These filters are nice because we have good control over
-their properties (by manipulating the time-frequency resolution tradeoff
-through the filter length).</p>
-<p>However, sometimes we may not be as concerned with the precise filter
-properties, and so there is a faster option: IIR filters. We often use
-these filters when removing 60Hz line noise.</p>
-<p>Here we apply a 3rd order butterworth filter to remove 60Hz noise.
-Notice that some edge artifacts remain.</p>
+<p>So far, the filters that we’ve been using are finite impulse response (FIR) filters.</p>
+<p>These filters are nice because we have good control over their properties,
+by manipulating the time-frequency resolution tradeoff through the filter length.</p>
+<p>However, sometimes we may not be as concerned with the precise filter properties,
+and so there is a faster option: IIR filters.</p>
+<p>We often use these filters when removing 60 Hz line noise.</p>
+<p>Here we apply a 3rd order butterworth filter to remove 60Hz noise.</p>
+<p>Notice that some edge artifacts remain.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal with a low-frequency drift</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
@@ -335,7 +334,7 @@ more sinusoidal than the original signal really is.</p>
 which is a tool for time-domain analyses of waveform shape.</p>
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 12</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.739 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.753 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-filtering-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/8893ddc6d4168638a0a61bd1d70c4b5d/plot_Filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_Filtering.py</span></code></a></div>

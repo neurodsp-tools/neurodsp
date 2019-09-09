@@ -168,9 +168,9 @@ normalized estimate of variance.</p>
 </div>
 <img alt="../../_images/sphx_glr_plot_SpectralVariance_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_003.png" />
 <p>As shown above, SCV calculated from the entire segment of data is quite noise due to the
-single estimate of mean and standard deviation. To overcome this, we can compute a
-bootstrap-resampled estimate of SCV, by randomly drawing slices from the non-overlapping
-spectrogram and taking their average.</p>
+single estimate of mean and standard deviation.</p>
+<p>To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
+slices from the non-overlapping spectrogram and taking their average.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span>
                                                 <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
@@ -195,7 +195,7 @@ deviation estimates.</p>
 than 1 (negative in log10).</p>
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 4</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.534 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.541 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/faf08d9610519a3909457d493997a9b0/plot_SpectralVariance.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SpectralVariance.py</span></code></a></div>

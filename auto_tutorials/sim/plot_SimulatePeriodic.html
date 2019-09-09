@@ -110,7 +110,7 @@
 </div>
 <div class="section" id="simulate-a-stationary-oscillation">
 <h2>Simulate a Stationary Oscillation<a class="headerlink" href="#simulate-a-stationary-oscillation" title="Permalink to this headline">¶</a></h2>
-<p>Let’s start by simulating an oscillation - in this case, a simple, sinuisoidal oscillation.</p>
+<p>Let’s start by simulating an oscillation. We’ll start with a simple, sinuisoidal, oscillation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">osc_freq</span> <span class="o">=</span> <span class="mf">6.6</span>
@@ -130,8 +130,9 @@
 <div class="section" id="cycle-kernels">
 <h2>Cycle Kernels<a class="headerlink" href="#cycle-kernels" title="Permalink to this headline">¶</a></h2>
 <p>To simulate oscillations, we can use a sinuisoidal kernel, as above, or any of a selection
-of other cycle kernals, that represent different shapes and properties that may be useful
-to simulate different aspects of periodic neural activity.</p>
+of other cycle kernels.</p>
+<p>Different kernels represent different shapes and properties that may be useful to simulate
+different aspects of periodic neural activity.</p>
 <p>Cycle kernel options include:</p>
 <ul class="simple">
 <li>sine: a sine wave cycle</li>
@@ -145,8 +146,8 @@ to simulate different aspects of periodic neural activity.</p>
 <div class="section" id="simulate-a-shapely-oscillation">
 <h2>Simulate a Shapely Oscillation<a class="headerlink" href="#simulate-a-shapely-oscillation" title="Permalink to this headline">¶</a></h2>
 <p>Next let’s simulate an aymmetric oscillation, using the <cite>asine</cite> cycle kernel,
-which stands for ‘asymmetric sinuisoidal’. Using the <cite>asine</cite> kernel, you
-can simulate arbitrary rise-decay symmetry of oscillations.</p>
+which stands for ‘asymmetric sinuisoidal’.</p>
+<p>Using the <cite>asine</cite> kernel, we can simulate arbitrary rise-decay symmetry of oscillations.</p>
 <p>We’ll plot it over our original sinuisoidal oscillation, so we can compare them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a shape-y oscillations</span>
 <span class="n">osc_shape</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=.</span><span class="mi">2</span><span class="p">)</span>
@@ -172,8 +173,9 @@ non-sinusoidal nature of the oscillation.</p>
 <div class="section" id="simulate-a-bursty-oscillation">
 <h2>Simulate a Bursty Oscillation<a class="headerlink" href="#simulate-a-bursty-oscillation" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes we want to study oscillations that come and go, so it can be useful to simulate
-oscillations with this property. We can do this by controlling the probability that a burst
-will start or stop with each new cycle.</p>
+oscillations with this property.</p>
+<p>We can do this by controlling the probability that a burst will start or stop with
+each new cycle.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for simulation</span>
 <span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">3</span>
@@ -206,7 +208,7 @@ will start or stop with each new cycle.</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" />
-<p>We can increase the number of bursts by increasing the probability to enter a burst</p>
+<p>We can increase the number of bursts by increasing the probability to enter a burst.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
 <span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
 <span class="n">osc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
@@ -222,7 +224,7 @@ will start or stop with each new cycle.</p>
 <img alt="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 1</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.303 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.312 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/e94738087df9a5d6647d8dad65c08d50/plot_SimulatePeriodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulatePeriodic.py</span></code></a></div>

@@ -82,6 +82,7 @@ with an aperiodic component.
 .. code-block:: python
 
 
+    # Plot the simulated data
     plot_time_series(times, sig, 'Simulated EEG')
 
 
@@ -93,25 +94,24 @@ with an aperiodic component.
 
 
 
-We can see that 10Hz oscillations present 1.5-2.1 seconds and after 4.2 seconds.
+In the simulated signal above, we can see some bursty 10 Hz oscillations.
 
 
 
 Dual Amplitude Threshold Algorithm
 ----------------------------------
 
-This algorithm first computes the amplitude at each point in time for
-a given frequency range. This amplitude is then normalized by the average
-(default: median) amplitude of the whole time series. Two thresholds are
-defined based off of this normalized amplitude. In order for a burst to be
-detected, the amplitude must cross the higher amplitude threshold. The burst
-lasts until the amplitude then falls below the lower amplitude threshold.
+This algorithm first computes the amplitude at each point in time for a given
+frequency range. This amplitude is then normalized by the average (default: median)
+amplitude of the whole time series. Two thresholds are defined based off of this
+normalized amplitude. In order for a burst to be detected, the amplitude must cross
+the higher amplitude threshold. The burst lasts until the amplitude then falls below
+the lower amplitude threshold.
 
-**Other Parameters:**
-* The average for normalization can be set to either the mean or median
-by modifying the `average_method` keyword argument.
-* Power can be used instead of amplitude by modifying the `magnitude_type`
-keyword argument.
+**Other Parameters**
+
+- `avg_type`: used to set the average for normalization to either 'median' or 'mean'
+- `magnitude_type`: used to set the metric for thresholding, to 'amplitude' or 'power'
 
 
 
@@ -136,8 +136,9 @@ keyword argument.
 
 
 
-The graph above shows the bursting activity in red. The algorithm was
-used with thresh=(1, 2), so any time point with more than 3 times the
+The graph above shows the bursting activity in red.
+
+The algorithm was used with thresh=(1, 2), so any time point with more than 3 times the
 median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.
 
 
@@ -176,6 +177,7 @@ Next up, we'll load a sample of real neural data, and try out the burst detectio
 
 No bursts were detected! There could be a number of reasons for this.
 One of the easy things to do is to adjust the parameters for burst detection.
+
 Let's try making the thresholds lower.
 
 
@@ -235,7 +237,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-**Total running time of the script:** ( 0 minutes  0.266 seconds)
+**Total running time of the script:** ( 0 minutes  0.271 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_burst_plot_BurstDetection.py:
