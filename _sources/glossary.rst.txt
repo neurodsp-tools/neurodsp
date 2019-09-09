@@ -1,7 +1,7 @@
 NeuroDSP Glossary
 =================
 
-The following is a glossary of neuroscience and digital processing related terms that are used in NeuroDSP.
+The following is a glossary of neuroscience and digital processing related terms that are used in NeuroDSP, as well as links to external resources that we like and use for learning DSP.
 
 General
 -------
@@ -20,6 +20,10 @@ Digital Signal Processing
 For a general introduction to digital signal processing, we recommend
 `Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
 by Jack Schaedler.
+
+For more in-depth descriptions, the free, online textbook,
+`The Scientist and Engineers Guide to Digital Signal Processing <http://www.dspguide.com/>`_,
+is a great resource.
 
 .. glossary::
 
@@ -57,10 +61,12 @@ Units
 Filters
 -------
 
-For a guide on filtering, specific to electrophysiological data, check out this
-`paper <https://doi.org/10.1016/j.jneumeth.2014.08.002>`_ from the journal of neuroscience methods.
+There are some available (paywalled) articles that present overviews and guides to filters, including:
 
-For a more in depth tutorial, in code, check out the
+- this `guide <https://doi.org/10.1016/j.jneumeth.2014.08.002>`_ on using filters for electrophysiological data
+- this `primer <https://doi.org/10.1016/j.neuron.2019.02.039>`_ on when, how, and why to use filters
+
+For an open, in depth, and code drive tutorial, check out the
 `MNE Filtering Tutorial <https://martinos.org/mne/stable/auto_tutorials/plot_background_filtering.html>`_.
 
 .. glossary::
