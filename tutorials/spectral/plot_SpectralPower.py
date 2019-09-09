@@ -103,7 +103,7 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 # As well as a large body of work investigating oscillations, this "1/f-like" aperiodic
 # components has been found to correlate with aging, memory, and cognitive control in several
 # previous publications, and has been proposed to reflect the physiological balance between
-#  excitation and inhibition.
+# excitation and inhibition.
 #
 # See for example: Voytek et al., JNeuro, 2015; Podvalny et al.,
 # JNeurophysiol, 2015; Gao et al., NeuroImage, 2017; Lombardi et al., Chaos, 2017

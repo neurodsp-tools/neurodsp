@@ -67,7 +67,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # Edge artifact removal is done by default in :func:`filter_signal`, because
 # the signal samples at the edges only experienced part of the filter.
 #
-# To bypass this feature, set `remove_edge_artifacts=False`, but at your own risk!
+# To bypass this feature, set `remove_edges=False`, but at your own risk!
 #
 
 ###################################################################################################
@@ -128,7 +128,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # 2c. Bandstop filter
 # ~~~~~~~~~~~~~~~~~~~
 #
-# Remove 60Hz noise from the data
+# Next let's try a bandstop filter, for the example usecase of removing 60Hz noise from data.
 #
 # Notice that it is necessary to set a nondefault filter length because
 # a filter of length 3 cycles of a 58Hz oscillation would not attenuate
@@ -137,7 +137,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 
-# Generate a signal with a low-frequency drift
+# Generate a signal, with a low frequency oscillation and 60 Hz line noise
 times = create_times(8, fs)
 sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
@@ -153,18 +153,24 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
+#
+# You might sometimes see a user warning that warns about the level of attenuation.
+#
+# You will see this warning whenever the filter you construct has a frequency response does
+# not hit a certain level of attenuation in the stopband.By default, if it does not go below 20dB.
+#
+# You can check filter properties by plotting the frequency response when you apply a filter.
+#
 
-# Note the user warning above.
-# This is because in the computed frequency response (below),
-# the attenuation in the stopband does not go below 20dB.
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25,
-                              plot_properties=True)
+###################################################################################################
+
+# Apply a short filter. In this case, we won't achieve our desird attenuation
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
 
 ###################################################################################################v
 
 # This user warning disappears if we elongate the filter
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1,
-                              plot_properties=True)
+sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_properties=True)
 
 ###################################################################################################
 #
@@ -177,11 +183,11 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1,
 # Two bandpass filters (one long and one short)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# Notice that the short filter preserves the start of the oscillation
-# better than the long filter (i.e. better time resolution).
+# Notice that the short filter preserves the start of the oscillation better than the
+# long filter (i.e. better time resolution).
 #
-# Notice that the long filter correctly removed the 1Hz oscillation,
-# but the short filter did not (i.e. better frequency resolution).
+# Notice that the long filter correctly removed the 1Hz oscillation, but the short filter
+# did not (i.e. better frequency resolution).
 #
 
 ###################################################################################################
@@ -226,16 +232,18 @@ sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 # 4. Infinite impulse response (IIR) filter option
 # ------------------------------------------------
 #
-# So far, the filters that we've been using are finite impulse response
-# (FIR) filters. These filters are nice because we have good control over
-# their properties (by manipulating the time-frequency resolution tradeoff
-# through the filter length).
+# So far, the filters that we've been using are finite impulse response (FIR) filters.
 #
-# However, sometimes we may not be as concerned with the precise filter
-# properties, and so there is a faster option: IIR filters. We often use
-# these filters when removing 60Hz line noise.
+# These filters are nice because we have good control over their properties,
+# by manipulating the time-frequency resolution tradeoff through the filter length.
+#
+# However, sometimes we may not be as concerned with the precise filter properties,
+# and so there is a faster option: IIR filters.
+#
+# We often use these filters when removing 60 Hz line noise.
 #
 # Here we apply a 3rd order butterworth filter to remove 60Hz noise.
+#
 # Notice that some edge artifacts remain.
 #
 

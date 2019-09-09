@@ -33,10 +33,10 @@ times = create_times(n_seconds, fs)
 # In order to simulate a signal that looks more like a brain signal, you may want
 # to simulate an oscillation together with aperiodic activity.
 #
-# We can do this with the `sim_combined` function, in which you specify a set of
+# We can do this with the :func:`sim_combined` function, in which you specify a set of
 # components that you want to add together to create a complex signal.
 #
-# You can use `sim_combined` with any combination of any of the other simulation functions.
+# You can use :func:`sim_combined` with any combination of any of the other simulation functions.
 #
 # Each component is indicated as a string label, indicating the desired function to use,
 # in a dictionary, with an associated dictionary of any and all parameters to use for that

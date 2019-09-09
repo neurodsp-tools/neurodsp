@@ -55,10 +55,13 @@ plot_time_series(times, sig)
 # ----------------------------------------------
 #
 # Because we define the window length to be about 1 cycle, this should roughly extract
-# the waveform shape of the neural oscillation. Notice that the beta cycles have sharper
-# troughs than peaks, and the average window is a beta cycle with a sharp trough.
+# the waveform shape of the neural oscillation.
 #
-# However, notice that these results change dramatically by changing the random seed.
+# Notice that the beta cycles have sharper troughs than peaks, and the average window is
+# a beta cycle with a sharp trough.
+#
+# One thing to explore is how these results change by changing the random seed.
+#
 # Using more data and increasing the number of iterations helps the robustness of the algorithm.
 #
 

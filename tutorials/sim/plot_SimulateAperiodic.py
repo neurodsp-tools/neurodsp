@@ -31,8 +31,8 @@ n_seconds = 10
 #
 # Often, we want to simulate noise that is comparable to what we see in neural recordings.
 #
-# Neural signals display 1/f like activity, whereby power decreases linearly across
-# increasing frequencies, when plotting in log-log.
+# Neural signals display 1/f-like activity, whereby power decreases linearly across
+# increasing frequencies, when plotted in log-log.
 #
 # Let's start with a powerlaw signal, specifically a brown noise process, or a signal
 # for which the power spectrum is distributed as 1/f^2.
@@ -92,7 +92,7 @@ plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #
-# Note: the :func:`sim_powerlaw` function can simualate power law exponents,
+# Note: the :func:`sim_powerlaw` function can simulate arbitrary power law exponents,
 # such as pink noise (-1), or any other exponent.
 #
 
@@ -122,7 +122,7 @@ plot_time_series(times, rw_noise, title='RW Process')
 # Another model for simulating aperiodic, neurally plausible activity, is to simulate
 # synaptic current activity, as a Lorentzian function.
 #
-# The synaptic current moedel is a poisson activity convoled with exponential kernels
+# The synaptic current moedel is poisson activity convolved with exponential kernels
 # that mimic the shape of post-synaptic potentials.
 #
 # For more details on the usage of such models for simulating neural signals,
