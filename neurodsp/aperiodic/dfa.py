@@ -69,9 +69,9 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     fluctuations = np.zeros_like(t_scales)
     for idx, win_len in enumerate(win_lens):
 
-        if method is 'dfa':
+        if method == 'dfa':
             fluctuations[idx] = compute_detrended_fluctuation(sig, win_len=win_len, deg=deg)
-        elif method is 'rs':
+        elif method == 'rs':
             fluctuations[idx] = compute_rescaled_range(sig, win_len=win_len)
         else:
             raise ValueError('Fluctuation method not understood.')
