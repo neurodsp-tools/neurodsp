@@ -44,10 +44,10 @@ def check_filter_definition(pass_type, f_range):
     ## Check that frequency cutoff inputs are appropriate
     # For band filters, 2 inputs required & second entry must be > first
     if pass_type in ('bandpass', 'bandstop'):
-        if isinstance(f_range, tuple) and f_range[0] >= f_range[1]:
+        if isinstance(f_range, (tuple, list)) and f_range[0] >= f_range[1]:
             raise ValueError('Second cutoff frequency must be greater than first.')
         elif isinstance(f_range, (int, float)) or len(f_range) != 2:
-            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
+            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters.')
 
         # Map f_range to f_lo and f_hi
         f_lo, f_hi = f_range
@@ -56,14 +56,14 @@ def check_filter_definition(pass_type, f_range):
     if pass_type == 'lowpass':
         if isinstance(f_range, (int, float)):
             f_hi = f_range
-        elif isinstance(f_range, tuple):
+        elif isinstance(f_range, (tuple, list)):
             f_hi = f_range[1]
         f_lo = None
 
     if pass_type == 'highpass':
         if isinstance(f_range, (int, float)):
             f_lo = f_range
-        elif isinstance(f_range, tuple):
+        elif isinstance(f_range, (tuple, list)):
             f_lo = f_range[0]
         f_hi = None
 
