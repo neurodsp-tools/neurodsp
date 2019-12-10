@@ -10,7 +10,7 @@ with open(os.path.join('neurodsp', 'version.py')) as vf:
 # Copy in long description.
 #  Note: this is a partial copy from the README
 #    Only update here in coordination with the README, to keep things consistent.
-long_description = \
+LONG_DESCRIPTION = \
 """
 ========
 Neurodsp
@@ -41,9 +41,11 @@ setup(
     name = 'neurodsp',
     version = __version__,
     description = 'Digital signal processing for neural time series.',
-    long_description = long_description,
+    long_description = LONG_DESCRIPTION,
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
+    maintainer = 'Thomas Donoghue',
+    maintainer_email = 'tdonoghue.research@gmail.com',
     url = 'https://github.com/neurodsp-tools/neurodsp',
     packages = find_packages(),
     license = 'Apache License, 2.0',
@@ -57,13 +59,18 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: Apache Software License',
-        'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX :: Linux',
+        'Operating System :: MacOS',
+        'Operating System :: POSIX',
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
-        ]
+        ],
+    project_urls = {
+        'Documentation' : 'https://neurodsp-tools.github.io/',
+        'Bug Reports' : 'https://github.com/neurodsp-tools/neurodsp/issues',
+        'Source' : 'https://github.com/neurodsp-tools/neurodsp'
+    },
 )
