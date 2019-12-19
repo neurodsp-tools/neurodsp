@@ -1,4 +1,4 @@
-"""Tests for sim related utility functions."""
+"""Tests for simulation related utility functions."""
 
 from neurodsp.utils.sim import *
 

@@ -101,13 +101,13 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         Frequencies at which the measure was calculated.
     t_inds : 1d array or None
         Time indices at which the measure was calculated.
-        This is only returnd for 'rolling' resampling. If 'bootstrap', t_inds = None.
+        This is only returned for 'rolling' resampling. If 'bootstrap', t_inds = None.
     scv_rs : 2d array
         Resampled spectral coefficient of variation.
 
     Notes
     -----
-    In the resampled verion, instead of a single estimate of mean and standard deviation,
+    In the resampled version, instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled.
 
     Resampling can be done either randomly (method='bootstrap') or in a time-stepped
@@ -128,7 +128,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         nslices, ndraws = rs_params
         scv_rs = np.zeros((len(freqs), ndraws))
 
-        # Repeated subsampling of spectrogram randomly, with replacement between draws
+        # Repeated sub-sampling of spectrogram randomly, with replacement between draws
         for draw in range(ndraws):
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
             scv_rs[:, draw] = np.std(

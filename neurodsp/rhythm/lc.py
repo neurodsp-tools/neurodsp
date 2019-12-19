@@ -101,7 +101,7 @@ def lagged_coherence_1freq(sig, fs, freq, n_cycles):
     chunks = split_signal(sig, n_samps)
     n_chunks = len(chunks)
 
-    # For each chunk, calculate the fourier coefficients at the frequency of interest
+    # For each chunk, calculate the Fourier coefficients at the frequency of interest
     hann_window = hann(n_samps)
     fft_freqs = np.fft.fftfreq(n_samps, 1 / float(fs))
     fft_freqs_idx = np.argmin(np.abs(fft_freqs - freq))

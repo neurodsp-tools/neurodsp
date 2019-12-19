@@ -19,7 +19,7 @@ def test_compute_lagged_coherence(tsig):
     lcs, freqs = compute_lagged_coherence(tsig, FS, FREQS_LST, return_spectrum=True)
     assert sum(np.isnan(lcs)) == 0
 
-    # Check using a list of n_cycles defintions
+    # Check using a list of n_cycles definitions
     lc = compute_lagged_coherence(tsig, FS, FREQS_ARR, n_cycles=[3, 4, 5])
 
     # Test the warning if can't estimate some values

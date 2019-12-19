@@ -37,7 +37,7 @@ def check_n_cycles(n_cycles, len_cycles=None):
     Parameters
     ----------
     n_cycles : float or list
-        Definiton of number of cycles.
+        Definition of number of cycles.
         If a single value, the same number of cycles is used for each frequency value.
         If a list or list_like, then should be a n_cycles corresponding to each frequency.
     len_cycles : int, optional

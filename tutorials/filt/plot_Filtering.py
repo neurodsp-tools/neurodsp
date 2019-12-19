@@ -16,7 +16,7 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 #
 # 1. Bandpass filter: extract a single oscillation from a signal
 # 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
-# 3. Time-frequency resolution tradeoff: Change the filter length
+# 3. Time-frequency resolution trade off: Change the filter length
 # 4. Infinite-impulse-response (IIR) filter option.
 # 5. Beta bandpass filter on a neural signal
 #
@@ -128,9 +128,9 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # 2c. Bandstop filter
 # ~~~~~~~~~~~~~~~~~~~
 #
-# Next let's try a bandstop filter, for the example usecase of removing 60Hz noise from data.
+# Next let's try a bandstop filter, for the example use case of removing 60Hz noise from data.
 #
-# Notice that it is necessary to set a nondefault filter length because
+# Notice that it is necessary to set a non-default filter length because
 # a filter of length 3 cycles of a 58Hz oscillation would not attenuate
 # the 60Hz oscillation much (try this yourself!).
 #
@@ -157,14 +157,14 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # You might sometimes see a user warning that warns about the level of attenuation.
 #
 # You will see this warning whenever the filter you construct has a frequency response does
-# not hit a certain level of attenuation in the stopband.By default, if it does not go below 20dB.
+# not hit a certain level of attenuation in the stopband. By default, if it does not go below 20dB.
 #
 # You can check filter properties by plotting the frequency response when you apply a filter.
 #
 
 ###################################################################################################
 
-# Apply a short filter. In this case, we won't achieve our desird attenuation
+# Apply a short filter. In this case, we won't achieve our desired attenuation
 sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
 
 ###################################################################################################v
@@ -174,8 +174,8 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_pr
 
 ###################################################################################################
 #
-# 3. Time-frequency resolution tradeoff
-# -------------------------------------
+# 3. Time-frequency resolution trade off
+# --------------------------------------
 #
 # With longer filter kernels, we get improved frequency resolution,
 # but worse time resolution.
@@ -235,7 +235,7 @@ sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 # So far, the filters that we've been using are finite impulse response (FIR) filters.
 #
 # These filters are nice because we have good control over their properties,
-# by manipulating the time-frequency resolution tradeoff through the filter length.
+# by manipulating the time-frequency resolution trade off through the filter length.
 #
 # However, sometimes we may not be as concerned with the precise filter properties,
 # and so there is a faster option: IIR filters.

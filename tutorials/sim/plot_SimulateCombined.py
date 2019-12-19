@@ -106,7 +106,7 @@ plot_power_spectra(freqs, psd)
 #
 # If you wish, you can also combine multiple components from the same simulation function.
 #
-# To do so, replace the dictionay of parameters with a list of parameters, where each
+# To do so, replace the dictionary of parameters with a list of parameters, where each
 # entry is a dictionary for each component, using the same simulation function.
 #
 # For example, here we can combine an aperiodic component with two different oscillations.

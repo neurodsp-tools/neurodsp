@@ -17,7 +17,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 
 @normalize
 def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
-    """Simulate a poisson population.
+    """Simulate a Poisson population.
 
     Parameters
     ----------
@@ -41,8 +41,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     property, i.e. mean(X) = var(X).
 
     The lambda parameter of the Poisson process (total rate) is determined as
-    firing rate * number of neurons, i.e. summation of poisson processes is still
-    a poisson processes.
+    firing rate * number of neurons, i.e. summation of Poisson processes is still
+    a Poisson processes.
 
     Note that the Gaussian approximation for a sum of Poisson processes is only
     a good approximation for large lambdas.
@@ -230,7 +230,7 @@ def _create_powerlaw(n_samples, fs, exponent):
 
     Notes
     -----
-    This function create variable powerlaw exponents by spectrally rotating white noise.
+    This function create variable power law exponents by spectrally rotating white noise.
     """
 
     # Start with white noise signal, that we will rotate, in frequency space
@@ -240,7 +240,7 @@ def _create_powerlaw(n_samples, fs, exponent):
     fft_output = np.fft.fft(sig)
     freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
-    # Rotate spectrum and invert, zscore to normalize.
+    # Rotate spectrum and invert, z-score to normalize.
     #   Note: the delta exponent to be applied is divided by two, as
     #     the FFT output is in units of amplitude not power
     fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)

@@ -35,7 +35,7 @@ def check_filter_definition(pass_type, f_range):
     Raises
     ------
     ValueError
-        If the filter passtype it not understood, or cutoff frequncies are incompatible.
+        If the filter passtype it not understood, or cutoff frequencies are incompatible.
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:

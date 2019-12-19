@@ -18,7 +18,7 @@ def test_sim_combined():
     out = sim_combined(N_SECONDS, FS, simulations)
     check_sim_output(out)
 
-    # Test case with mutliple uses of same function
+    # Test case with multiple uses of same function
     simulations = {'sim_oscillation' : [{'freq' : FREQ1}, {'freq' : FREQ2}],
                    'sim_powerlaw' : {'exponent' : -2}}
     variances = [0.5, 0.5, 1]

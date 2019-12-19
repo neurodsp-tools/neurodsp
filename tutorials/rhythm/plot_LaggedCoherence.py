@@ -97,6 +97,8 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 # the frequency range of interest, compared to a signal that does not have an oscillation.
 #
 
+###################################################################################################
+
 samp_burst = np.arange(1000)
 samp_noburst = np.arange(1000, 2000)
 
@@ -110,6 +112,8 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 # Compute lagged coherence of an example neural signal
 # ----------------------------------------------------
 #
+
+###################################################################################################
 
 # Load signal
 sig = np.load('../data/sample_data_1.npy')

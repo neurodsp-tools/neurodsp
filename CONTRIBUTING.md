@@ -1,7 +1,7 @@
 # Contributing Guidelines
 
 Thank you for your interest in contributing to NeuroDSP! We welcome contributions to the
-project that extend or improve code and/or documenation and/or tutorials in the
+project that extend or improve code and/or documentation and/or tutorials in the
 NeuroDSP project!
 
 If you have an idea you would like to contribute to NeuroDSP, please first check that
@@ -51,7 +51,7 @@ To make a contribution:
 At minimum, there should be a sentence describing what the function does and a list of
 parameters and returns.
     * Private functions should be indicated with a leading underscore, and should still include a
-docstrings including at least a sentence describition what the function does.
+docstrings including at least a sentence describing what the function does.
     * If you add any new public functions, note this function in the doc/api.rst file,
 so that this function gets included in the documentation site API listing.
 
@@ -60,7 +60,7 @@ so that this function gets included in the documentation site API listing.
     * If any more packages are needed, they should be added to the `requirements.txt` file.
 
 4. API & Naming Conventions
-    * Try to keep the API consistent across neurodp in naming and parameter ordering, for example:
+    * Try to keep the API consistent across NeuroDSP in naming and parameter ordering, for example:
         * `sig` is commonly the first input, representing the neural time series
         * `fs` is commonly the second input, representing the sampling rate
     * Try to keep naming conventions consistent with other modules, for example:

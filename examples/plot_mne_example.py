@@ -207,7 +207,7 @@ for ind, ch_label in enumerate(raw.ch_names):
     # Calculate lagged coherence on current channel data
     cur_lcs, cur_freqs = compute_lagged_coherence(cur_sig, fs, f_range, return_spectrum=True)
 
-    # Collect data of interest: frequency of max rhymiticity & associated rhythmicity value
+    # Collect data of interest: frequency of max rhythmicity & associated rhythmicity value
     max_freq[ind] = cur_freqs[np.argmax(cur_lcs)]
     max_score[ind] = np.max(cur_lcs)
 

@@ -133,7 +133,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
 
 
 def compute_nyquist(fs):
-    """Compute the nyquist frequency.
+    """Compute the Nyquist frequency.
 
     Parameters
     ----------
@@ -143,7 +143,7 @@ def compute_nyquist(fs):
     Returns
     -------
     float
-        The nyquist frequency of a signal with the given sampling rate, in Hz.
+        The Nyquist frequency of a signal with the given sampling rate, in Hz.
     """
 
     return fs / 2.

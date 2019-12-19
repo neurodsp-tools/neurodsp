@@ -72,7 +72,7 @@ plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
 
-# Compute instaneous amplitude from a signal
+# Compute instantaneous amplitude from a signal
 amp = amp_by_time(sig, fs, f_range)
 
 ###################################################################################################
@@ -95,15 +95,15 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
 #
 # It is measured as the temporal derivative of the instantaneous phase.
 #
-# Intstantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
-# such as appling a median filter, is used to make it smoother.
+# Instantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
+# such as applying a median filter, is used to make it smoother.
 #
 # For example of this, see Samaha & Postle, 2015.
 #
 
 ###################################################################################################
 
-# Compute instaneous frequency from a signal
+# Compute instantaneous frequency from a signal
 i_f = freq_by_time(sig, fs, f_range)
 
 ###################################################################################################

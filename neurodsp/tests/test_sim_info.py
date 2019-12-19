@@ -1,4 +1,4 @@
-"""Tests for sim info functions."""
+"""Tests for simulation info functions."""
 
 from pytest import raises
 

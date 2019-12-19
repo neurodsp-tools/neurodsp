@@ -28,7 +28,7 @@ fs = 1000
 # Simulate a Stationary Oscillation
 # ---------------------------------
 #
-# Let's start by simulating an oscillation. We'll start with a simple, sinuisoidal, oscillation.
+# Let's start by simulating an oscillation. We'll start with a simple, sinusoidal, oscillation.
 #
 
 ###################################################################################################
@@ -51,7 +51,7 @@ plot_time_series(times, osc_sine)
 # Cycle Kernels
 # -------------
 #
-# To simulate oscillations, we can use a sinuisoidal kernel, as above, or any of a selection
+# To simulate oscillations, we can use a sinusoidal kernel, as above, or any of a selection
 # of other cycle kernels.
 #
 # Different kernels represent different shapes and properties that may be useful to simulate
@@ -72,12 +72,12 @@ plot_time_series(times, osc_sine)
 # Simulate a Shapely Oscillation
 # ------------------------------
 #
-# Next let's simulate an aymmetric oscillation, using the `asine` cycle kernel,
-# which stands for 'asymmetric sinuisoidal'.
+# Next let's simulate an asymmetric oscillation, using the `asine` cycle kernel,
+# which stands for 'asymmetric sinusoidal'.
 #
 # Using the `asine` kernel, we can simulate arbitrary rise-decay symmetry of oscillations.
 #
-# We'll plot it over our original sinuisoidal oscillation, so we can compare them.
+# We'll plot it over our original sinusoidal oscillation, so we can compare them.
 #
 
 ###################################################################################################

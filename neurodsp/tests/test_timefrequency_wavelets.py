@@ -1,4 +1,4 @@
-"""Tests for timefrequency estimations using wavelets."""
+"""Tests for time-frequency estimations using wavelets."""
 
 from neurodsp.tests.settings import FS, FREQ1, FREQS_ARR
 
@@ -12,7 +12,7 @@ def test_compute_wavelet_transform(tsig):
     out = compute_wavelet_transform(tsig, FS, FREQS_ARR)
     assert out.ndim == 2
 
-    # Check using a list of n_cycles defintions
+    # Check using a list of n_cycles definitions
     out = compute_wavelet_transform(tsig, FS, FREQS_ARR, n_cycles=[3, 4, 5])
 
 def test_compute_wavelet_transform_2d(tsig2d):

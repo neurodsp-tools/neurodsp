@@ -1,4 +1,4 @@
-"""Tests for sim decorator functions."""
+"""Tests for decorator functions."""
 
 from neurodsp.utils.decorators import *
 

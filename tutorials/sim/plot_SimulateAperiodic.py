@@ -34,7 +34,7 @@ n_seconds = 10
 # Neural signals display 1/f-like activity, whereby power decreases linearly across
 # increasing frequencies, when plotted in log-log.
 #
-# Let's start with a powerlaw signal, specifically a brown noise process, or a signal
+# Let's start with a power law signal, specifically a brown noise process, or a signal
 # for which the power spectrum is distributed as 1/f^2.
 #
 
@@ -63,11 +63,11 @@ plot_power_spectra(freqs, psd)
 # Simulate Filtered 1/f Activity
 # ------------------------------
 #
-# The powerlaw simulation function is also integrated with a filter. This can be useful
+# The power law simulation function is also integrated with a filter. This can be useful
 # if one wants to filter out the slow frequencies, as is often done with neural signals,
 # to remove the very slow drifts that we see in the pure 1/f simulations.
 #
-# To filter a simulated powerlaw signal, simply pass in a filter range, and the filter will
+# To filter a simulated power law signal, simply pass in a filter range, and the filter will
 # be applied to the simulated data before being returned. Here we will apply a high-pass filter.
 #
 # We can see that the resulting signal has much less low-frequency drift than the first one.
@@ -122,7 +122,7 @@ plot_time_series(times, rw_noise, title='RW Process')
 # Another model for simulating aperiodic, neurally plausible activity, is to simulate
 # synaptic current activity, as a Lorentzian function.
 #
-# The synaptic current moedel is poisson activity convolved with exponential kernels
+# The synaptic current model is Poisson activity convolved with exponential kernels
 # that mimic the shape of post-synaptic potentials.
 #
 # For more details on the usage of such models for simulating neural signals,

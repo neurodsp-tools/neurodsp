@@ -113,7 +113,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 def _compute_cost(sig, window_starts, win_n_samps):
     """Compute the cost, which is proportional to the difference between pairs of windows."""
 
-    # Get all windows and zscore them
+    # Get all windows and z-score them
     n_windows = len(window_starts)
     windows = np.zeros((n_windows, win_n_samps))
 

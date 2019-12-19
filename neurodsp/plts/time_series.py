@@ -87,7 +87,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
 @savefig
 @style_plot
 def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
-    """Plot a time series, with labelled bursts.
+    """Plot a time series, with labeled bursts.
 
     Parameters
     ----------

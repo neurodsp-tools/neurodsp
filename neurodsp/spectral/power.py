@@ -108,7 +108,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Method to average across the windows:
 
         * 'mean' is the same as Welch's method, taking the mean across FFT windows.
-        * 'median' uses median across FFT windows instead of the mean, to minimize outlier effect.
+        * 'median' uses median across FFT windows instead of the mean, to minimize outlier effects.
     window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
@@ -132,7 +132,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Power spectral density.
     """
 
-    # Calculate the short time fourier transform with signal.spectrogram
+    # Calculate the short time Fourier transform with signal.spectrogram
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
@@ -152,7 +152,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
 @multidim(select=[0])
 def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
-    """Compute the power spectral densitry as a smoothed FFT.
+    """Compute the power spectral density as a smoothed FFT.
 
     Parameters
     ----------

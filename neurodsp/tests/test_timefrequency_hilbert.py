@@ -1,4 +1,4 @@
-"""Test functions for timefrequency hilbert analyses."""
+"""Test functions for time-frequency Hilbert analyses."""
 
 from neurodsp.tests.settings import FS
 
