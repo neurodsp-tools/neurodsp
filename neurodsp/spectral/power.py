@@ -29,7 +29,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    method : {'welch', 'wavelet', 'medfilt'}
+    method : {'welch', 'wavelet', 'medfilt'}, optional
         Method to use to estimate the power spectrum.
     avg_type : {'mean', 'median'}, optional
         If relevant, the method to average across windows to create the spectrum.
@@ -119,7 +119,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     noverlap : int, optional
         Number of points to overlap between segments.
         If None, noverlap = nperseg // 8.
-    f_range : list of [float, float] optional
+    f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
     outlier_percent : float, optional
         The percentage of outlier values to be removed. Must be between 0 and 100.
@@ -160,9 +160,9 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    filt_len : float, optional, default: 1.
+    filt_len : float, optional, default: 1
         Length of the median filter, in Hz.
-    f_range : list of [float, float] optional
+    f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
 
     Returns

@@ -8,7 +8,7 @@ import numpy as np
 ###################################################################################################
 
 def check_filter_definition(pass_type, f_range):
-    """Check a filter definition for validity, and get f_lo and f_hi.
+    """Check a filter definition for validity, and get filter frequency range of the filter.
 
     Parameters
     ----------

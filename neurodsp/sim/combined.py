@@ -22,7 +22,7 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
         Signal sampling rate, in Hz.
     components : dictionary
         A dictionary of simulation functions to run, with their desired parameters.
-    component_variances : list of float or 1
+    component_variances : list of float or 1, optional, default: 1
         Variance to simulate with for each component of the signal.
         If 1, each component signal is simulated with unit variance.
 

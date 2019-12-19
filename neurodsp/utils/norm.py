@@ -14,7 +14,7 @@ def demean(array, mean=0., select_nonzero=True):
         Data to demean.
     mean : float, optional, default: 0
         New mean for data to have.
-    select_nonzero : boolean, optional, default=True
+    select_nonzero : bool, optional, default: True
         Whether to calculate the mean of the array across only non-zero data points.
 
     Returns
@@ -42,9 +42,9 @@ def normalize_variance(array, variance=1., select_nonzero=True):
     ----------
     array : 1d array
         Data to normalize variance to.
-    variance : float, optional, default=1.
+    variance : float, optional, default: 1.0
         Variance to normalize to.
-    select_nonzero : boolean, optional, default=True
+    select_nonzero : bool, optional, default: True
         Whether to calculate the variance of the array across only non-zero data points.
 
     Returns

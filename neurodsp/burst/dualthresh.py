@@ -28,10 +28,10 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
     f_range : tuple of (float, float), optional
         Frequency range, to filter signal to, before running burst detection.
         If f_range is None, then no filtering is applied prior to running burst detection.
-    min_n_cycles : float, optional, default=3
+    min_n_cycles : float, optional, default: 3
         Minimum burst duration in to keep.
         Only used if `f_range` is defined, and is used as the number of cycles at f_range[0].
-    min_burst_duration : float, optional, default=None
+    min_burst_duration : float, optional, default: None
         Minimum length of a burst, in seconds. Must be defined if not filtering.
         Only used if `f_range` is not defined, or if `min_n_cycles` is set to None.
     avg_type : {'median', 'mean'}, optional

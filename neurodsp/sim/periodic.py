@@ -60,9 +60,9 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
         Sampling rate of simulated signal, in Hz.
     freq : float
         Oscillation frequency, in Hz.
-    enter_burst : float
+    enter_burst : float, optional, default: 0.2
         Probability of a cycle being oscillating given the last cycle is not oscillating.
-    leave_burst : float
+    leave_burst : float, optional, default: 0.2
         Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.

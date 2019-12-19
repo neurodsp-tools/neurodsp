@@ -21,7 +21,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
@@ -69,7 +69,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
@@ -171,7 +171,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional

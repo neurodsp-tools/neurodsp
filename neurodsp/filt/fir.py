@@ -50,7 +50,7 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
 
     Returns
     -------
-    sig_filt : 1d array
+    sig_filt : array
         Filtered time series.
     filter_coefs : 1d array
         Filter coefficients of the FIR filter. Only returned if `return_filter` is True.
@@ -129,7 +129,7 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     n_cycles : float, optional, default: 3
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
-    n_seconds : float, optional
+    n_seconds : float or None, optional
         Length of filter, in seconds. This parameter overwrites `n_cycles`.
 
     Returns
@@ -168,9 +168,9 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
         The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
         The higher frequency range of the filter, specifying the lowpass frequency, if specified.
-    n_cycles : float, optional, default: 3
+    n_cycles : float or None, optional, default: 3
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
-    n_seconds : float, optional
+    n_seconds : float or None, optional
         Length of filter, in seconds.
 
     Returns

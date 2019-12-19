@@ -177,4 +177,4 @@ def create_cycle_time(n_seconds, fs):
         Time indices.
     """
 
-    return 2*np.pi*1/n_seconds * (np.arange(fs*n_seconds)/fs)
+    return 2 * np.pi * 1 / n_seconds * (np.arange(fs * n_seconds) / fs)

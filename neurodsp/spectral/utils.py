@@ -53,7 +53,7 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     delta_exponent : float
         Change in power law exponent to be applied.
         Positive is counterclockwise rotation (flatten), negative is clockwise rotation (steepen).
-    f_rotation : float, optional, default=1
+    f_rotation : float, optional, default: 1
         Frequency at which to rotate the spectrum, where power is unchanged by the rotation, in Hz.
         This only matters if not further normalizing signal variance.
 

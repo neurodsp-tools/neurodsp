@@ -47,9 +47,9 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     Notes
     -----
-    * Apply a highpass filter if looking at high frequency activity, so that it does
+    - Apply a highpass filter if looking at high frequency activity, so that it does
       not converge on a low frequency motif.
-    * Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
+    - Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
       motif of interest, and the N derived should be about the number of occurrences.
     """
 

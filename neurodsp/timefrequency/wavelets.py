@@ -58,9 +58,9 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
         Sampling rate, in Hz.
     freq : float
         Center frequency of bandpass filter.
-    n_cycles : float, optional, default=7
+    n_cycles : float, optional, default: 7
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
-    scaling : float, optional, default=0.5
+    scaling : float, optional, default: 0.5
         Scaling factor for the morlet wavelet.
     wavelet_len : integer, optional
         Length of the wavelet. If defined, this overrides the freq and n_cycles inputs.

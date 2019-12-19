@@ -25,9 +25,9 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    n_neurons : int
+    n_neurons : int, optional, default: 1000
         Number of neurons in the simulated population.
-    firing_rate : type
+    firing_rate : float, optional, default: 2
         Firing rate of individual neurons in the population.
 
     Returns
@@ -61,8 +61,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
 
 
 @normalize
-def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
-                         tau_r=0, tau_d=0.01, t_ker=None):
+def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
+                         tau_r=0., tau_d=0.01, t_ker=None):
     """Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.
 
     Parameters
@@ -71,15 +71,15 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2,
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    n_neurons : int
+    n_neurons : int, optional, default: 1000
         Number of neurons in the simulated population.
-    firing_rate : float
+    firing_rate : float, optional, default: 2
         Firing rate of individual neurons in the population.
-    tau_r : float
+    tau_r : float, optional, default: 0.
         Rise time of synaptic kernel, in seconds.
-    tau_d : float
+    tau_d : float, optional, default: 0.01
         Decay time of synaptic kernel, in seconds.
-    t_ker : float
+    t_ker : float, optional
         Length of time of the simulated synaptic kernel, in seconds.
 
     Returns
@@ -114,12 +114,11 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    theta : float
-        Memory scale parameter.
-        Larger theta values create faster fluctuations.
-    mu : float
+    theta : float, optional, default: 1.0
+        Memory scale parameter. Larger theta values create faster fluctuations.
+    mu : float, optional, default: 0.0
         Mean of the random walk.
-    sigma : float
+    sigma : float, optional, default: 5.0
         Standard deviation of the random walk.
 
     Returns
@@ -171,7 +170,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    exponent : float
+    exponent : float, optional, default: -2
         Desired power-law exponent, of the form P(f)=f^exponent.
     f_range : list of [float, float] or None, optional
         Frequency range to filter simulated data, as [f_lo, f_hi], in Hz.
