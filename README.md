@@ -8,15 +8,21 @@
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/neurodsp.svg)](https://pypi.python.org/pypi/neurodsp/)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.01272/status.svg)](https://doi.org/10.21105/joss.01272)
 
-A package of tools to analyze and simulate neural time series, using digital signal processing.
+Tools to analyze and simulate neural time series, using digital signal processing.
 
 ## Documentation
 
 Documentation for the NeuroDSP module is available [here](https://neurodsp-tools.github.io/neurodsp/).
 
-The documentation also includes a set of [tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html)
-describing each module in NeuroDSP, as well as a set of [examples](https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html)
-of applications of NeuroDSP.
+The documentation includes:
+- [Tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html),
+which describe and work through each module in NeuroDSP
+- [Examples](https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html),
+demonstrating example applications and workflows
+- An [API](https://neurodsp-tools.github.io/neurodsp/api.html) directory,
+which lists all the code and functionality available in the module
+- A [Glossary](https://neurodsp-tools.github.io/neurodsp/glossary.html),
+which defines all the terms used in the module
 
 If you have a question about using NeuroDSP that doesn't seem to be covered by the documentation, feel free to
 open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
@@ -26,10 +32,12 @@ open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
 NeuroDSP is written in Python, and requires Python >= 3.5 to run.
 
 It has the following dependencies:
-- numpy
-- scipy
-- matplotlib
-- pytest (optional)
+- [numpy](https://github.com/numpy/numpy)
+- [scipy](https://github.com/scipy/scipy)
+- [matplotlib](https://github.com/matplotlib/matplotlib)
+
+Optional dependencies:
+- [pytest](https://github.com/pytest-dev/pytest) is needed if you want to run the test suite locally
 
 We recommend using the [Anaconda](https://www.continuum.io/downloads) distribution to manage these requirements.
 
@@ -79,7 +87,9 @@ Available modules in NeuroDSP include:
 
 If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
 
-When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md), and also make sure to follow our
+When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md). 
+
+We also require that all contributors follow our
 [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
 
 ## Reference
