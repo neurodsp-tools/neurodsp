@@ -44,7 +44,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Time indices.
     """
 
-    return np.arange(start_val, n_seconds, 1/fs)
+    return np.arange(start_val, n_seconds + start_val, 1/fs)
 
 
 def create_samples(n_samples, start_val=0):

@@ -17,8 +17,17 @@ def test_create_freqs():
 
 def test_create_times():
 
-    times = create_times(1, 10)
-    assert_equal(times, np.arange(0, 1, 1/10))
+    fs = 10
+
+    n_seconds = 1
+    times = create_times(n_seconds, fs)
+    assert_equal(times, np.arange(0, n_seconds, 1/fs))
+
+    n_seconds = 2
+    start_val = 1
+    times = create_times(n_seconds, fs, start_val=start_val)
+    assert times[0] == start_val
+    assert len(times) == n_seconds * fs
 
 def test_create_samples():
 
