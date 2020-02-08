@@ -62,7 +62,7 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
     scaling : float, optional, default: 0.5
         Scaling factor for the morlet wavelet.
-    wavelet_len : integer, optional
+    wavelet_len : int, optional
         Length of the wavelet. If defined, this overrides the freq and n_cycles inputs.
     norm : {'sss', 'amp'}, optional
         Normalization method:
@@ -84,7 +84,7 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
     """
 
     if wavelet_len is None:
-        wavelet_len = n_cycles * fs / freq
+        wavelet_len = int(n_cycles * fs / freq)
 
     if wavelet_len > sig.shape[-1]:
         raise ValueError('The length of the wavelet is greater than the signal. Can not proceed.')
