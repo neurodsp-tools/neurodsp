@@ -12,9 +12,7 @@ with open(os.path.join('neurodsp', 'version.py')) as vf:
 #    Only update here in coordination with the README, to keep things consistent.
 LONG_DESCRIPTION = \
 """
-========
-Neurodsp
-========
+NeuroDSP: Neuro Digital Signal Processing
 
 NeuroDSP is package of tools to analyze and simulate neural time series, using digital signal processing.
 
@@ -66,7 +64,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7'
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8'
         ],
     project_urls = {
         'Documentation' : 'https://neurodsp-tools.github.io/',
