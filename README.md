@@ -15,14 +15,14 @@ Tools to analyze and simulate neural time series, using digital signal processin
 Documentation for the NeuroDSP module is available [here](https://neurodsp-tools.github.io/neurodsp/).
 
 The documentation includes:
-- [Tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html),
+- [Tutorials](https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html):
 which describe and work through each module in NeuroDSP
-- [Examples](https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html),
+- [Examples](https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html):
 demonstrating example applications and workflows
-- An [API](https://neurodsp-tools.github.io/neurodsp/api.html) directory,
-which lists all the code and functionality available in the module
-- A [Glossary](https://neurodsp-tools.github.io/neurodsp/glossary.html),
-which defines all the terms used in the module
+- [API List](https://neurodsp-tools.github.io/neurodsp/api.html):
+which lists and describes all the code and functionality available in the module
+- [Glossary](https://neurodsp-tools.github.io/neurodsp/glossary.html):
+which defines all the key terms used in the module
 
 If you have a question about using NeuroDSP that doesn't seem to be covered by the documentation, feel free to
 open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) and ask!
@@ -67,7 +67,9 @@ To install an editable version, download the development version as above, and r
 
 ## Bug Reports
 
-Please use the [Github issue tracker](https://github.com/neurodsp-tools/neurodsp/issues) to file bug reports and/or ask questions about this project.
+Please use the
+[Github issue tracker](https://github.com/neurodsp-tools/neurodsp/issues)
+to file bug reports and/or ask questions about this project.
 
 ## Modules
 
@@ -85,9 +87,11 @@ Available modules in NeuroDSP include:
 
 `NeuroDSP` welcomes and encourages contributions from the community!
 
-If you have an idea of something to add to NeuroDSP, please start by opening an [issue](https://github.com/neurodsp-tools/neurodsp/issues).
+If you have an idea of something to add to NeuroDSP, please start by opening an
+[issue](https://github.com/neurodsp-tools/neurodsp/issues).
 
-When writing code to add to NeuroDSP, please follow the [Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md). 
+When writing code to add to NeuroDSP, please follow the
+[Contribution Guidelines](https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md).
 
 We also require that all contributors follow our
 [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
@@ -99,7 +103,7 @@ If you use this code in your project, please cite:
 ```
 Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for
 neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
-https://doi.org/10.21105/joss.01272
+DOI: 10.21105/joss.01272
 ```
 
 Direct Link: https://doi.org/10.21105/joss.01272
@@ -107,14 +111,14 @@ Direct Link: https://doi.org/10.21105/joss.01272
 Bibtex:
 ```
 @article{cole_neurodsp:_2019,
-	 title = {NeuroDSP: A package for neural digital signal processing},
-	 author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
-    	 journal = {Journal of Open Source Software},
-	 year = {2019},
-	 volume = {4},
-    	 number = {36},
-	 issn = {2475-9066},
-	 url = {http://joss.theoj.org/papers/10.21105/joss.01272},
-	 doi = {10.21105/joss.01272},
+    title = {NeuroDSP: A package for neural digital signal processing},
+    author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
+    journal = {Journal of Open Source Software},
+    year = {2019},
+    volume = {4},
+    number = {36},
+    issn = {2475-9066},
+    url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+    doi = {10.21105/joss.01272},
 }
 ```
