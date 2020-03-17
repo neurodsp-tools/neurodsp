@@ -3,6 +3,8 @@
 import os
 import shutil
 
+import numpy as np
+
 from neurodsp.utils.download import *
 
 ###################################################################################################
@@ -35,5 +37,14 @@ def test_fetch_ndsp_data():
 
     fetch_ndsp_data(filename, folder=TEST_FOLDER)
     assert os.path.isfile(os.path.join(TEST_FOLDER, filename))
+
+    clean_up_downloads()
+
+def test_load_ndsp_data():
+
+    filename = 'sample_data_1.npy'
+
+    data = load_ndsp_data(filename, folder=TEST_FOLDER)
+    assert isinstance(data, np.ndarray)
 
     clean_up_downloads()
