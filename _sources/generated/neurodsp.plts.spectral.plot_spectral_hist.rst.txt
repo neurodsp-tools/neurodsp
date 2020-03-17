@@ -1,6 +1,0 @@
-neurodsp.plts.spectral.plot\_spectral\_hist
-===========================================
-
-.. currentmodule:: neurodsp.plts.spectral
-
-.. autofunction:: plot_spectral_hist

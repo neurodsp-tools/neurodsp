@@ -1,6 +1,0 @@
-neurodsp.plts.time\_series.plot\_time\_series
-=============================================
-
-.. currentmodule:: neurodsp.plts.time_series
-
-.. autofunction:: plot_time_series

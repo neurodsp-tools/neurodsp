@@ -1,6 +1,0 @@
-neurodsp.filt.checks.check\_filter\_definition
-==============================================
-
-.. currentmodule:: neurodsp.filt.checks
-
-.. autofunction:: check_filter_definition

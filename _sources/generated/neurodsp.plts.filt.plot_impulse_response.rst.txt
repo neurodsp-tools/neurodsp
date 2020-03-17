@@ -1,6 +1,0 @@
-neurodsp.plts.filt.plot\_impulse\_response
-==========================================
-
-.. currentmodule:: neurodsp.plts.filt
-
-.. autofunction:: plot_impulse_response

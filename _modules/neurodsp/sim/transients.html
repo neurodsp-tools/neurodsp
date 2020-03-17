@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>neurodsp.sim.transients &#8212; neurodsp 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.transients</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulating transients.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">gaussian</span><span class="p">,</span> <span class="n">sawtooth</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="sim_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_cycle.html#neurodsp.sim.transients.sim_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle_type</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a single cycle of a periodic pattern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">        This is NOT the period of the cycle, but the length of the returned array of the cycle.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    cycle_type : {&#39;sine&#39;, &#39;asine&#39;, &#39;sawtooth&#39;, &#39;gaussian&#39;, &#39;exp&#39;, &#39;2exp&#39;}</span>
+<span class="sd">        What type of cycle to simulate. Options:</span>
+
+<span class="sd">        * sine: a sine wave cycle</span>
+<span class="sd">        * asine: an asymmetric sine wave</span>
+<span class="sd">        * sawtooth: a sawtooth wave</span>
+<span class="sd">        * gaussian: a gaussian cycle</span>
+<span class="sd">        * exp: a cycle with exponential decay</span>
+<span class="sd">        * 2exp: a cycle with exponential rise and decay</span>
+
+<span class="sd">    **cycle_params</span>
+<span class="sd">        Keyword arguments for parameters of the cycle, all as float:</span>
+
+<span class="sd">        * sine: None</span>
+<span class="sd">        * asine: `rdsym`, rise-decay symmetry, from 0-1</span>
+<span class="sd">        * sawtooth: `width`, width of the rising ramp as a proportion of the total cycle</span>
+<span class="sd">        * gaussian: `std`, standard deviation of the gaussian kernel, in seconds</span>
+<span class="sd">        * exp: `tau_d`, decay time, in seconds</span>
+<span class="sd">        * 2exp: `tau_r` &amp; `tau_d` rise time, and decay time, in seconds</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle: 1d array</span>
+<span class="sd">        Simulated cycle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">cycle_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="s1">&#39;sawtooth&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="s1">&#39;2exp&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Did not recognize cycle type.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;sine&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;asine&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_asine_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;rdsym&#39;</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;sawtooth&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">sawtooth</span><span class="p">(</span><span class="n">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">),</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;exp&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;tau_d&#39;</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">cycle_type</span> <span class="o">==</span> <span class="s1">&#39;2exp&#39;</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;tau_r&#39;</span><span class="p">],</span> <span class="n">cycle_params</span><span class="p">[</span><span class="s1">&#39;tau_d&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<span class="k">def</span> <span class="nf">sim_asine_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">rdsym</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a cycle of an asymmetric sine wave.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">        Note that this is NOT the period of the cycle, but the length of the returned array</span>
+<span class="sd">        that contains the cycle, which can be (and usually is) much shorter.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    rdsym : float</span>
+<span class="sd">        Rise-decay symmetry of the cycle, as fraction of the period in the rise time, where:</span>
+<span class="sd">        = 0.5 - symmetric (sine wave)</span>
+<span class="sd">        &lt; 0.5 - shorter rise, longer decay</span>
+<span class="sd">        &gt; 0.5 - longer rise, shorter decay</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated asymmetric cycle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Determine number of samples in rise and decay periods</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">n_rise</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">rdsym</span><span class="p">))</span>
+    <span class="n">n_decay</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="n">n_rise</span>
+
+    <span class="c1"># Make phase array for the cycle, and convert to signal</span>
+    <span class="c1">#   Note: the ceil &amp; floor are so the cycle has the right number of samples if n_decay is odd</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_rise</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_decay</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_rise</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]))</span>
+
+    <span class="k">return</span> <span class="n">cycle</span>
+
+
+<div class="viewcode-block" id="sim_synaptic_kernel"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_synaptic_kernel.html#neurodsp.sim.transients.sim_synaptic_kernel">[docs]</a><span class="k">def</span> <span class="nf">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a synaptic kernel with specified time constants.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of simulated kernel in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    tau_r : float</span>
+<span class="sd">        Rise time of synaptic kernel, in seconds.</span>
+<span class="sd">    tau_d : float</span>
+<span class="sd">        Decay time of synaptic kernel, in seconds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kernel : 1d array</span>
+<span class="sd">        Simulated synaptic kernel.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Three types of kernels are available, based on combinations of time constants:</span>
+
+<span class="sd">    - tau_r == tau_d      : alpha synapse</span>
+<span class="sd">    - tau_r = 0           : instantaneous rise, with single exponential decay</span>
+<span class="sd">    - tau_r != tau_d != 0 : double-exponential, with exponential rise and decay</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or</span>
+    <span class="c1">#   shorter times vector, which will affect final signal length</span>
+    <span class="c1">#   https://docs.python.org/2/tutorial/floatingpoint.html</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="mf">1.</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Kernel type: single exponential</span>
+    <span class="k">if</span> <span class="n">tau_r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">times</span> <span class="o">/</span> <span class="n">tau_d</span><span class="p">)</span>
+
+    <span class="c1"># Kernel type: alpha</span>
+    <span class="k">elif</span> <span class="n">tau_r</span> <span class="o">==</span> <span class="n">tau_d</span><span class="p">:</span>
+        <span class="c1"># I(t) = t/tau * exp(-t/tau)</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="p">(</span><span class="n">times</span> <span class="o">/</span> <span class="n">tau_r</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">times</span> <span class="o">/</span> <span class="n">tau_r</span><span class="p">)</span>
+
+    <span class="c1"># Kernel type: double exponential</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tau_r</span> <span class="o">&gt;</span> <span class="n">tau_d</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Rise time constant should be shorter than decay time constant.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># I(t)=(tau_r/(tau_r-tau_d))*(exp(-t/tau_d)-exp(-t/tau_r))</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">times</span> <span class="o">/</span> <span class="n">tau_d</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">times</span> <span class="o">/</span> <span class="n">tau_r</span><span class="p">))</span>
+
+    <span class="c1"># Normalize the integral to 1</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">kernel</span></div>
+
+
+<span class="k">def</span> <span class="nf">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a vector of time indices for a single cycle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of simulated kernel in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    1d array</span>
+<span class="sd">        Time indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1</span><span class="o">/</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">fs</span><span class="o">*</span><span class="n">n_seconds</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

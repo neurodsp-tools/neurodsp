@@ -1,6 +1,0 @@
-neurodsp.spectral.variance.compute\_scv
-=======================================
-
-.. currentmodule:: neurodsp.spectral.variance
-
-.. autofunction:: compute_scv

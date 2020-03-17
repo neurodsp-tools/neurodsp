@@ -1,6 +1,0 @@
-neurodsp.plts.filt.plot\_frequency\_response
-============================================
-
-.. currentmodule:: neurodsp.plts.filt
-
-.. autofunction:: plot_frequency_response

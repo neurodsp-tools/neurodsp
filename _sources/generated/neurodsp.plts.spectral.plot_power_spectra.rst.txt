@@ -1,6 +1,0 @@
-neurodsp.plts.spectral.plot\_power\_spectra
-===========================================
-
-.. currentmodule:: neurodsp.plts.spectral
-
-.. autofunction:: plot_power_spectra

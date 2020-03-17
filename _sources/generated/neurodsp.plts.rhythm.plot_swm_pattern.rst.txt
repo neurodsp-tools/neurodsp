@@ -1,6 +1,0 @@
-neurodsp.plts.rhythm.plot\_swm\_pattern
-=======================================
-
-.. currentmodule:: neurodsp.plts.rhythm
-
-.. autofunction:: plot_swm_pattern

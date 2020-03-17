@@ -2,27 +2,26 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -63,8 +62,14 @@
               
             
             
+              
+                
+              
             
             
+            
+            
+              <li class="hidden-sm"></li>
             
           </ul>
 
@@ -84,7 +89,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="neuro-digital-signal-processing-toolbox">
 <h1>Neuro Digital Signal Processing Toolbox<a class="headerlink" href="#neuro-digital-signal-processing-toolbox" title="Permalink to this headline">¶</a></h1>
@@ -95,13 +100,21 @@
 <a class="reference external image-reference" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Supported Python Versions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a>
 <a class="reference external image-reference" href="https://doi.org/10.21105/joss.01272"><img alt="DOI" src="http://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a>
-<p>A package of tools to analyze and simulate neural time series, using digital signal processing.</p>
+<p>Tools to analyze and simulate neural time series, using digital signal processing.</p>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Documentation for the NeuroDSP module is available <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/">here</a>.</p>
-<p>The documentation also includes a set of <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html">tutorials</a>
-describing each module in NeuroDSP, as well as a set of <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html">examples</a>
-of applications of NeuroDSP.</p>
+<p>The documentation includes:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html">Tutorials</a>:
+which describe and work through each module in NeuroDSP</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html">Examples</a>:
+demonstrating example applications and workflows</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/api.html">API List</a>:
+which lists and describes all the code and functionality available in the module</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/glossary.html">Glossary</a>:
+which defines all the key terms used in the module</p></li>
+</ul>
 <p>If you have a question about using NeuroDSP that doesn’t seem to be covered by the documentation, feel free to
 open an <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a> and ask!</p>
 </div>
@@ -110,10 +123,13 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <p>NeuroDSP is written in Python, and requires Python &gt;= 3.5 to run.</p>
 <p>It has the following dependencies:</p>
 <ul class="simple">
-<li>numpy</li>
-<li>scipy</li>
-<li>matplotlib</li>
-<li>pytest (optional)</li>
+<li><p><a class="reference external" href="https://github.com/numpy/numpy">numpy</a></p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy">scipy</a></p></li>
+<li><p><a class="reference external" href="https://github.com/matplotlib/matplotlib">matplotlib</a></p></li>
+</ul>
+<p>Optional dependencies:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytest-dev/pytest">pytest</a> is needed if you want to run the test suite locally</p></li>
 </ul>
 <p>We recommend using the <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> distribution to manage these requirements.</p>
 </div>
@@ -133,48 +149,53 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 </div>
 <div class="section" id="bug-reports">
 <h2>Bug Reports<a class="headerlink" href="#bug-reports" title="Permalink to this headline">¶</a></h2>
-<p>Please use the <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">Github issue tracker</a> to file bug reports and/or ask questions about this project.</p>
+<p>Please use the
+<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">Github issue tracker</a>
+to file bug reports and/or ask questions about this project.</p>
 </div>
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <p>Available modules in NeuroDSP include:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters</li>
-<li><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillations in neural signals</li>
-<li><code class="docutils literal notranslate"><span class="pre">rhythm</span></code> : Find and analyze rhythmic and recurrent patterns in time series</li>
-<li><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features such as power spectra</li>
-<li><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity</li>
-<li><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate time series, including periodic and aperiodic signal components</li>
-<li><code class="docutils literal notranslate"><span class="pre">plts</span></code> : Plotting functions</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillations in neural signals</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rhythm</span></code> : Find and analyze rhythmic and recurrent patterns in time series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features such as power spectra</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate time series, including periodic and aperiodic signal components</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plts</span></code> : Plotting functions</p></li>
 </ul>
 </div>
 <div class="section" id="contribute">
 <h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> welcomes and encourages contributions from the community!</p>
-<p>If you have an idea of something to add to NeuroDSP, please start by opening an <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a>.</p>
-<p>When writing code to add to NeuroDSP, please follow the <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md">Contribution Guidelines</a>, and also make sure to follow our
+<p>If you have an idea of something to add to NeuroDSP, please start by opening an
+<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a>.</p>
+<p>When writing code to add to NeuroDSP, please follow the
+<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md">Contribution Guidelines</a>.</p>
+<p>We also require that all contributors follow our
 <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a>.</p>
 </div>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <p>If you use this code in your project, please cite:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Cole, S., Donoghue, T., Gao, R., &amp; Voytek, B. (2019). NeuroDSP: A package for
-neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
-https://doi.org/10.21105/joss.01272
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">Cole</span><span class="p">,</span> <span class="n">S</span><span class="p">.,</span> <span class="n">Donoghue</span><span class="p">,</span> <span class="n">T</span><span class="p">.,</span> <span class="n">Gao</span><span class="p">,</span> <span class="n">R</span><span class="p">.,</span> <span class="o">&amp;</span> <span class="n">Voytek</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span> <span class="p">(</span><span class="mi">2019</span><span class="p">).</span> <span class="n">NeuroDSP</span><span class="p">:</span> <span class="n">A</span> <span class="n">package</span> <span class="k">for</span>
+<span class="n">neural</span> <span class="n">digital</span> <span class="n">signal</span> <span class="n">processing</span><span class="p">.</span> <span class="n">Journal</span> <span class="k">of</span> <span class="k">Open</span> <span class="k">Source</span> <span class="n">Software</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="mi">1272</span><span class="p">.</span>
+<span class="n">DOI</span><span class="p">:</span> <span class="mi">10</span><span class="p">.</span><span class="mi">21105</span><span class="o">/</span><span class="n">joss</span><span class="p">.</span><span class="mi">01272</span>
 </pre></div>
 </div>
 <p>Direct Link: <a class="reference external" href="https://doi.org/10.21105/joss.01272">https://doi.org/10.21105/joss.01272</a></p>
 <p>Bibtex:</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@article{cole_neurodsp:_2019,
-     title = {NeuroDSP: A package for neural digital signal processing},
-     author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
-         journal = {Journal of Open Source Software},
-     year = {2019},
-     volume = {4},
-         number = {36},
-     issn = {2475-9066},
-     url = {http://joss.theoj.org/papers/10.21105/joss.01272},
-     doi = {10.21105/joss.01272},
+    title = {NeuroDSP: A package for neural digital signal processing},
+    author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
+    journal = {Journal of Open Source Software},
+    year = {2019},
+    volume = {4},
+    number = {36},
+    issn = {2475-9066},
+    url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+    doi = {10.21105/joss.01272},
 }
 </pre></div>
 </div>
@@ -193,8 +214,8 @@ https://doi.org/10.21105/joss.01272
       
     </p>
     <p>
-        &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
     </p>
   </div>
 </footer>

@@ -1,6 +1,0 @@
-neurodsp.timefrequency.wavelets.convolve\_wavelet
-=================================================
-
-.. currentmodule:: neurodsp.timefrequency.wavelets
-
-.. autofunction:: convolve_wavelet

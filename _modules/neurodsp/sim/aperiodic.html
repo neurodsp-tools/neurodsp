@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>neurodsp.sim.aperiodic &#8212; neurodsp 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.aperiodic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulating time series, with aperiodic activity.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">zscore</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.filt</span> <span class="k">import</span> <span class="n">filter_signal</span><span class="p">,</span> <span class="n">infer_passtype</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.fir</span> <span class="k">import</span> <span class="n">compute_filter_length</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="k">import</span> <span class="n">check_filter_definition</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">remove_nans</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="k">import</span> <span class="n">rotate_powerlaw</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="k">import</span> <span class="n">create_times</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.transients</span> <span class="k">import</span> <span class="n">sim_synaptic_kernel</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="sim_poisson_pop"><a class="viewcode-back" href="../../../generated/neurodsp.sim.aperiodic.sim_poisson_pop.html#neurodsp.sim.aperiodic.sim_poisson_pop">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_poisson_pop</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a poisson population.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    n_neurons : int</span>
+<span class="sd">        Number of neurons in the simulated population.</span>
+<span class="sd">    firing_rate : type</span>
+<span class="sd">        Firing rate of individual neurons in the population.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Simulated population activity.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The simulated signal is essentially white noise, but satisfies the Poisson</span>
+<span class="sd">    property, i.e. mean(X) = var(X).</span>
+
+<span class="sd">    The lambda parameter of the Poisson process (total rate) is determined as</span>
+<span class="sd">    firing rate * number of neurons, i.e. summation of poisson processes is still</span>
+<span class="sd">    a poisson processes.</span>
+
+<span class="sd">    Note that the Gaussian approximation for a sum of Poisson processes is only</span>
+<span class="sd">    a good approximation for large lambdas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Poisson population rate signal scales with # of neurons and individual rate</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">n_neurons</span> <span class="o">*</span> <span class="n">firing_rate</span>
+
+    <span class="c1"># Variance is equal to the mean</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">lam</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
+
+    <span class="c1"># Enforce that sig is non-negative in cases of low firing rate</span>
+    <span class="n">sig</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sig</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_synaptic_current"><a class="viewcode-back" href="../../../generated/neurodsp.sim.aperiodic.sim_synaptic_current.html#neurodsp.sim.aperiodic.sim_synaptic_current">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_synaptic_current</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                         <span class="n">tau_r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tau_d</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">t_ker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    n_neurons : int</span>
+<span class="sd">        Number of neurons in the simulated population.</span>
+<span class="sd">    firing_rate : float</span>
+<span class="sd">        Firing rate of individual neurons in the population.</span>
+<span class="sd">    tau_r : float</span>
+<span class="sd">        Rise time of synaptic kernel, in seconds.</span>
+<span class="sd">    tau_d : float</span>
+<span class="sd">        Decay time of synaptic kernel, in seconds.</span>
+<span class="sd">    t_ker : float</span>
+<span class="sd">        Length of time of the simulated synaptic kernel, in seconds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Simulated synaptic current.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The resulting signal is most similar to unsigned intracellular current or conductance change.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If not provided, compute t_ker as a function of decay time constant</span>
+    <span class="k">if</span> <span class="n">t_ker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t_ker</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">*</span> <span class="n">tau_d</span>
+
+    <span class="c1"># Simulate an extra bit because the convolution will snip it. Turn off normalization for this sig</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_poisson_pop</span><span class="p">((</span><span class="n">n_seconds</span> <span class="o">+</span> <span class="n">t_ker</span><span class="p">),</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">firing_rate</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">ker</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">t_ker</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">ker</span><span class="p">,</span> <span class="s1">&#39;valid&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_random_walk"><a class="viewcode-back" href="../../../generated/neurodsp.sim.aperiodic.sim_random_walk.html#neurodsp.sim.aperiodic.sim_random_walk">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    theta : float</span>
+<span class="sd">        Memory scale parameter.</span>
+<span class="sd">        Larger theta values create faster fluctuations.</span>
+<span class="sd">    mu : float</span>
+<span class="sd">        Mean of the random walk.</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Standard deviation of the random walk.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig: 1d array</span>
+<span class="sd">        Simulated random walk signal.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The random walk is simulated as a discretized Ornstein-Uhlenbeck process:</span>
+
+<span class="sd">    `dx = theta*(x-mu)*dt + sigma*dWt`</span>
+
+<span class="sd">    Where:</span>
+
+<span class="sd">    - mu : mean</span>
+<span class="sd">    - sigma : standard deviation</span>
+<span class="sd">    - theta : memory scale</span>
+<span class="sd">    - dWt : increments of Wiener process, i.e. white noise</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    See the wikipedia page for the integral solution:</span>
+
+<span class="sd">    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">mu</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">))</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">theta</span> <span class="o">*</span> <span class="n">times</span><span class="p">)</span>
+    <span class="n">ws</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">*</span> <span class="n">ex</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">ex</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">ex</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">times</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">ws</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_powerlaw"><a class="viewcode-back" href="../../../generated/neurodsp.sim.aperiodic.sim_powerlaw.html#neurodsp.sim.aperiodic.sim_powerlaw">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a power law time series, with a specified exponent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Desired power-law exponent, of the form P(f)=f^exponent.</span>
+<span class="sd">    f_range : list of [float, float] or None, optional</span>
+<span class="sd">        Frequency range to filter simulated data, as [f_lo, f_hi], in Hz.</span>
+<span class="sd">    **filter_kwargs : kwargs, optional</span>
+<span class="sd">        Keyword arguments to pass to `filter_signal`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig: 1d array</span>
+<span class="sd">        Time-series with the desired power law exponent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the number of samples to simulate for the signal</span>
+    <span class="c1">#   If filter is to be filtered, with FIR, add extra to compensate for edges</span>
+    <span class="k">if</span> <span class="n">f_range</span> <span class="ow">and</span> <span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filter_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
+
+        <span class="n">pass_type</span> <span class="o">=</span> <span class="n">infer_passtype</span><span class="p">(</span><span class="n">f_range</span><span class="p">)</span>
+        <span class="n">filt_len</span> <span class="o">=</span> <span class="n">compute_filter_length</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span>
+                                         <span class="o">*</span><span class="n">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">),</span>
+                                         <span class="n">n_seconds</span><span class="o">=</span><span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_seconds&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                         <span class="n">n_cycles</span><span class="o">=</span><span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_cycles&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span> <span class="o">+</span> <span class="n">filt_len</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">_create_powerlaw</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">f_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">filter_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">infer_passtype</span><span class="p">(</span><span class="n">f_range</span><span class="p">),</span> <span class="n">f_range</span><span class="p">,</span>
+                            <span class="n">remove_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_kwargs</span><span class="p">)</span>
+        <span class="c1"># Drop the edges, that were compensated for, if not using IIR (using FIR)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filter_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
+            <span class="n">sig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">remove_nans</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_powerlaw</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a power law time series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_samples : int</span>
+<span class="sd">        The number of samples to simulate</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Desired power-law exponent, of the form P(f)=f^exponent.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig: 1d array</span>
+<span class="sd">        Time-series with the desired power law exponent.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function create variable powerlaw exponents by spectrally rotating white noise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Start with white noise signal, that we will rotate, in frequency space</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+
+    <span class="c1"># Compute the FFT</span>
+    <span class="n">fft_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Rotate spectrum and invert, zscore to normalize.</span>
+    <span class="c1">#   Note: the delta exponent to be applied is divided by two, as</span>
+    <span class="c1">#     the FFT output is in units of amplitude not power</span>
+    <span class="n">fft_output_rot</span> <span class="o">=</span> <span class="n">rotate_powerlaw</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">fft_output</span><span class="p">,</span> <span class="o">-</span><span class="n">exponent</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fft_output_rot</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">sig</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

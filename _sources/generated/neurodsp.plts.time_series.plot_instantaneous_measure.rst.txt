@@ -1,6 +1,0 @@
-neurodsp.plts.time\_series.plot\_instantaneous\_measure
-=======================================================
-
-.. currentmodule:: neurodsp.plts.time_series
-
-.. autofunction:: plot_instantaneous_measure

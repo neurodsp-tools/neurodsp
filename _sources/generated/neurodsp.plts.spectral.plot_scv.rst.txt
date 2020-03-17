@@ -1,6 +1,0 @@
-neurodsp.plts.spectral.plot\_scv
-================================
-
-.. currentmodule:: neurodsp.plts.spectral
-
-.. autofunction:: plot_scv

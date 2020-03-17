@@ -1,6 +1,0 @@
-neurodsp.rhythm.swm.sliding\_window\_matching
-=============================================
-
-.. currentmodule:: neurodsp.rhythm.swm
-
-.. autofunction:: sliding_window_matching

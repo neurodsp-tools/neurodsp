@@ -1,6 +1,0 @@
-neurodsp.plts.spectral.plot\_scv\_rs\_lines
-===========================================
-
-.. currentmodule:: neurodsp.plts.spectral
-
-.. autofunction:: plot_scv_rs_lines

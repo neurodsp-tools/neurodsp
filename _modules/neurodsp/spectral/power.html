@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>neurodsp.spectral.power &#8212; neurodsp 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.spectral.power</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compute spectral measures that measure spectral power.</span>
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">Mostly relies on scipy.signal.spectrogram and numpy.fft</span>
+<span class="sd">https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.html</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">spectrogram</span><span class="p">,</span> <span class="n">medfilt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="k">import</span> <span class="n">get_avg_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="k">import</span> <span class="n">create_freqs</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.outliers</span> <span class="k">import</span> <span class="n">discard_outliers</span>
+<span class="kn">from</span> <span class="nn">neurodsp.timefrequency.wavelets</span> <span class="k">import</span> <span class="n">compute_wavelet_transform</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="k">import</span> <span class="n">trim_spectrum</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="k">import</span> <span class="n">check_spg_settings</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="compute_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.power.compute_spectrum.html#neurodsp.spectral.power.compute_spectrum">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the power spectral density of a time series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    method : {&#39;welch&#39;, &#39;wavelet&#39;, &#39;medfilt&#39;}</span>
+<span class="sd">        Method to use to estimate the power spectrum.</span>
+<span class="sd">    avg_type : {&#39;mean&#39;, &#39;median&#39;}, optional</span>
+<span class="sd">        If relevant, the method to average across windows to create the spectrum.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments to pass through to the function that calculates the spectrum.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequencies at which the measure was calculated.</span>
+<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">        Power spectral density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;welch&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_welch</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="n">avg_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;wavelet&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_wavelet</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="n">avg_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;medfilt&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_medfilt</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown power spectrum method: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compute_spectrum_wavelet"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.power.compute_spectrum_wavelet.html#neurodsp.spectral.power.compute_spectrum_wavelet">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">compute_spectrum_wavelet</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the power spectral density using wavelets.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    freqs : 1d array or list of float</span>
+<span class="sd">        If array, frequency values to estimate with morlet wavelets.</span>
+<span class="sd">        If list, define the frequency range, as [freq_start, freq_stop, freq_step].</span>
+<span class="sd">        The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.</span>
+<span class="sd">    avg_type : {&#39;mean&#39;, &#39;median&#39;}, optional</span>
+<span class="sd">        Method to average across the windows.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional inputs for using wavelets.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequencies at which the measure was calculated.</span>
+<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">        Power spectral density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">freqs</span> <span class="o">=</span> <span class="n">create_freqs</span><span class="p">(</span><span class="o">*</span><span class="n">freqs</span><span class="p">)</span>
+
+    <span class="n">mwt</span> <span class="o">=</span> <span class="n">compute_wavelet_transform</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">get_avg_func</span><span class="p">(</span><span class="n">avg_type</span><span class="p">)(</span><span class="n">mwt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span></div>
+
+
+<div class="viewcode-block" id="compute_spectrum_welch"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.power.compute_spectrum_welch.html#neurodsp.spectral.power.compute_spectrum_welch">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum_welch</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hann&#39;</span><span class="p">,</span>
+                           <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outlier_percent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the power spectral density using Welch&#39;s method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    avg_type : {&#39;mean&#39;, &#39;median&#39;}, optional</span>
+<span class="sd">        Method to average across the windows:</span>
+
+<span class="sd">        * &#39;mean&#39; is the same as Welch&#39;s method, taking the mean across FFT windows.</span>
+<span class="sd">        * &#39;median&#39; uses median across FFT windows instead of the mean, to minimize outlier effect.</span>
+<span class="sd">    window : str or tuple or array_like, optional, default: &#39;hann&#39;</span>
+<span class="sd">        Desired window to use. See scipy.signal.get_window for a list of available windows.</span>
+<span class="sd">        If array_like, the array will be used as the window and its length must be nperseg.</span>
+<span class="sd">    nperseg : int, optional</span>
+<span class="sd">        Length of each segment, in number of samples.</span>
+<span class="sd">        If None, and window is str or tuple, is set to 1 second of data.</span>
+<span class="sd">        If None, and window is array_like, is set to the length of the window.</span>
+<span class="sd">    noverlap : int, optional</span>
+<span class="sd">        Number of points to overlap between segments.</span>
+<span class="sd">        If None, noverlap = nperseg // 8.</span>
+<span class="sd">    f_range : list of [float, float] optional</span>
+<span class="sd">        Frequency range to sub-select from the power spectrum.</span>
+<span class="sd">    outlier_percent : float, optional</span>
+<span class="sd">        The percentage of outlier values to be removed. Must be between 0 and 100.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequencies at which the measure was calculated.</span>
+<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">        Power spectral density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Calculate the short time fourier transform with signal.spectrogram</span>
+    <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span> <span class="o">=</span> <span class="n">check_spg_settings</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
+    <span class="n">freqs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">spg</span> <span class="o">=</span> <span class="n">spectrogram</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
+
+    <span class="c1"># Throw out outliers if indicated</span>
+    <span class="k">if</span> <span class="n">outlier_percent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">spg</span> <span class="o">=</span> <span class="n">discard_outliers</span><span class="p">(</span><span class="n">spg</span><span class="p">,</span> <span class="n">outlier_percent</span><span class="p">)</span>
+
+    <span class="c1"># Average across windows</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">get_avg_func</span><span class="p">(</span><span class="n">avg_type</span><span class="p">)(</span><span class="n">spg</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Trim spectrum, if requested</span>
+    <span class="k">if</span> <span class="n">f_range</span><span class="p">:</span>
+        <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">=</span> <span class="n">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span></div>
+
+
+<div class="viewcode-block" id="compute_spectrum_medfilt"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.power.compute_spectrum_medfilt.html#neurodsp.spectral.power.compute_spectrum_medfilt">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">compute_spectrum_medfilt</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">filt_len</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the power spectral densitry as a smoothed FFT.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    filt_len : float, optional, default: 1.</span>
+<span class="sd">        Length of the median filter, in Hz.</span>
+<span class="sd">    f_range : list of [float, float] optional</span>
+<span class="sd">        Frequency range to sub-select from the power spectrum.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequencies at which the measure was calculated.</span>
+<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">        Power spectral density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Take the positive half of the spectrum since it&#39;s symmetrical</span>
+    <span class="n">ft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig</span><span class="p">)[:</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">))]</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)[:</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">))]</span>
+
+    <span class="c1"># Convert median filter length from Hz to samples, and make sure it is odd</span>
+    <span class="n">filt_len_samp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">filt_len</span> <span class="o">/</span> <span class="p">(</span><span class="n">freqs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+    <span class="k">if</span> <span class="n">filt_len_samp</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">filt_len_samp</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">medfilt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ft</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span> <span class="o">/</span> <span class="p">(</span><span class="n">fs</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)),</span> <span class="n">filt_len_samp</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">f_range</span><span class="p">:</span>
+        <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">=</span> <span class="n">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

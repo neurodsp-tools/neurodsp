@@ -1,6 +1,0 @@
-neurodsp.spectral.power.compute\_spectrum\_welch
-================================================
-
-.. currentmodule:: neurodsp.spectral.power
-
-.. autofunction:: compute_spectrum_welch

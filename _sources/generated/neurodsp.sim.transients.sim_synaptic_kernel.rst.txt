@@ -1,6 +1,0 @@
-neurodsp.sim.transients.sim\_synaptic\_kernel
-=============================================
-
-.. currentmodule:: neurodsp.sim.transients
-
-.. autofunction:: sim_synaptic_kernel

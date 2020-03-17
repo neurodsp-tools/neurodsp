@@ -2,27 +2,26 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Simulating Aperiodic Signals &#8212; neurodsp 2.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -63,8 +62,14 @@
               
             
             
+              
+                
+              
             
             
+            
+            
+              <li class="hidden-sm"></li>
             
           </ul>
 
@@ -84,24 +89,24 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="sphx-glr-download-link-note admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="simulating-aperiodic-signals">
 <span id="sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"></span><h1>Simulating Aperiodic Signals<a class="headerlink" href="#simulating-aperiodic-signals" title="Permalink to this headline">¶</a></h1>
-<p>Simulate aperiodic, or 1/f-like, signals.</p>
-<p>This tutorial covers <code class="xref py py-mod docutils literal notranslate"><span class="pre">neurodsp.sim.aperiodic</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neurodsp</span> <span class="kn">import</span> <span class="n">sim</span><span class="p">,</span> <span class="n">spectral</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">create_times</span>
+<p>Simulate aperiodic signals.</p>
+<p>This tutorial covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.aperiodic</span></code> module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neurodsp</span> <span class="k">import</span> <span class="n">sim</span><span class="p">,</span> <span class="n">spectral</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">create_times</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="n">plot_power_spectra</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="k">import</span> <span class="n">plot_power_spectra</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="k">import</span> <span class="n">plot_time_series</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
 <span class="n">sim</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Set some general settings, to be used across all simulations</span>
@@ -114,9 +119,11 @@
 <p>Often, we want to simulate noise that is comparable to what we see in neural recordings.</p>
 <p>Neural signals display 1/f-like activity, whereby power decreases linearly across
 increasing frequencies, when plotted in log-log.</p>
-<p>Let’s start with a powerlaw signal, specifically a brown noise process, or a signal
+<p>To simulate activity with powerlaw distributions, use the
+<a class="reference internal" href="../../generated/neurodsp.sim.aperiodic.sim_powerlaw.html#neurodsp.sim.aperiodic.sim_powerlaw" title="neurodsp.sim.aperiodic.sim_powerlaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code></a> function.</p>
+<p>Let’s start with a power law signal, specifically a brown noise process, or a signal
 for which the power spectrum is distributed as 1/f^2.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting for the simulation</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting for the simulation</span>
 <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
 
 <span class="c1"># Simulate powerlaw activity, specifically brown noise</span>
@@ -124,12 +131,12 @@ for which the power spectrum is distributed as 1/f^2.</p>
 <span class="n">br_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
 <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">br_noise</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_001.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">br_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
@@ -138,39 +145,40 @@ for which the power spectrum is distributed as 1/f^2.</p>
 </div>
 <div class="section" id="simulate-filtered-1-f-activity">
 <h2>Simulate Filtered 1/f Activity<a class="headerlink" href="#simulate-filtered-1-f-activity" title="Permalink to this headline">¶</a></h2>
-<p>The powerlaw simulation function is also integrated with a filter. This can be useful
-if one wants to filter out the slow frequencies, as is often done with neural signals,
+<p>The power law simulation function is also integrated with a filter. This can be useful
+for filtering out some low frequencies, as is often done with neural signals,
 to remove the very slow drifts that we see in the pure 1/f simulations.</p>
-<p>To filter a simulated powerlaw signal, simply pass in a filter range, and the filter will
+<p>To filter a simulated power law signal, simply pass in a filter range, and the filter will
 be applied to the simulated data before being returned. Here we will apply a high-pass filter.</p>
 <p>We can see that the resulting signal has much less low-frequency drift than the first one.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate highpass-filtered brown noise with a 1Hz cutoff frequency</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate highpass-filtered brown noise with a 1Hz cutoff frequency</span>
 <span class="n">f_hipass_brown</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">brown_filt</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="n">f_hipass_brown</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+<span class="n">brown_filt</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="n">f_hipass_brown</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
 <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">brown_filt</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_003.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">brown_filt</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" />
-<p>Note: the <code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code> function can simulate arbitrary power law exponents,
-such as pink noise (-1), or any other exponent.</p>
+<p>Note: the <a class="reference internal" href="../../generated/neurodsp.sim.aperiodic.sim_powerlaw.html#neurodsp.sim.aperiodic.sim_powerlaw" title="neurodsp.sim.aperiodic.sim_powerlaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code></a> function can simulate arbitrary
+power law exponents, such as pink noise (-1), or any other exponent.</p>
 </div>
 <div class="section" id="random-walk-activity">
 <h2>Random Walk Activity<a class="headerlink" href="#random-walk-activity" title="Permalink to this headline">¶</a></h2>
 <p>We can also simulate an Ornstein-Uhlenbeck process, which is a random walk process with memory.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate aperiodic signals from a random walk process</span>
+<p>We can do this with the <a class="reference internal" href="../../generated/neurodsp.sim.aperiodic.sim_random_walk.html#neurodsp.sim.aperiodic.sim_random_walk" title="neurodsp.sim.aperiodic.sim_random_walk"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_random_walk()</span></code></a> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate aperiodic signals from a random walk process</span>
 <span class="n">rw_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
 <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">rw_noise</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;RW Process&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -180,22 +188,23 @@ such as pink noise (-1), or any other exponent.</p>
 <h2>Simulate Synaptic Activity<a class="headerlink" href="#simulate-synaptic-activity" title="Permalink to this headline">¶</a></h2>
 <p>Another model for simulating aperiodic, neurally plausible activity, is to simulate
 synaptic current activity, as a Lorentzian function.</p>
-<p>The synaptic current moedel is poisson activity convolved with exponential kernels
+<p>This is available with the <a class="reference internal" href="../../generated/neurodsp.sim.aperiodic.sim_synaptic_current.html#neurodsp.sim.aperiodic.sim_synaptic_current" title="neurodsp.sim.aperiodic.sim_synaptic_current"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_synaptic_current()</span></code></a> function.</p>
+<p>The synaptic current model is Poisson activity convolved with exponential kernels
 that mimic the shape of post-synaptic potentials.</p>
 <p>For more details on the usage of such models for simulating neural signals,
 see Destexhe et al., 2001 and/or Gao et al., 2017.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate aperiodic activity from the synaptic kernel model</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate aperiodic activity from the synaptic kernel model</span>
 <span class="n">syn_noise</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_synaptic_current</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
 <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">syn_noise</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Synaptic Activity&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_006.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_006.png" />
 <p>Both the random walk, and synaptic model produce 1/f scaling in higher frequencies with a
 fixed exponent of -2, as we can see in the power spectra plot below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">rw_psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">rw_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">syn_psd</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">syn_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
@@ -205,14 +214,16 @@ fixed exponent of -2, as we can see in the power spectra plot below.</p>
 <img alt="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" />
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 3</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.748 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.437 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../../_downloads/7fd0d08f479c303f3db38485b6051041/plot_SimulateAperiodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulateAperiodic.py</span></code></a></div>
-<div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../../_downloads/89a7dbcfb91245c3229e23513a9abb6f/plot_SimulateAperiodic.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_SimulateAperiodic.ipynb</span></code></a></div>
+<p><a class="reference download internal" download="" href="../../_downloads/e1963e42ee9782dfbfb85eb2a6c87cb3/plot_SimulateAperiodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulateAperiodic.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5cb150bdedaa65603854df9e0321a351/plot_SimulateAperiodic.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_SimulateAperiodic.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 </div>
 
@@ -228,8 +239,8 @@ sphinx_gallery_thumbnail_number = 3</p>
       
     </p>
     <p>
-        &copy; Copyright 2018 - VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
     </p>
   </div>
 </footer>

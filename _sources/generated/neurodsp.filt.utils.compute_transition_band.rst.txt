@@ -1,6 +1,0 @@
-neurodsp.filt.utils.compute\_transition\_band
-=============================================
-
-.. currentmodule:: neurodsp.filt.utils
-
-.. autofunction:: compute_transition_band
