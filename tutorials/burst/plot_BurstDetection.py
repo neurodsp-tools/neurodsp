@@ -78,10 +78,20 @@ plot_time_series(times, sig, 'Simulated EEG')
 
 ###################################################################################################
 
-# Detect bursts using 'deviation' algorithm
+# Settings for the dual threshold algorithm
 amp_dual_thresh = (1, 2)
 f_range = (8, 12)
+
+# Detect bursts using dual threshold algorithm
 bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
+
+###################################################################################################
+#
+# You can plot detected bursts using
+# :func:`~neurodsp.plts.time_series.plot_bursts`.
+#
+
+###################################################################################################
 
 # Plot original signal and burst activity
 plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
@@ -93,6 +103,23 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 # The algorithm was used with thresh=(1, 2), so any time point with more than 3 times the
 # median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.
 #
+
+###################################################################################################
+# Checking Burst Statistics
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Once you have detected bursts, you can calculate some statistics on those bursts with
+# :func:`~neurodsp.burst.utils.detect_bursts_dual_threshold`.
+#
+
+###################################################################################################
+
+# Compute burst statistics
+burst_stats = compute_burst_stats(bursting, fs)
+
+# Print out burst statistic information
+for key, val in burst_stats.items():
+    print('{:15} \t: {}'.format(key, val))
 
 ###################################################################################################
 # Burst detection applied to real recordings
@@ -113,7 +140,7 @@ times = create_times(len(sig)/fs, fs)
 bursting = detect_bursts_dual_threshold(sig, fs, (3, 3), f_range)
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Data', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -129,7 +156,7 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, (1, 2), f_range)
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Data', 'Detected Burst'])
 
 ###################################################################################################
 #
@@ -145,13 +172,24 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 bursting = detect_bursts_dual_threshold(sig, fs, (1, 2), (13, 30))
 
 # Plot original signal and burst activity
-plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
+plot_bursts(times, sig, bursting, labels=['Data', 'Detected Burst'])
 
 ###################################################################################################
 #
 # Much better! This just goes to show that burst detection is an art that
 # requires some knowledge of the data you're working with.
 #
+# Finally, we can again check our burst statistics.
+#
+
+###################################################################################################
+
+# Compute burst statistics
+burst_stats = compute_burst_stats(bursting, fs)
+
+# Print out burst statistic information
+for key, val in burst_stats.items():
+    print('{:15} \t: {}'.format(key, val))
 
 ###################################################################################################
 #
