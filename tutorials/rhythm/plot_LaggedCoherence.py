@@ -21,7 +21,10 @@ This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
 import numpy as np
 
 from neurodsp.rhythm import compute_lagged_coherence
+
+from neurodsp.sim import sim_powerlaw, sim_combined
 from neurodsp.utils import create_times
+
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
 
@@ -37,25 +40,24 @@ np.random.seed(0)
 
 ###################################################################################################
 
-# Parameters for simulated signal
-n_samples = 5000
+# Set time and sampling rate
+n_seconds_burst = 1
+n_seconds_noise = 2
 fs = 1000
-burst_freq = 10
-burst_starts = [0, 3000]
-burst_seconds = 1
-burst_samples = burst_seconds*fs
 
-###################################################################################################
+# Create a times vector
+times = create_times(n_seconds_burst + n_seconds_noise, fs)
 
-# Design burst kernel
-burst_kernel_t = create_times(burst_seconds, fs)
-burst_kernel = 2*np.sin(burst_kernel_t*2*np.pi*burst_freq)
+# Simulate a signal component with an oscillation
+components = {'sim_powerlaw' : {'exponent' : 0},
+              'sim_oscillation' : {'freq' : 10}}
+s1 = sim_combined(n_seconds_burst, fs, components, [0.1, 1])
 
-# Generate random signal with bursts
-times = create_times(n_samples/fs, fs)
-sig = np.random.randn(n_samples)
-for ind in burst_starts:
-    sig[ind:ind+burst_samples] += burst_kernel
+# Simulate a signal component with just noise
+s2 = sim_powerlaw(n_seconds_noise, fs, 0, variance=0.1)
+
+# Join signals together to approximate a 'burst'
+sig = np.append(s1, s2)
 
 ###################################################################################################
 
@@ -92,7 +94,7 @@ print('Lagged coherence = ', lag_coh_alpha)
 ###################################################################################################
 
 # Calculate lagged coherence across a frequency range
-lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (1, 40),
+lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (5, 40),
                                                return_spectrum=True)
 
 ###################################################################################################
@@ -116,11 +118,10 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 
 ###################################################################################################
 
-samp_burst = np.arange(1000)
-samp_noburst = np.arange(1000, 2000)
-
-lag_coh_burst = compute_lagged_coherence(sig[samp_burst], fs, f_range)
-lag_coh_noburst = compute_lagged_coherence(sig[samp_noburst], fs, f_range)
+# Calculate coherence for data with the burst - the 1st second of data
+lag_coh_burst = compute_lagged_coherence(sig[0:fs], fs, f_range)
+# Calculate coherence for data without the burst - the 2nd second of data
+lag_coh_noburst = compute_lagged_coherence(sig[fs:2*fs], fs, f_range)
 
 print('Lagged coherence, bursting = ', lag_coh_burst)
 print('Lagged coherence, not bursting = ', lag_coh_noburst)
