@@ -20,18 +20,22 @@ This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
 
 import numpy as np
 
+# Import the lagged coherence function
 from neurodsp.rhythm import compute_lagged_coherence
 
-from neurodsp.sim import sim_powerlaw, sim_combined
+# Import simulation code for creating test data
+from neurodsp.sim import sim_powerlaw, sim_combined, set_random_seed
 from neurodsp.utils import create_times
 
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-np.random.seed(0)
+set_random_seed(0)
 
 ###################################################################################################
 # Simulate a Signal with a Bursty Oscillation
@@ -133,13 +137,13 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 
 ###################################################################################################
 
-# Load signal
-sig = np.load('../data/sample_data_1.npy')
-sig_filt_true = np.load('../data/sample_data_1_filt.npy')
-fs = 1000
+# Download, if needed, and load example data files
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
+# Set sampling rate, and create a times vector for plotting
+fs = 1000
 times = create_times(len(sig)/fs, fs)
-f_range = (13, 30)
 
 ###################################################################################################
 
@@ -148,8 +152,13 @@ plot_time_series(times, sig)
 
 ###################################################################################################
 
+# Set the frequency range to compute lagged coherence across
 f_range = (13, 30)
+
+# Compute lagged coherence
 lag_coh_beta = compute_lagged_coherence(sig, fs, f_range)
+
+# Check lagged coherence result
 print('Lagged coherence = ', lag_coh_beta)
 
 ###################################################################################################

@@ -9,12 +9,15 @@ This tutorial primarily covers ``neurodsp.burst``.
 
 ###################################################################################################
 
-import numpy as np
-
-from neurodsp import sim
-from neurodsp.utils import create_times
+# Import burst detection functions
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
+# Import simulation code for creating test data
+from neurodsp import sim
+from neurodsp.utils import create_times
+
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_bursts
 
 ###################################################################################################
@@ -130,14 +133,22 @@ for key, val in burst_stats.items():
 
 ###################################################################################################
 
-# Load data & create an associated times vector
-sig = np.load('../data/sample_data_1.npy')
+# Download, if needed, and load example data file
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
-f_range = (8, 12)
 times = create_times(len(sig)/fs, fs)
+
+###################################################################################################
+
+# Set the frequency range to look for bursts
+f_range = (8, 12)
 
 # Detect bursts using the dual threshold algorithm
 bursting = detect_bursts_dual_threshold(sig, fs, (3, 3), f_range)
+
+###################################################################################################
 
 # Plot original signal and burst activity
 plot_bursts(times, sig, bursting, labels=['Data', 'Detected Burst'])

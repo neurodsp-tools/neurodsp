@@ -17,14 +17,15 @@ This tutorial primarily covers ``neurodsp.spectral.variance``.
 
 ###################################################################################################
 
-import numpy as np
+# Import spectral module
+from neurodsp import spectral
 
+# Import utilities for loading and plotting data
 from neurodsp.utils import create_times
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.spectral import plot_spectral_hist
 from neurodsp.plts.spectral import plot_scv, plot_scv_rs_lines, plot_scv_rs_matrix
-
-from neurodsp import spectral
 
 ###################################################################################################
 # Load example neural signal
@@ -38,12 +39,16 @@ from neurodsp import spectral
 
 ###################################################################################################
 
-# Load example data signal
-sig = np.load('../data/sample_data_2.npy')
+# Download, if needed, and load example data files
+sig = load_ndsp_data('sample_data_2.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
+times = create_times(len(sig)/fs, fs)
+
+###################################################################################################
 
 # Plot the loaded signal
-times = create_times(len(sig)/fs, fs)
 plot_time_series(times, sig, xlim=[0, 3])
 
 ###################################################################################################

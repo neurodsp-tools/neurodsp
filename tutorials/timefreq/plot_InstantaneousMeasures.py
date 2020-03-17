@@ -9,11 +9,14 @@ This tutorial primarily covers ``neurodsp.timefrequency``.
 
 ###################################################################################################
 
-import numpy as np
 import matplotlib.pyplot as plt
 
-from neurodsp.utils import create_times
+# Import time-frequency functions
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
+
+# Import utilities for loading and plotting data
+from neurodsp.utils import create_times
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
 
 ###################################################################################################
@@ -26,10 +29,10 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 ###################################################################################################
 
 # Load a neural signal, as well as a filtered version of the same signal
-sig = np.load('../data/sample_data_1.npy')
-sig_filt_true = np.load('../data/sample_data_1_filt.npy')
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
-# Set the sampling rate and create a times vector for the signal
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 
