@@ -116,7 +116,7 @@ Spectral Power Measures
 .. currentmodule:: neurodsp.spectral.power
 
 .. autosummary::
-   :toctree: generated/
+  :toctree: generated/
 
   compute_spectrum
   compute_spectrum_welch
@@ -129,7 +129,7 @@ Spectral Variance Measures
 .. currentmodule:: neurodsp.spectral.variance
 
 .. autosummary::
-   :toctree: generated/
+  :toctree: generated/
 
   compute_scv
   compute_scv_rs
@@ -141,7 +141,7 @@ Spectral Utilities
 .. currentmodule:: neurodsp.spectral.utils
 
 .. autosummary::
-   :toctree: generated/
+  :toctree: generated/
 
   trim_spectrum
   rotate_powerlaw

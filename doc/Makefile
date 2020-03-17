@@ -25,8 +25,9 @@ clean:
 	rm -rf auto_examples
 	rm -rf auto_tutorials
 	rm -rf generated
+	rm -rf backrefs
 
-## make install:
+
 # Build the html site, and push it to gh-pages branch of repo to deploy
 install:
 	make clean
