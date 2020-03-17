@@ -8,7 +8,7 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-DATA_URL = 'https://raw.githubusercontent.com/neurodsp-tools/neurodsp/master/tutorials/data/'
+DATA_URL = 'https://raw.githubusercontent.com/neurodsp-tools/neurodsp/master/data/'
 
 def check_data_folder(folder):
     """Check if a data folder exists, and create if not.

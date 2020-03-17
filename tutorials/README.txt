@@ -3,7 +3,7 @@
 Tutorials
 =========
 
-Below is a series of notebooks that provide an introduction to the tools in neurodsp.
+Tutorials, split up by each sub-module, introducing the tools available in NeuroDSP.
 
 .. contents:: Contents
    :local:
