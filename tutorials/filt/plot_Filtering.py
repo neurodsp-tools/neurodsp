@@ -28,19 +28,21 @@ This tutorial primarily covers ``neurodsp.filt``.
 
 ###################################################################################################
 
-import numpy as np
-
+# Import filter function
 from neurodsp.filt import filter_signal
 
-from neurodsp.sim import sim_combined
+# Import simulation code for creating test data
+from neurodsp.sim import sim_combined, set_random_seed
 from neurodsp.utils import create_times
 
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-np.random.seed(0)
+set_random_seed(0)
 
 ###################################################################################################
 
@@ -304,8 +306,10 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 
-# Generate a signal with a low-frequency drift
-sig = np.load('../data/sample_data_1.npy')
+# Download, if needed, and load example data file
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 

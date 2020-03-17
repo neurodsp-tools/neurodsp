@@ -79,7 +79,7 @@ Filter Utilities
 Time-Frequency Analyses
 -----------------------
 
-Functions and utilities in the :mod:`timefreq` module, for time-frequency analyses.
+Functions and utilities in the :mod:`timefrequency` module, for time-frequency analyses.
 
 Hilbert Methods
 ~~~~~~~~~~~~~~~

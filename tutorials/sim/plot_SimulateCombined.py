@@ -9,9 +9,14 @@ This tutorial covers the ``neurodsp.sim.combined`` module.
 
 ###################################################################################################
 
-from neurodsp import sim, spectral
-from neurodsp.utils import create_times, create_samples
+# Import sim module
+from neurodsp import sim
 
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
+
+# Import utilities for plotting data
+from neurodsp.utils import create_times
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
@@ -63,7 +68,7 @@ plot_time_series(times, signal)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(signal, fs)
+freqs, psd = compute_spectrum(signal, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
@@ -96,7 +101,7 @@ plot_time_series(times, sig)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(sig, fs)
+freqs, psd = compute_spectrum(sig, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################

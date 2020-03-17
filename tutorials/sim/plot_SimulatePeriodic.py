@@ -9,9 +9,14 @@ This tutorial covers the ``neurodsp.sim.periodic`` module.
 
 ###################################################################################################
 
-from neurodsp import sim, spectral
-from neurodsp.utils import create_times
+# Import sim module
+from neurodsp import sim
 
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
+
+# Import utilities for plotting data
+from neurodsp.utils import create_times
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
@@ -103,8 +108,8 @@ plot_time_series(times, [osc_sine, osc_shape], ['rdsym='+str(.5), 'rdsym='+str(.
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs_sine, psd_sine = spectral.compute_spectrum(osc_sine, fs)
-freqs_shape, psd_shape = spectral.compute_spectrum(osc_shape, fs)
+freqs_sine, psd_sine = compute_spectrum(osc_sine, fs)
+freqs_shape, psd_shape = compute_spectrum(osc_shape, fs)
 
 plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 

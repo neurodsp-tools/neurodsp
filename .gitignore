@@ -26,9 +26,12 @@ __pycache__/
 # Ignore temp file for linter output
 _lint.txt
 
+# Ignore data files loaded for tutorials
+tutorials/**/data/
+
 # Ignore any files generated in the documentation
 doc/_build/
 doc/auto_examples/
 doc/auto_tutorials/
 doc/generated/
-doc/backrefs
+doc/backrefs/

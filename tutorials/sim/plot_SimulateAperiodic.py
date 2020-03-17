@@ -9,9 +9,14 @@ This tutorial covers the ``neurodsp.sim.aperiodic`` module.
 
 ###################################################################################################
 
-from neurodsp import sim, spectral
-from neurodsp.utils import create_times
+# Import sim module
+from neurodsp import sim
 
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
+
+# Import utilities for plotting data
+from neurodsp.utils import create_times
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
@@ -57,7 +62,7 @@ plot_time_series(times, br_noise)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(br_noise, fs)
+freqs, psd = compute_spectrum(br_noise, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
@@ -88,7 +93,7 @@ plot_time_series(times, brown_filt)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(brown_filt, fs)
+freqs, psd = compute_spectrum(brown_filt, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
@@ -151,8 +156,8 @@ plot_time_series(times, syn_noise, title='Synaptic Activity')
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, rw_psd = spectral.compute_spectrum(rw_noise, fs)
-freqs, syn_psd = spectral.compute_spectrum(syn_noise, fs)
+freqs, rw_psd = compute_spectrum(rw_noise, fs)
+freqs, syn_psd = compute_spectrum(syn_noise, fs)
 
 plot_power_spectra(freqs, [rw_psd, syn_psd], ['RW', 'Synaptic'])
 
