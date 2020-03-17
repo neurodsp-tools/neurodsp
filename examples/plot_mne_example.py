@@ -42,7 +42,6 @@ from neurodsp.rhythm import compute_lagged_coherence
 from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plot_lagged_coherence
 
 ###################################################################################################
-#
 # Load & Check MNE Data
 # ---------------------
 #
@@ -94,7 +93,6 @@ sig = np.squeeze(sig)
 plot_time_series(times, sig)
 
 ###################################################################################################
-#
 # Calculate Power Spectra
 # -----------------------
 #
@@ -121,7 +119,6 @@ plot_power_spectra(freqs, powers)
 plt.plot(freqs[np.argmax(powers)], np.max(powers), '.r', ms=12)
 
 ###################################################################################################
-#
 # Look for Bursts
 # ---------------
 #
@@ -146,7 +143,6 @@ bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
 plot_bursts(times, sig, bursting, labels=['Raw Data', 'Detected Bursts'])
 
 ###################################################################################################
-#
 # Measure Rhythmicity with Lagged Coherence
 # -----------------------------------------
 #
@@ -212,7 +208,6 @@ for ind, ch_label in enumerate(raw.ch_names):
     max_score[ind] = np.max(cur_lcs)
 
 ###################################################################################################
-#
 # Plot Rhythmicity Across the Scalp
 # ---------------------------------
 #
@@ -254,7 +249,6 @@ cbar = plt.colorbar(sm, orientation='vertical', label='Frequency')
 plt.gca().set_visible(False); plt.gcf().subplots_adjust(right=0.5)
 
 ###################################################################################################
-#
 # Further Analyses with MNE
 # -------------------------
 #

@@ -4,11 +4,10 @@ Spectral Domain Analysis: Power
 
 Apply spectral domain analyses, calculating power measures.
 
-This tutorial primarily covers :mod:`neurodsp.spectral.power`.
+This tutorial primarily covers ``neurodsp.spectral.power``.
 """
 
 ###################################################################################################
-#
 # Overview
 # --------
 #
@@ -27,7 +26,6 @@ from neurodsp.plts.time_series import plot_time_series
 from neurodsp import spectral
 
 ###################################################################################################
-#
 # Load example neural signal
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
@@ -53,7 +51,6 @@ plot_time_series(times, sig, xlim=[0, 3])
 #
 
 ###################################################################################################
-#
 # Computing the power spectral density (PSD)
 # ------------------------------------------
 #
@@ -62,15 +59,25 @@ plot_time_series(times, sig, xlim=[0, 3])
 # Using the Fourier transform, the signal is split into orthogonal components
 # of different frequencies, and amount of power in each frequency is estimated.
 #
-# In this toolbox, there are a few ways of estimating the PSD, with different smoothing:
+# The main function for computing power spectra is
+# :func:`~neurodsp.spectral.power.compute_spectrum`.
 #
-# - 'mean' : same as Welch's method; mean over spectrogram of data.
+# There are a few ways of estimating the PSD, with different smoothing:
 #
-#   - This is the most straightforward and "standard" way of computing the PSD.
-# - 'median' : similar to Welch's method; median (instead of mean) over spectrogram of data.
+# - 'welch' : averages over windowed power estimates, using fourier transforms
 #
-#   - This diminishes the effect of outlier power values from signal artifacts.
+#   - in this approach, you can also choose how to average across windows
+#
+#     - 'mean' : the traditional welch's approach, which takes the mean over windows
+#     - 'median' : take the median across windows, which dimininishes the the effect of outlier power values
+#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_welch`
+#
+# - 'wavelet' : uses wavelets to calculate power at designated frequencies
+#
+#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_wavelet`
 # - 'medfilt' : a median filter of the squared FFT magnitude.
+#
+#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_medfilt`
 #
 
 ###################################################################################################
@@ -85,6 +92,11 @@ freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch', avg_type=
 freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
 
 ###################################################################################################
+#
+# You can plot power spectra with :func:`~neurodsp.plts.spectral.plot_power_spectra`.
+#
+
+###################################################################################################
 
 # Plot the power spectra
 plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
@@ -92,7 +104,6 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
                    ['Welch', 'Median Welch', 'Median Filter FFT'])
 
 ###################################################################################################
-#
 # Aside: Fitting 1/f and oscillations in power spectra
 # ----------------------------------------------------
 #
@@ -114,13 +125,16 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 #
 
 ###################################################################################################
-#
 # Spectral Rotation
 # -----------------
 #
 # Another included utility function is spectral rotation, which rotates the power
 # spectrum about a given axis frequency, by an amount indicated by the 'delta_exponent'
 # argument (negative is clockwise, positive is counterclockwise).
+#
+# You can perform spectral rotation with
+# :func:`~neurodsp.spectral.utils.rotate_powerlaw`.
+#
 #
 # This function is mostly useful for investigating the effect of rotating the spectrum
 # in frequency domain on the time domain signal. Effectively, this performs a very specific

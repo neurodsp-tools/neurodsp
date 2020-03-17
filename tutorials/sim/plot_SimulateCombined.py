@@ -4,7 +4,7 @@ Simulating Combined Signals
 
 Simulate combined signals, with periodic and aperiodic components.
 
-This tutorial primarily covers :mod:`neurodsp.sim.combined`
+This tutorial covers the ``neurodsp.sim.combined`` module.
 """
 
 ###################################################################################################
@@ -26,17 +26,17 @@ n_seconds = 3
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
-#
 # Simulate Combined Periodic & Aperiodic Signals
 # ----------------------------------------------
 #
 # In order to simulate a signal that looks more like a brain signal, you may want
 # to simulate an oscillation together with aperiodic activity.
 #
-# We can do this with the :func:`sim_combined` function, in which you specify a set of
-# components that you want to add together to create a complex signal.
+# We can do this with the :func:`~neurodsp.sim.combined.sim_combined` function, in which you specify
+# a set of components that you want to add together to create a complex signal.
 #
-# You can use :func:`sim_combined` with any combination of any of the other simulation functions.
+# You can use :func:`~neurodsp.sim.combined.sim_combined` with any combination
+# of any of the other simulation functions.
 #
 # Each component is indicated as a string label, indicating the desired function to use,
 # in a dictionary, with an associated dictionary of any and all parameters to use for that
@@ -100,7 +100,6 @@ freqs, psd = spectral.compute_spectrum(sig, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
-#
 # Simulating Multiple Components from the Same Function
 # -----------------------------------------------------
 #

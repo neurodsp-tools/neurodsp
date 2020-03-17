@@ -4,11 +4,10 @@ Sliding Window Matching
 
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
-This tutorial primarily covers :mod:`neurodsp.rhythm.swm`.
+This tutorial primarily covers ``neurodsp.rhythm.swm``.
 """
 
 ###################################################################################################
-#
 # Overview
 # --------
 #
@@ -33,7 +32,6 @@ from neurodsp.plts.time_series import plot_time_series
 np.random.seed(0)
 
 ###################################################################################################
-#
 # Load neural signal
 # ------------------
 #
@@ -50,19 +48,17 @@ f_range = (13, 30)
 plot_time_series(times, sig)
 
 ###################################################################################################
-#
 # Apply sliding window matching to neural signal
 # ----------------------------------------------
 #
-# Because we define the window length to be about 1 cycle, this should roughly extract
+# The loaded neural signal has a beta oscillation, that we can attempt to analyze
+# with the sliding window matching approach.
+#
+# We will define the window length to be about 1 cycle, which should roughly extract
 # the waveform shape of the neural oscillation.
 #
-# Notice that the beta cycles have sharper troughs than peaks, and the average window is
-# a beta cycle with a sharp trough.
-#
-# One thing to explore is how these results change by changing the random seed.
-#
-# Using more data and increasing the number of iterations helps the robustness of the algorithm.
+# Sliding window matching can be applied with the
+# :func:`~neurodsp.rhythm.swm.sliding_window_matching` function.
 #
 
 ###################################################################################################
@@ -76,9 +72,24 @@ avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spa
                                                        max_iterations=500)
 
 ###################################################################################################
+#
+# You can plot the resulting pattern with :func:`~neurodsp.plts.rhythm.plot_swm_pattern`.
+#
+
+###################################################################################################
 
 # Plot the discovered pattern
 plot_swm_pattern(avg_window)
+
+###################################################################################################
+#
+# Notice that the beta cycles have sharper troughs than peaks, and the average window is
+# a beta cycle with a sharp trough.
+#
+# One thing to explore is how these results change by changing the random seed.
+#
+# Using more data and increasing the number of iterations helps the robustness of the algorithm.
+#
 
 ###################################################################################################
 #

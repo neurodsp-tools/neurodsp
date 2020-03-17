@@ -4,7 +4,7 @@ Simulating Periodic Signals
 
 Simulate periodic, or oscillatory, signals.
 
-This tutorial covers :mod:`neurodsp.sim.periodic`.
+This tutorial covers the ``neurodsp.sim.periodic`` module.
 """
 
 ###################################################################################################
@@ -24,11 +24,12 @@ sim.set_random_seed(0)
 fs = 1000
 
 ###################################################################################################
-#
 # Simulate a Stationary Oscillation
 # ---------------------------------
 #
 # Let's start by simulating an oscillation. We'll start with a simple, sinusoidal, oscillation.
+#
+# Continuous peridic signals can be created with :func:`~neurodsp.sim.periodic.sim_oscillation`.
 #
 
 ###################################################################################################
@@ -47,28 +48,29 @@ times = create_times(n_seconds, fs)
 plot_time_series(times, osc_sine)
 
 ###################################################################################################
-#
 # Cycle Kernels
 # -------------
 #
-# To simulate oscillations, we can use a sinusoidal kernel, as above, or any of a selection
-# of other cycle kernels.
+# To simulate oscillations, we can use a sinusoidal kernel, as above, or any of a
+# selection of other cycle kernels.
 #
-# Different kernels represent different shapes and properties that may be useful to simulate
-# different aspects of periodic neural activity.
+# Different kernels represent different shapes and properties that may be useful to
+# simulate different aspects of periodic neural activity.
 #
 # Cycle kernel options include:
 #
-# - sine: a sine wave cycle
-# - asine: an asymmetric sine wave
-# - sawtooth: a sawtooth wave
-# - gaussian: a gaussian cycle
-# - exp: a cycle with exponential decay
-# - 2exp: a cycle with exponential rise and decay
+# - ``sine``: a sine wave cycle
+# - ``asine``: an asymmetric sine wave
+# - ``sawtooth``: a sawtooth wave
+# - ``gaussian``: a gaussian cycle
+# - ``exp``: a cycle with exponential decay
+# - ``2exp``: a cycle with exponential rise and decay
+#
+# Note that these cycle kernels are all created with the
+# :func:`~neurodsp.sim.transients.sim_cycle` function.
 #
 
 ###################################################################################################
-#
 # Simulate a Shapely Oscillation
 # ------------------------------
 #
@@ -107,15 +109,16 @@ freqs_shape, psd_shape = spectral.compute_spectrum(osc_shape, fs)
 plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 
 ###################################################################################################
-#
 # Simulate a Bursty Oscillation
 # -----------------------------
 #
 # Sometimes we want to study oscillations that come and go, so it can be useful to simulate
 # oscillations with this property.
 #
-# We can do this by controlling the probability that a burst will start or stop with
-# each new cycle.
+# You can simulate bursty oscillations with :func:`~neurodsp.sim.periodic.sim_bursty_oscillation`.
+#
+# To control the bursitness of the simulated signal, you can control the probability
+# that a burst will start or stop with each new cycle.
 #
 
 ###################################################################################################

@@ -4,7 +4,7 @@ Time-frequency analysis
 
 Estimate instantaneous measures of phase, amplitude, and frequency.
 
-This tutorial primarily covers :mod:`neurodsp.timefrequency`.
+This tutorial primarily covers ``neurodsp.timefrequency``.
 """
 
 ###################################################################################################
@@ -17,7 +17,6 @@ from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
 from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
 
 ###################################################################################################
-#
 # Load example neural signal
 # --------------------------
 #
@@ -38,16 +37,26 @@ times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 ###################################################################################################
+#
+# Throughout this example, we will use
+# :func:`~neurodsp.plts.time_series.plot_time_series` to plot time series, and
+# :func:`~neurodsp.plts.time_series.plot_instantaneous_measure`
+# to plot instantaneous measures.
+#
+
+###################################################################################################
 
 # Plot signal
 plot_time_series(times, sig)
 
 ###################################################################################################
-#
 # Instantaneous Phase
 # -------------------
 #
 # Instantaneous phase is a measure of the phase of a signal, over time.
+#
+# Instantaneous phase can be analyzed with the
+# :func:`~neurodsp.timefrequency.hilbert.phase_by_time` function.
 #
 
 ###################################################################################################
@@ -63,11 +72,13 @@ plot_time_series(times, sig, xlim=[4, 5], xlabel=None, ax=axs[0])
 plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
-#
 # Instantaneous Amplitude
 # -----------------------
 #
 # Instantaneous amplitude is a measure of the amplitude of a signal, over time.
+#
+# Instantaneous amplitude can be analyzed with the
+# :func:`~neurodsp.timefrequency.hilbert.amp_by_time` function.
 #
 
 ###################################################################################################
@@ -87,7 +98,6 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
                            xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
-#
 # Instantaneous Frequency
 # -----------------------
 #
@@ -99,6 +109,9 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
 # such as applying a median filter, is used to make it smoother.
 #
 # For example of this, see Samaha & Postle, 2015.
+#
+# Instantaneous frequency can be analyzed with the
+# :func:`~neurodsp.timefrequency.hilbert.freq_by_time` function.
 #
 
 ###################################################################################################

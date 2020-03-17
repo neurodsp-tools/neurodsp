@@ -2,9 +2,9 @@
 Simulating Aperiodic Signals
 ============================
 
-Simulate aperiodic, or 1/f-like, signals.
+Simulate aperiodic signals.
 
-This tutorial covers :mod:`neurodsp.sim.aperiodic`
+This tutorial covers the ``neurodsp.sim.aperiodic`` module.
 """
 
 ###################################################################################################
@@ -25,7 +25,6 @@ fs = 1000
 n_seconds = 10
 
 ###################################################################################################
-#
 # Simulate 1/f Activity
 # ---------------------
 #
@@ -33,6 +32,9 @@ n_seconds = 10
 #
 # Neural signals display 1/f-like activity, whereby power decreases linearly across
 # increasing frequencies, when plotted in log-log.
+#
+# To simulate activity with powerlaw distributions, use the
+# :func:`~neurodsp.sim.aperiodic.sim_powerlaw` function.
 #
 # Let's start with a power law signal, specifically a brown noise process, or a signal
 # for which the power spectrum is distributed as 1/f^2.
@@ -59,12 +61,11 @@ freqs, psd = spectral.compute_spectrum(br_noise, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
-#
 # Simulate Filtered 1/f Activity
 # ------------------------------
 #
 # The power law simulation function is also integrated with a filter. This can be useful
-# if one wants to filter out the slow frequencies, as is often done with neural signals,
+# for filtering out some low frequencies, as is often done with neural signals,
 # to remove the very slow drifts that we see in the pure 1/f simulations.
 #
 # To filter a simulated power law signal, simply pass in a filter range, and the filter will
@@ -92,16 +93,17 @@ plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 #
-# Note: the :func:`sim_powerlaw` function can simulate arbitrary power law exponents,
-# such as pink noise (-1), or any other exponent.
+# Note: the :func:`~neurodsp.sim.aperiodic.sim_powerlaw` function can simulate arbitrary
+# power law exponents, such as pink noise (-1), or any other exponent.
 #
 
 ###################################################################################################
-#
 # Random Walk Activity
 # --------------------
 #
 # We can also simulate an Ornstein-Uhlenbeck process, which is a random walk process with memory.
+#
+# We can do this with the :func:`~neurodsp.sim.aperiodic.sim_random_walk` function.
 #
 
 ###################################################################################################
@@ -115,12 +117,13 @@ rw_noise = sim.sim_random_walk(n_seconds, fs)
 plot_time_series(times, rw_noise, title='RW Process')
 
 ###################################################################################################
-#
 # Simulate Synaptic Activity
 # --------------------------
 #
 # Another model for simulating aperiodic, neurally plausible activity, is to simulate
 # synaptic current activity, as a Lorentzian function.
+#
+# This is available with the :func:`~neurodsp.sim.aperiodic.sim_synaptic_current` function.
 #
 # The synaptic current model is Poisson activity convolved with exponential kernels
 # that mimic the shape of post-synaptic potentials.

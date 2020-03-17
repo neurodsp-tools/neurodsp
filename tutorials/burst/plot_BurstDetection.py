@@ -4,7 +4,7 @@ Burst Detection
 
 Analyze neural signals for bursts of oscillations of interest.
 
-This tutorial primarily covers :mod:`neurodsp.burst`.
+This tutorial primarily covers ``neurodsp.burst``.
 """
 
 ###################################################################################################
@@ -23,7 +23,6 @@ from neurodsp.plts.time_series import plot_time_series, plot_bursts
 sim.set_random_seed(0)
 
 ###################################################################################################
-#
 # Simulate a Bursty Oscillation
 # -----------------------------
 #
@@ -58,9 +57,11 @@ plot_time_series(times, sig, 'Simulated EEG')
 #
 
 ###################################################################################################
-#
 # Dual Amplitude Threshold Algorithm
 # ----------------------------------
+#
+# First, let's use the dual-amplitude threshold algorithm for burst detection, which
+# we can use with the :func:`~neurodsp.burst.detect_bursts_dual_threshold` function.
 #
 # This algorithm first computes the amplitude at each point in time for a given
 # frequency range. This amplitude is then normalized by the average (default: median)
@@ -94,7 +95,6 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 #
 
 ###################################################################################################
-#
 # Burst detection applied to real recordings
 # ------------------------------------------
 #

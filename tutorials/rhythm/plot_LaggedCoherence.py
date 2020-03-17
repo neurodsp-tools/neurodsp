@@ -4,11 +4,10 @@ Lagged Coherence
 
 Compute lagged coherence on neural signals.
 
-This tutorial primarily covers :mod:`neurodsp.rhythm.laggedcoherence`.
+This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
 """
 
 ###################################################################################################
-#
 # Overview
 # --------
 #
@@ -32,7 +31,6 @@ from neurodsp.plts.rhythm import plot_lagged_coherence
 np.random.seed(0)
 
 ###################################################################################################
-#
 # Simulate a Signal with a Bursty Oscillation
 # -------------------------------------------
 #
@@ -65,17 +63,25 @@ for ind in burst_starts:
 plot_time_series(times, sig)
 
 ###################################################################################################
-#
 # Compute lagged coherence for an alpha oscillation
 # -------------------------------------------------
 #
+# We can compute lagged coherence with the
+# :func:`~neurodsp.rhythm.lc.compute_lagged_coherence` function.
+#
 
+###################################################################################################
+
+# Set the frequency range to compute lagged coherence across
 f_range = (8, 12)
+
+# Compute lagged coherence
 lag_coh_alpha = compute_lagged_coherence(sig, fs, f_range)
+
+# Check the resulting value
 print('Lagged coherence = ', lag_coh_alpha)
 
 ###################################################################################################
-#
 # Compute lagged coherence across the frequency spectrum
 # ------------------------------------------------------
 #
@@ -83,13 +89,24 @@ print('Lagged coherence = ', lag_coh_alpha)
 # oscillation), but it is not very specific to that frequency.
 #
 
-lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (1, 40), return_spectrum=True)
+###################################################################################################
+
+# Calculate lagged coherence across a frequency range
+lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (1, 40),
+                                               return_spectrum=True)
+
+###################################################################################################
+#
+# You can plot the lagged coherence results with
+# :func:`~neurodsp.plts.rhythm.plot_lagged_coherence`.
+#
+
+###################################################################################################
 
 # Visualize lagged coherence as a function of frequency
 plot_lagged_coherence(freqs, lag_coh_by_f)
 
 ###################################################################################################
-#
 # Compute lagged coherence for time segments with and without burst
 # -----------------------------------------------------------------
 #
@@ -104,11 +121,11 @@ samp_noburst = np.arange(1000, 2000)
 
 lag_coh_burst = compute_lagged_coherence(sig[samp_burst], fs, f_range)
 lag_coh_noburst = compute_lagged_coherence(sig[samp_noburst], fs, f_range)
+
 print('Lagged coherence, bursting = ', lag_coh_burst)
 print('Lagged coherence, not bursting = ', lag_coh_noburst)
 
 ###################################################################################################
-#
 # Compute lagged coherence of an example neural signal
 # ----------------------------------------------------
 #

@@ -4,15 +4,20 @@ Filtering
 
 Using digital filters on neural signals, including highpass, lowpass, bandpass & bandstop.
 
-This tutorial primarily covers :mod:`neurodsp.filt`.
+This tutorial primarily covers ``neurodsp.filt``.
 """
 
 ###################################################################################################
+# Filtering with NeuroDSP
+# -----------------------
+#
+# The :func:`~neurodsp.filt.filter.filter_signal` function is the main function for applying
+# filtering using NeuroDSP.
 #
 # Sections
-# --------
+# ~~~~~~~~
 #
-# This tutorial is broken down into the following sections:
+# This tutorial contains the following sections:
 #
 # 1. Bandpass filter: extract a single oscillation from a signal
 # 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
@@ -25,7 +30,7 @@ This tutorial primarily covers :mod:`neurodsp.filt`.
 
 import numpy as np
 
-from neurodsp import filt
+from neurodsp.filt import filter_signal
 from neurodsp.utils import create_times
 from neurodsp.plts.time_series import plot_time_series
 
@@ -35,7 +40,6 @@ from neurodsp.plts.time_series import plot_time_series
 np.random.seed(0)
 
 ###################################################################################################
-#
 # 1. Bandpass filter
 # ------------------
 #
@@ -53,7 +57,7 @@ sig = np.random.randn(len(times)) + 5*np.sin(times*2*np.pi*6)
 
 # Filter the data, across a frequency band of interest
 f_range = (4, 8)
-sig_filt = filt.filter_signal(sig, fs, 'bandpass', f_range)
+sig_filt = filter_signal(sig, fs, 'bandpass', f_range)
 
 ###################################################################################################
 
@@ -64,21 +68,20 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 #
 # Notice that the edges of the filtered signal are clipped (no red).
 #
-# Edge artifact removal is done by default in :func:`filter_signal`, because
+# Edge artifact removal is done by default in NeuroDSP filtering, because
 # the signal samples at the edges only experienced part of the filter.
 #
 # To bypass this feature, set `remove_edges=False`, but at your own risk!
 #
 
 ###################################################################################################
-#
 # 2. Highpass, lowpass, and bandstop filters
 # ------------------------------------------
 #
 # 2a. Highpass filter
 # ~~~~~~~~~~~~~~~~~~~
 #
-# Remove low frequency drift from the data
+# Remove low frequency drift from the data.
 #
 
 ###################################################################################################
@@ -91,7 +94,7 @@ sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(tim
 
 # Filter the data
 f_range = (2, None)
-sig_filt = filt.filter_signal(sig, fs, 'highpass', f_range)
+sig_filt = filter_signal(sig, fs, 'highpass', f_range)
 
 ###################################################################################################
 
@@ -99,7 +102,6 @@ sig_filt = filt.filter_signal(sig, fs, 'highpass', f_range)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
-#
 # 2b. Lowpass filter
 # ~~~~~~~~~~~~~~~~~~
 #
@@ -116,7 +118,7 @@ sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(tim
 
 # Filter the data
 f_range = (None, 20)
-sig_filt = filt.filter_signal(sig, fs, 'lowpass', f_range)
+sig_filt = filter_signal(sig, fs, 'lowpass', f_range)
 
 ###################################################################################################
 
@@ -124,7 +126,6 @@ sig_filt = filt.filter_signal(sig, fs, 'lowpass', f_range)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
-#
 # 2c. Bandstop filter
 # ~~~~~~~~~~~~~~~~~~~
 #
@@ -145,7 +146,7 @@ sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 
 # Filter the data
 f_range = (58, 62)
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
 
 ###################################################################################################
 
@@ -165,15 +166,14 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 
 # Apply a short filter. In this case, we won't achieve our desired attenuation
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
 
 ###################################################################################################v
 
 # This user warning disappears if we elongate the filter
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_properties=True)
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_properties=True)
 
 ###################################################################################################
-#
 # 3. Time-frequency resolution trade off
 # --------------------------------------
 #
@@ -208,8 +208,8 @@ f_range = (4, 8)
 ###################################################################################################
 
 # Filter the data
-sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1)
-sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1)
+sig_filt_short = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1)
+sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1)
 
 ###################################################################################################
 
@@ -221,14 +221,13 @@ plot_time_series(times, [sig, sig_filt_short, sig_filt_long],
 
 # Visualize the kernels and frequency responses
 print('Short filter')
-sig_filt_short = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1,
-                                    plot_properties=True)
+sig_filt_short = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1,
+                               plot_properties=True)
 print('\n\nLong filter')
-sig_filt_long = filt.filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
-                                   plot_properties=True)
+sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
+                              plot_properties=True)
 
 ###################################################################################################
-#
 # 4. Infinite impulse response (IIR) filter option
 # ------------------------------------------------
 #
@@ -257,13 +256,14 @@ sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
 ###################################################################################################
 
 # Low-pass filter the signal at 100Hz, just for fun.
-sig = filt.filter_signal(sig, fs, 'lowpass', f_range=100)
+sig = filter_signal(sig, fs, 'lowpass', f_range=100)
 
 ###################################################################################################
 
 # Filter the data
 f_range = (58, 62)
-sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filter_type='iir', butterworth_order=3)
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
+                         filter_type='iir', butterworth_order=3)
 
 ###################################################################################################
 
@@ -271,9 +271,9 @@ sig_filt = filt.filter_signal(sig, fs, 'bandstop', f_range, filter_type='iir', b
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
 
 ###################################################################################################
-#
 # 5. Beta bandpass filter on neural signal
 # ----------------------------------------
+#
 
 ###################################################################################################
 
@@ -287,8 +287,8 @@ times = create_times(len(sig)/fs, fs)
 # Filter the data
 # If you want to get rid of the transition band printouts, set verbose=False
 f_range = (13, 30)
-sig_filt, kernel = filt.filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
-                                      plot_properties=True, return_filter=True)
+sig_filt, kernel = filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
+                                 plot_properties=True, return_filter=True)
 
 ###################################################################################################
 
