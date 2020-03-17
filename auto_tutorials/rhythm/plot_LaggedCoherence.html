@@ -106,7 +106,10 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.rhythm</span> <span class="k">import</span> <span class="n">compute_lagged_coherence</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="k">import</span> <span class="n">sim_powerlaw</span><span class="p">,</span> <span class="n">sim_combined</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">create_times</span>
+
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="k">import</span> <span class="n">plot_time_series</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.rhythm</span> <span class="k">import</span> <span class="n">plot_lagged_coherence</span>
 </pre></div>
@@ -118,24 +121,24 @@
 </div>
 <div class="section" id="simulate-a-signal-with-a-bursty-oscillation">
 <h2>Simulate a Signal with a Bursty Oscillation<a class="headerlink" href="#simulate-a-signal-with-a-bursty-oscillation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters for simulated signal</span>
-<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5000</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set time and sampling rate</span>
+<span class="n">n_seconds_burst</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">n_seconds_noise</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">burst_freq</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">burst_starts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3000</span><span class="p">]</span>
-<span class="n">burst_seconds</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">burst_samples</span> <span class="o">=</span> <span class="n">burst_seconds</span><span class="o">*</span><span class="n">fs</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Design burst kernel</span>
-<span class="n">burst_kernel_t</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">burst_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">burst_kernel</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">burst_kernel_t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">burst_freq</span><span class="p">)</span>
 
-<span class="c1"># Generate random signal with bursts</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_samples</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">burst_starts</span><span class="p">:</span>
-    <span class="n">sig</span><span class="p">[</span><span class="n">ind</span><span class="p">:</span><span class="n">ind</span><span class="o">+</span><span class="n">burst_samples</span><span class="p">]</span> <span class="o">+=</span> <span class="n">burst_kernel</span>
+<span class="c1"># Create a times vector</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds_burst</span> <span class="o">+</span> <span class="n">n_seconds_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Simulate a signal component with an oscillation</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+              <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds_burst</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Simulate a signal component with just noise</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Join signals together to approximate a &#39;burst&#39;</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
@@ -159,7 +162,7 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.7763874314234405
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.853963379763884
 </pre></div>
 </div>
 </div>
@@ -168,18 +171,8 @@
 <p>Notice that lagged coherence peaks around 10Hz (the frequency of our
 oscillation), but it is not very specific to that frequency.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate lagged coherence across a frequency range</span>
-<span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+<span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
                                                <span class="n">return_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/anaconda3/lib/python3.7/site-packages/neurodsp/rhythm/lc.py:120: RuntimeWarning: invalid value encountered in double_scalars
-  return np.abs(lcs_num / lcs_denom)
-/opt/anaconda3/lib/python3.7/site-packages/neurodsp/rhythm/lc.py:64: UserWarning: NEURODSP - LAGGED COHERENCE WARNING:
-Lagged coherence could not be estimated for at least some requested frequencies.
-This happens, especially with low frequencies, when there are not enough samples per segment and/or not enough segments available to estimate the measure.
-Try using a greater number of cycles and/or a longer signal length, and/or adjust the frequency range.
-  warn(&quot;NEURODSP - LAGGED COHERENCE WARNING:&quot;
 </pre></div>
 </div>
 <p>You can plot the lagged coherence results with
@@ -194,19 +187,18 @@ Try using a greater number of cycles and/or a longer signal length, and/or adjus
 <h2>Compute lagged coherence for time segments with and without burst<a class="headerlink" href="#compute-lagged-coherence-for-time-segments-with-and-without-burst" title="Permalink to this headline">¶</a></h2>
 <p>Note that lagged coherence is greater when analyzing a neural signal that has a burst in
 the frequency range of interest, compared to a signal that does not have an oscillation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samp_burst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">samp_noburst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
-
-<span class="n">lag_coh_burst</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">samp_burst</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
-<span class="n">lag_coh_noburst</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">samp_noburst</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate coherence for data with the burst - the 1st second of data</span>
+<span class="n">lag_coh_burst</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">fs</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="c1"># Calculate coherence for data without the burst - the 2nd second of data</span>
+<span class="n">lag_coh_noburst</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">fs</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">fs</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_burst</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, not bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_noburst</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence, bursting =  0.9987945421210493
-Lagged coherence, not bursting =  0.6340581331289348
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence, bursting =  0.9997367083696822
+Lagged coherence, not bursting =  0.6340098045107514
 </pre></div>
 </div>
 </div>
@@ -237,7 +229,7 @@ Lagged coherence, not bursting =  0.6340581331289348
 </div>
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 2</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.250 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.299 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-rhythm-plot-laggedcoherence-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5d3626ea0e78e2c7d64d8fc1a4bfc4df/plot_LaggedCoherence.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_LaggedCoherence.py</span></code></a></p>

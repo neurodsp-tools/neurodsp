@@ -153,12 +153,17 @@ the lower amplitude threshold.</p>
 <li><p><cite>avg_type</cite>: used to set the average for normalization to either ‘median’ or ‘mean’</p></li>
 <li><p><cite>magnitude_type</cite>: used to set the metric for thresholding, to ‘amplitude’ or ‘power’</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detect bursts using &#39;deviation&#39; algorithm</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the dual threshold algorithm</span>
 <span class="n">amp_dual_thresh</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp_dual_thresh</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 
-<span class="c1"># Plot original signal and burst activity</span>
+<span class="c1"># Detect bursts using dual threshold algorithm</span>
+<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp_dual_thresh</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can plot detected bursts using
+<a class="reference internal" href="../../generated/neurodsp.plts.time_series.plot_bursts.html#neurodsp.plts.time_series.plot_bursts" title="neurodsp.plts.time_series.plot_bursts"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_bursts()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot original signal and burst activity</span>
 <span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -166,6 +171,27 @@ the lower amplitude threshold.</p>
 <p>The graph above shows the bursting activity in red.</p>
 <p>The algorithm was used with thresh=(1, 2), so any time point with more than 3 times the
 median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.</p>
+<div class="section" id="checking-burst-statistics">
+<h3>Checking Burst Statistics<a class="headerlink" href="#checking-burst-statistics" title="Permalink to this headline">¶</a></h3>
+<p>Once you have detected bursts, you can calculate some statistics on those bursts with
+<code class="xref py py-func docutils literal notranslate"><span class="pre">detect_bursts_dual_threshold()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute burst statistics</span>
+<span class="n">burst_stats</span> <span class="o">=</span> <span class="n">compute_burst_stats</span><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Print out burst statistic information</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">burst_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:15}</span><span class="s1"> </span><span class="se">\t</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>n_bursts                : 2
+duration_mean           : 0.5515
+duration_std            : 0.10850000000000001
+percent_burst           : 22.06
+bursts_per_second       : 0.4
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="burst-detection-applied-to-real-recordings">
 <h2>Burst detection applied to real recordings<a class="headerlink" href="#burst-detection-applied-to-real-recordings" title="Permalink to this headline">¶</a></h2>
@@ -180,7 +206,7 @@ median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.</
 <span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
 
 <span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_BurstDetection_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_003.png" />
@@ -191,7 +217,7 @@ One of the easy things to do is to adjust the parameters for burst detection.</p
 <span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
 
 <span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_BurstDetection_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_004.png" />
@@ -202,15 +228,32 @@ but the bursts in this data are <em>beta</em> bursts.</p>
 <span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
 
 <span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_BurstDetection_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_005.png" />
 <p>Much better! This just goes to show that burst detection is an art that
 requires some knowledge of the data you’re working with.</p>
+<p>Finally, we can again check our burst statistics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute burst statistics</span>
+<span class="n">burst_stats</span> <span class="o">=</span> <span class="n">compute_burst_stats</span><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Print out burst statistic information</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">burst_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:15}</span><span class="s1"> </span><span class="se">\t</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>n_bursts                : 5
+duration_mean           : 0.6981999999999999
+duration_std            : 0.09064524256683304
+percent_burst           : 34.91
+bursts_per_second       : 0.5
+</pre></div>
+</div>
 <p>Sphinx settings:
 sphinx_gallery_thumbnail_number = 2</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.591 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.602 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-burst-plot-burstdetection-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/16691a9254c9356c13d0be52bcc5b22e/plot_BurstDetection.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_BurstDetection.py</span></code></a></p>

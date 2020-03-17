@@ -31,13 +31,25 @@ This tutorial primarily covers ``neurodsp.filt``.
 import numpy as np
 
 from neurodsp.filt import filter_signal
+
+from neurodsp.sim import sim_combined
 from neurodsp.utils import create_times
+
 from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
 np.random.seed(0)
+
+###################################################################################################
+
+# General setting for simulations
+fs = 1000
+n_seconds = 5
+
+# Generate a times vector, for plotting
+times = create_times(n_seconds, fs)
 
 ###################################################################################################
 # 1. Bandpass filter
@@ -48,15 +60,23 @@ np.random.seed(0)
 
 ###################################################################################################
 
-# Generate an oscillation with noise
-fs = 1000
-times = create_times(4, 1000)
-sig = np.random.randn(len(times)) + 5*np.sin(times*2*np.pi*6)
+# Set the frequency in our simulated signal
+freq = 6
+
+# Set up simulation for a signal with an oscillaton + noise
+components = {'sim_powerlaw' : {'exponent' : 0},
+              'sim_oscillation' : {'freq' : 6}}
+variances = [0.1, 1]
+
+# Simulate our signal
+sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
 
-# Filter the data, across a frequency band of interest
+# Define a frequency range to filter the data
 f_range = (4, 8)
+
+# Bandpass filter the data, across the band of interest
 sig_filt = filter_signal(sig, fs, 'bandpass', f_range)
 
 ###################################################################################################
@@ -86,9 +106,17 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 
-# Generate a signal with a low-frequency drift
-times = create_times(6, fs)
-sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
+# Settings for the rhythmic components in the data
+freq1 = 3
+freq2 = 0.5
+
+# Set up simulation for a signal with an oscillaton + noise + low frequency activity
+components = {'sim_powerlaw' : {'exponent' : 0},
+              'sim_oscillation' : [{'freq' : freq1}, {'freq' : freq2}]}
+variances = [0.1, 1, 1]
+
+# Generate a signal including low-frequency activty
+sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
 
@@ -107,12 +135,6 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 #
 # Remove high frequency activity from the data.
 #
-
-###################################################################################################
-
-# Generate a signal with a low-frequency drift
-times = create_times(6, fs)
-sig = np.random.randn(len(times)) + 5 * np.sin(times*2*np.pi*3) + 4 * np.sin(times*2*np.pi*.5)
 
 ###################################################################################################
 
@@ -139,8 +161,9 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 
 # Generate a signal, with a low frequency oscillation and 60 Hz line noise
-times = create_times(8, fs)
-sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
+components = {'sim_oscillation' : [{'freq' : 6}, {'freq' : 60}]}
+variances = [1, 0.2]
+sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
 
@@ -192,20 +215,24 @@ sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_propert
 
 ###################################################################################################
 
-# Generate an oscillation with noise
+# Reset simulation settings for this example
 fs = 100
-times = create_times(3, fs)
-sig = np.random.randn(len(times)) * .3 + 5 * np.sin(times*2*np.pi*6) + 4 * np.sin(times*2*np.pi*1)
+n_seconds = 3
+times = create_times(n_seconds, fs)
 
-###################################################################################################
+# Generate a signal with an oscillation, noise, and a low frequency oscillation
+components = {'sim_powerlaw' : {'exponent' : 0},
+              'sim_oscillation' : [{'freq' : 6}, {'freq' : 1}]}
+variances = [0.1, 1, 1]
+sig = sim_combined(n_seconds, fs, components, variances)
 
 # Set the first second to 0
 sig[:fs] = 0
 
+###################################################################################################
+
 # Define the frequency band of interest
 f_range = (4, 8)
-
-###################################################################################################
 
 # Filter the data
 sig_filt_short = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1)
@@ -248,15 +275,15 @@ sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 
 ###################################################################################################
 
-# Generate a signal with a low-frequency drift
+# Reset simulation settings
+n_seconds = 1
 fs = 1000
-times = create_times(2, fs)
-sig = 5 * np.sin(times*2*np.pi*5) + 2 * np.sin(times*2*np.pi*60)
+times = create_times(n_seconds, fs)
 
-###################################################################################################
-
-# Low-pass filter the signal at 100Hz, just for fun.
-sig = filter_signal(sig, fs, 'lowpass', f_range=100)
+# Generate a signal, with a low frequency oscillation and 60 Hz line noise
+components = {'sim_oscillation' : [{'freq' : 6}, {'freq' : 60}]}
+variances = [1, 0.2]
+sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
 
@@ -268,7 +295,7 @@ sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
 ###################################################################################################
 
 # Plot filtered signal
-plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[0, 0.2])
+plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
 # 5. Beta bandpass filter on neural signal
@@ -285,7 +312,6 @@ times = create_times(len(sig)/fs, fs)
 ###################################################################################################
 
 # Filter the data
-# If you want to get rid of the transition band printouts, set verbose=False
 f_range = (13, 30)
 sig_filt, kernel = filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
                                  plot_properties=True, return_filter=True)
