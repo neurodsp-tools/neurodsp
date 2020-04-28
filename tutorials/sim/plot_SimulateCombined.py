@@ -4,13 +4,13 @@ Simulating Combined Signals
 
 Simulate combined signals, with periodic and aperiodic components.
 
-This tutorial covers the ``neurodsp.sim.combined`` module.
+This tutorial covers the :mod:`~neurodsp.sim.combined` module.
 """
 
 ###################################################################################################
 
 # Import sim module
-from neurodsp import sim
+from neurodsp.sim import set_random_seed, sim_combined
 
 # Import function to compute power spectra
 from neurodsp.spectral import compute_spectrum
@@ -23,7 +23,7 @@ from neurodsp.plts.time_series import plot_time_series
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-sim.set_random_seed(0)
+set_random_seed(0)
 
 # Set some general settings, to be used across all simulations
 fs = 1000
@@ -37,10 +37,10 @@ times = create_times(n_seconds, fs)
 # In order to simulate a signal that looks more like a brain signal, you may want
 # to simulate an oscillation together with aperiodic activity.
 #
-# We can do this with the :func:`~neurodsp.sim.combined.sim_combined` function, in which you specify
+# We can do this with the :func:`~.sim_combined` function, in which you specify
 # a set of components that you want to add together to create a complex signal.
 #
-# You can use :func:`~neurodsp.sim.combined.sim_combined` with any combination
+# You can use :func:`~.sim_combined` with any combination
 # of any of the other simulation functions.
 #
 # Each component is indicated as a string label, indicating the desired function to use,
@@ -58,7 +58,7 @@ components = {'sim_synaptic_current' : {'n_neurons' : 1000, 'firing_rate' : 2, '
 ###################################################################################################
 
 # Simulate an oscillation over an aperiodic component
-signal = sim.sim_combined(n_seconds, fs, components)
+signal = sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 
@@ -91,7 +91,7 @@ component_variances = [1, 0.5]
 ###################################################################################################
 
 # Simulate a bursty oscillation combined with aperiodic activity
-sig = sim.combined.sim_combined(n_seconds, fs, components, component_variances)
+sig = sim_combined(n_seconds, fs, components, component_variances)
 
 ###################################################################################################
 
@@ -123,7 +123,7 @@ components = {'sim_powerlaw' : {'exponent': -2},
               'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
 
 # Simulate a combined signal with multiple oscillations
-sig = sim.sim_combined(n_seconds, fs, components)
+sig = sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 

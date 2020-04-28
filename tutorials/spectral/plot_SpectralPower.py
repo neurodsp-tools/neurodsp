@@ -4,7 +4,7 @@ Spectral Domain Analysis: Power
 
 Apply spectral domain analyses, calculating power measures.
 
-This tutorial primarily covers ``neurodsp.spectral.power``.
+This tutorial primarily covers the :mod:`~neurodsp.spectral.power` module.
 """
 
 ###################################################################################################
@@ -17,12 +17,12 @@ This tutorial primarily covers ``neurodsp.spectral.power``.
 ###################################################################################################
 
 # Import spectral module
-from neurodsp import spectral
+from neurodsp.spectral import compute_spectrum, rotate_powerlaw
 
 # Import utilities for loading and plotting data
 from neurodsp.utils import create_times
 from neurodsp.utils.download import load_ndsp_data
-from neurodsp.plts.spectral import *
+from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
@@ -64,7 +64,7 @@ plot_time_series(times, sig, xlim=[0, 3])
 # of different frequencies, and amount of power in each frequency is estimated.
 #
 # The main function for computing power spectra is
-# :func:`~neurodsp.spectral.power.compute_spectrum`.
+# :func:`~.compute_spectrum`.
 #
 # There are a few ways of estimating the PSD, with different smoothing:
 #
@@ -74,30 +74,30 @@ plot_time_series(times, sig, xlim=[0, 3])
 #
 #     - 'mean' : the traditional welch's approach, which takes the mean over windows
 #     - 'median' : take the median across windows, which dimininishes the the effect of outlier power values
-#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_welch`
+#   - You can do this directly with :func:`~.compute_spectrum_welch`
 #
 # - 'wavelet' : uses wavelets to calculate power at designated frequencies
 #
-#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_wavelet`
+#   - You can do this directly with :func:`~.compute_spectrum_wavelet`
 # - 'medfilt' : a median filter of the squared FFT magnitude.
 #
-#   - You can do this directly with :func:`~neurodsp.spectral.power.compute_spectrum_medfilt`
+#   - You can do this directly with :func:`~.compute_spectrum_medfilt`
 #
 
 ###################################################################################################
 
 # Mean of spectrogram (Welch)
-freq_mean, psd_mean = spectral.compute_spectrum(sig, fs, method='welch', avg_type='mean', nperseg=fs*2)
+freq_mean, psd_mean = compute_spectrum(sig, fs, method='welch', avg_type='mean', nperseg=fs*2)
 
 # Median of spectrogram ("median Welch")
-freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch', avg_type='median', nperseg=fs*2)
+freq_med, psd_med = compute_spectrum(sig, fs, method='welch', avg_type='median', nperseg=fs*2)
 
 # Median filtered spectrum
-freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
+freq_mf, psd_mf = compute_spectrum(sig, fs, method='medfilt')
 
 ###################################################################################################
 #
-# You can plot power spectra with :func:`~neurodsp.plts.spectral.plot_power_spectra`.
+# You can plot power spectra with :func:`~.plot_power_spectra`.
 #
 
 ###################################################################################################
@@ -137,7 +137,7 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 # argument (negative is clockwise, positive is counterclockwise).
 #
 # You can perform spectral rotation with
-# :func:`~neurodsp.spectral.utils.rotate_powerlaw`.
+# :func:`~.rotate_powerlaw`.
 #
 #
 # This function is mostly useful for investigating the effect of rotating the spectrum
@@ -147,7 +147,7 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 
 ###################################################################################################
 
-psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
+psd_rot = rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
 
 plot_power_spectra([freq_med[:200], freq_med[:200]],
                    [psd_med[:200], psd_rot[:200]],

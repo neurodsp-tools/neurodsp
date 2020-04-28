@@ -4,14 +4,14 @@ Filtering
 
 Using digital filters on neural signals, including highpass, lowpass, bandpass & bandstop.
 
-This tutorial primarily covers ``neurodsp.filt``.
+This tutorial primarily covers the :mod:`~neurodsp.filt` module.
 """
 
 ###################################################################################################
 # Filtering with NeuroDSP
 # -----------------------
 #
-# The :func:`~neurodsp.filt.filter.filter_signal` function is the main function for applying
+# The :func:`~.filter_signal` function is the main function for applying
 # filtering using NeuroDSP.
 #
 # Sections

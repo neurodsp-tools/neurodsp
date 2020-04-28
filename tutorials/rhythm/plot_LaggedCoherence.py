@@ -4,7 +4,7 @@ Lagged Coherence
 
 Compute lagged coherence on neural signals.
 
-This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
+This tutorial primarily covers the :func:`~.compute_lagged_coherence` function.
 """
 
 ###################################################################################################
@@ -73,7 +73,7 @@ plot_time_series(times, sig)
 # -------------------------------------------------
 #
 # We can compute lagged coherence with the
-# :func:`~neurodsp.rhythm.lc.compute_lagged_coherence` function.
+# :func:`~.compute_lagged_coherence` function.
 #
 
 ###################################################################################################
@@ -104,7 +104,7 @@ lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (5, 40),
 ###################################################################################################
 #
 # You can plot the lagged coherence results with
-# :func:`~neurodsp.plts.rhythm.plot_lagged_coherence`.
+# :func:`~.plot_lagged_coherence`.
 #
 
 ###################################################################################################

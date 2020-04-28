@@ -16,8 +16,8 @@ dataset, including calculating power spectra, running burst detection,
 and applying lagged coherence.
 
 This tutorial requires that you have MNE installed. If you don't already have
-MNE, you can follow instructions to get it `here
-<https://mne-tools.github.io/stable/getting_started.html>`_.
+MNE, you can follow instructions to get it
+`here <https://mne-tools.github.io/stable/getting_started.html>`_.
 """
 
 ###################################################################################################
@@ -25,7 +25,7 @@ MNE, you can follow instructions to get it `here
 # General imports
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm, colors, colorbar
+from matplotlib import cm, colors
 
 # Import MNE, as well as the MNE sample dataset
 import mne
@@ -53,7 +53,7 @@ from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plo
 # For the current example, we are going to sub-select only the EEG data,
 # and analyze it as continuous (non-epoched) data.
 #
-# Note that if you don't already have the data, the `data_path` command
+# Note that if you don't already have the data, the :meth:`~.sample.data_path` method
 # will download the MNE sample dataset.
 #
 

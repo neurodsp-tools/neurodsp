@@ -4,7 +4,7 @@ Spectral Domain Analysis: Variance
 
 Apply spectral domain analyses, calculating variance measures.
 
-This tutorial primarily covers ``neurodsp.spectral.variance``.
+This tutorial primarily covers the :mod:`~neurodsp.spectral.variance` module.
 """
 
 ###################################################################################################
@@ -18,7 +18,8 @@ This tutorial primarily covers ``neurodsp.spectral.variance``.
 ###################################################################################################
 
 # Import spectral module
-from neurodsp import spectral
+from neurodsp.spectral import (compute_spectral_hist, compute_spectrum, compute_scv,
+                               compute_scv_rs)
 
 # Import utilities for loading and plotting data
 from neurodsp.utils import create_times
@@ -61,7 +62,7 @@ plot_time_series(times, sig, xlim=[0, 3])
 # ------------------
 #
 # First, let's look at computing spectral histograms, with
-# :func:`~neurodsp.spectral.variance.compute_spectral_hist`.
+# :func:`~.compute_spectral_hist`.
 #
 # The PSD is an estimate of the central tendency (mean/median) of the signal's power
 # at each frequency, with the assumption that the signal is relatively stationary and
@@ -77,11 +78,11 @@ plot_time_series(times, sig, xlim=[0, 3])
 ###################################################################################################
 
 # Calculate the spectral histogram
-freqs, bins, spect_hist = spectral.compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
+freqs, bins, spect_hist = compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
                                                          cut_pct=(0.1, 99.9))
 
 # Calculate a power spectrum, with median Welch
-freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch',
+freq_med, psd_med = compute_spectrum(sig, fs, method='welch',
                                               avg_type='median', nperseg=fs*2)
 
 # Plot the spectral histogram
@@ -98,7 +99,7 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 # ---------------------------------------
 #
 # Next, let's look at computing the spectral coefficient of variation, with
-# :func:`~neurodsp.spectral.variance.compute_scv`.
+# :func:`~.compute_scv`.
 #
 # As noted above, the range of log-power values in the theta frequency range is lower
 # compared to other frequencies, while that of 30-100Hz appear to be quite constant
@@ -111,11 +112,11 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 ###################################################################################################
 
 # Calculate SCV
-freqs, scv = spectral.compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
+freqs, scv = compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
 
 ###################################################################################################
 #
-# There is also a plotting function for SCV, :func:`~neurodsp.plts.spectral.plot_scv`.
+# There is also a plotting function for SCV, :func:`~.plot_scv`.
 #
 
 ###################################################################################################
@@ -132,19 +133,19 @@ plot_scv(freqs, scv)
 # slices from the non-overlapping spectrogram and taking their average.
 #
 # The resample spectral coefficient of variation can be computed with
-# :func:`~neurodsp.spectral.variance.compute_scv_rs`.
+# :func:`~.compute_scv_rs`.
 #
 
 ###################################################################################################
 
 # Calculate SCV with the resampling method
-freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
+freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
                                                 rs_params=(20, 200))
 
 ###################################################################################################
 #
 # You can plot the resampled scv, as lines, with
-# :func:`~neurodsp.plts.spectral.plot_scv_rs_lines`.
+# :func:`~.plot_scv_rs_lines`.
 #
 
 ###################################################################################################
@@ -162,12 +163,12 @@ plot_scv_rs_lines(freqs, scv_rs)
 ###################################################################################################
 
 # Calculate SCV with the resampling method
-freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
+freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
 
 ###################################################################################################
 #
 # You can plot the resampled scv, as a matrix, with
-# :func:`~neurodsp.plts.spectral.plot_scv_rs_matrix`.
+# :func:`~.plot_scv_rs_matrix`.
 #
 
 ###################################################################################################
