@@ -18,6 +18,10 @@ This tutorial primarily covers the :func:`~.compute_lagged_coherence` function.
 
 ###################################################################################################
 
+###################################################################################################
+
+# sphinx_gallery_thumbnail_number = 2
+
 import numpy as np
 
 # Import the lagged coherence function
@@ -160,9 +164,3 @@ lag_coh_beta = compute_lagged_coherence(sig, fs, f_range)
 
 # Check lagged coherence result
 print('Lagged coherence = ', lag_coh_beta)
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#

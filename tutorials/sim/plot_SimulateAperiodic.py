@@ -9,6 +9,8 @@ This tutorial covers the the :mod:`~neurodsp.sim.aperiodic` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 3
+
 # Import sim module
 from neurodsp.sim import set_random_seed, sim_powerlaw, sim_random_walk, sim_synaptic_current
 
@@ -160,9 +162,3 @@ freqs, rw_psd = compute_spectrum(rw_noise, fs)
 freqs, syn_psd = compute_spectrum(syn_noise, fs)
 
 plot_power_spectra(freqs, [rw_psd, syn_psd], ['RW', 'Synaptic'])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 3
-#

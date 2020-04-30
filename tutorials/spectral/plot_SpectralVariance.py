@@ -40,6 +40,8 @@ from neurodsp.plts.spectral import plot_scv, plot_scv_rs_lines, plot_scv_rs_matr
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 4
+
 # Download, if needed, and load example data files
 sig = load_ndsp_data('sample_data_2.npy', folder='data')
 
@@ -180,10 +182,4 @@ plot_scv_rs_matrix(freqs, t_inds, scv_rs)
 #
 # In the plot below, we see that the theta band (~7Hz) consistently has CV of less
 # than 1 (negative in log10).
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 4
 #

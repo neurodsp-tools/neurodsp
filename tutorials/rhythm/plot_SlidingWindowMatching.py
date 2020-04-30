@@ -19,6 +19,8 @@ This tutorial primarily covers the :func:`~.sliding_window_matching` function.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 2
+
 # Import the sliding window matching function
 from neurodsp.rhythm import sliding_window_matching
 
@@ -95,10 +97,4 @@ plot_swm_pattern(avg_window)
 # One thing to explore is how these results change by changing the random seed.
 #
 # Using more data and increasing the number of iterations helps the robustness of the algorithm.
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
 #

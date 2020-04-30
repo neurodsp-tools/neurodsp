@@ -9,6 +9,8 @@ This tutorial covers the :mod:`~neurodsp.sim.periodic` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 1
+
 # Import sim module
 from neurodsp.sim import set_random_seed, sim_oscillation, sim_bursty_oscillation
 
@@ -182,9 +184,3 @@ times = create_times(n_seconds, fs)
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, osc, xlim=[0, n_seconds])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 1
-#

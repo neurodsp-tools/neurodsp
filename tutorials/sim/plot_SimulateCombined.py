@@ -9,6 +9,8 @@ This tutorial covers the :mod:`~neurodsp.sim.combined` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 1
+
 # Import sim module
 from neurodsp.sim import set_random_seed, sim_combined
 
@@ -129,9 +131,3 @@ sig = sim_combined(n_seconds, fs, components)
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, sig)
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 1
-#

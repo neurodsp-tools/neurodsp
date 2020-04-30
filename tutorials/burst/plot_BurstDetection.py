@@ -9,6 +9,8 @@ This tutorial primarily covers the :mod:`~.neurodsp.burst` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 2
+
 # Import burst detection functions
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
@@ -19,6 +21,7 @@ from neurodsp.utils import create_times
 # Import utilities for loading and plotting data
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_bursts
+
 
 ###################################################################################################
 
@@ -201,9 +204,3 @@ burst_stats = compute_burst_stats(bursting, fs)
 # Print out burst statistic information
 for key, val in burst_stats.items():
     print('{:15} \t: {}'.format(key, val))
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#

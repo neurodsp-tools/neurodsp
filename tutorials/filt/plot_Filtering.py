@@ -28,6 +28,8 @@ This tutorial primarily covers the :mod:`~neurodsp.filt` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 12
+
 # Import filter function
 from neurodsp.filt import filter_signal
 
@@ -333,10 +335,4 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
 # If you are interested in this problem, and how to deal with it, you should check out
 # `bycycle <https://bycycle-tools.github.io/bycycle/>`_,
 # which is a tool for time-domain analyses of waveform shape.
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 12
 #

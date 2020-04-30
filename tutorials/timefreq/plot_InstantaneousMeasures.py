@@ -9,6 +9,8 @@ This tutorial primarily covers the :mod:`~neurodsp.timefrequency` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 3
+
 import matplotlib.pyplot as plt
 
 # Import time-frequency functions
@@ -132,9 +134,3 @@ plot_time_series(times, sig_filt_true,
                  xlim=[4, 5], xlabel=None, ax=axs[1])
 plot_instantaneous_measure(times, i_f, 'frequency', colors='r',
                            xlim=[4, 5], ylim=[10, 30], ax=axs[2])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 3
-#

@@ -16,6 +16,8 @@ This tutorial primarily covers the :mod:`~neurodsp.spectral.power` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 2
+
 # Import spectral module
 from neurodsp.spectral import compute_spectrum, rotate_powerlaw
 
@@ -152,9 +154,3 @@ psd_rot = rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
 plot_power_spectra([freq_med[:200], freq_med[:200]],
                    [psd_med[:200], psd_rot[:200]],
                    ['Original', 'Rotated'])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#
