@@ -247,8 +247,8 @@ Combined Signals
 
     sim_combined
 
-Create Data
-~~~~~~~~~~~
+Utilities
+~~~~~~~~~
 
 .. currentmodule:: neurodsp.utils
 
@@ -322,29 +322,3 @@ Rhythm
 
     plot_swm_pattern
     plot_lagged_coherence
-
-
-Fetch/Load Data
----------------
-
-Functions for downloading or fetching data.
-
-Load
-~~~~
-
-.. currentmodule:: neurodsp.utils.download
-
-.. autosummary::
-    :toctree: generated/
-
-    load_ndsp_data
-
-Fetch
-~~~~~
-
-.. currentmodule:: neurodsp.utils.download
-
-.. autosummary::
-    :toctree: generated/
-
-    fetch_ndsp_data
