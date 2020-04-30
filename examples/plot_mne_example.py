@@ -48,7 +48,7 @@ from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plo
 # First, we will load the example dataset from MNE, and have a quick look at the data.
 #
 # The MNE sample dataset is a combined MEG/EEG recording with an audiovisual task, as
-# described `here <https://mne.tools/0.11/manual/datasets_index.html#sample>`_.
+# described `here <https://mne.tools/stable/overview/datasets_index.html?#sample>`_.
 #
 # For the current example, we are going to sub-select only the EEG data,
 # and analyze it as continuous (non-epoched) data.

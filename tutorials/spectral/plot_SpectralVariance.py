@@ -18,8 +18,8 @@ This tutorial primarily covers the ``neurodsp.spectral.variance`` module.
 ###################################################################################################
 
 # Import spectral module
-from neurodsp.spectral import (compute_spectral_hist, compute_spectrum, compute_scv,
-                               compute_scv_rs)
+from neurodsp.spectral import (compute_spectral_hist, compute_spectrum,
+                               compute_scv, compute_scv_rs)
 
 # Import utilities for loading and plotting data
 from neurodsp.utils import create_times
@@ -81,11 +81,11 @@ plot_time_series(times, sig, xlim=[0, 3])
 
 # Calculate the spectral histogram
 freqs, bins, spect_hist = compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
-                                                         cut_pct=(0.1, 99.9))
+                                                cut_pct=(0.1, 99.9))
 
 # Calculate a power spectrum, with median Welch
 freq_med, psd_med = compute_spectrum(sig, fs, method='welch',
-                                              avg_type='median', nperseg=fs*2)
+                                     avg_type='median', nperseg=fs*2)
 
 # Plot the spectral histogram
 plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
@@ -142,7 +142,7 @@ plot_scv(freqs, scv)
 
 # Calculate SCV with the resampling method
 freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
-                                                rs_params=(20, 200))
+                                       rs_params=(20, 200))
 
 ###################################################################################################
 #

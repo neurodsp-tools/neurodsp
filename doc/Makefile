@@ -35,7 +35,6 @@ check:
 install:
     # Clean out existing build
 	make clean
-	rm -rf _build/doctrees _build/
 	# Clone, specifically, the gh-pages branch, putting it into '_build/gh_pages/'
 	#   --no-checkout just fetches the root folder without content
 	#   --depth 1 is a speed optimization since we don't need the history prior to the last commit
