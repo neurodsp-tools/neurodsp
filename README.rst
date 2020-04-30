@@ -16,11 +16,11 @@
 .. |codecov| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
 .. _codecov: https://codecov.io/gh/neurodsp-tools/neurodsp
 
-.. |License| image:: https://img.shields.io/pypi/l/fooof.svg
+.. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
 .. _License: https://opensource.org/licenses/Apache-2.0
 
-.. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/fooof.svg
-.. _PythonVersions: https://pypi.python.org/pypi/fooof/
+.. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/neurodsp.svg
+.. _PythonVersions: https://pypi.python.org/pypi/neurodsp/
 
 .. |DOI| image:: https://joss.theoj.org/papers/10.21105/joss.01272/status.svg
 .. _DOI: https://doi.org/10.21105/joss.01272
@@ -57,7 +57,7 @@ Optional dependencies:
 
 - `pytest <https://github.com/pytest-dev/pytest>`_ is needed if you want to run the test suite locally
 
-We recommend using the `Anaconda <https://www.continuum.io/downloads>`_ distribution to manage these requirements.
+We recommend using the `Anaconda <https://www.anaconda.com/products/individual>`_ distribution to manage these requirements.
 
 Install
 -------
