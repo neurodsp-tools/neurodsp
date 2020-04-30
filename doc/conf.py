@@ -46,8 +46,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx_gallery.gen_gallery',
-    'numpydoc',
-    'm2r']
+    'sphinx_copybutton',
+    'numpydoc'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -56,6 +57,16 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# numpydoc interacts with autosummary, that creates excessive warnings
+# This line is a 'hack' for that interaction that stops the warnings
+numpydoc_show_class_members = False
+
+# Set to generate sphinx docs for class members (methods)
+autodoc_default_options = {
+    'members': None,
+    'inherited-members': None,
+}
 
 # generate autosummary even if no references
 autosummary_generate = True
@@ -69,6 +80,8 @@ master_doc = 'index'
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Settings for sphinx_copybutton
+copybutton_prompt_text = "$ "
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -82,7 +95,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # Theme options to customize the look and feel, which are theme-specific.
 html_theme_options = {
-
+    'navbar_sidebarrel': False,
     # A list of tuples containing pages or urls to link to.
     'navbar_links': [
         ("API", "api"),
@@ -91,6 +104,9 @@ html_theme_options = {
         ("Examples", "auto_examples/index"),
         ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
+
+    # Set the page width to not be restricted to hardset value
+    'body_max_width': None,
 
     # Bootswatch (http://bootswatch.com/) theme to apply.
     'bootswatch_theme': "flatly",
@@ -112,7 +128,8 @@ sphinx_gallery_conf = {
     'gallery_dirs': ['auto_examples', 'auto_tutorials'],
     'within_subsection_order': FileNameSortKey,
     # Settings for linking between examples & API examples
-    'backreferences_dir': 'backrefs',
+    'backreferences_dir': 'generated',
     'doc_module': ('neurodsp',),
-    'reference_url': {'neurodsp': None}
+    'reference_url': {'neurodsp': None},
+    'remove_config_comments': True
 }

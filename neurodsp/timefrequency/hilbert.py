@@ -21,7 +21,7 @@ def robust_hilbert(sig, increase_n=False):
         Time series.
     increase_n : bool, optional, default: False
         If True, zero pad the signal to length the next power of 2 for the Hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some signal lengths.
+        This is because ``scipy.signal.hilbert`` can be very slow for some signal lengths.
 
     Returns
     -------
@@ -61,7 +61,7 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zero pad the signal to length the next power of 2 when doing the Hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of x.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half of the filters length to the edge with np.nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
@@ -101,7 +101,7 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zero pad the signal to length the next power of 2 when doing the Hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half of the filters length to the edge with np.nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
@@ -141,7 +141,7 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
         If True, zero pad the signal to length the next power of 2 when doing the Hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
         If True, replace samples that are within half of the filters length to the edge with np.nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.

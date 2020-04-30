@@ -10,46 +10,47 @@ Table of Contents
 =================
 
 .. contents::
-   :local:
-   :depth: 2
+    :local:
+    :depth: 2
+
 
 Filtering
 ---------
 
-Functions and utilities for the :mod:`filt` module, for filtering time series.
+Functions and utilities for the ``filt`` module, for filtering time series.
 
 General Filter Function
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.filt.filter
+.. currentmodule:: neurodsp.filt
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  filter_signal
+    filter_signal
 
 
 FIR Filters
 ~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.filt.fir
+.. currentmodule:: neurodsp.filt
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  filter_signal_fir
-  design_fir_filter
+    filter_signal_fir
+    design_fir_filter
 
 IIR Filters
 ~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.filt.iir
+.. currentmodule:: neurodsp.filt
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  filter_signal_iir
-  design_iir_filter
+    filter_signal_iir
+    design_iir_filter
 
 Check Filter Properties
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,10 +58,10 @@ Check Filter Properties
 .. currentmodule:: neurodsp.filt.checks
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  check_filter_definition
-  check_filter_properties
+    check_filter_definition
+    check_filter_properties
 
 Filter Utilities
 ~~~~~~~~~~~~~~~~
@@ -68,36 +69,36 @@ Filter Utilities
 .. currentmodule:: neurodsp.filt.utils
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  compute_frequency_response
-  compute_pass_band
-  compute_transition_band
-  compute_nyquist
-  remove_filter_edges
+    compute_frequency_response
+    compute_pass_band
+    compute_transition_band
+    compute_nyquist
+    remove_filter_edges
 
 Time-Frequency Analyses
 -----------------------
 
-Functions and utilities in the :mod:`timefrequency` module, for time-frequency analyses.
+Functions and utilities in the ``timefrequency`` module, for time-frequency analyses.
 
 Hilbert Methods
 ~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.timefrequency.hilbert
+.. currentmodule:: neurodsp.timefrequency
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  robust_hilbert
-  phase_by_time
-  amp_by_time
-  freq_by_time
+    robust_hilbert
+    phase_by_time
+    amp_by_time
+    freq_by_time
 
 Wavelet Methods
 ~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.timefrequency.wavelets
+.. currentmodule:: neurodsp.timefrequency
 
 .. autosummary::
   :toctree: generated/
@@ -108,48 +109,48 @@ Wavelet Methods
 Spectral Analyses
 -----------------
 
-Functions and utilities in the :mod:`spectral` module, for spectral analyses.
+Functions and utilities in the ``spectral`` module, for spectral analyses.
 
 Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.spectral.power
+.. currentmodule:: neurodsp.spectral
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  compute_spectrum
-  compute_spectrum_welch
-  compute_spectrum_wavelet
-  compute_spectrum_medfilt
+    compute_spectrum
+    compute_spectrum_welch
+    compute_spectrum_wavelet
+    compute_spectrum_medfilt
 
 Spectral Variance Measures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.spectral.variance
+.. currentmodule:: neurodsp.spectral
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  compute_scv
-  compute_scv_rs
-  compute_spectral_hist
+    compute_scv
+    compute_scv_rs
+    compute_spectral_hist
 
 Spectral Utilities
 ~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.spectral.utils
+.. currentmodule:: neurodsp.spectral
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  trim_spectrum
-  rotate_powerlaw
+    trim_spectrum
+    rotate_powerlaw
 
 Burst Detection
 ---------------
 
-Functions and utilities in the :mod:`burst` module, for detection bursts in time series.
+Functions and utilities in the ``burst`` module, for detection bursts in time series.
 
 Burst Detection Algorithms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,145 +158,167 @@ Burst Detection Algorithms
 .. currentmodule:: neurodsp.burst
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  detect_bursts_dual_threshold
+    detect_bursts_dual_threshold
 
 Burst Utilities
 ~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.burst.utils
+.. currentmodule:: neurodsp.burst
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  compute_burst_stats
+    compute_burst_stats
 
 Rhythm Analyses
 ---------------
 
-Functions and utilities in the :mod:`rhythm` module, for finding and analyzing rhythmic and recurring patterns in time series.
+Functions and utilities in the ``rhythm`` module, for finding and analyzing rhythmic and recurring patterns in time series.
 
 Sliding Window Matching
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.rhythm.swm
+.. currentmodule:: neurodsp.rhythm
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  sliding_window_matching
+    sliding_window_matching
 
 Lagged Coherence
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.rhythm.lc
+.. currentmodule:: neurodsp.rhythm
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  compute_lagged_coherence
+    compute_lagged_coherence
 
 Simulations
 -----------
 
-Functions and utilities in the :mod:`sim` module, for simulating time series.
+Functions and utilities in the ``sim`` module, for simulating time series.
 
 Periodic Signals
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim.periodic
+.. currentmodule:: neurodsp.sim
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  sim_oscillation
-  sim_bursty_oscillation
+    sim_oscillation
+    sim_bursty_oscillation
 
 Aperiodic Signals
 ~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim.aperiodic
+.. currentmodule:: neurodsp.sim
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  sim_powerlaw
-  sim_poisson_pop
-  sim_synaptic_current
-  sim_random_walk
+    sim_powerlaw
+    sim_poisson_pop
+    sim_synaptic_current
+    sim_random_walk
 
 Transients
 ~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim.transients
+.. currentmodule:: neurodsp.sim
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  sim_cycle
-  sim_synaptic_kernel
+    sim_cycle
+    sim_synaptic_kernel
 
 Combined Signals
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim.combined
+.. currentmodule:: neurodsp.sim
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  sim_combined
+    sim_combined
+
+Utilities
+~~~~~~~~~
+
+.. currentmodule:: neurodsp.utils
+
+.. autosummary::
+    :toctree: generated/
+
+    create_times
+    create_samples
+
+Random Seed
+~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.sim
+
+.. autosummary::
+    :toctree: generated/
+
+    set_random_seed
+
 
 Plots
 -----
 
-Functions for in the :mod:`plts` module, for plotting time series and analysis outputs.
+Functions for in the ``plts`` module, for plotting time series and analysis outputs.
 
 Time Series
 ~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.plts.time_series
+.. currentmodule:: neurodsp.plts
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  plot_time_series
-  plot_instantaneous_measure
-  plot_bursts
+    plot_time_series
+    plot_instantaneous_measure
+    plot_bursts
 
 Spectral
 ~~~~~~~~
 
-.. currentmodule:: neurodsp.plts.spectral
+.. currentmodule:: neurodsp.plts
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  plot_power_spectra
-  plot_scv
-  plot_scv_rs_lines
-  plot_scv_rs_matrix
-  plot_spectral_hist
+    plot_power_spectra
+    plot_scv
+    plot_scv_rs_lines
+    plot_scv_rs_matrix
+    plot_spectral_hist
 
 Filter
 ~~~~~~
 
-.. currentmodule:: neurodsp.plts.filt
+.. currentmodule:: neurodsp.plts
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  plot_filter_properties
-  plot_frequency_response
-  plot_impulse_response
+    plot_filter_properties
+    plot_frequency_response
+    plot_impulse_response
 
 Rhythm
 ~~~~~~
 
-.. currentmodule:: neurodsp.plts.rhythm
+.. currentmodule:: neurodsp.plts
 
 .. autosummary::
-  :toctree: generated/
+    :toctree: generated/
 
-  plot_swm_pattern
-  plot_lagged_coherence
+    plot_swm_pattern
+    plot_lagged_coherence

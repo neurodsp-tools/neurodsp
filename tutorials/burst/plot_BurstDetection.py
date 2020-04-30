@@ -4,26 +4,29 @@ Burst Detection
 
 Analyze neural signals for bursts of oscillations of interest.
 
-This tutorial primarily covers ``neurodsp.burst``.
+This tutorial primarily covers the ``neurodsp.burst`` module.
 """
 
 ###################################################################################################
+
+# sphinx_gallery_thumbnail_number = 2
 
 # Import burst detection functions
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
 # Import simulation code for creating test data
-from neurodsp import sim
+from neurodsp.sim import set_random_seed, sim_combined
 from neurodsp.utils import create_times
 
 # Import utilities for loading and plotting data
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_bursts
 
+
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-sim.set_random_seed(0)
+set_random_seed(0)
 
 ###################################################################################################
 # Simulate a Bursty Oscillation
@@ -46,7 +49,7 @@ components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
                                           'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
 
 # Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
-sig = sim.sim_combined(n_seconds, fs, components)
+sig = sim_combined(n_seconds, fs, components)
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
@@ -64,7 +67,7 @@ plot_time_series(times, sig, 'Simulated EEG')
 # ----------------------------------
 #
 # First, let's use the dual-amplitude threshold algorithm for burst detection, which
-# we can use with the :func:`~neurodsp.burst.detect_bursts_dual_threshold` function.
+# we can use with the :func:`~.detect_bursts_dual_threshold` function.
 #
 # This algorithm first computes the amplitude at each point in time for a given
 # frequency range. This amplitude is then normalized by the average (default: median)
@@ -91,7 +94,7 @@ bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
 ###################################################################################################
 #
 # You can plot detected bursts using
-# :func:`~neurodsp.plts.time_series.plot_bursts`.
+# :func:`~.plot_bursts`.
 #
 
 ###################################################################################################
@@ -112,7 +115,7 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 # ~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Once you have detected bursts, you can calculate some statistics on those bursts with
-# :func:`~neurodsp.burst.utils.detect_bursts_dual_threshold`.
+# :func:`~.detect_bursts_dual_threshold`.
 #
 
 ###################################################################################################
@@ -201,9 +204,3 @@ burst_stats = compute_burst_stats(bursting, fs)
 # Print out burst statistic information
 for key, val in burst_stats.items():
     print('{:15} \t: {}'.format(key, val))
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#

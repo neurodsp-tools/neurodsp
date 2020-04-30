@@ -9,8 +9,10 @@ This tutorial covers the ``neurodsp.sim.periodic`` module.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 1
+
 # Import sim module
-from neurodsp import sim
+from neurodsp.sim import set_random_seed, sim_oscillation, sim_bursty_oscillation
 
 # Import function to compute power spectra
 from neurodsp.spectral import compute_spectrum
@@ -23,7 +25,7 @@ from neurodsp.plts.time_series import plot_time_series
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-sim.set_random_seed(0)
+set_random_seed(0)
 
 # Set some general settings, to be used across all simulations
 fs = 1000
@@ -34,7 +36,7 @@ fs = 1000
 #
 # Let's start by simulating an oscillation. We'll start with a simple, sinusoidal, oscillation.
 #
-# Continuous peridic signals can be created with :func:`~neurodsp.sim.periodic.sim_oscillation`.
+# Continuous peridic signals can be created with :func:`~.sim_oscillation`.
 #
 
 ###################################################################################################
@@ -44,7 +46,7 @@ n_seconds = 1
 osc_freq = 6.6
 
 # Simulate a sinusoidal oscillation
-osc_sine = sim.sim_oscillation(n_seconds, fs, osc_freq, cycle='sine')
+osc_sine = sim_oscillation(n_seconds, fs, osc_freq, cycle='sine')
 
 # Create a times vector for our simulation
 times = create_times(n_seconds, fs)
@@ -72,7 +74,7 @@ plot_time_series(times, osc_sine)
 # - ``2exp``: a cycle with exponential rise and decay
 #
 # Note that these cycle kernels are all created with the
-# :func:`~neurodsp.sim.transients.sim_cycle` function.
+# :func:`~.sim_cycle` function.
 #
 
 ###################################################################################################
@@ -90,7 +92,7 @@ plot_time_series(times, osc_sine)
 ###################################################################################################
 
 # Simulate a shape-y oscillations
-osc_shape = sim.sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.2)
+osc_shape = sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.2)
 
 ###################################################################################################
 
@@ -120,7 +122,7 @@ plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 # Sometimes we want to study oscillations that come and go, so it can be useful to simulate
 # oscillations with this property.
 #
-# You can simulate bursty oscillations with :func:`~neurodsp.sim.periodic.sim_bursty_oscillation`.
+# You can simulate bursty oscillations with :func:`~.sim_bursty_oscillation`.
 #
 # To control the bursitness of the simulated signal, you can control the probability
 # that a burst will start or stop with each new cycle.
@@ -135,9 +137,9 @@ enter_burst = .1
 leave_burst = .1
 
 # Simulate a bursty oscillation
-osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 enter_burst=enter_burst,
-                                 leave_burst=leave_burst)
+osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                             enter_burst=enter_burst,
+                             leave_burst=leave_burst)
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
@@ -154,9 +156,9 @@ plot_time_series(times, osc, xlim=[0, n_seconds])
 
 # Simulate a bursty oscillation, with a specified burst probability
 leave_burst = .4
-osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 enter_burst=enter_burst,
-                                 leave_burst=leave_burst)
+osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                             enter_burst=enter_burst,
+                             leave_burst=leave_burst)
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
@@ -173,18 +175,12 @@ plot_time_series(times, osc, xlim=[0, n_seconds])
 
 # Simulate a bursty oscillation, with a specified burst probability
 enter_burst = .4
-osc = sim.sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                                 enter_burst=enter_burst,
-                                 leave_burst=leave_burst)
+osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                             enter_burst=enter_burst,
+                             leave_burst=leave_burst)
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, osc, xlim=[0, n_seconds])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 1
-#

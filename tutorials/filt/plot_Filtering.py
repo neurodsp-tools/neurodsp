@@ -4,14 +4,14 @@ Filtering
 
 Using digital filters on neural signals, including highpass, lowpass, bandpass & bandstop.
 
-This tutorial primarily covers ``neurodsp.filt``.
+This tutorial primarily covers the ``neurodsp.filt`` module.
 """
 
 ###################################################################################################
 # Filtering with NeuroDSP
 # -----------------------
 #
-# The :func:`~neurodsp.filt.filter.filter_signal` function is the main function for applying
+# The :func:`~.filter_signal` function is the main function for applying
 # filtering using NeuroDSP.
 #
 # Sections
@@ -27,6 +27,8 @@ This tutorial primarily covers ``neurodsp.filt``.
 #
 
 ###################################################################################################
+
+# sphinx_gallery_thumbnail_number = 12
 
 # Import filter function
 from neurodsp.filt import filter_signal
@@ -333,10 +335,4 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
 # If you are interested in this problem, and how to deal with it, you should check out
 # `bycycle <https://bycycle-tools.github.io/bycycle/>`_,
 # which is a tool for time-domain analyses of waveform shape.
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 12
 #

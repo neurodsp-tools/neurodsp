@@ -4,7 +4,7 @@ Sliding Window Matching
 
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
-This tutorial primarily covers ``neurodsp.rhythm.swm``.
+This tutorial primarily covers the :func:`~.sliding_window_matching` function.
 """
 
 ###################################################################################################
@@ -19,6 +19,8 @@ This tutorial primarily covers ``neurodsp.rhythm.swm``.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 2
+
 # Import the sliding window matching function
 from neurodsp.rhythm import sliding_window_matching
 
@@ -26,7 +28,8 @@ from neurodsp.rhythm import sliding_window_matching
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.rhythm import plot_swm_pattern
 from neurodsp.plts.time_series import plot_time_series
-from neurodsp.utils import create_times, set_random_seed
+from neurodsp.utils import create_times
+from neurodsp.sim import set_random_seed
 
 ###################################################################################################
 
@@ -63,7 +66,7 @@ plot_time_series(times, sig)
 # the waveform shape of the neural oscillation.
 #
 # Sliding window matching can be applied with the
-# :func:`~neurodsp.rhythm.swm.sliding_window_matching` function.
+# :func:`~.sliding_window_matching` function.
 #
 
 ###################################################################################################
@@ -78,7 +81,7 @@ avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spa
 
 ###################################################################################################
 #
-# You can plot the resulting pattern with :func:`~neurodsp.plts.rhythm.plot_swm_pattern`.
+# You can plot the resulting pattern with :func:`~.plot_swm_pattern`.
 #
 
 ###################################################################################################
@@ -94,10 +97,4 @@ plot_swm_pattern(avg_window)
 # One thing to explore is how these results change by changing the random seed.
 #
 # Using more data and increasing the number of iterations helps the robustness of the algorithm.
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
 #

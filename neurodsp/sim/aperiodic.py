@@ -143,7 +143,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     ----------
     See the wikipedia page for the integral solution:
 
-    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Solution
+    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution
     """
 
     times = create_times(n_seconds, fs)

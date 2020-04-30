@@ -67,7 +67,7 @@ There are some available (paywalled) articles that present overviews and guides 
 - this `primer <https://doi.org/10.1016/j.neuron.2019.02.039>`_ on when, how, and why to use filters
 
 For an open, in depth, and code drive tutorial, check out the
-`MNE Filtering Tutorial <https://martinos.org/mne/stable/auto_tutorials/plot_background_filtering.html>`_.
+`MNE Filtering Tutorial <https://mne.tools/stable/auto_tutorials/discussions/plot_background_filtering.html>`_.
 
 .. glossary::
 
