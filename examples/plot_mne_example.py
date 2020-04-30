@@ -53,7 +53,7 @@ from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plo
 # For the current example, we are going to sub-select only the EEG data,
 # and analyze it as continuous (non-epoched) data.
 #
-# Note that if you don't already have the data, the :meth:`~.sample.data_path` method
+# Note that if you don't already have the data, the ``sample.data_path`` method
 # will download the MNE sample dataset.
 #
 
