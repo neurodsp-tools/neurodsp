@@ -17,7 +17,7 @@ Table of Contents
 Filtering
 ---------
 
-Functions and utilities for the :mod:`~.filt` module, for filtering time series.
+Functions and utilities for the ``filt`` module, for filtering time series.
 
 General Filter Function
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,7 +80,7 @@ Filter Utilities
 Time-Frequency Analyses
 -----------------------
 
-Functions and utilities in the :mod:`timefrequency` module, for time-frequency analyses.
+Functions and utilities in the ``timefrequency`` module, for time-frequency analyses.
 
 Hilbert Methods
 ~~~~~~~~~~~~~~~
@@ -109,7 +109,7 @@ Wavelet Methods
 Spectral Analyses
 -----------------
 
-Functions and utilities in the :mod:`spectral` module, for spectral analyses.
+Functions and utilities in the ``spectral`` module, for spectral analyses.
 
 Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -150,7 +150,7 @@ Spectral Utilities
 Burst Detection
 ---------------
 
-Functions and utilities in the :mod:`burst` module, for detection bursts in time series.
+Functions and utilities in the ``burst`` module, for detection bursts in time series.
 
 Burst Detection Algorithms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -175,7 +175,7 @@ Burst Utilities
 Rhythm Analyses
 ---------------
 
-Functions and utilities in the :mod:`rhythm` module, for finding and analyzing rhythmic and recurring patterns in time series.
+Functions and utilities in the ``rhythm`` module, for finding and analyzing rhythmic and recurring patterns in time series.
 
 Sliding Window Matching
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,7 +200,7 @@ Lagged Coherence
 Simulations
 -----------
 
-Functions and utilities in the :mod:`sim` module, for simulating time series.
+Functions and utilities in the ``sim`` module, for simulating time series.
 
 Periodic Signals
 ~~~~~~~~~~~~~~~~
@@ -272,7 +272,7 @@ Random Seed
 Plots
 -----
 
-Functions for in the :mod:`plts` module, for plotting time series and analysis outputs.
+Functions for in the ``plts`` module, for plotting time series and analysis outputs.
 
 Time Series
 ~~~~~~~~~~~

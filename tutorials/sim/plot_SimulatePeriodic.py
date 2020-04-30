@@ -4,7 +4,7 @@ Simulating Periodic Signals
 
 Simulate periodic, or oscillatory, signals.
 
-This tutorial covers the :mod:`~neurodsp.sim.periodic` module.
+This tutorial covers the ``neurodsp.sim.periodic`` module.
 """
 
 ###################################################################################################

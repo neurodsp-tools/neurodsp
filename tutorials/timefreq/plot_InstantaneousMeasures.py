@@ -4,7 +4,7 @@ Time-frequency analysis
 
 Estimate instantaneous measures of phase, amplitude, and frequency.
 
-This tutorial primarily covers the :mod:`~neurodsp.timefrequency` module.
+This tutorial primarily covers the ``neurodsp.timefrequency`` module.
 """
 
 ###################################################################################################

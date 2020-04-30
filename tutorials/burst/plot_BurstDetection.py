@@ -4,7 +4,7 @@ Burst Detection
 
 Analyze neural signals for bursts of oscillations of interest.
 
-This tutorial primarily covers the :mod:`~.neurodsp.burst` module.
+This tutorial primarily covers the ``neurodsp.burst`` module.
 """
 
 ###################################################################################################

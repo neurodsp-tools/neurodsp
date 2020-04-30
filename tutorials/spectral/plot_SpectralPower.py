@@ -4,7 +4,7 @@ Spectral Domain Analysis: Power
 
 Apply spectral domain analyses, calculating power measures.
 
-This tutorial primarily covers the :mod:`~neurodsp.spectral.power` module.
+This tutorial primarily covers the ``neurodsp.spectral.power`` module.
 """
 
 ###################################################################################################

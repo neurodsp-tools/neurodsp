@@ -4,7 +4,7 @@ Spectral Domain Analysis: Variance
 
 Apply spectral domain analyses, calculating variance measures.
 
-This tutorial primarily covers the :mod:`~neurodsp.spectral.variance` module.
+This tutorial primarily covers the ``neurodsp.spectral.variance`` module.
 """
 
 ###################################################################################################

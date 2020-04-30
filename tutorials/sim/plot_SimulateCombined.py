@@ -4,7 +4,7 @@ Simulating Combined Signals
 
 Simulate combined signals, with periodic and aperiodic components.
 
-This tutorial covers the :mod:`~neurodsp.sim.combined` module.
+This tutorial covers the ``neurodsp.sim.combined`` module.
 """
 
 ###################################################################################################
