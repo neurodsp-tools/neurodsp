@@ -30,6 +30,13 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     -------
     sig : 1d array
         Simulated oscillation.
+
+    Examples
+    --------
+    Simulate an sine oscillation at 5 hz and return the signal:
+
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5, cycle='sine')
+
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
@@ -82,6 +89,14 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     If the cycle length does not fit evenly into the simulated data length,
     then the last few samples will be non-oscillating.
+
+    Examples
+    --------
+    Simulate a bursy oscilation and return the signal:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=.2,
+    ...                              leave_burst=.2, cycle='sine')
+
     """
 
     # Determine number of samples & cycles

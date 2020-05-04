@@ -25,6 +25,20 @@ def compute_burst_stats(bursting, fs):
         * `duration_std`: standard deviation of burst durations, in seconds
         * `percent_burst`: percent time in bursts
         * `burst_rate`: bursts/sec
+
+    Examples
+    --------
+    Compute statistics of detected bursts in a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.burst import detect_bursts_dual_threshold
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> is_burst = detect_bursts_dual_threshold(sig, fs, dual_thresh=(1, 2), f_range=(8, 12))
+    >>> stats_dict = compute_burst_stats(is_burst, fs)
+
     """
 
     tot_time = len(bursting) / fs

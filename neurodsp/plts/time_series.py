@@ -29,6 +29,22 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
         Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+
+    Examples
+    --------
+    Create a time series plot from a simulated signal:
+
+    >>> from neurodsp.sim import set_random_seed, sim_combined
+    >>> from neurodsp.utils import create_times
+    >>> set_random_seed(0)
+    >>> fs = 500
+    >>> n_seconds = 10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    ...                    component_variances=(0.1, 0.9))
+    >>> times = create_times(n_seconds, fs)
+    >>> plot_time_series(times, sig)
+
     """
 
     ax = check_ax(ax, (15, 3))
@@ -70,6 +86,21 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
         Figure axes upon which to plot.
     **plt_kwargs
         Keyword arguments to pass into `plot_time_series`.
+
+    Examples
+    --------
+    Create a instantaneous phase plot from a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.utils import create_times
+    >>> fs = 500
+    >>> n_seconds = 10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    ...                    component_variances=(0.1, 0.9))
+    >>> times = create_times(n_seconds, fs)
+    >>> plot_instantaneous_measure(times, sig, measure='phase')
+
     """
 
     if measure not in ['phase', 'amplitude', 'frequency']:
@@ -101,6 +132,24 @@ def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
         Figure axes upon which to plot.
     **plt_kwargs
         Keyword arguments to pass into `plot_time_series`.
+
+    Examples
+    --------
+    Plot bursts from a simulated signal:
+
+    >>> from neurodsp.sim import set_random_seed, sim_combined
+    >>> from neurodsp.utils import create_times
+    >>> from neurodsp.burst import detect_bursts_dual_threshold
+    >>> set_random_seed(0)
+    >>> fs = 500
+    >>> n_seconds = 10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    ...                    component_variances=(0.1, 0.9))
+    >>> is_burst = detect_bursts_dual_threshold(sig, fs, dual_thresh=(1, 2), f_range=(7, 12))
+    >>> times = create_times(n_seconds, fs)
+    >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
+
     """
 
     ax = check_ax(ax, (15, 3))

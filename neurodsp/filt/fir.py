@@ -54,6 +54,18 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         Filtered time series.
     filter_coefs : 1d array
         Filter coefficients of the FIR filter. Only returned if `return_filter` is True.
+
+    Examples
+    --------
+    Simulate a signal and apply a band pass filter:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal_fir(sig, fs, pass_type='bandpass', f_range=(1, 25))
+
     """
 
     # Design filter & check that the length is okay with signal
@@ -102,6 +114,19 @@ def apply_fir_filter(sig, filter_coefs):
     -------
     array
         Filtered time series.
+
+    Examples
+    --------
+    Simulate a signal, design a filter, and apply that filter to the simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 25))
+    >>> filt_sig = apply_fir_filter(sig, filter_coefs)
+
     """
 
     return np.convolve(filter_coefs, sig, 'same')
@@ -136,6 +161,13 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     -------
     filter_coefs : 1d array
         The filter coefficients for an FIR filter.
+
+    Examples
+    --------
+    Return a bandpass FIR filter:
+
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
+
     """
 
     # Check filter definition
@@ -155,7 +187,7 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     return filter_coefs
 
 
-def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=None):
+def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=3, n_seconds=None):
     """Compute the filter length for an FIR signal given specified parameters.
 
     Parameters
@@ -177,6 +209,13 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
     -------
     filt_len : int
         The length of the specified filter.
+
+    Examples
+    --------
+    Return the length of bandpass (1 to 25 hz) filter:
+
+    >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25)
+
     """
 
     # Compute filter length if specified in seconds

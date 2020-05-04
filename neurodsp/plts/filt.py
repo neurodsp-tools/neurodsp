@@ -23,6 +23,18 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
         Sampling rate, in Hz.
     impulse_response : 1d array
         The impulse response of a filter. For an FIR filter, these are the filter coefficients.
+
+    Examples
+    --------
+    Plot a FIR bandpass filter:
+
+    >>> from neurodsp.filt import design_fir_filter
+    >>> from neurodsp.filt.utils import compute_frequency_response
+    >>> fs = 500
+    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 40))
+    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs)
+    >>> plot_filter_properties(f_db, db, fs, filter_coefs)
+
     """
 
     fig, ax = plt.subplots(1, 2, figsize=(10, 5))
@@ -44,6 +56,18 @@ def plot_frequency_response(f_db, db, ax=None):
         Degree of attenuation for each frequency specified in f_db, in dB.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+
+    Examples
+    --------
+    Plot the frequency response of a FIR bandpass filter:
+
+    >>> from neurodsp.filt import design_fir_filter
+    >>> from neurodsp.filt.utils import compute_frequency_response
+    >>> fs = 500
+    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 40))
+    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs)
+    >>> plot_frequency_response(f_db, db)
+
     """
 
     ax = check_ax(ax, (5, 5))
@@ -68,6 +92,17 @@ def plot_impulse_response(fs, impulse_response, ax=None):
         The impulse response of a filter.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+
+    Examples
+    --------
+    Plot the impulse response of a FIR bandpass filter:
+
+    >>> from neurodsp.filt import design_fir_filter
+    >>> from neurodsp.filt.utils import compute_frequency_response
+    >>> fs = 500
+    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 40))
+    >>> plot_impulse_response(fs, filter_coefs)
+
     """
 
     ax = check_ax(ax, (5, 5))

@@ -44,6 +44,18 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     Notes
     -----
     White noise should have a SCV of 1 at all frequencies.
+
+    Examples
+    --------
+    Compute the spectral coefficient of variation of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> fs = 500
+    >>> n_seconds=10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, scv = compute_scv(sig, fs)
+
     """
 
     # Compute spectrogram of data
@@ -61,7 +73,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 @multidim(select=[0, 1])
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
                    method='bootstrap', rs_params=None):
-    """Compute a resampled version of the the spectral coefficient of variation (SCV).
+    """Compute a resampled version of the spectral coefficient of variation (SCV).
 
     Parameters
     -----------
@@ -112,6 +124,18 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
     Resampling can be done either randomly (method='bootstrap') or in a time-stepped
     manner (method='rolling').
+
+    Examples
+    --------
+    Compute the resampled spectral coefficient of variation of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> fs = 500
+    >>> n_seconds=10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='bootstrap')
+
     """
 
     # Compute spectrogram of data
@@ -199,6 +223,18 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     Notes
     -----
     Histogram bins are the same for every frequency, evenly spacing the global min & max power.
+
+    Examples
+    --------
+    Compute the log10 power distribution of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> fs = 500
+    >>> n_seconds=10
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs)
+
     """
 
     # Compute spectrogram of data

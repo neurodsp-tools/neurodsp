@@ -33,6 +33,19 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
     -------
     mwt : 2d array
         Time frequency representation of the input signal.
+
+    Examples
+    --------
+    Compute the Morlet wavewlet time-frequency representation of a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> fs = 500
+    >>> n_seconds=10
+    >>> sig = sim_combined(n_seconds, fs,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> mwt = compute_wavelet_transform(sig, fs, [1, 30])
+
     """
 
     if isinstance(freqs, (tuple, list)):
@@ -81,6 +94,19 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
     * The real part of the returned array is the filtered signal.
     * Taking np.abs() of output gives the analytic amplitude.
     * Taking np.angle() of output gives the analytic phase.
+
+    Examples
+    --------
+    Convolve a simulated signal with a complex wavelet and return a complex time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> fs = 500
+    >>> n_seconds=10
+    >>> sig = sim_combined(n_seconds, fs,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> cts = convolve_wavelet(sig, fs, 10)
+
     """
 
     if wavelet_len is None:

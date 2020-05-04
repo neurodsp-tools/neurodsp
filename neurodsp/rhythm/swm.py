@@ -51,6 +51,26 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
       not converge on a low frequency motif.
     - Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
       motif of interest, and the N derived should be about the number of occurrences.
+
+    Examples
+    --------
+    Simulated beta oscillations and find reoccuring patterns using the sliding window matching
+    algorithm.
+
+    >>> from neurodsp.sim import set_random_seed, sim_combined
+    >>> set_random_seed(0)
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 20,
+    ...                                                            'enter_burst': .05,
+    ...                                                            'leave_burst': .10}},
+    ...                    component_variances=(0.001, 0.900))
+    >>> win_len = 0.05
+    >>> win_spacing = 0.20
+    >>> avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win_spacing)
+
     """
 
     # Compute window length and spacing in samples

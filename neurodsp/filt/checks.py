@@ -36,6 +36,21 @@ def check_filter_definition(pass_type, f_range):
     ------
     ValueError
         If the filter passtype it not understood, or cutoff frequencies are incompatible.
+
+    Examples
+    --------
+    An error is raised for invalid filters:
+
+    >>> try:
+    ...     f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(20))
+    ... except ValueError:
+    ...     print("f_range for a bandpass filter requires a two cutoff freqeuncies.")
+    f_range for a bandpass filter requires a two cutoff freqeuncies.
+
+    Whereas cutoff frequencies are returned for valid filers:
+
+    >>> f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(5, 25))
+
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
@@ -106,6 +121,18 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
     -------
     passes : bool
         Whether all the checks pass. False if one or more checks fail.
+
+    Examples
+    --------
+    Design an IIF filter and check its properties:
+
+    >>> from neurodsp.filt import design_iir_filter
+    >>> fs = 500
+    >>> b_vals, a_vals = design_iir_filter(fs, pass_type='bandstop',
+    ...                                    f_range=(10, 20), butterworth_order=7)
+    >>> passes = check_filter_properties(b_vals, a_vals, fs, pass_type='bandstop', f_range=(10, 20))
+    Transition bandwidth is 2.0 Hz.
+    Pass/stop bandwidth is 10.0 Hz.
     """
 
     # Import utility functions inside function to avoid circular imports

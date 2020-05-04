@@ -46,6 +46,13 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
 
     Note that the Gaussian approximation for a sum of Poisson processes is only
     a good approximation for large lambdas.
+
+    Examples
+    --------
+    Simulated a Poisson population and return the signal:
+
+    >>> sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)
+
     """
 
     # Poisson population rate signal scales with # of neurons and individual rate
@@ -90,14 +97,23 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
     Notes
     -----
     The resulting signal is most similar to unsigned intracellular current or conductance change.
+
+    Examples
+    --------
+    Simulate a synaptic current and return the signal:
+
+    >>> sig = sim_synaptic_current(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2.,
+    ...                            tau_r=0., tau_d=0.01, t_ker=None)
+
     """
 
     # If not provided, compute t_ker as a function of decay time constant
     if t_ker is None:
         t_ker = 5. * tau_d
 
-    # Simulate an extra bit because the convolution will snip it. Turn off normalization for this sig
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate, mean=None, variance=None)
+    # Simulate an extra bit because the convolution will snip it.
+    # Turn off normalization for this sig.
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
@@ -144,6 +160,13 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     See the wikipedia page for the integral solution:
 
     https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution
+
+    Examples
+    --------
+    Simulate a Ornstein-Uhlenbeck random walk and return the signal:
+
+    >>> sig = sim_random_walk(n_seconds=1, fs=500, theta=1., mu=0., sigma=5.)
+
     """
 
     times = create_times(n_seconds, fs)
@@ -181,6 +204,13 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     -------
     sig: 1d array
         Time-series with the desired power law exponent.
+
+    Examples
+    --------
+    Simulate a power law time series and return the signal:
+
+    >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-2.0, f_range=None)
+
     """
 
     # Get the number of samples to simulate for the signal

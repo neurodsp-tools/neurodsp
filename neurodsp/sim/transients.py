@@ -42,6 +42,13 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     -------
     cycle: 1d array
         Simulated cycle.
+
+    Examples
+    --------
+    Simulate and return a single 2 hz sine cycle, where frequency = 1 / n_seconds:
+
+    >>> cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type='sine')
+
     """
 
     if cycle_type not in ['sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp']:
@@ -89,6 +96,13 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     -------
     cycle : 1d array
         Simulated asymmetric cycle.
+
+    Examples
+    --------
+    Simulate and return a single 2 hz asymetric sine cycle:
+
+    >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
+
     """
 
     # Determine number of samples in rise and decay periods
@@ -131,6 +145,13 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     - tau_r == tau_d      : alpha synapse
     - tau_r = 0           : instantaneous rise, with single exponential decay
     - tau_r != tau_d != 0 : double-exponential, with exponential rise and decay
+
+    Examples
+    --------
+    Simulate and return an alpha synapse kernel:
+
+    >>> kernel = sim_synaptic_kernel(n_seconds=1, fs=500, tau_r=0.25, tau_d=0.25)
+
     """
 
     # NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or
@@ -175,6 +196,13 @@ def create_cycle_time(n_seconds, fs):
     -------
     1d array
         Time indices.
+
+    Examples
+    --------
+    Create and return time indices, in radians, for a single cycle:
+
+    >>> indices = create_cycle_time(n_seconds=1, fs=500)
+
     """
 
     return 2 * np.pi * 1 / n_seconds * (np.arange(fs * n_seconds) / fs)

@@ -51,6 +51,19 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     filter_coefs : tuple of (1d array, 1d array)
         Filter coefficients of the IIR filter, as (b_vals, a_vals).
         Only returned if `return_filter` is True.
+
+    Examples
+    --------
+    Simulate a signal and apply a bandstop IIR filter:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal_iir(sig, fs, pass_type='bandstop', f_range=(10, 20),
+    ...                              butterworth_order=7)
+
     """
 
     # Design filter
@@ -95,6 +108,20 @@ def apply_iir_filter(sig, b_vals, a_vals):
     -------
     array
         Filtered time series.
+
+    Examples
+    --------
+    Simulate a signal, design an IIR filter, and apply the filter:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> b_vals, a_vals = design_iir_filter(fs, pass_type='bandstop',
+    ...                                    f_range=(10, 20), butterworth_order=7)
+    >>> filt_signal = apply_iir_filter(sig, b_vals, a_vals)
+
     """
 
     return filtfilt(b_vals, a_vals, sig)
@@ -129,6 +156,14 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
         B value filter coefficients for an IIR filter.
     a_vals : 1d array
         A value filter coefficients for an IIR filter.
+
+    Examples
+    --------
+    Design and return coeffecicients for a bandstop IIR filter:
+
+    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
+    ...                                    f_range=(10, 20), butterworth_order=7)
+
     """
 
     # Warn about only recommending IIR for bandstop

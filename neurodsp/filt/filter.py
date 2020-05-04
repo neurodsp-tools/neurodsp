@@ -59,6 +59,18 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
         Filtered time series.
     kernel : 1d array or tuple of (1d array, 1d array)
         Filter coefficients. Only returned if `return_filter` is True.
+
+    Examples
+    --------
+    Simulate a signal and apply a band pass filter:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal(sig, fs, pass_type='bandpass', f_range=(1, 25))
+
     """
 
     if filter_type == 'fir':
