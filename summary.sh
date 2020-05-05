@@ -17,6 +17,10 @@ printf "\n\n\n RUN TESTS & TEST COVERAGE: \n"
 coverage run --source neurodsp  -m py.test
 coverage report
 
+# Check doctests - runs doctests with pytest, skipping normal tests
+printf "\n\n\nCHECK DOCTEST EXAMPLES: \n"
+pytest --doctest-modules --ignore=neurodsp/tests neurodsp
+
 # Run pylint and print summary
 printf "\n\n\n RUN PYLINT ACROSS MODULE: \n"
 pylint neurodsp --ignore tests -> _lint.txt
