@@ -125,7 +125,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.01, 0.9))
-    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, nperseg=fs, method='bootstrap',
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, nperseg=500, method='bootstrap',
     ...                                        rs_params=(5, 200))
     >>> plot_scv_rs_lines(freqs, scv_rs)
 
@@ -168,8 +168,8 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
     ...                    component_variances=(0.001, 0.9))
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='rolling', rs_params=(10, 2))
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
-    # Note that the first 21 values are indexed here and correspond to frequencies 0 through 20.
-    #   This is done to highlight the simulated bursting at 10Hz.
+    >>> # Note that the first 21 values are indexed here and correspond to frequencies 0 through 20.
+    >>> #   This is done to highlight the simulated bursting at 10Hz.
 
     """
 

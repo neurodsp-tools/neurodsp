@@ -212,7 +212,7 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
     --------
     Compute the length of bandpass (1 to 25 hz) filter:
 
-    >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25)
+    >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25, n_cycles=3)
 
     """
 

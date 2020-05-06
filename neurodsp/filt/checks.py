@@ -39,14 +39,14 @@ def check_filter_definition(pass_type, f_range):
 
     Examples
     --------
-    An error is raised for invalid filters:
+    An error is raised for invalid filters. Note that this example would fail since a bandpass
+    filter requires two values for ``f_range``.
 
     >>> try:
     ...     f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(20))
     ... except ValueError:
     ...     print("The filter definition is invalid.")
     The filter definition is invalid.
-    # Note that this example would fail since a bandpass filter requires two values for ``f_range``.
 
     Whereas cutoff frequencies are computed for valid filers:
 

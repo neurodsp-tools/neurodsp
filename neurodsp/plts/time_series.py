@@ -95,7 +95,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.1, 0.9))
-    >>> times = create_times(n_seconds, fs=500)
+    >>> times = create_times(n_seconds=10, fs=500)
     >>> plot_instantaneous_measure(times, sig, measure='phase')
 
     """
@@ -142,7 +142,7 @@ def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
     ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.1, 0.9))
     >>> is_burst = detect_bursts_dual_threshold(sig, fs=500, dual_thresh=(1, 2), f_range=(7, 12))
-    >>> times = create_times(n_seconds, fs=500)
+    >>> times = create_times(n_seconds=10, fs=500)
     >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
 
     """

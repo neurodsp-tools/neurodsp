@@ -160,7 +160,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
-    ...                                 sim_bursty_oscillation' : {'freq': 10}})
+    ...                                'sim_bursty_oscillation': {'freq': 10}})
     >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
 
     """
