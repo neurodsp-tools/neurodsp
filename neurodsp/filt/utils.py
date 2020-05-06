@@ -61,7 +61,7 @@ def compute_frequency_response(b_vals, a_vals, fs):
 
     Examples
     --------
-    Simulate an IIR filter and compute the frequency response:
+    Compute the frequency response for an IIR filter:
 
     >>> from neurodsp.filt import design_iir_filter
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
@@ -143,7 +143,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
 
     Examples
     --------
-    Design a filter, compute f_db and db, and then compute the tranistion band:
+    Compute the transition band of an IIR filter, using the computed frequency response:
 
     >>> from neurodsp.filt import design_iir_filter
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
@@ -177,7 +177,7 @@ def compute_nyquist(fs):
 
     Examples
     --------
-    Compute the Nyquist frequency of 500 Hz sampling rate:
+    Compute the Nyquist frequency for a 500 Hz sampling rate:
 
     >>> compute_nyquist(fs=500)
     250.0
@@ -205,15 +205,14 @@ def remove_filter_edges(sig, filt_len):
 
     Examples
     --------
-    Simulate and filter a signal, and remove the filter edges:
+    Remove the filter edges of a filtered signal:
 
     >>> from neurodsp.filt.fir import design_fir_filter, apply_fir_filter
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 25))
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
     >>> filt_sig = apply_fir_filter(sig, filter_coefs)
     >>> filt_sig_no_edges = remove_filter_edges(filt_sig, filt_len=len(filter_coefs))
 

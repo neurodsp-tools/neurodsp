@@ -31,16 +31,15 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
 
     Examples
     --------
-    Plot the power spectrum of a simulated signal:
+    Plot a power spectrum:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_spectrum
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.01, 0.9))
-    >>> freqs, powers = compute_spectrum(sig, fs)
+    >>> freqs, powers = compute_spectrum(sig, fs=500)
     >>> plot_power_spectra(freqs, powers)
 
     """
@@ -81,16 +80,15 @@ def plot_scv(freqs, scv, ax=None):
 
     Examples
     --------
-    Plot the power spectral coefficient of variation of a simulated signal:
+    Plot the spectral coefficient of variation:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.01, 0.9))
-    >>> freqs, scv = compute_scv(sig, fs)
+    >>> freqs, scv = compute_scv(sig, fs=500)
     >>> plot_scv(freqs, scv)
 
     """
@@ -119,16 +117,15 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 
     Examples
     --------
-    Plot the power spectral coefficient of variation of a simulated signal:
+    Plot the spectral coefficient of variation using a resampling method:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv_rs
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.01, 0.9))
-    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, nperseg=fs, method='bootstrap',
     ...                                        rs_params=(5, 200))
     >>> plot_scv_rs_lines(freqs, scv_rs)
 
@@ -164,15 +161,15 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv_rs
-    >>> n_seconds = 100
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> sig = sim_combined(n_seconds=100, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10,
     ...                                                            'enter_burst':0.75}},
     ...                    component_variances=(0.001, 0.9))
-    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='rolling', rs_params=(10, 2))
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
+    # Note that the first 21 values are indexed here and correspond to frequencies 0 through 20.
+    #   This is done to highlight the simulated bursting at 10Hz.
 
     """
 
@@ -206,16 +203,15 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, sp
 
     Examples
     --------
-    Plot a spectral histogram for a simulated signal:
+    Plot a spectral histogram:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_spectral_hist
-    >>> n_seconds = 100
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}},
+    >>> sig = sim_combined(n_seconds=100, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}},
     ...                    component_variances=(0.01, 0.9))
-    >>> freqs, bins, spect_hist = compute_spectral_hist(sig, fs, nbins=40, f_range=(0, 80),
+    >>> freqs, bins, spect_hist = compute_spectral_hist(sig, fs=500, nbins=40, f_range=(0, 80),
     ...                                                 cut_pct=(0.1, 99.9))
     >>> plot_spectral_hist(freqs, bins, spect_hist)
 

@@ -49,7 +49,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
 
     Examples
     --------
-    Simulated a Poisson population and return the signal:
+    Simulate a Poisson population:
 
     >>> sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)
 
@@ -100,7 +100,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
     Examples
     --------
-    Simulate a synaptic current and return the signal:
+    Simulate a synaptic current:
 
     >>> sig = sim_synaptic_current(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2.,
     ...                            tau_r=0., tau_d=0.01, t_ker=None)
@@ -113,7 +113,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
     # Simulate an extra bit because the convolution will snip it.
     # Turn off normalization for this sig.
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate, mean=None, variance=None)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
@@ -163,7 +163,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
     Examples
     --------
-    Simulate a Ornstein-Uhlenbeck random walk and return the signal:
+    Simulate a Ornstein-Uhlenbeck random walk:
 
     >>> sig = sim_random_walk(n_seconds=1, fs=500, theta=1., mu=0., sigma=5.)
 
@@ -207,7 +207,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     Examples
     --------
-    Simulate a power law time series and return the signal:
+    Simulate a power law time series:
 
     >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-2.0, f_range=None)
 

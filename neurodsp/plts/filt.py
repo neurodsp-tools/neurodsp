@@ -26,7 +26,7 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
 
     Examples
     --------
-    Plot a FIR bandpass filter:
+    Plot the properties of a FIR bandpass filter:
 
     >>> from neurodsp.filt import design_fir_filter
     >>> from neurodsp.filt.utils import compute_frequency_response
@@ -63,9 +63,8 @@ def plot_frequency_response(f_db, db, ax=None):
 
     >>> from neurodsp.filt import design_fir_filter
     >>> from neurodsp.filt.utils import compute_frequency_response
-    >>> fs = 500
-    >>> filter_coefs = design_fir_filter(fs, pass_type='bandpass', f_range=(1, 40))
-    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs)
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 40))
+    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
     >>> plot_frequency_response(f_db, db)
 
     """

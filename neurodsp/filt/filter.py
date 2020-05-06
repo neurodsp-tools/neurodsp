@@ -62,14 +62,13 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
 
     Examples
     --------
-    Simulate a signal and apply a band pass filter:
+    Apply a band pass filter:
 
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> filt_sig = filter_signal(sig, fs, pass_type='bandpass', f_range=(1, 25))
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal(sig, fs=500, pass_type='bandpass', f_range=(1, 25))
 
     """
 

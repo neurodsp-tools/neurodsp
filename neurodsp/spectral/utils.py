@@ -31,15 +31,14 @@ def trim_spectrum(freqs, power_spectra, f_range):
 
     Examples
     --------
-    Trim the PSD of a simulated time series:
+    Trim the power spectrum of a simulated time series:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_spectrum
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum(sig, fs=500)
     >>> freqs_ext, spec_ext = trim_spectrum(freqs, spec, [1, 30])
 
     """
@@ -84,8 +83,9 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     >>> from neurodsp.spectral import compute_spectrum
     >>> fs = 500
     >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
     >>> freqs, spec = compute_spectrum(sig, fs)
     >>> rotated_spectrum = rotate_powerlaw(freqs, spec, -2)
 

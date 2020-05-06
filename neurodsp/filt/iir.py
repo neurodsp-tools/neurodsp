@@ -54,14 +54,12 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
 
     Examples
     --------
-    Simulate a signal and apply a bandstop IIR filter:
+    Apply a bandstop IIR filter:
 
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    >>> sig = sim_combined(n_seconds=10, fs=500, components={'sim_synaptic_current': {},
     ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> filt_sig = filter_signal_iir(sig, fs, pass_type='bandstop', f_range=(10, 20),
+    >>> filt_sig = filter_signal_iir(sig, fs=500, pass_type='bandstop', f_range=(10, 20),
     ...                              butterworth_order=7)
 
     """
@@ -111,14 +109,13 @@ def apply_iir_filter(sig, b_vals, a_vals):
 
     Examples
     --------
-    Simulate a signal, design an IIR filter, and apply the filter:
+    Apply an IIR filter:
 
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> b_vals, a_vals = design_iir_filter(fs, pass_type='bandstop',
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
     ...                                    f_range=(10, 20), butterworth_order=7)
     >>> filt_signal = apply_iir_filter(sig, b_vals, a_vals)
 
@@ -159,7 +156,7 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
 
     Examples
     --------
-    Design and return coeffecicients for a bandstop IIR filter:
+    Compute coefficients for a bandstop IIR filter:
 
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
     ...                                    f_range=(10, 20), butterworth_order=7)

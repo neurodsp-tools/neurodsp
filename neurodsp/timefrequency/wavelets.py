@@ -36,15 +36,13 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
 
     Examples
     --------
-    Compute the Morlet wavewlet time-frequency representation of a simulated signal:
+    Compute a Morlet wavelet time-frequency representation:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}})
-    >>> mwt = compute_wavelet_transform(sig, fs, [1, 30])
+    >>> mwt = compute_wavelet_transform(sig, fs=500, freqs=[1, 30])
 
     """
 
@@ -97,15 +95,13 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
 
     Examples
     --------
-    Convolve a simulated signal with a complex wavelet and return a complex time series:
+    Convolve a complex wavelet with a simulated signal:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}})
-    >>> cts = convolve_wavelet(sig, fs, 10)
+    >>> cts = convolve_wavelet(sig, fs=500, freq=10)
 
     """
 

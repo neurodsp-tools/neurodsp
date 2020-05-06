@@ -54,22 +54,18 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     Examples
     --------
-    Simulated beta oscillations and find reoccuring patterns using the sliding window matching
-    algorithm.
+    Find reoccuring patterns using the sliding window matching algorithm in simulated beta
+    oscillations.
 
-    >>> from neurodsp.sim import set_random_seed, sim_combined
-    >>> set_random_seed(0)
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 20,
     ...                                                            'enter_burst': .05,
     ...                                                            'leave_burst': .10}},
     ...                    component_variances=(0.001, 0.900))
-    >>> win_len = 0.05
-    >>> win_spacing = 0.20
-    >>> avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win_spacing)
+    >>> avg_window, window_starts, costs = sliding_window_matching(sig, fs=500, win_len=0.05,
+    ...                                                            win_spacing=0.20)
 
     """
 

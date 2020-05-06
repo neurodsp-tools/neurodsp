@@ -30,13 +30,12 @@ def robust_hilbert(sig, increase_n=False):
 
     Examples
     --------
-    Simulated a signal and compute the Hilbert transform:
+    Compute a Hilbert transform:
 
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
     >>> sig_hilb = robust_hilbert(sig)
 
     """
@@ -87,14 +86,12 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
 
     Examples
     --------
-    Compute the instantaneous phase of a simulated time series:
+    Compute the instantaneous phase:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds = 10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
+    >>> sig = sim_combined(n_seconds=10, fs=500, components={'sim_synaptic_current': {},
     ...                                               'sim_bursty_oscillation': {'freq': 10}})
-    >>> pha = phase_by_time(sig, fs)
+    >>> pha = phase_by_time(sig, fs=500)
 
     """
 
@@ -139,14 +136,13 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
 
     Examples
     --------
-    Compute the instantaneous amplitude of a simulated time series:
+    Compute the instantaneous amplitude:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds = 10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> amp = amp_by_time(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> amp = amp_by_time(sig, fs=500)
 
     """
 
@@ -195,14 +191,13 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
 
     Examples
     --------
-    Compute the instantaneous frequency of a simulated time series:
+    Compute the instantaneous frequency:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds = 10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> instant_freq = freq_by_time(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> instant_freq = freq_by_time(sig, fs=500)
 
     """
 

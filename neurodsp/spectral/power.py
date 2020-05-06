@@ -45,14 +45,13 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
     Examples
     --------
-    Compute the PSD of a simulated time series:
+    Compute the power spectrum of a simulated time series:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum(sig, fs=500)
 
     """
 
@@ -97,14 +96,13 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
     Examples
     --------
-    Compute the PSD of a simulated time series using wavelets:
+    Compute the power spectrum of a simulated time series using wavelets:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum_wavelet(sig, fs, [1, 30])
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_wavelet(sig, fs=500, freqs=[1, 30])
 
     """
 
@@ -157,14 +155,13 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
     Examples
     --------
-    Compute the PSD of a simulated time series using Welch's method:
+    Compute the power spectrum of a simulated time series using Welch's method:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum_welch(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                 sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
 
     """
 
@@ -210,14 +207,13 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     Examples
     --------
-    Compute the PSD of a simulated time series as a smoothed FFT:
+    Compute the power spectrum of a simulated time series as a smoothed FFT:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum_medfilt(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
 
     """
 

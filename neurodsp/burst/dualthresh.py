@@ -49,15 +49,13 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
 
     Examples
     --------
-
-    Detect burst in a simulated signal using the dual threshold algorithm:
+    Detect bursts in using the dual threshold algorithm:
 
     >>> from neurodsp.sim import sim_combined
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> is_burst = detect_bursts_dual_threshold(sig, fs, dual_thresh=(1, 2), f_range=(8, 12))
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> is_burst = detect_bursts_dual_threshold(sig, fs=500, dual_thresh=(1, 2), f_range=(8, 12))
 
     """
 

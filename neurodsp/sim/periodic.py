@@ -33,7 +33,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
 
     Examples
     --------
-    Simulate an sine oscillation at 5 hz and return the signal:
+    Simulate a sine oscillation at 5 hz:
 
     >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5, cycle='sine')
 
@@ -92,7 +92,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     Examples
     --------
-    Simulate a bursy oscilation and return the signal:
+    Simulate a bursty oscillation:
 
     >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=.2,
     ...                              leave_burst=.2, cycle='sine')

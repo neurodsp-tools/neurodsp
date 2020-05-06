@@ -127,14 +127,13 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
     Examples
     --------
-    Compute the resampled spectral coefficient of variation of a simulated time series:
+    Compute the resampled spectral coefficient of variation:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='bootstrap')
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='bootstrap')
 
     """
 
@@ -226,14 +225,13 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Examples
     --------
-    Compute the log10 power distribution of a simulated time series:
+    Compute the log10 power distribution:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs)
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation': {'freq': 10}})
+    >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs=500)
 
     """
 

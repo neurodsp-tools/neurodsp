@@ -45,7 +45,7 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
     Examples
     --------
-    Simulate and return a single 2 hz sine cycle, where frequency = 1 / n_seconds:
+    Simulate a single 2 hz sine cycle, where frequency = 1 / n_seconds:
 
     >>> cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type='sine')
 
@@ -99,7 +99,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
 
     Examples
     --------
-    Simulate and return a single 2 hz asymetric sine cycle:
+    Simulate a 2 hz asymetric sine cycle:
 
     >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
 
@@ -148,7 +148,7 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
 
     Examples
     --------
-    Simulate and return an alpha synapse kernel:
+    Simulate an alpha synapse kernel:
 
     >>> kernel = sim_synaptic_kernel(n_seconds=1, fs=500, tau_r=0.25, tau_d=0.25)
 
@@ -199,7 +199,7 @@ def create_cycle_time(n_seconds, fs):
 
     Examples
     --------
-    Create and return time indices, in radians, for a single cycle:
+    Create time indices, in radians, for a single cycle:
 
     >>> indices = create_cycle_time(n_seconds=1, fs=500)
 

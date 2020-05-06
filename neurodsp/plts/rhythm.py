@@ -26,16 +26,13 @@ def plot_swm_pattern(pattern, ax=None):
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.rhythm import sliding_window_matching
-    >>>
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 20,
     ...                                                            'enter_burst': .10,
     ...                                                            'leave_burst': .15}},
     ...                    component_variances=(0.001, 0.90))
-    >>> avg_window, _, _ = sliding_window_matching(sig, fs, win_len=0.05, win_spacing=0.5)
+    >>> avg_window, _, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)
     >>> plot_swm_pattern(avg_window)
 
     """
@@ -65,20 +62,18 @@ def plot_lagged_coherence(freqs, lcs, ax=None):
 
     Examples
     --------
-    Plot lagged coherence from simulated data:
+    Plot lagged coherence:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.rhythm import compute_lagged_coherence
-    >>>
-    >>> n_seconds = 10
-    >>> fs = 500
-    >>> sig = sim_combined(n_seconds, fs,
+    >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 20,
     ...                                                            'enter_burst': .10,
     ...                                                            'leave_burst': .15}},
     ...                    component_variances=(0.001, 0.90))
-    >>> lag_coh_beta, freqs = compute_lagged_coherence(sig, fs, (5, 30), return_spectrum=True)
+    >>> lag_coh_beta, freqs = compute_lagged_coherence(sig, fs=500, freqs=(15, 30),
+    ...                                                return_spectrum=True)
     >>> plot_lagged_coherence(freqs, lag_coh_beta)
 
     """
