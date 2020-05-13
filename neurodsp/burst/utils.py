@@ -38,7 +38,6 @@ def compute_burst_stats(bursting, fs):
     ...                                'sim_bursty_oscillation' : {'freq': 10}})
     >>> is_burst = detect_bursts_dual_threshold(sig, fs=500, dual_thresh=(1, 2), f_range=(8, 12))
     >>> stats_dict = compute_burst_stats(is_burst, fs=500)
-
     """
 
     tot_time = len(bursting) / fs

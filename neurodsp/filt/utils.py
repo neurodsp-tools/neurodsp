@@ -61,13 +61,18 @@ def compute_frequency_response(b_vals, a_vals, fs):
 
     Examples
     --------
+    Compute the frequency response for an FIR filter:
+
+    >>> from neurodsp.filt.fir import design_fir_filter
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(8, 12))
+    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
+
     Compute the frequency response for an IIR filter:
 
-    >>> from neurodsp.filt import design_iir_filter
+    >>> from neurodsp.filt.iir import design_iir_filter
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(10, 20), butterworth_order=7)
+    ...                                    f_range=(55, 65), butterworth_order=7)
     >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
-
     """
 
     w_vals, h_vals = freqz(b_vals, a_vals, worN=int(fs * 2))
@@ -108,7 +113,6 @@ def compute_pass_band(fs, pass_type, f_range):
 
     >>> compute_pass_band(fs=500, pass_type='bandpass', f_range=(5, 25))
     20.0
-
     """
 
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
@@ -143,15 +147,22 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
 
     Examples
     --------
+    Compute the transition band of an FIR filter, using the computed frequency response:
+
+    >>> from neurodsp.filt.fir import design_fir_filter
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
+    >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
+    >>> compute_transition_band(f_db, db, low=-20, high=-3)
+    0.5
+
     Compute the transition band of an IIR filter, using the computed frequency response:
 
-    >>> from neurodsp.filt import design_iir_filter
+    >>> from neurodsp.filt.iir import design_iir_filter
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
     ...                                    f_range=(10, 20), butterworth_order=7)
     >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
     >>> compute_transition_band(f_db, db, low=-20, high=-3)
     2.0
-
     """
 
     # This gets the indices of transitions to the values in searched for range
@@ -181,7 +192,6 @@ def compute_nyquist(fs):
 
     >>> compute_nyquist(fs=500)
     250.0
-
     """
 
     return fs / 2.
@@ -205,17 +215,15 @@ def remove_filter_edges(sig, filt_len):
 
     Examples
     --------
-    Remove the filter edges of a filtered signal:
+    Apply a filter and remove the filter edges of the filtered signal:
 
     >>> from neurodsp.filt.fir import design_fir_filter, apply_fir_filter
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
     >>> filt_sig = apply_fir_filter(sig, filter_coefs)
     >>> filt_sig_no_edges = remove_filter_edges(filt_sig, filt_len=len(filter_coefs))
-
     """
 
     n_rmv = int(np.ceil(filt_len / 2))

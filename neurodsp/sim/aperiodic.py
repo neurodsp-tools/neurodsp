@@ -52,7 +52,6 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     Simulate a Poisson population:
 
     >>> sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)
-
     """
 
     # Poisson population rate signal scales with # of neurons and individual rate
@@ -100,20 +99,18 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
     Examples
     --------
-    Simulate a synaptic current:
+    Simulate a synaptic current signal:
 
-    >>> sig = sim_synaptic_current(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2.,
-    ...                            tau_r=0., tau_d=0.01, t_ker=None)
-
+    >>> sig = sim_synaptic_current(n_seconds=1, fs=500)
     """
 
     # If not provided, compute t_ker as a function of decay time constant
     if t_ker is None:
         t_ker = 5. * tau_d
 
-    # Simulate an extra bit because the convolution will snip it.
-    # Turn off normalization for this sig.
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate, mean=None, variance=None)
+    # Simulate an extra bit because the convolution will trim & turn off normalization
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate,
+                          mean=None, variance=None)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:-1]
 
@@ -165,8 +162,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     --------
     Simulate a Ornstein-Uhlenbeck random walk:
 
-    >>> sig = sim_random_walk(n_seconds=1, fs=500, theta=1., mu=0., sigma=5.)
-
+    >>> sig = sim_random_walk(n_seconds=1, fs=500, theta=1.)
     """
 
     times = create_times(n_seconds, fs)
@@ -207,10 +203,13 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     Examples
     --------
-    Simulate a power law time series:
+    Simulate a power law signal, with an exponent of -2 (brown noise):
 
-    >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-2.0, f_range=None)
+    >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-2.0)
 
+    Simulate a power law signal, with a highpass filter applied at 2 Hz:
+
+    >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-1.5, f_range=(2, None))
     """
 
     # Get the number of samples to simulate for the signal
@@ -259,7 +258,7 @@ def _create_powerlaw(n_samples, fs, exponent):
 
     Notes
     -----
-    This function create variable power law exponents by spectrally rotating white noise.
+    This function creates variable power law exponents by spectrally rotating white noise.
     """
 
     # Start with white noise signal, that we will rotate, in frequency space

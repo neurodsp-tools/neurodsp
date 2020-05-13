@@ -49,10 +49,8 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum(sig, fs=500)
-
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
     if method == 'welch':
@@ -100,10 +98,8 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum_wavelet(sig, fs=500, freqs=[1, 30])
-
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum_wavelet(sig, fs=500, freqs=[1, 30])
     """
 
     if isinstance(freqs, (tuple, list)):
@@ -159,10 +155,8 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation': {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
     >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
-
     """
 
     # Calculate the short time Fourier transform with signal.spectrogram
@@ -211,13 +205,11 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
-
     """
 
-    # Take the positive half of the spectrum since it's symmetrical
+    # Take the positive half of the spectrum, since it's symmetrical
     ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
     freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
 

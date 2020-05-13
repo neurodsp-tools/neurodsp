@@ -38,10 +38,9 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}},
-    ...                    component_variances=(0.01, 0.9))
+    ...                    component_variances=(0.5, 1.))
     >>> freqs, powers = compute_spectrum(sig, fs=500)
     >>> plot_power_spectra(freqs, powers)
-
     """
 
     ax = check_ax(ax, (6, 6))
@@ -85,12 +84,9 @@ def plot_scv(freqs, scv, ax=None):
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}},
-    ...                    component_variances=(0.01, 0.9))
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> freqs, scv = compute_scv(sig, fs=500)
     >>> plot_scv(freqs, scv)
-
     """
 
     ax = check_ax(ax, (5, 5))
@@ -122,13 +118,10 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv_rs
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}},
-    ...                    component_variances=(0.01, 0.9))
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, nperseg=500, method='bootstrap',
     ...                                        rs_params=(5, 200))
     >>> plot_scv_rs_lines(freqs, scv_rs)
-
     """
 
     ax = check_ax(ax, (8, 8))
@@ -163,14 +156,10 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
     >>> from neurodsp.spectral import compute_scv_rs
     >>> sig = sim_combined(n_seconds=100, fs=500,
     ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10,
-    ...                                                            'enter_burst':0.75}},
-    ...                    component_variances=(0.001, 0.9))
+    ...                                'sim_bursty_oscillation': {'freq': 10, 'enter_burst':0.75}})
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='rolling', rs_params=(10, 2))
+    >>> # Plot the computed scv, plotting frequencies up to 20 Hz (index of 21)
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
-    >>> # Note that the first 21 values are indexed here and correspond to frequencies 0 through 20.
-    >>> #   This is done to highlight the simulated bursting at 10Hz.
-
     """
 
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -210,18 +199,18 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, sp
     >>> sig = sim_combined(n_seconds=100, fs=500,
     ...                    components={'sim_synaptic_current': {},
     ...                                'sim_bursty_oscillation' : {'freq': 10}},
-    ...                    component_variances=(0.01, 0.9))
-    >>> freqs, bins, spect_hist = compute_spectral_hist(sig, fs=500, nbins=40, f_range=(0, 80),
+    ...                    component_variances=(0.5, 1))
+    >>> freqs, bins, spect_hist = compute_spectral_hist(sig, fs=500, nbins=40, f_range=(1, 75),
     ...                                                 cut_pct=(0.1, 99.9))
     >>> plot_spectral_hist(freqs, bins, spect_hist)
-
     """
 
     # Automatically scale figure height based on number of bins
     plt.figure(figsize=(8, 12 * len(power_bins) / len(freqs)))
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]], aspect='auto')
+    plt.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]],
+               aspect='auto')
     plt.xlabel('Frequency (Hz)', fontsize=15)
     plt.ylabel('Log10 Power', fontsize=15)
     plt.colorbar(label='Probability')
@@ -229,7 +218,7 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, sp
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Log10 Power')
 
-    # If a PSD is provided, plot over the histogram data
+    # If a power spectrum is provided, plot over the histogram data
     if spectrum is not None:
         plt_inds = np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])
         plt.plot(spectrum_freqs[plt_inds], np.log10(spectrum[plt_inds]), color='w', alpha=0.8)

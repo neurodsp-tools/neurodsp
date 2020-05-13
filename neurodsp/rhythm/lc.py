@@ -56,13 +56,10 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 20,
-    ...                                                            'enter_burst': .05,
-    ...                                                            'leave_burst': .10}},
-    ...                    component_variances=(0.001, 0.900))
-    >>> lag_coh_betas, freqs = compute_lagged_coherence(sig, fs=500, freqs=(1, 30),
-    ...                                                 return_spectrum=True)
-
+    ...                                'sim_bursty_oscillation': {'freq': 20,
+    ...                                                           'enter_burst': .50,
+    ...                                                           'leave_burst': .25}})
+    >>> lag_cohs = compute_lagged_coherence(sig, fs=500, freqs=(5, 35))
     """
 
     if isinstance(freqs, (tuple, list)):

@@ -33,10 +33,9 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
 
     Examples
     --------
-    Simulate a sine oscillation at 5 hz:
+    Simulate a continuous oscillation at 5 hz:
 
-    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5, cycle='sine')
-
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5)
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
@@ -92,11 +91,17 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     Examples
     --------
-    Simulate a bursty oscillation:
+    Simulate a bursty oscillation, with a low probability of bursting:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=.2,
-    ...                              leave_burst=.2, cycle='sine')
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.2, leave_burst=0.8)
 
+    Simulate a bursty oscillation, with a high probability of bursting:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=15, enter_burst=0.8, leave_burst=0.4)
+
+    Simulate a bursty oscillation, of sawtooth waves:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, cycle='sawtooth', width=0.3)
     """
 
     # Determine number of samples & cycles

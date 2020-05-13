@@ -54,14 +54,13 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
 
     Examples
     --------
-    Apply a bandstop IIR filter:
+    Apply a bandstop IIR filter to a simulated signal:
 
     >>> from neurodsp.sim import sim_combined
-    >>> sig = sim_combined(n_seconds=10, fs=500, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> filt_sig = filter_signal_iir(sig, fs=500, pass_type='bandstop', f_range=(10, 20),
-    ...                              butterworth_order=7)
-
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal_iir(sig, fs=500, pass_type='bandstop',
+    ...                              f_range=(55, 65), butterworth_order=7)
     """
 
     # Design filter
@@ -109,16 +108,14 @@ def apply_iir_filter(sig, b_vals, a_vals):
 
     Examples
     --------
-    Apply an IIR filter:
+    Apply an IIR filter, after designing the filter coefficients:
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(10, 20), butterworth_order=7)
+    ...                                    f_range=(55, 65), butterworth_order=7)
     >>> filt_signal = apply_iir_filter(sig, b_vals, a_vals)
-
     """
 
     return filtfilt(b_vals, a_vals, sig)
@@ -159,8 +156,7 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
     Compute coefficients for a bandstop IIR filter:
 
     >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(10, 20), butterworth_order=7)
-
+    ...                                    f_range=(55, 65), butterworth_order=7)
     """
 
     # Warn about only recommending IIR for bandstop

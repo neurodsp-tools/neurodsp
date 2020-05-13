@@ -50,12 +50,9 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     Compute the spectral coefficient of variation of a simulated time series:
 
     >>> from neurodsp.sim import sim_combined
-    >>> fs = 500
-    >>> n_seconds=10
-    >>> sig = sim_combined(n_seconds, fs, components={'sim_synaptic_current': {},
-    ...                                               'sim_bursty_oscillation' : {'freq': 10}})
-    >>> freqs, scv = compute_scv(sig, fs)
-
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, scv = compute_scv(sig, fs=500)
     """
 
     # Compute spectrogram of data
@@ -127,14 +124,12 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
     Examples
     --------
-    Compute the resampled spectral coefficient of variation:
+    Compute the resampled spectral coefficient of variation, using the bootstrap method:
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation' : {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='bootstrap')
-
     """
 
     # Compute spectrogram of data
@@ -225,14 +220,12 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Examples
     --------
-    Compute the log10 power distribution:
+    Compute the distribution of power, which is the spectral histogram:
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation': {'freq': 10}})
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
     >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs=500)
-
     """
 
     # Compute spectrogram of data
