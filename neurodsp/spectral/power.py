@@ -42,6 +42,15 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
     if method == 'welch':
@@ -82,6 +91,15 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series using wavelets:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum_wavelet(sig, fs=500, freqs=[1, 30])
     """
 
     if isinstance(freqs, (tuple, list)):
@@ -130,6 +148,15 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series using Welch's method:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
     """
 
     # Calculate the short time Fourier transform with signal.spectrogram
@@ -171,9 +198,18 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series as a smoothed FFT:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
     """
 
-    # Take the positive half of the spectrum since it's symmetrical
+    # Take the positive half of the spectrum, since it's symmetrical
     ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
     freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
 

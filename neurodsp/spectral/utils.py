@@ -28,6 +28,17 @@ def trim_spectrum(freqs, power_spectra, f_range):
     -----
     This function extracts frequency ranges >= f_low and <= f_high.
     It does not round to below or above f_low and f_high, respectively.
+
+    Examples
+    --------
+    Trim the power spectrum of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
+    >>> freqs_ext, spec_ext = trim_spectrum(freqs, spectrum, [1, 30])
     """
 
     # Create mask to index only requested frequencies
@@ -52,7 +63,7 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
         Power spectrum to be rotated.
     delta_exponent : float
         Change in power law exponent to be applied.
-        Positive is counterclockwise rotation (flatten), negative is clockwise rotation (steepen).
+        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).
     f_rotation : float, optional, default: 1
         Frequency at which to rotate the spectrum, where power is unchanged by the rotation, in Hz.
         This only matters if not further normalizing signal variance.
@@ -61,6 +72,17 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     -------
     rotated_spectrum : 1d array
         Rotated spectrum.
+
+    Examples
+    --------
+    Rotate a power spectrum, calculated on simualated data:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
+    >>> rotated_spectrum = rotate_powerlaw(freqs, spectrum, -1)
     """
 
     if freqs[0] == 0:

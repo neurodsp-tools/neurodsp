@@ -27,6 +27,15 @@ def robust_hilbert(sig, increase_n=False):
     -------
     sig_hilb : 1d array
         The Hilbert transform of the input signal.
+
+    Examples
+    --------
+    Compute a Hilbert transform of a signal, using zero padding:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> sig_hilb = robust_hilbert(sig, increase_n=True)
     """
 
     # Extract the signal that is not nan
@@ -72,6 +81,15 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     -------
     pha : 1d array
         Instantaneous phase time series.
+
+    Examples
+    --------
+    Compute the instantaneous phase, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> pha = phase_by_time(sig, fs=500, f_range=(8, 12))
     """
 
     if f_range:
@@ -112,6 +130,15 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     -------
     amp : 1d array
         Instantaneous amplitude time series.
+
+    Examples
+    --------
+    Compute the instantaneous amplitude, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> amp = amp_by_time(sig, fs=500, f_range=(8, 12))
     """
 
     if f_range:
@@ -156,6 +183,15 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     Notes
     -----
     This function assumes monotonic phase, so phase slips will be processed as high frequencies.
+
+    Examples
+    --------
+    Compute the instantaneous frequency, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> instant_freq = freq_by_time(sig, fs=500, f_range=(8, 12))
     """
 
     pha = phase_by_time(sig, fs, f_range, hilbert_increase_n,

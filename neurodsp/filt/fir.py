@@ -7,7 +7,8 @@ from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
 from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, remove_filter_edges
-from neurodsp.filt.checks import check_filter_definition, check_filter_properties, check_filter_length
+from neurodsp.filt.checks import (check_filter_definition, check_filter_properties,
+                                  check_filter_length)
 
 ###################################################################################################
 ###################################################################################################
@@ -54,6 +55,21 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         Filtered time series.
     filter_coefs : 1d array
         Filter coefficients of the FIR filter. Only returned if `return_filter` is True.
+
+    Examples
+    --------
+    Apply a band pass FIR filter to a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal_fir(sig, fs=500, pass_type='bandpass', f_range=(1, 25))
+
+    Apply a high pass FIR filter to a signal, with a specified number of cycles:
+
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> filt_sig = filter_signal_fir(sig, fs=500, pass_type='highpass', f_range=(2, None), n_cycles=5)
     """
 
     # Design filter & check that the length is okay with signal
@@ -102,6 +118,16 @@ def apply_fir_filter(sig, filter_coefs):
     -------
     array
         Filtered time series.
+
+    Examples
+    --------
+    Apply an FIR filter, from computed filter coefficients:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
+    >>> filt_sig = apply_fir_filter(sig, filter_coefs)
     """
 
     return np.convolve(filter_coefs, sig, 'same')
@@ -136,6 +162,12 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     -------
     filter_coefs : 1d array
         The filter coefficients for an FIR filter.
+
+    Examples
+    --------
+    Create the filter coefficients for an FIR filter:
+
+    >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
     """
 
     # Check filter definition
@@ -168,7 +200,7 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
         The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
         The higher frequency range of the filter, specifying the lowpass frequency, if specified.
-    n_cycles : float or None, optional, default: 3
+    n_cycles : float or None, optional
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
     n_seconds : float or None, optional
         Length of filter, in seconds.
@@ -177,6 +209,12 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
     -------
     filt_len : int
         The length of the specified filter.
+
+    Examples
+    --------
+    Compute the length of bandpass (1 to 25 hz) filter:
+
+    >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25, n_cycles=3)
     """
 
     # Compute filter length if specified in seconds

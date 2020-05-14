@@ -48,6 +48,18 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     .. [1] Fransen, A. M., van Ede, F., & Maris, E. (2015).
            Identifying neuronal oscillations using rhythmicity.
            Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003
+
+    Examples
+    --------
+    Compute lagged coherence for a simulated signal with beta oscillations:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation': {'freq': 20,
+    ...                                                           'enter_burst': .50,
+    ...                                                           'leave_burst': .25}})
+    >>> lag_cohs = compute_lagged_coherence(sig, fs=500, freqs=(5, 35))
     """
 
     if isinstance(freqs, (tuple, list)):

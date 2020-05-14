@@ -36,6 +36,21 @@ def check_filter_definition(pass_type, f_range):
     ------
     ValueError
         If the filter passtype it not understood, or cutoff frequencies are incompatible.
+
+    Examples
+    --------
+    Check a filter definition, and get the cutoff frequencies returned, if the filter is valid:
+
+    >>> f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(5, 25))
+
+    Check a filter defition, for an invalid filter.
+    This example fails since a bandpass filter requires two values for ``f_range``.
+
+    >>> try:
+    ...     f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(20))
+    ... except ValueError:
+    ...     print("The filter definition is invalid.")
+    The filter definition is invalid.
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
@@ -74,7 +89,8 @@ def check_filter_definition(pass_type, f_range):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=(-20, -3), verbose=True):
+def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
+                            transitions=(-20, -3), verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
@@ -106,6 +122,26 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
     -------
     passes : bool
         Whether all the checks pass. False if one or more checks fail.
+
+    Examples
+    --------
+    Check the properties of an FIR filter:
+
+    >>> from neurodsp.filt.fir import design_fir_filter
+    >>> fs, pass_type, f_range = 500, 'bandpass', (1, 25)
+    >>> filter_coefs = design_fir_filter(fs, pass_type, f_range)
+    >>> passes = check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)
+    Transition bandwidth is 0.5 Hz.
+    Pass/stop bandwidth is 24.0 Hz.
+
+    Check the properties of an IIR filter:
+
+    >>> from neurodsp.filt.iir import design_iir_filter
+    >>> fs, pass_type, f_range, order = 500, 'bandstop', (55, 65), 7
+    >>> b_vals, a_vals = design_iir_filter(fs, pass_type, f_range, order)
+    >>> passes = check_filter_properties(b_vals, a_vals, fs, pass_type, f_range)
+    Transition bandwidth is 1.5 Hz.
+    Pass/stop bandwidth is 10.0 Hz.
     """
 
     # Import utility functions inside function to avoid circular imports

@@ -35,13 +35,20 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
     --------
     Simulate a combined signal with an aperiodic and periodic component:
 
-    >>> sim_components = {'sim_powerlaw' : {'exponent' : -2}, 'sim_oscillation' : {'freq' : 10}}
-    >>> sim_combined(1, 500, sim_components)
+    >>> sim_components = {'sim_powerlaw': {'exponent' : -2}, 'sim_oscillation': {'freq' : 10}}
+    >>> sig = sim_combined(n_seconds=1, fs=500, components=sim_components)
 
     Simulate a combined signal with multiple periodic components:
 
-    >>> sim_components = {'sim_powerlaw' : {'exponent' : -2}, 'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
-    >>> sim_combined(1, 500, sim_components)
+    >>> sim_components = {'sim_powerlaw': {'exponent' : -2},
+    ...                   'sim_oscillation': [{'freq' : 10}, {'freq' : 20}]}
+    >>> sig = sim_combined(n_seconds=1, fs=500, components=sim_components)
+
+    Simulate a combined signal with unequal variance for the different components:
+
+    >>> sig = sim_combined(n_seconds=1, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq' : 10}},
+    ...                    component_variances=[0.25, 0.75])
     """
 
     # Check how simulation components are specified, in terms of number of parameter sets

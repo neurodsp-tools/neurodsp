@@ -59,8 +59,10 @@ def multidim(select=[]):
 
                 if isinstance(outs[0], tuple):
 
-                    # Collect together associated outputs from each, in case there are multiple outputs
-                    out = [np.stack([dat[n_out] for dat in outs]) for n_out in range(len(outs[0]))]
+                    # Collect together associated outputs from each,
+                    #   in case there are multiple outputs
+                    out = [np.stack([dat[n_out] for dat in outs]) \
+                        for n_out in range(len(outs[0]))]
 
                     # Sub-select single instance of collection for requested outputs
                     out = [dat[0] if ind in select else dat for ind, dat in enumerate(out)]
