@@ -16,8 +16,3 @@ RUN ["/bin/bash", "-c", "source activate neurodsp && \
                         pip install -q jupyter && \
                         pip install -q -r requirements.txt && \
                         python setup.py -q develop"]
-
-
-# If not in interactive mode, make the tutorials available over the exposed port
-COPY . /neurodsp
-CMD ["source activate neurodsp && jupyter notebook tutorials/ --ip=0.0.0.0 --port=5555 --no-browser --allow-root"]

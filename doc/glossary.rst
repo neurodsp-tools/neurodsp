@@ -1,7 +1,8 @@
 NeuroDSP Glossary
 =================
 
-The following is a glossary of neuroscience and digital processing related terms that are used in NeuroDSP, as well as links to external resources that we like and use for learning DSP.
+The following is a glossary of neuroscience and digital processing related terms that are used
+in NeuroDSP, as well as links to external resources that we like and use for learning DSP.
 
 General
 -------
@@ -17,13 +18,16 @@ General
 Digital Signal Processing
 -------------------------
 
-For a general introduction to digital signal processing, we recommend
-`Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
-by Jack Schaedler.
+Digital Signal Processing (DSP) is a vast area of science & engineering of computational analysis
+to digital signals.
 
-For more in-depth descriptions, the free, online textbook,
-`The Scientist and Engineers Guide to Digital Signal Processing <http://www.dspguide.com/>`_,
-is a great resource.
+For a collection of lots of openly available resources for learning DSP, check out this
+`list <https://github.com/openlists/DSPResources/>`_.
+
+If you want to start with a general introduction to DSP, check out
+`Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
+or for more in-depth descriptions, check out
+`The Scientist and Engineers Guide to Digital Signal Processing <http://www.dspguide.com/>`_.
 
 .. glossary::
 
