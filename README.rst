@@ -11,7 +11,7 @@
 .. _Version: https://pypi.python.org/pypi/neurodsp/
 
 .. |BuildStatus| image:: https://travis-ci.org/neurodsp-tools/neurodsp.svg
-.. _BuildStatus: https://codecov.io/gh/neurodsp-tools/neurodsp
+.. _BuildStatus: https://travis-ci.com/github/neurodsp-tools/neurodsp
 
 .. |codecov| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
 .. _codecov: https://codecov.io/gh/neurodsp-tools/neurodsp
