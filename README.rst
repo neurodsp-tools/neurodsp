@@ -2,7 +2,7 @@
  Neuro Digital Signal Processing Toolbox
 ========================================
 
-|ProjectStatus|_ |Version|_ |BuildStatus|_ |codecov|_ |License|_ |PythonVersions|_ |DOI|_
+|ProjectStatus|_ |Version|_ |BuildStatus|_ |Coverage|_ |License|_ |PythonVersions|_ |Publication|_
 
 .. |ProjectStatus| image:: https://www.repostatus.org/badges/latest/active.svg
 .. _ProjectStatus: https://www.repostatus.org/#active
@@ -10,11 +10,11 @@
 .. |Version| image:: https://img.shields.io/pypi/v/neurodsp.svg
 .. _Version: https://pypi.python.org/pypi/neurodsp/
 
-.. |BuildStatus| image:: https://travis-ci.org/neurodsp-tools/neurodsp.svg
+.. |BuildStatus| image:: https://travis-ci.com/neurodsp-tools/neurodsp.svg
 .. _BuildStatus: https://travis-ci.com/github/neurodsp-tools/neurodsp
 
-.. |codecov| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
-.. _codecov: https://codecov.io/gh/neurodsp-tools/neurodsp
+.. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
+.. _Coverage: https://codecov.io/gh/neurodsp-tools/neurodsp
 
 .. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
 .. _License: https://opensource.org/licenses/Apache-2.0
@@ -22,8 +22,8 @@
 .. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/neurodsp.svg
 .. _PythonVersions: https://pypi.python.org/pypi/neurodsp/
 
-.. |DOI| image:: https://joss.theoj.org/papers/10.21105/joss.01272/status.svg
-.. _DOI: https://doi.org/10.21105/joss.01272
+.. |Publication| image:: https://joss.theoj.org/papers/10.21105/joss.01272/status.svg
+.. _Publication: https://doi.org/10.21105/joss.01272
 
 Tools to analyze and simulate neural time series, using digital signal processing.
 
