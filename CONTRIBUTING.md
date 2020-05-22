@@ -1,48 +1,45 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to NeuroDSP! We welcome contributions to the
-project that extend or improve code and/or documentation and/or tutorials in the
-NeuroDSP project!
+Thank you for your interest in contributing to NeuroDSP! 
 
-If you have an idea you would like to contribute to NeuroDSP, please first check that
-it is in scope for the project, as discussed below.
-
-If it seems related to the project, it is best to go and open an
-[issue](https://github.com/neurodsp-tools/neurodsp/issues),
-suggesting your idea.
-
-From there, you can follow the procedures and conventions described below to
-add your contribution to NeuroDSP!
+We welcome contributions to the project that extend or improve code and/or documentation 
+in the module!
 
 Note that contributors to NeuroDSP are expected to follow the
 [Code of Conduct](https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md).
 
+## How to Contribute
+
+If you are interested in getting involved in helping with and maintaining `NeuroDSP`, the best place to start is on the [issues](https://github.com/neurodsp-tools/neurodsp/issues) board. Check through if there are any open issues that you might be able to contribute to!
+
+If you have a new idea you would like to contribute to NeuroDSP, please do the following:
+
+1. Check that your idea is in scope for the project (as discussed below).
+2. Open an [issue](https://github.com/neurodsp-tools/neurodsp/issues) in the repository suggesting and describing your idea
+3. Wait for some feedback from project maintainers on the idea, and coordinate with maintainers an a plan for the contribution
+   
+To contribute a fix, or add an update of the repository, do the following:
+
+1. Make a fork of the NeuroDSP repository
+2. Update the fork of the repository with any updates and/or additions to the project
+3. Check that any additions to the project follow the conventions (described below)
+4. Make a pull request from your fork to the `NeuroDSP` repository
+5. Address any feedback and/or recommendations from reviewers, until the contribution is ready to be merged
+
 ## Scope
 
-`NeuroDSP` is a lightweight library for neural time series analysis.
+All contributions to `NeuroDSP` must be within the scope of the module. 
 
-As a rule of thumb, functions and algorithms that operate on neural time series are considered in scope.
+The scope of `NeuroDSP` is digital signal processing approaches for neural data, that operate on neural time series. 
 
-Code and utilities that focused on data management, and/or multi-channel analyses are currently
-considered out of scope for the project.
-
-## Procedures
-
-NeuroDSP is hosted and developed on Github.
-
-To make a contribution:
-
-1. Make an issue on the NeuroDSP repository, stating your intention and getting feedback from maintainers
-2. Make a fork of the NeuroDSP repository
-3. Update the fork of the repository with any updates and/or additions to the project
-4. Check that any additions to the project follow the conventions described below
-5. Make a pull request from your fork to the NeuroDSP repository
-6. Address any feedback and/or recommendations from reviewers, until the contribution is ready to be merged
+The goal of `NeuroDSP` is to provide a light-weight collection of useful analyses approaches, agnostic to precise data types, and data organizations. Code and utilities that focused on data management are considered out of scope. 
 
 ## Conventions
 
+All code contributed to the module should follow these conventions:
+
 1. Code & Style
-    * All code should be written in Python 3.4+
+    * All code should be written in Python 3.5+
     * Code should follow the [PEP8](https://www.python.org/dev/peps/pep-0008/) style guide
 
 2. Documentation
