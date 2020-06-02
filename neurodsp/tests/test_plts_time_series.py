@@ -15,6 +15,9 @@ def test_plot_time_series(tsig):
     times = np.arange(0, len(tsig), 1)
     plot_time_series(times, tsig)
 
+    tsig_rev = tsig[::-1]
+    plot_time_series(times, [tsig, tsig_rev], lw=[1, 2], alpha=[1, 0.5])
+
 @plot_test
 def test_plot_instantaneous_measure(tsig):
 
