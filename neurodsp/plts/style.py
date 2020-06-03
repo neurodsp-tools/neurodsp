@@ -1,4 +1,4 @@
-"""Style helpers and utilities for plots."""
+"""Functions and utilities to apply aesthetic styling to plots."""
 
 from itertools import cycle
 from functools import wraps
@@ -13,7 +13,15 @@ from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
 ###################################################################################################
 
 def plot_style(ax, **kwargs):
-    """Define plot style."""
+    """Apply plot style to a figure axis.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    **kwargs
+        Keyword arguments that define plot style to apply.
+    """
 
     # Apply any provided plot style arguments
     plot_kwargs = {key : val for key, val in kwargs.items() if key in PLOT_STYLE_ARGS}
@@ -51,7 +59,29 @@ def plot_style(ax, **kwargs):
 
 
 def style_plot(func, *args, **kwargs):
-    """Decorator function to apply a plot style function, after plot generation."""
+    """Decorator function to apply a plot style function, after plot generation.
+
+    Parameters
+    ----------
+    func : callable
+        The plotting function to create a plot
+    *args, **kwargs
+        Arguments & keyword arguments.
+        These should include any arguments for the plot, and those for applying plot style.
+
+    Notes
+    -----
+    This is a decorate, for plot, functions that functions roughly as:
+
+    - catching all inputs that relate to plot style
+    - create a plot, using the passed in plotting function & passing in all non-style arguments
+    - passing the style related arguments into a `plot_style` function
+
+    This function itself does not apply create any plots or apply any styling itself.
+
+    By default, this function applies styling with the `plot_style` function. Custom
+    functions for applying style can be passed in using `plot_style` as a keyword argument.
+    """
 
     @wraps(func)
     def decorated(*args, **kwargs):
