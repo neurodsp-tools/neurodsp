@@ -34,7 +34,7 @@ def plot_style(ax, **kwargs):
         # Values should be either a single value, for all lines, or a list, of a value per line
         #   This line checks type, and makes a cycle-able / loop-able object out of the values
         values = cycle([value] if isinstance(value, (int, float, str)) else value)
-        for idx, line in enumerate(ax.lines):
+        for line in ax.lines:
             line.set(**{style : next(values)})
 
     # If a title was provided, update the size
@@ -64,7 +64,7 @@ def style_plot(func, *args, **kwargs):
     Parameters
     ----------
     func : callable
-        The plotting function to create a plot
+        The plotting function for creating a plot.
     *args, **kwargs
         Arguments & keyword arguments.
         These should include any arguments for the plot, and those for applying plot style.

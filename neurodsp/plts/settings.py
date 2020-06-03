@@ -8,9 +8,9 @@
 PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
 # Line style arguments are those that can be defined on a line object
 LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle']
-# Custom style arguments are those that are customly handled by the plot style function
-CUSTOM_STYLE_ARGS = ['title_fontsize', 'label_size', 'tick_labelsize'
-                      'legend_size', 'legend_loc']
+# Custom style arguments are those that are custom-handled by the plot style function
+CUSTOM_STYLE_ARGS = ['title_fontsize', 'label_size', 'tick_labelsize',
+                     'legend_size', 'legend_loc']
 STYLE_ARGS = PLOT_STYLE_ARGS + LINE_STYLE_ARGS + CUSTOM_STYLE_ARGS
 
 ## Define default values for aesthetic
