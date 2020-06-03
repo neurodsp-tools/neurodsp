@@ -5,12 +5,12 @@ from functools import wraps
 
 import matplotlib.pyplot as plt
 
-###################################################################################################
-###################################################################################################
+from neurodsp.plts.settings import PLOT_STYLE_ARGS, LINE_STYLE_ARGS, STYLE_ARGS
+from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
+                                    TICK_LABELSIZE, TITLE_FONTSIZE)
 
-PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
-LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle']
-STYLE_ARGS = PLOT_STYLE_ARGS + LINE_STYLE_ARGS
+###################################################################################################
+###################################################################################################
 
 def plot_style(ax, **kwargs):
     """Define plot style."""
@@ -29,18 +29,23 @@ def plot_style(ax, **kwargs):
         for idx, line in enumerate(ax.lines):
             line.set(**{style : next(values)})
 
-    # Aesthetics and axis labels
-    ax.xaxis.label.set_size(16)
-    ax.yaxis.label.set_size(16)
-    ax.tick_params(axis='both', which='major', labelsize=16)
+    # If a title was provided, update the size
+    if ax.get_title():
+        ax.title.set_size(kwargs.pop('title_fontsize', TITLE_FONTSIZE))
+
+    # Settings for the axis labels
+    label_size = kwargs.pop('label_size', LABEL_SIZE)
+    ax.xaxis.label.set_size(label_size)
+    ax.yaxis.label.set_size(label_size)
+
+    # Settings for the axis ticks
+    ax.tick_params(axis='both', which='major',
+                   labelsize=kwargs.pop('tick_labelsize', TICK_LABELSIZE))
 
     # If labels were provided, add a legend
     if ax.get_legend_handles_labels()[0]:
-        ax.legend(prop={'size': 12}, loc='best')
-
-    # If a title was provided, update the size
-    if ax.get_title():
-        ax.title.set_size(20)
+        ax.legend(prop={'size': kwargs.pop('legend_size', LEGEND_SIZE)},
+                  loc=kwargs.pop('legend_loc', LEGEND_LOC))
 
     plt.tight_layout()
 
