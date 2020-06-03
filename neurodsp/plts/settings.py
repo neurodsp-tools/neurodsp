@@ -5,13 +5,14 @@
 
 ## Define collections of style arguments
 # Plot style arguments are those that can be defined on an axis object
-PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
+AXIS_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
 # Line style arguments are those that can be defined on a line object
 LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle']
 # Custom style arguments are those that are custom-handled by the plot style function
 CUSTOM_STYLE_ARGS = ['title_fontsize', 'label_size', 'tick_labelsize',
                      'legend_size', 'legend_loc']
-STYLE_ARGS = PLOT_STYLE_ARGS + LINE_STYLE_ARGS + CUSTOM_STYLE_ARGS
+STYLERS = ['plot_styler', 'line_styler', 'custom_styler']
+STYLE_ARGS = AXIS_STYLE_ARGS + LINE_STYLE_ARGS + CUSTOM_STYLE_ARGS + STYLERS
 
 ## Define default values for aesthetic
 # These are all custom style arguments

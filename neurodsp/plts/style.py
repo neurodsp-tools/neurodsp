@@ -5,30 +5,46 @@ from functools import wraps
 
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.settings import PLOT_STYLE_ARGS, LINE_STYLE_ARGS, STYLE_ARGS
+from neurodsp.plts.settings import AXIS_STYLE_ARGS, LINE_STYLE_ARGS, STYLE_ARGS
 from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
                                     TICK_LABELSIZE, TITLE_FONTSIZE)
 
 ###################################################################################################
 ###################################################################################################
 
-def plot_style(ax, **kwargs):
-    """Apply plot style to a figure axis.
+def apply_axis_style(ax, style_args=AXIS_STYLE_ARGS, **kwargs):
+    """Apply axis plot style.
 
     Parameters
     ----------
     ax : matplotlib.Axes
         Figure axes to apply style to.
+    style_args : list of str
+        A list of arguments to be sub-selected from `kwargs` and applied as axis styling.
     **kwargs
         Keyword arguments that define plot style to apply.
     """
 
-    # Apply any provided plot style arguments
-    plot_kwargs = {key : val for key, val in kwargs.items() if key in PLOT_STYLE_ARGS}
+    # Apply any provided axis style arguments
+    plot_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
     ax.set(**plot_kwargs)
 
+
+def apply_line_style(ax, style_args=LINE_STYLE_ARGS, **kwargs):
+    """Apply line plot style.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    style_args : list of str
+        A list of arguments to be sub-selected from `kwargs` and applied as line styling.
+    **kwargs
+        Keyword arguments that define line style to apply.
+    """
+
     # Apply any provided line style arguments
-    line_kwargs = {key : val for key, val in kwargs.items() if key in LINE_STYLE_ARGS}
+    line_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
     for style, value in line_kwargs.items():
 
         # Values should be either a single value, for all lines, or a list, of a value per line
@@ -36,6 +52,18 @@ def plot_style(ax, **kwargs):
         values = cycle([value] if isinstance(value, (int, float, str)) else value)
         for line in ax.lines:
             line.set(**{style : next(values)})
+
+
+def apply_custom_style(ax, **kwargs):
+    """Apply custom plot style.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    **kwargs
+        Keyword arguments that define custom style to apply.
+    """
 
     # If a title was provided, update the size
     if ax.get_title():
@@ -56,6 +84,30 @@ def plot_style(ax, **kwargs):
                   loc=kwargs.pop('legend_loc', LEGEND_LOC))
 
     plt.tight_layout()
+
+
+def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
+               custom_styler=apply_custom_style, **kwargs):
+    """Apply plot style to a figure axis.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    axis_styler, line_styler, custom_styler : callable, optional
+        Functions to apply style to aspects of the plot.
+    **kwargs
+        Keyword arguments that define style to apply.
+
+    Notes
+    -----
+    This function wraps sub-functions which apply style to different plot elements.
+    Each of these sub-functions can be replaced by passing in replacement callables.
+    """
+
+    axis_styler(ax, **kwargs)
+    line_styler(ax, **kwargs)
+    custom_styler(ax, **kwargs)
 
 
 def style_plot(func, *args, **kwargs):
@@ -81,6 +133,10 @@ def style_plot(func, *args, **kwargs):
 
     By default, this function applies styling with the `plot_style` function. Custom
     functions for applying style can be passed in using `plot_style` as a keyword argument.
+
+    The `plot_style` function calls sub-functions for applying style different plot elements,
+    and these sub-functions can be overridden by passing in alternatives for `axis_styler`,
+    `line_styler`, and `custom_styler`.
     """
 
     @wraps(func)
@@ -88,7 +144,8 @@ def style_plot(func, *args, **kwargs):
 
         # Grab a custom style function, if provided, and grab any provided style arguments
         style_func = kwargs.pop('plot_style', plot_style)
-        style_kwargs = {key : kwargs.pop(key) for key in STYLE_ARGS if key in kwargs}
+        style_args = kwargs.pop('style_args', STYLE_ARGS)
+        style_kwargs = {key : kwargs.pop(key) for key in style_args if key in kwargs}
 
         # Create the plot
         func(*args, **kwargs)
