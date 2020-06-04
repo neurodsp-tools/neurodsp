@@ -1,6 +1,6 @@
 """Plotting functions for neurodsp.spectral."""
 
-from itertools import repeat
+from itertools import repeat, cycle
 
 import numpy as np
 import matplotlib.pyplot as plt

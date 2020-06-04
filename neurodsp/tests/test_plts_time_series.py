@@ -1,5 +1,7 @@
 """Test time series plots."""
 
+import tempfile
+
 from pytest import raises
 
 from neurodsp.tests.utils import plot_test
@@ -16,7 +18,10 @@ def test_plot_time_series(tsig):
     plot_time_series(times, tsig)
 
     tsig_rev = tsig[::-1]
-    plot_time_series(times, [tsig, tsig_rev], lw=[1, 2], alpha=[1, 0.5])
+    with tempfile.NamedTemporaryFile(mode='w+') as f:
+        plot_time_series(times, [tsig, tsig_rev], lw=[1, 2], alpha=[1, 0.5],
+                         labels=['signal', 'signal reversed'], colors=['k', 'r'],
+                         save_fig=True, file_name=f.name)
 
 @plot_test
 def test_plot_instantaneous_measure(tsig):
