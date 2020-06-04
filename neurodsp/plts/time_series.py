@@ -25,7 +25,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
         Time series to plot.
     labels : list of str, optional
         Labels for each time series.
-    cols : str or list of str
+    colors : str or list of str
         Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
