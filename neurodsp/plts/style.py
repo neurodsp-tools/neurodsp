@@ -1,45 +1,151 @@
-"""Style helpers and utilities for plots."""
+"""Functions and utilities to apply aesthetic styling to plots."""
 
+from itertools import cycle
 from functools import wraps
 
 import matplotlib.pyplot as plt
 
+from neurodsp.plts.settings import AXIS_STYLE_ARGS, LINE_STYLE_ARGS, STYLE_ARGS
+from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
+                                    TICK_LABELSIZE, TITLE_FONTSIZE)
+
 ###################################################################################################
 ###################################################################################################
 
-PLOT_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim', 'alpha', 'lw']
+def apply_axis_style(ax, style_args=AXIS_STYLE_ARGS, **kwargs):
+    """Apply axis plot style.
 
-def plot_style(ax, **kwargs):
-    """Define plot style."""
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    style_args : list of str
+        A list of arguments to be sub-selected from `kwargs` and applied as axis styling.
+    **kwargs
+        Keyword arguments that define plot style to apply.
+    """
 
-    # Set any provided plot arguments
-    ax.set(**kwargs)
+    # Apply any provided axis style arguments
+    plot_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
+    ax.set(**plot_kwargs)
 
-    # Aesthetics and axis labels
-    ax.xaxis.label.set_size(16)
-    ax.yaxis.label.set_size(16)
-    ax.tick_params(axis='both', which='major', labelsize=16)
 
-    # If labels were provided, add a legend
-    if ax.get_legend_handles_labels()[0]:
-        ax.legend(prop={'size': 12}, loc='best')
+def apply_line_style(ax, style_args=LINE_STYLE_ARGS, **kwargs):
+    """Apply line plot style.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    style_args : list of str
+        A list of arguments to be sub-selected from `kwargs` and applied as line styling.
+    **kwargs
+        Keyword arguments that define line style to apply.
+    """
+
+    # Apply any provided line style arguments
+    line_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
+    for style, value in line_kwargs.items():
+
+        # Values should be either a single value, for all lines, or a list, of a value per line
+        #   This line checks type, and makes a cycle-able / loop-able object out of the values
+        values = cycle([value] if isinstance(value, (int, float, str)) else value)
+        for line in ax.lines:
+            line.set(**{style : next(values)})
+
+
+def apply_custom_style(ax, **kwargs):
+    """Apply custom plot style.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    **kwargs
+        Keyword arguments that define custom style to apply.
+    """
 
     # If a title was provided, update the size
     if ax.get_title():
-        ax.title.set_size(20)
+        ax.title.set_size(kwargs.pop('title_fontsize', TITLE_FONTSIZE))
+
+    # Settings for the axis labels
+    label_size = kwargs.pop('label_size', LABEL_SIZE)
+    ax.xaxis.label.set_size(label_size)
+    ax.yaxis.label.set_size(label_size)
+
+    # Settings for the axis ticks
+    ax.tick_params(axis='both', which='major',
+                   labelsize=kwargs.pop('tick_labelsize', TICK_LABELSIZE))
+
+    # If labels were provided, add a legend
+    if ax.get_legend_handles_labels()[0]:
+        ax.legend(prop={'size': kwargs.pop('legend_size', LEGEND_SIZE)},
+                  loc=kwargs.pop('legend_loc', LEGEND_LOC))
 
     plt.tight_layout()
 
 
+def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
+               custom_styler=apply_custom_style, **kwargs):
+    """Apply plot style to a figure axis.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    axis_styler, line_styler, custom_styler : callable, optional
+        Functions to apply style to aspects of the plot.
+    **kwargs
+        Keyword arguments that define style to apply.
+
+    Notes
+    -----
+    This function wraps sub-functions which apply style to different plot elements.
+    Each of these sub-functions can be replaced by passing in replacement callables.
+    """
+
+    axis_styler(ax, **kwargs)
+    line_styler(ax, **kwargs)
+    custom_styler(ax, **kwargs)
+
+
 def style_plot(func, *args, **kwargs):
-    """Decorator function to apply a plot style function, after plot generation."""
+    """Decorator function to apply a plot style function, after plot generation.
+
+    Parameters
+    ----------
+    func : callable
+        The plotting function for creating a plot.
+    *args, **kwargs
+        Arguments & keyword arguments.
+        These should include any arguments for the plot, and those for applying plot style.
+
+    Notes
+    -----
+    This is a decorate, for plot, functions that functions roughly as:
+
+    - catching all inputs that relate to plot style
+    - create a plot, using the passed in plotting function & passing in all non-style arguments
+    - passing the style related arguments into a `plot_style` function
+
+    This function itself does not apply create any plots or apply any styling itself.
+
+    By default, this function applies styling with the `plot_style` function. Custom
+    functions for applying style can be passed in using `plot_style` as a keyword argument.
+
+    The `plot_style` function calls sub-functions for applying style different plot elements,
+    and these sub-functions can be overridden by passing in alternatives for `axis_styler`,
+    `line_styler`, and `custom_styler`.
+    """
 
     @wraps(func)
     def decorated(*args, **kwargs):
 
         # Grab a custom style function, if provided, and grab any provided style arguments
         style_func = kwargs.pop('plot_style', plot_style)
-        style_kwargs = {key : kwargs.pop(key) for key in PLOT_STYLE_ARGS if key in kwargs}
+        style_args = kwargs.pop('style_args', STYLE_ARGS)
+        style_kwargs = {key : kwargs.pop(key) for key in style_args if key in kwargs}
 
         # Create the plot
         func(*args, **kwargs)
