@@ -12,11 +12,11 @@ from neurodsp.plts.rhythm import *
 @plot_test
 def tests_plot_swm_pattern():
 
-    dat = np.arange(0, 2, 0.1)
-    plot_swm_pattern(dat)
+    data = np.arange(0, 2, 0.1)
+    plot_swm_pattern(data)
 
 @plot_test
 def test_plot_lagged_coherence():
 
-    dat = np.arange(0, 2, 0.1)
-    plot_lagged_coherence(dat, dat)
+    data = np.arange(0, 2, 0.1)
+    plot_lagged_coherence(data, data)
