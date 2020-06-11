@@ -1,7 +1,8 @@
 NeuroDSP Glossary
 =================
 
-The following is a glossary of neuroscience and digital processing related terms that are used in NeuroDSP, as well as links to external resources that we like and use for learning DSP.
+The following is a glossary of neuroscience and digital processing related terms that are used
+in NeuroDSP, as well as links to some external resources for learning DSP.
 
 General
 -------
@@ -17,13 +18,16 @@ General
 Digital Signal Processing
 -------------------------
 
-For a general introduction to digital signal processing, we recommend
-`Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
-by Jack Schaedler.
+Digital Signal Processing (DSP) is an area of science & engineering related to the computational
+analysis of digital signals.
 
-For more in-depth descriptions, the free, online textbook,
-`The Scientist and Engineers Guide to Digital Signal Processing <http://www.dspguide.com/>`_,
-is a great resource.
+For a collection of openly available resources for learning DSP, check out this
+`list <https://github.com/openlists/DSPResources/>`_.
+
+If you want to start with a general introduction to DSP, check out
+`Seeing Circles Sines and Signal <https://jackschaedler.github.io/circles-sines-signals/>`_
+or for more in-depth descriptions, check out
+`The Scientist and Engineers Guide to Digital Signal Processing <http://www.dspguide.com/>`_.
 
 .. glossary::
 
@@ -66,7 +70,7 @@ There are some available (paywalled) articles that present overviews and guides 
 - this `guide <https://doi.org/10.1016/j.jneumeth.2014.08.002>`_ on using filters for electrophysiological data
 - this `primer <https://doi.org/10.1016/j.neuron.2019.02.039>`_ on when, how, and why to use filters
 
-For an open, in depth, and code drive tutorial, check out the
+For an open, in depth, and code-driven tutorial, check out the
 `MNE Filtering Tutorial <https://mne.tools/stable/auto_tutorials/discussions/plot_background_filtering.html>`_.
 
 .. glossary::
@@ -106,7 +110,7 @@ Rhythms & Bursts
 .. glossary::
 
     burst
-        Periodic activity that lasts for a short or transient amount of time , as in a 'burst of oscillatory activity'.
+        Periodic activity that lasts for a short or transient amount of time, as in a 'burst of oscillatory activity'.
 
 Time Frequency
 --------------
@@ -120,7 +124,7 @@ We currently have two general approaches to time frequency analyses:
   * See also this
     `deep dive into Hilbert methods <http://www.rdgao.com/roemerhasit_Hilbert_Transform/>`_
     from VoytekLab member Richard Gao.
-* wavelet based approaches.
+* wavelet based approaches
 
 .. glossary::
 
@@ -131,7 +135,7 @@ We currently have two general approaches to time frequency analyses:
         The position, at a point in time, on a waveform cycle.
 
     amplitude
-        The magnitude of a signal, as the peak-to-trough.
+        The magnitude of a signal, as the peak-to-trough distance.
 
     power
         The squared magnitude of a signal.
@@ -159,7 +163,7 @@ by 3Blue1Brown.
 .. glossary::
 
     fourier transform
-        A mathematical transformation to decompose a time series into its constituent frequencies.
+        A mathematical transformation to decompose a time series into a frequency representation.
 
     power spectrum
         A frequency domain representation, as an estimate of the power across frequencies in a signal.
@@ -181,22 +185,22 @@ from scholarpedia.
 
     noise signal
         Formally, a noise signal is a signal produced by a stochastic (random) process.
-        The aperiodic signals that are simulated in NeuroDSP are noise signals.
+        The aperiodic signals that are simulated in NeuroDSP are, technically, noise signals.
 
     powerlaw
         A relationship between two quantities, whereby one quantity varies as a power of another.
         One-over-f relationships are powerlaw, as the spectral power varies by a power of the frequency.
 
     1/f signal
-        A signal for which the power spectrum can be described by a 1/f^chi powerlaw,
-        where `chi` refers to the exponent of the powerlaw.
+        A signal for which the power spectrum can be described by a powerlaw of the form :math:`1/f^\chi`,
+        where :math:`\chi` refers to the exponent of the powerlaw.
 
     coloured noise
         The 'colour' of noise refers to the 1/f exponent of the power spectrum of a noise signal.
 
-        * white noise: a signal with a flat power spectrum, with equal power at all frequencies. White noise has an exponent of 0.
-        * pink noise: a signal with a 1/f power spectrum. Pink noise has an exponent of 1.
-        * brown noise: a signal with a 1/f^2 power spectrum. Also called red noise.
+        * white noise: a signal with a :math:`1/f^0` power spectrum, which is flat with equal power across all frequencies
+        * pink noise: a signal with a :math:`1/f^1` power spectrum
+        * brown noise: a signal with a :math:`1/f^2` power spectrum, sometimes also known as red noise
 
     random walk
         A random process that describes a path of a succession of random steps.

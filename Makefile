@@ -1,52 +1,103 @@
-PYTHON = python
+# Makefile for working with a Python module
 
-help:
-	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  init           to install required packages"
-	@echo "  build          to build the python package(s)"
-	@echo "  install        to build and install the python package(s)"
-	@echo "  develop        to build and install the python package(s) for development"
-	@echo "  test           to run all integration and unit tests"
-	@echo "  docker         to build the Docker image and launch the tutorials at localhost:5555"
-	@echo ""
-	@echo "Advanced targets"
-	@echo "  docker-build   to build only the Docker image from Dockerfile"
-	@echo "  docker-clean   to delete all generated or dangling Docker images"
-	@echo "  docker-run     to launch Docker container with the neurodsp:latest ID"
-	@echo "  docker-stop    to halt a running neurodsp container"
+##########################################################################
+## REQUIREMENTS
+#
+# This file requires certain dependencies for full functionality.
+#
+# The following Python packages are required:
+#   pytest              For running tests
+#   coverage            For running test coverage
+#   pylint              For running linting on code
+#   setuptools          For creating distributions
+#
+# The following command line utilities are required:
+#   cloc                For counting code
+#
 
-init:
-	pip install -r requirements.txt
+##########################################################################
+## VARIABLES
 
-build:
-	$(PYTHON) setup.py build
+MODULE      = neurodsp
+LINT_FILE   = _lint.txt
 
-install: build
-	$(PYTHON) setup.py install
+##########################################################################
+## CODE COUNTING
 
-develop: build
-	$(PYTHON) setup.py develop
+# Run all counts
+run-counts:
+	@make count-size
+	@make count-module
+	@make count-tests
 
-test: develop
-	pytest
+# Count the total number of lines in the module
+count-size:
+	@printf "\n\nCHECK MODULE SIZE:"
+	@printf "\nNumber of lines of code & comments in the module: "
+	@find ./$(MODULE) -name "*.py" -type f -exec grep . {} \; | wc -l
 
-docker-build:
-	@echo "Creating Docker image - neurodsp:latest"
-	docker build . -t neurodsp
+# Count module code with CLOC, excluding test files
+count-module:
+	@printf "\n\nCLOC OUTPUT - MODULE: \n"
+	@cloc $(MODULE) --exclude-dir='tests'
 
-docker-clean:
-	@echo "Removing latest and dangling images"
-	docker rmi neurodsp:latest
+# Count test code, with CLOC
+count-tests:
+	@printf "\n\nCLOC OUTPUT - TEST FILES: \n"
+	@cloc $(MODULE)/tests --exclude-dir='test_files'
 
-docker-run:
-	@echo "Launching container - neurodsp"
-	docker run -d -it -p 5555:5555 --rm --name neurodsp neurodsp:latest
-	@echo "Copy and paste this URL into your browser to access notebooks"
-	@sleep 1
-	@docker logs neurodsp | grep token -m 1
+##########################################################################
+## CODE TESTING
 
-docker-stop:
-	@echo "Shutting down container"
-	docker stop neurodsp
+# Run all tests
+run-tests:
+	@make coverage
+	@make doctests
 
-docker: docker-build docker-run
+# Run tests
+tests:
+	@printf "\n\nRUN TESTS: \n"
+	@pytest
+
+# Run test coverage
+coverage:
+	@printf "\n\nRUN TESTS: \n"
+	@coverage run --source $(MODULE) -m py.test
+	@printf "\n\nCHECK COVERAGE: \n"
+	@coverage report --omit="*/tests*"
+
+# Run doctests
+doctests:
+	@printf "\n\nCHECK DOCTEST EXAMPLES: \n"
+	@pytest --doctest-modules --ignore=$(MODULE)/tests $(MODULE)
+
+##########################################################################
+## CODE LINTING
+
+# Run pylint and print summary
+#   Note: --exit-zero is because pylint throws an error when called
+#     from a Makefile. Unclear why, but this avoids it stopping.
+run-lints:
+	@printf "\n\nRUN PYLINT ACROSS MODULE: \n"
+	@pylint $(MODULE) --ignore tests --exit-zero  > $(LINT_FILE)
+	@tail -n4 $(LINT_FILE)
+
+##########################################################################
+## SUMMARY
+
+# Run a summary of the module
+summary:
+	@make run-counts
+	@make run-tests
+	@make run-lints
+
+##########################################################################
+## DISTRIBUTION
+
+# Create a distribution build of the module
+dist:
+	@python setup.py sdist bdist_wheel
+
+# Clear out distribution files
+clear-dist:
+	@rm -rf build dist $(MODULE).egg-info
