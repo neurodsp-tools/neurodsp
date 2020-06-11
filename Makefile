@@ -101,33 +101,3 @@ dist:
 # Clear out distribution files
 clear-dist:
 	@rm -rf build dist $(MODULE).egg-info
-
-
-##########################################################################
-##
-
-help:
-	@echo "Docker related targets"
-	@echo "  docker         to build the Docker image and launch the tutorials at localhost:5555"
-	@echo "  docker-build   to build only the Docker image from Dockerfile"
-	@echo "  docker-clean   to delete all generated or dangling Docker images"
-	@echo "  docker-run     to launch Docker container with the neurodsp:latest ID"
-	@echo "  docker-stop    to halt a running neurodsp container"
-
-docker-build:
-	@echo "Creating Docker image - neurodsp:latest"
-	docker build . -t neurodsp
-
-docker-clean:
-	@echo "Removing latest and dangling images"
-	docker rmi neurodsp:latest
-
-docker-run:
-	@echo "Launching container - neurodsp"
-	docker run -d -it -p 5555:5555 --rm --name neurodsp neurodsp:latest
-
-docker-stop:
-	@echo "Shutting down container"
-	docker stop neurodsp
-
-docker: docker-build docker-run
