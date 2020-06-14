@@ -5,12 +5,21 @@ from functools import wraps
 
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.settings import AXIS_STYLE_ARGS, LINE_STYLE_ARGS, STYLE_ARGS
+from neurodsp.plts.settings import AXIS_STYLE_ARGS, LINE_STYLE_ARGS, CUSTOM_STYLE_ARGS, STYLE_ARGS
 from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
                                     TICK_LABELSIZE, TITLE_FONTSIZE)
 
 ###################################################################################################
 ###################################################################################################
+
+def check_style_options():
+    """Check valid style arguments that can be passed into plot functions."""
+
+    print('Valid style arguments:')
+    for label, options in zip(['Axis', 'Line', 'Custom'],
+                              [AXIS_STYLE_ARGS, LINE_STYLE_ARGS, CUSTOM_STYLE_ARGS]):
+        print('  ', label, '\t', ', '.join(options))
+
 
 def apply_axis_style(ax, style_args=AXIS_STYLE_ARGS, **kwargs):
     """Apply axis plot style.
