@@ -37,11 +37,11 @@ def plot_swm_pattern(pattern, ax=None):
 
     ax = check_ax(ax, (4, 4))
 
-    plt.plot(pattern, 'k')
+    ax.plot(pattern, 'k')
 
-    plt.title('Average Pattern')
-    plt.xlabel('Time (samples)')
-    plt.ylabel('Voltage (a.u.)')
+    ax.set_title('Average Pattern')
+    ax.set_xlabel('Time (samples)')
+    ax.set_ylabel('Voltage (a.u.)')
 
 
 @savefig
@@ -76,7 +76,7 @@ def plot_lagged_coherence(freqs, lcs, ax=None):
 
     ax = check_ax(ax, (6, 3))
 
-    plt.plot(freqs, lcs, 'k.-')
+    ax.plot(freqs, lcs, 'k.-')
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Lagged Coherence')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('Lagged Coherence')
