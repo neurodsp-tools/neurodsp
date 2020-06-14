@@ -13,7 +13,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
+def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwargs):
     """Plot power spectra.
 
     Parameters
@@ -28,6 +28,8 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
         Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -65,7 +67,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
 
 @savefig
 @style_plot
-def plot_scv(freqs, scv, ax=None):
+def plot_scv(freqs, scv, ax=None, **kwargs):
     """Plot spectral coefficient of variation.
 
     Parameters
@@ -76,6 +78,8 @@ def plot_scv(freqs, scv, ax=None):
         Spectral coefficient of variation.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -99,7 +103,7 @@ def plot_scv(freqs, scv, ax=None):
 
 @savefig
 @style_plot
-def plot_scv_rs_lines(freqs, scv_rs, ax=None):
+def plot_scv_rs_lines(freqs, scv_rs, ax=None, **kwargs):
     """Plot spectral coefficient of variation, from the resampling method, as lines.
 
     Parameters
@@ -110,6 +114,8 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
         Spectral coefficient of variation, from resampling procedure.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -136,7 +142,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 
 @savefig
 @style_plot
-def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
+def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None, **kwargs):
     """Plot spectral coefficient of variation, from the resampling method, as a matrix.
 
     Parameters
@@ -149,6 +155,8 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
         Spectral coefficient of variation, from resampling procedure.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -177,7 +185,7 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None):
 @savefig
 @style_plot
 def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
-                       spectrum=None, ax=None):
+                       spectrum=None, ax=None, **kwargs):
     """Plot spectral histogram.
 
     Parameters
@@ -194,6 +202,8 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
         Spectrum to be plotted over the histograms.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -215,8 +225,8 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
     ax = check_ax(ax, figsize)
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    im = ax.imshow(spectral_hist, extent=[freqs[0], freqs[-1],
-                   power_bins[0], power_bins[-1]], aspect='auto')
+    im = ax.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]],
+                   aspect='auto')
     plt.colorbar(im, label='Probability')
 
     ax.set_xlabel('Frequency (Hz)')

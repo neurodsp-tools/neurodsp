@@ -1,7 +1,5 @@
 """Plotting functions for neurodsp.rhythm."""
 
-import matplotlib.pyplot as plt
-
 from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
@@ -10,7 +8,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_swm_pattern(pattern, ax=None):
+def plot_swm_pattern(pattern, ax=None, **kwargs):
     """Plot the resulting pattern from a sliding window matching analysis.
 
     Parameters
@@ -19,6 +17,8 @@ def plot_swm_pattern(pattern, ax=None):
         The resulting average pattern from applying sliding window matching.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -46,7 +46,7 @@ def plot_swm_pattern(pattern, ax=None):
 
 @savefig
 @style_plot
-def plot_lagged_coherence(freqs, lcs, ax=None):
+def plot_lagged_coherence(freqs, lcs, ax=None, **kwargs):
     """Plot lagged coherence values across frequencies.
 
     Parameters
@@ -57,6 +57,8 @@ def plot_lagged_coherence(freqs, lcs, ax=None):
         Lagged coherence values across the computed frequencies.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
