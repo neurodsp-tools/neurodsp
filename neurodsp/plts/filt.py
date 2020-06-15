@@ -36,7 +36,7 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
     >>> plot_filter_properties(f_db, db, fs, filter_coefs)
     """
 
-    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+    _, ax = plt.subplots(1, 2, figsize=(10, 5))
 
     plot_frequency_response(f_db, db, ax=ax[0])
     plot_impulse_response(fs, impulse_response, ax=ax[1])
@@ -44,7 +44,7 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
 
 @savefig
 @style_plot
-def plot_frequency_response(f_db, db, ax=None):
+def plot_frequency_response(f_db, db, ax=None, **kwargs):
     """Plot the frequency response of a filter.
 
     Parameters
@@ -55,6 +55,8 @@ def plot_frequency_response(f_db, db, ax=None):
         Degree of attenuation for each frequency specified in f_db, in dB.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -78,7 +80,7 @@ def plot_frequency_response(f_db, db, ax=None):
 
 @savefig
 @style_plot
-def plot_impulse_response(fs, impulse_response, ax=None):
+def plot_impulse_response(fs, impulse_response, ax=None, **kwargs):
     """Plot the impulse response of a filter.
 
     Parameters
@@ -89,6 +91,8 @@ def plot_impulse_response(fs, impulse_response, ax=None):
         The impulse response of a filter.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------

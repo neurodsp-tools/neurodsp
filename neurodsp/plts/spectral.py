@@ -13,7 +13,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
+def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwargs):
     """Plot power spectra.
 
     Parameters
@@ -28,6 +28,8 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
         Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -65,7 +67,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None):
 
 @savefig
 @style_plot
-def plot_scv(freqs, scv, ax=None):
+def plot_scv(freqs, scv, ax=None, **kwargs):
     """Plot spectral coefficient of variation.
 
     Parameters
@@ -76,6 +78,8 @@ def plot_scv(freqs, scv, ax=None):
         Spectral coefficient of variation.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -99,7 +103,7 @@ def plot_scv(freqs, scv, ax=None):
 
 @savefig
 @style_plot
-def plot_scv_rs_lines(freqs, scv_rs, ax=None):
+def plot_scv_rs_lines(freqs, scv_rs, ax=None, **kwargs):
     """Plot spectral coefficient of variation, from the resampling method, as lines.
 
     Parameters
@@ -110,6 +114,8 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
         Spectral coefficient of variation, from resampling procedure.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -136,7 +142,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None):
 
 @savefig
 @style_plot
-def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
+def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None, **kwargs):
     """Plot spectral coefficient of variation, from the resampling method, as a matrix.
 
     Parameters
@@ -147,6 +153,10 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
         Time indices.
     scv_rs : 1d array
         Spectral coefficient of variation, from resampling procedure.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -162,19 +172,20 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs):
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
     """
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    ax = check_ax(ax, (10, 5))
 
-    plt.imshow(np.log10(scv_rs), aspect='auto',
-               extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
-    plt.colorbar(label='SCV')
+    im = ax.imshow(np.log10(scv_rs), aspect='auto',
+                   extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
+    plt.colorbar(im, label='SCV')
 
-    plt.xlabel('Time (s)')
-    plt.ylabel('Frequency (Hz)')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Frequency (Hz)')
 
 
 @savefig
 @style_plot
-def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, spectrum=None):
+def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
+                       spectrum=None, ax=None, **kwargs):
     """Plot spectral histogram.
 
     Parameters
@@ -189,6 +200,10 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, sp
         Frequency axis of the power spectrum to be plotted.
     spectrum : 1d array, optional
         Spectrum to be plotted over the histograms.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -205,18 +220,19 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None, sp
     >>> plot_spectral_hist(freqs, bins, spect_hist)
     """
 
-    # Automatically scale figure height based on number of bins
-    plt.figure(figsize=(8, 12 * len(power_bins) / len(freqs)))
+    # Get axis, by default scaling figure height based on number of bins
+    figsize = (8, 12 * len(power_bins) / len(freqs))
+    ax = check_ax(ax, figsize)
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
-    plt.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]],
-               aspect='auto')
-    plt.colorbar(label='Probability')
+    im = ax.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]],
+                   aspect='auto')
+    plt.colorbar(im, label='Probability')
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Log10 Power')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('Log10 Power')
 
     # If a power spectrum is provided, plot over the histogram data
     if spectrum is not None:
         plt_inds = np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])
-        plt.plot(spectrum_freqs[plt_inds], np.log10(spectrum[plt_inds]), color='w', alpha=0.8)
+        ax.plot(spectrum_freqs[plt_inds], np.log10(spectrum[plt_inds]), color='w', alpha=0.8)

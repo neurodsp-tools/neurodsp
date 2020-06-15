@@ -14,7 +14,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
+def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     """Plot a time series.
 
     Parameters
@@ -29,6 +29,8 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
         Colors to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -67,7 +69,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None):
 
 @savefig
 @style_plot
-def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwargs):
+def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
     """Plot an instantaneous measure, of phase, amplitude or frequency.
 
     Parameters
@@ -80,8 +82,8 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
         Which kind of measure is being plotted.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
-    **plt_kwargs
-        Keyword arguments to pass into `plot_time_series`.
+    **kwargs
+        Keyword arguments to pass into `plot_time_series`, and/or for customizing the plot.
 
     Examples
     --------
@@ -101,17 +103,17 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **plt_kwar
         raise ValueError('Measure not understood.')
 
     if measure == 'phase':
-        plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **plt_kwargs)
+        plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **kwargs)
         plt.yticks([-np.pi, 0, np.pi], ['-$\pi$', 0, '$\pi$'])
     elif measure == 'amplitude':
-        plot_time_series(times, sigs, ax=ax, ylabel='Amplitude', **plt_kwargs)
+        plot_time_series(times, sigs, ax=ax, ylabel='Amplitude', **kwargs)
     elif measure == 'frequency':
-        plot_time_series(times, sigs, ax=ax, ylabel='Instantaneous\nFrequency (Hz)', **plt_kwargs)
+        plot_time_series(times, sigs, ax=ax, ylabel='Instantaneous\nFrequency (Hz)', **kwargs)
 
 
 @savefig
 @style_plot
-def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
+def plot_bursts(times, sig, bursting, ax=None, **kwargs):
     """Plot a time series, with labeled bursts.
 
     Parameters
@@ -124,8 +126,8 @@ def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
         A boolean array which indicates identified bursts.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
-    **plt_kwargs
-        Keyword arguments to pass into `plot_time_series`.
+    **kwargs
+        Keyword arguments to pass into `plot_time_series`, and/or for customizing the plot.
 
     Examples
     --------
@@ -146,4 +148,4 @@ def plot_bursts(times, sig, bursting, ax=None, **plt_kwargs):
     ax = check_ax(ax, (15, 3))
 
     bursts = ma.array(sig, mask=np.invert(bursting))
-    plot_time_series(times, [sig, bursts], ax=ax, **plt_kwargs)
+    plot_time_series(times, [sig, bursts], ax=ax, **kwargs)

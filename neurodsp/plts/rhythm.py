@@ -1,7 +1,5 @@
 """Plotting functions for neurodsp.rhythm."""
 
-import matplotlib.pyplot as plt
-
 from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
 
@@ -10,7 +8,7 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_swm_pattern(pattern, ax=None):
+def plot_swm_pattern(pattern, ax=None, **kwargs):
     """Plot the resulting pattern from a sliding window matching analysis.
 
     Parameters
@@ -19,6 +17,8 @@ def plot_swm_pattern(pattern, ax=None):
         The resulting average pattern from applying sliding window matching.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -37,16 +37,16 @@ def plot_swm_pattern(pattern, ax=None):
 
     ax = check_ax(ax, (4, 4))
 
-    plt.plot(pattern, 'k')
+    ax.plot(pattern, 'k')
 
-    plt.title('Average Pattern')
-    plt.xlabel('Time (samples)')
-    plt.ylabel('Voltage (a.u.)')
+    ax.set_title('Average Pattern')
+    ax.set_xlabel('Time (samples)')
+    ax.set_ylabel('Voltage (a.u.)')
 
 
 @savefig
 @style_plot
-def plot_lagged_coherence(freqs, lcs, ax=None):
+def plot_lagged_coherence(freqs, lcs, ax=None, **kwargs):
     """Plot lagged coherence values across frequencies.
 
     Parameters
@@ -57,6 +57,8 @@ def plot_lagged_coherence(freqs, lcs, ax=None):
         Lagged coherence values across the computed frequencies.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
 
     Examples
     --------
@@ -76,7 +78,7 @@ def plot_lagged_coherence(freqs, lcs, ax=None):
 
     ax = check_ax(ax, (6, 3))
 
-    plt.plot(freqs, lcs, 'k.-')
+    ax.plot(freqs, lcs, 'k.-')
 
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Lagged Coherence')
+    ax.set_xlabel('Frequency (Hz)')
+    ax.set_ylabel('Lagged Coherence')
