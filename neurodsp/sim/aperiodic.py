@@ -15,7 +15,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 ###################################################################################################
 
-@normalize
+@normalize()
 def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     """Simulate a Poisson population.
 
@@ -66,7 +66,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     return sig
 
 
-@normalize
+@normalize()
 def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
                          tau_r=0., tau_d=0.01, t_ker=None):
     """Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.
@@ -117,7 +117,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
     return sig
 
 
-@normalize
+@normalize()
 def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     """Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
@@ -179,7 +179,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     return sig
 
 
-@normalize
+@normalize()
 def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """Simulate a power law time series, with a specified exponent.
 

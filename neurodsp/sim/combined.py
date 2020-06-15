@@ -10,7 +10,7 @@ from neurodsp.utils.decorators import normalize
 ###################################################################################################
 ###################################################################################################
 
-@normalize
+@normalize()
 def sim_combined(n_seconds, fs, components, component_variances=1):
     """Simulate a signal by combining multiple component signals.
 

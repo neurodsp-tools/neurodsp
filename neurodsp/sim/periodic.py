@@ -9,7 +9,7 @@ from neurodsp.sim.transients import sim_cycle
 ###################################################################################################
 ###################################################################################################
 
-@normalize
+@normalize()
 def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     """Simulate an oscillation.
 
@@ -64,7 +64,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     return sig
 
 
-@normalize
+@normalize(select_nonzero=True)
 def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
                            cycle='sine', **cycle_params):
     """Simulate a bursty oscillation.
