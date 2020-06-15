@@ -1,6 +1,7 @@
 """Simulating time series, with periodic activity."""
 
 import numpy as np
+from scipy.signal import resample
 
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_cycle
@@ -40,13 +41,23 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
     n_cycles = int(np.ceil(n_seconds * freq))
-    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+    n_seconds_cycle = 1 / freq
 
     # Create oscillation by tiling a single cycle of the desired oscillation
-    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    #   The cycle sampling rate is tuned to the cycle length, to help with concatenation
+    #   Here, we set cycle fs such that a single cycle should be 1000 points
+    cycle_fs = 1000 / n_seconds_cycle
+    osc_cycle = sim_cycle(n_seconds_cycle, cycle_fs, cycle, **cycle_params)
+
+    # Create the full signal by tiling the simulated single cycle
     sig = np.tile(osc_cycle, n_cycles)
 
+    # Resample cycle to desired sampling rate
+    sig = resample(sig, int(n_cycles * 1/freq * fs))
+
     # Truncate the length of the signal to be the number of expected samples
+    #   This is done because we simulate an integer number of cycles,
+    #   which may be more than the length of the requested signal
     n_samps = int(n_seconds * fs)
     sig = sig[:n_samps]
 
