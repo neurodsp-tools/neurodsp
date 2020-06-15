@@ -4,7 +4,7 @@ from neurodsp.tests.utils import check_sim_output
 from neurodsp.tests.settings import FS, N_SECONDS, FREQ1
 
 from neurodsp.sim.periodic import *
-from neurodsp.sim.periodic import _make_is_osc
+from neurodsp.sim.periodic import _make_is_osc, _make_tilable_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -18,6 +18,14 @@ def test_sim_bursty_oscillation():
 
     sig = sim_bursty_oscillation(N_SECONDS, FS, FREQ1)
     check_sim_output(sig)
+
+def test_make_tilable_cycle():
+
+    n_samples = 1000
+    freq = 6.5
+
+    cycle = _make_tilable_cycle(n_samples, freq, 'sine')
+    assert len(cycle) == n_samples
 
 def test_make_is_osc():
 
