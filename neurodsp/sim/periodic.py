@@ -46,8 +46,16 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     # Create oscillation by tiling a single cycle of the desired oscillation
     #   The cycle sampling rate is tuned to the cycle length, to help with concatenation
     #   Here, we set cycle fs such that a single cycle should be 1000 points
-    cycle_fs = 1000 / n_seconds_cycle
+    n_samples_cycle = 1000
+    cycle_fs = n_samples_cycle / n_seconds_cycle
     osc_cycle = sim_cycle(n_seconds_cycle, cycle_fs, cycle, **cycle_params)
+
+    # There can be an off-by-one error in the cycle length (an extra sample than expected)
+    #   This stems from an estimation artifact when creating the cycle times vector
+    #   If it happens, this leads to a concatenation issue
+    #   So, to avoid this we trim to the expected # of samples
+    if len(osc_cycle) > n_samples_cycle:
+        osc_cycle = osc_cycle[0:n_samples_cycle]
 
     # Create the full signal by tiling the simulated single cycle
     sig = np.tile(osc_cycle, n_cycles)
