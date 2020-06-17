@@ -40,14 +40,15 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     """
 
     # Create a single cycle, that can be tiled to create the overall signal
-    osc_cycle = _make_tilable_cycle(1000, freq, cycle, **cycle_params)
+    #osc_cycle = _make_tilable_cycle(1000, freq, cycle, **cycle_params)
+    osc_cycle = _make_tilable_cycle(int(1/freq * fs), freq, cycle, **cycle_params)
 
     # Create the full signal by tiling the simulated single cycle the needed number of times
     n_cycles = int(np.ceil(n_seconds * freq))
     sig = np.tile(osc_cycle, n_cycles)
 
     # Resample cycle to desired sampling rate
-    sig = resample(sig, int(n_cycles * 1/freq * fs))
+    #sig = resample(sig, int(n_cycles * 1/freq * fs))
 
     # Truncate the length of the signal to be the number of expected samples
     #   This is done because we simulate an integer number of cycles,
@@ -112,7 +113,8 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
     # Make a single cycle of an oscillation
     #   Here we add a small buffer value to the cycle, so that no values are exactly zero
     #   This is because normalization gets applied to non-zero values
-    osc_cycle = _make_tilable_cycle(1000, freq, cycle, **cycle_params) + 0.00001
+    #osc_cycle = _make_tilable_cycle(1000, freq, cycle, **cycle_params) + 0.00001
+    osc_cycle = _make_tilable_cycle(int(1/freq * fs), freq, cycle, **cycle_params) + 0.00001
 
     # Determine which periods will be oscillating
     n_cycles = int(np.floor(n_seconds * freq))
@@ -129,7 +131,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
             sig[cycle_ind:cycle_ind+n_samples_cycle] = osc_cycle
 
     # Resample cycle to desired sampling rate
-    sig = resample(sig, int(n_cycles * 1/freq * fs))
+    #sig = resample(sig, int(n_cycles * 1/freq * fs))
 
     # If burst tiling isn't even with the requested signal length, pad zeros to the end
     end_points = int(n_seconds * fs) - len(sig)
