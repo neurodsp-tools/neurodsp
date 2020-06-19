@@ -57,11 +57,15 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     if colors is not None:
         colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
-    else:
-        colors = cycle(['k', 'r', 'b', 'g', 'm', 'c'])
+    elif len(sigs) <= 2:
+        colors = cycle(['k', 'r'])
 
-    for time, sig, color, label in zip(times, sigs, colors, labels):
-        ax.plot(time, sig, color, label=label)
+    for time, sig, label in zip(times, sigs, labels):
+
+        if colors is not None:
+            ax.plot(time, sig, next(colors), label=label)
+        else:
+            ax.plot(time, sig, label=label)
 
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Voltage (uV)')
