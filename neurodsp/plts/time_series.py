@@ -57,9 +57,8 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     # If not provided, default colors for up to two signals to be black & red
     if not colors and len(sigs) <= 2:
-        colors = cycle(['k', 'r'])
-    else:
-        colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
+        colors = ['k', 'r']
+    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
 
     for time, sig, label in zip(times, sigs, labels):
         ax.plot(time, sig, color=next(colors), label=label)
