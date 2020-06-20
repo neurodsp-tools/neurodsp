@@ -60,8 +60,8 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
         colors = ['k', 'r']
     colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
 
-    for time, sig, label in zip(times, sigs, labels):
-        ax.plot(time, sig, color=next(colors), label=label)
+    for time, sig, color, label in zip(times, sigs, colors, labels):
+        ax.plot(time, sig, color=color, label=label)
 
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Voltage (uV)')
