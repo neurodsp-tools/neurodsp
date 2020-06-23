@@ -13,7 +13,7 @@ from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
 ###################################################################################################
 
 def check_style_options():
-    """Check valid style arguments that can be passed into plot functions."""
+    """Check the list of valid style arguments that can be passed into plot functions."""
 
     print('Valid style arguments:')
     for label, options in zip(['Axis', 'Line', 'Custom'],
@@ -52,14 +52,20 @@ def apply_line_style(ax, style_args=LINE_STYLE_ARGS, **kwargs):
         Keyword arguments that define line style to apply.
     """
 
-    # Apply any provided line style arguments
+    # Check how many lines are from the current plot call, to apply style to
+    #   If available, this indicates the apply styling to the last 'n' lines
+    n_lines_apply = kwargs.pop('n_lines_apply', 0)
+
+    # Get the line related styling arguments from the keyword arguments
     line_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
+
+    # Apply any provided line style arguments
     for style, value in line_kwargs.items():
 
         # Values should be either a single value, for all lines, or a list, of a value per line
         #   This line checks type, and makes a cycle-able / loop-able object out of the values
         values = cycle([value] if isinstance(value, (int, float, str)) else value)
-        for line in ax.lines:
+        for line in ax.lines[-n_lines_apply:]:
             line.set(**{style : next(values)})
 
 
@@ -132,13 +138,11 @@ def style_plot(func, *args, **kwargs):
 
     Notes
     -----
-    This is a decorate, for plot, functions that functions roughly as:
+    This decorator works by:
 
     - catching all inputs that relate to plot style
-    - create a plot, using the passed in plotting function & passing in all non-style arguments
-    - passing the style related arguments into a `plot_style` function
-
-    This function itself does not apply create any plots or apply any styling itself.
+    - creating a plot, using the passed in plotting function & passing in all non-style arguments
+    - passing the style related arguments into a `plot_style` function which applies plot styling
 
     By default, this function applies styling with the `plot_style` function. Custom
     functions for applying style can be passed in using `plot_style` as a keyword argument.
@@ -156,11 +160,20 @@ def style_plot(func, *args, **kwargs):
         style_args = kwargs.pop('style_args', STYLE_ARGS)
         style_kwargs = {key : kwargs.pop(key) for key in style_args if key in kwargs}
 
+        # Check how many lines are already on the plot, if it exists already
+        n_lines_pre = len(kwargs['ax'].lines) if 'ax' in kwargs and kwargs['ax'] is not None else 0
+
         # Create the plot
         func(*args, **kwargs)
 
-        # Get plot axis, if a specific one was provided, or just grab current and apply style
+        # Get plot axis, if a specific one was provided, or if not, grab the current axis
         cur_ax = kwargs['ax'] if 'ax' in kwargs and kwargs['ax'] is not None else plt.gca()
+
+        # Check how many lines were added to the plot, and make info available to plot styling
+        n_lines_apply = len(cur_ax.lines) - n_lines_pre
+        style_kwargs['n_lines_apply'] = n_lines_apply
+
+        # Apply the styling function
         style_func(cur_ax, **style_kwargs)
 
     return decorated
