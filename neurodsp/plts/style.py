@@ -13,7 +13,7 @@ from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
 ###################################################################################################
 
 def check_style_options():
-    """Check valid style arguments that can be passed into plot functions."""
+    """Check the list of valid style arguments that can be passed into plot functions."""
 
     print('Valid style arguments:')
     for label, options in zip(['Axis', 'Line', 'Custom'],
@@ -132,13 +132,11 @@ def style_plot(func, *args, **kwargs):
 
     Notes
     -----
-    This is a decorate, for plot, functions that functions roughly as:
+    This decorator works by:
 
     - catching all inputs that relate to plot style
-    - create a plot, using the passed in plotting function & passing in all non-style arguments
-    - passing the style related arguments into a `plot_style` function
-
-    This function itself does not apply create any plots or apply any styling itself.
+    - creating a plot, using the passed in plotting function & passing in all non-style arguments
+    - passing the style related arguments into a `plot_style` function which applies plot styling
 
     By default, this function applies styling with the `plot_style` function. Custom
     functions for applying style can be passed in using `plot_style` as a keyword argument.
