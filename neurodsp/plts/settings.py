@@ -7,7 +7,8 @@
 # Plot style arguments are those that can be defined on an axis object
 AXIS_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
 # Line style arguments are those that can be defined on a line object
-LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle']
+LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle',
+                   'marker', 'ms', 'markersize']
 # Custom style arguments are those that are custom-handled by the plot style function
 CUSTOM_STYLE_ARGS = ['title_fontsize', 'label_size', 'tick_labelsize',
                      'legend_size', 'legend_loc']
