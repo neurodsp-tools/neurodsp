@@ -159,10 +159,6 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
     ...                                    f_range=(55, 65), butterworth_order=7)
     """
 
-    # Warn about only recommending IIR for bandstop
-    if pass_type != 'bandstop':
-        warn('IIR filters are not recommended other than for notch filters.')
-
     # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
 
