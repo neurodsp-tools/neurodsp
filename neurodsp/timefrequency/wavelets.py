@@ -48,9 +48,9 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
         freqs = create_freqs(*freqs)
     n_cycles = check_n_cycles(n_cycles, len(freqs))
 
-    mwt = np.zeros([len(sig), len(freqs)], dtype=complex)
+    mwt = np.zeros([len(freqs), len(sig)], dtype=complex)
     for ind, (freq, n_cycle) in enumerate(zip(freqs, n_cycles)):
-        mwt[:, ind] = convolve_wavelet(sig, fs, freq, n_cycle, scaling)
+        mwt[ind, :] = convolve_wavelet(sig, fs, freq, n_cycle, scaling)
 
     return mwt
 
