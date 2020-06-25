@@ -193,12 +193,10 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> instant_freq = freq_by_time(sig, fs=500, f_range=(8, 12))
     """
-
-    pha = phase_by_time(sig, fs, f_range, hilbert_increase_n,
-                        remove_edges, **filter_kwargs)
+    pha = np.unwrap(phase_by_time(sig, fs, f_range, hilbert_increase_n,
+                        remove_edges, **filter_kwargs))
 
     phadiff = np.diff(pha)
-    phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
 
     i_f = fs * phadiff / (2 * np.pi)
     i_f = np.insert(i_f, 0, np.nan)
