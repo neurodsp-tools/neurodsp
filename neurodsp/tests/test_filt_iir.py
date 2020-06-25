@@ -22,7 +22,7 @@ def test_filter_signal_iir_2d(tsig2d):
 
 def test_apply_iir_filter(tsig):
 
-    out = apply_iir_filter(tsig, np.array([1, 1, 1, 1, 1]), np.array([1, 1, 1, 1, 1]))
+    out = apply_iir_filter(tsig, np.array([1, 1, 1, 1, 1, 1]))
     assert out.shape == tsig.shape
 
 def test_design_iir_filter():

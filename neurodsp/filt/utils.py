@@ -1,7 +1,7 @@
 """Utility functions for filtering."""
 
 import numpy as np
-from scipy.signal import freqz
+from scipy.signal import freqz, sosfreqz
 
 from neurodsp.utils.decorators import multidim
 from neurodsp.filt.checks import check_filter_definition
@@ -66,16 +66,42 @@ def compute_frequency_response(b_vals, a_vals, fs):
     >>> from neurodsp.filt.fir import design_fir_filter
     >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(8, 12))
     >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
-
-    Compute the frequency response for an IIR filter:
-
-    >>> from neurodsp.filt.iir import design_iir_filter
-    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(55, 65), butterworth_order=7)
-    >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
     """
 
     w_vals, h_vals = freqz(b_vals, a_vals, worN=int(fs * 2))
+    f_db = w_vals * fs / (2. * np.pi)
+    db = 20 * np.log10(abs(h_vals))
+
+    return f_db, db
+
+def sos_compute_frequency_response(sos, fs):
+    """Compute the frequency response of a filter.
+
+    Parameters
+    ----------
+    sos: 2d array of shape (n, 6)
+        Second-order filter coefficients.
+    fs : float
+        Sampling rate, in Hz.
+
+    Returns
+    -------
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in `f_db`, in dB.
+
+    Examples
+    --------
+    Compute the frequency response for an IIR filter given second order series coefficients:
+
+    >>> from neurodsp.filt.iir import design_iir_filter
+    >>> sos = design_iir_filter(fs=500, pass_type='bandstop',
+    ...                                    f_range=(55, 65), butterworth_order=7)
+    >>> f_db, db = sos_compute_frequency_response(sos, fs=500)
+    """
+
+    w_vals, h_vals = sosfreqz(sos, worN=int(fs * 2))
     f_db = w_vals * fs / (2. * np.pi)
     db = 20 * np.log10(abs(h_vals))
 
@@ -158,9 +184,9 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     Compute the transition band of an IIR filter, using the computed frequency response:
 
     >>> from neurodsp.filt.iir import design_iir_filter
-    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
+    >>> sos = design_iir_filter(fs=500, pass_type='bandstop',
     ...                                    f_range=(10, 20), butterworth_order=7)
-    >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
+    >>> f_db, db = sos_compute_frequency_response(sos, fs=500)
     >>> compute_transition_band(f_db, db, low=-20, high=-3)
     2.0
     """
