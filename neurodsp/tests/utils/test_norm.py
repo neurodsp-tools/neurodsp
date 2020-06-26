@@ -24,10 +24,6 @@ def test_demean():
     out3 = demean(d2)
     assert np.isclose(out3[np.nonzero(out3)].mean(), 0)
 
-    # Check turning of non-zero selection
-    out3 = demean(d2, mean=1, select_nonzero=False)
-    assert np.isclose(out3.mean(), 1)
-
 def test_normalize_variance():
 
     d1 = np.array([1, 2, 3])
