@@ -1,5 +1,6 @@
 """Tests for filter utilities."""
 
+from pytest import raises
 from neurodsp.tests.settings import FS
 
 from neurodsp.filt.utils import *
@@ -18,6 +19,9 @@ def test_compute_frequency_response():
 
     filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
     f_db, db = compute_frequency_response(filter_coefs, 1, FS)
+
+    with raises(ValueError):
+        f_db, db = compute_frequency_response(filter_coefs, None, FS)
 
 def test_compute_pass_band():
 

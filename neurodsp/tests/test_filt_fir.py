@@ -1,5 +1,6 @@
 """Tests for FIR filters."""
 
+from pytest import raises
 import numpy as np
 
 from neurodsp.tests.settings import FS
@@ -56,3 +57,7 @@ def test_compute_filter_length():
     expected_filt_len = int(np.ceil(fs * n_cycles / f_lo)) + 1
     filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=n_cycles, n_seconds=None)
     assert filt_len == expected_filt_len
+
+    with raises(ValueError):
+        filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi)
+
