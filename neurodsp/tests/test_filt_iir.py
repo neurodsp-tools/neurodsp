@@ -20,9 +20,12 @@ def test_filter_signal_iir_2d(tsig2d):
    assert out.shape == tsig2d.shape
    assert sum(~np.isnan(out[0, :])) > 0
 
+   out, sos = filter_signal_iir(tsig2d, FS, 'bandpass', (8, 12), 3, return_filter=True)
+   assert np.shape(sos)[1] == 6
+
 def test_apply_iir_filter(tsig):
 
-    out = apply_iir_filter(tsig, np.array([1, 1, 1, 1, 1]), np.array([1, 1, 1, 1, 1]))
+    out = apply_iir_filter(tsig, np.array([1, 1, 1, 1, 1, 1]))
     assert out.shape == tsig.shape
 
 def test_design_iir_filter():

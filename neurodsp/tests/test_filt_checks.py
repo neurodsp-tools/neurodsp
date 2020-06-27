@@ -46,8 +46,18 @@ def test_check_filter_definition():
 def test_check_filter_properties():
 
     filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
-    check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
-    assert True
+    
+    passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
+    assert passes is True
+
+    filter_coefs = design_fir_filter(FS, 'bandstop', (8, 12))
+    passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
+    assert passes is False
+
+    filter_coefs = design_fir_filter(FS, 'bandpass', (20, 21))
+    passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
+    assert passes is False
+
 
 def test_check_filter_length():
 

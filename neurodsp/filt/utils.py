@@ -1,7 +1,7 @@
 """Utility functions for filtering."""
 
 import numpy as np
-from scipy.signal import freqz
+from scipy.signal import freqz, sosfreqz
 
 from neurodsp.utils.decorators import multidim
 from neurodsp.filt.checks import check_filter_definition
@@ -40,15 +40,17 @@ def infer_passtype(f_range):
     return pass_type
 
 
-def compute_frequency_response(b_vals, a_vals, fs):
+def compute_frequency_response(filter_coefs, a_vals, fs):
     """Compute the frequency response of a filter.
 
     Parameters
     ----------
-    b_vals : 1d array
-        B value filter coefficients for a filter.
-    a_vals : 1d array
-        A value filter coefficients for a filter.
+    filter_coefs : 1d or 2d array
+        If 1d, interpreted as the B-value filter coefficients.
+        If 2d, interpreted as the second-order (sos) filter coefficients.
+    a_vals : 1d array or None
+        The A-value filter coefficients for a filter.
+        If second-order filter coefficients are provided in `filter_coefs`, must be None.
     fs : float
         Sampling rate, in Hz.
 
@@ -67,15 +69,23 @@ def compute_frequency_response(b_vals, a_vals, fs):
     >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(8, 12))
     >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
 
-    Compute the frequency response for an IIR filter:
+    Compute the frequency response for an IIR filter, which uses SOS coefficients:
 
     >>> from neurodsp.filt.iir import design_iir_filter
-    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(55, 65), butterworth_order=7)
-    >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
+    >>> sos_coefs = design_iir_filter(fs=500, pass_type='bandpass',
+    ...                               f_range=(8, 12), butterworth_order=3)
+    >>> f_db, db = compute_frequency_response(sos_coefs, None, fs=500)
     """
 
-    w_vals, h_vals = freqz(b_vals, a_vals, worN=int(fs * 2))
+    if filter_coefs.ndim == 1 and a_vals is not None:
+        # Compute response for B & A value filter coefficient inputs
+        w_vals, h_vals = freqz(filter_coefs, a_vals, worN=int(fs * 2))
+    elif filter_coefs.ndim == 2 and a_vals is None:
+        # Compute response for sos filter coefficient inputs
+        w_vals, h_vals = sosfreqz(filter_coefs, worN=int(fs * 2))
+    else:
+        raise ValueError("The organization of the filter coefficient inputs is not understood.")
+
     f_db = w_vals * fs / (2. * np.pi)
     db = 20 * np.log10(abs(h_vals))
 
@@ -109,7 +119,7 @@ def compute_pass_band(fs, pass_type, f_range):
 
     Examples
     --------
-    Compute the bandwith of a bandpass filter:
+    Compute the bandwidth of a bandpass filter:
 
     >>> compute_pass_band(fs=500, pass_type='bandpass', f_range=(5, 25))
     20.0
@@ -158,9 +168,9 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     Compute the transition band of an IIR filter, using the computed frequency response:
 
     >>> from neurodsp.filt.iir import design_iir_filter
-    >>> b_vals, a_vals = design_iir_filter(fs=500, pass_type='bandstop',
-    ...                                    f_range=(10, 20), butterworth_order=7)
-    >>> f_db, db = compute_frequency_response(b_vals, a_vals, fs=500)
+    >>> sos = design_iir_filter(fs=500, pass_type='bandstop',
+    ...                         f_range=(10, 20), butterworth_order=7)
+    >>> f_db, db = compute_frequency_response(sos, None, fs=500)
     >>> compute_transition_band(f_db, db, low=-20, high=-3)
     2.0
     """

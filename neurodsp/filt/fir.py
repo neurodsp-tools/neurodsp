@@ -6,7 +6,7 @@ from scipy.signal import firwin
 from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
-from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, remove_filter_edges
+from neurodsp.filt.utils import compute_frequency_response, remove_filter_edges
 from neurodsp.filt.checks import (check_filter_definition, check_filter_properties,
                                   check_filter_length)
 
@@ -174,15 +174,14 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
     filt_len = compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
 
-    f_nyq = compute_nyquist(fs)
     if pass_type == 'bandpass':
-        filter_coefs = firwin(filt_len, (f_lo, f_hi), pass_zero=False, nyq=f_nyq)
+        filter_coefs = firwin(filt_len, (f_lo, f_hi), pass_zero=False, fs=fs)
     elif pass_type == 'bandstop':
-        filter_coefs = firwin(filt_len, (f_lo, f_hi), nyq=f_nyq)
+        filter_coefs = firwin(filt_len, (f_lo, f_hi), fs=fs)
     elif pass_type == 'highpass':
-        filter_coefs = firwin(filt_len, f_lo, pass_zero=False, nyq=f_nyq)
+        filter_coefs = firwin(filt_len, f_lo, pass_zero=False, fs=fs)
     elif pass_type == 'lowpass':
-        filter_coefs = firwin(filt_len, f_hi, nyq=f_nyq)
+        filter_coefs = firwin(filt_len, f_hi, fs=fs)
 
     return filter_coefs
 

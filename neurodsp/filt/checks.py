@@ -89,16 +89,18 @@ def check_filter_definition(pass_type, f_range):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
+def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
                             transitions=(-20, -3), verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
     ----------
-    b_vals : 1d array
-        B value filter coefficients for a filter.
-    a_vals : 1d array
-        A value filter coefficients for a filter.
+    filter_coefs : 1d or 2d array
+        If 1d, interpreted as the B-value filter coefficients.
+        If 2d, interpreted as the second-order (sos) filter coefficients.
+    a_vals : 1d array or None
+        The A-value filter coefficients for a filter.
+        If second-order filter coefficients are provided in `filter_coefs`, must be None.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -133,15 +135,6 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
     >>> passes = check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)
     Transition bandwidth is 0.5 Hz.
     Pass/stop bandwidth is 24.0 Hz.
-
-    Check the properties of an IIR filter:
-
-    >>> from neurodsp.filt.iir import design_iir_filter
-    >>> fs, pass_type, f_range, order = 500, 'bandstop', (55, 65), 7
-    >>> b_vals, a_vals = design_iir_filter(fs, pass_type, f_range, order)
-    >>> passes = check_filter_properties(b_vals, a_vals, fs, pass_type, f_range)
-    Transition bandwidth is 1.5 Hz.
-    Pass/stop bandwidth is 10.0 Hz.
     """
 
     # Import utility functions inside function to avoid circular imports
@@ -152,7 +145,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
     passes = True
 
     # Compute the frequency response
-    f_db, db = compute_frequency_response(b_vals, a_vals, fs)
+    f_db, db = compute_frequency_response(filter_coefs, a_vals, fs)
 
     # Check that frequency response goes below transition level (has significant attenuation)
     if np.min(db) >= transitions[0]:
