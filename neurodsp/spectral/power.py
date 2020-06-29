@@ -106,7 +106,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         freqs = create_freqs(*freqs)
 
     mwt = compute_wavelet_transform(sig, fs, freqs, **kwargs)
-    spectrum = get_avg_func(avg_type)(mwt, axis=0)
+    spectrum = get_avg_func(avg_type)(abs(mwt)**2, axis=1)
 
     return freqs, spectrum
 
