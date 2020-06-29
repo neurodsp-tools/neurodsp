@@ -26,7 +26,7 @@ def robust_hilbert(sig, increase_n=False):
     Returns
     -------
     sig_hilb : 1d array
-        The Hilbert transform of the input signal.
+        The analytic signal, of which the imaginary part is the Hilbert transform of the input signal.
 
     Examples
     --------
