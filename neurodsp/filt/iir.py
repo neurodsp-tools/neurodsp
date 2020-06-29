@@ -1,12 +1,10 @@
 """Filter signals with IIR filters."""
 
-from warnings import warn
-
 from scipy.signal import butter, sosfiltfilt
 
 from neurodsp.utils import remove_nans, restore_nans
-from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, sos_compute_frequency_response
-from neurodsp.filt.checks import check_filter_definition, check_filter_properties, sos_check_filter_properties
+from neurodsp.filt.utils import compute_nyquist, compute_frequency_response
+from neurodsp.filt.checks import check_filter_definition, check_filter_properties
 from neurodsp.plts.filt import plot_frequency_response
 
 ###################################################################################################
@@ -48,8 +46,8 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     -------
     sig_filt : 1d array
         Filtered time series.
-    sos : 2d array of shape (n, 6)
-        Second order series coefficients of the IIR filter.
+    sos : 2d array
+        Second order series coefficients of the IIR filter. Has shape of (n_sections, 6).
         Only returned if `return_filter` is True.
 
     Examples
@@ -67,7 +65,7 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     sos = design_iir_filter(fs, pass_type, f_range, butterworth_order)
 
     # Check filter properties: compute transition bandwidth & run checks
-    sos_check_filter_properties(sos, fs, pass_type, f_range, verbose=print_transitions)
+    check_filter_properties(sos, None, fs, pass_type, f_range, verbose=print_transitions)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -80,7 +78,7 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
 
     # Plot frequency response, if desired
     if plot_properties:
-        f_db, db = sos_compute_frequency_response(sos, fs)
+        f_db, db = compute_frequency_response(sos, None, fs)
         plot_frequency_response(f_db, db)
 
     if return_filter:
@@ -96,8 +94,8 @@ def apply_iir_filter(sig, sos):
     ----------
     sig : array
         Time series to be filtered.
-    sos : 2d array of shape (n, 6)
-        Second order series coefficients for an IIR filter.
+    sos : 2d array
+        Second order series coefficients for an IIR filter. Has shape of (n_sections, 6).
 
     Returns
     -------
@@ -144,8 +142,8 @@ def design_iir_filter(fs, pass_type, f_range, butterworth_order):
 
     Returns
     -------
-    sos : 2d array of shape (n, 6)
-        Second order series coefficients for an IIR filter.
+    sos : 2d array
+        Second order series coefficients for an IIR filter. Has shape of (n_sections, 6).
 
     Examples
     --------

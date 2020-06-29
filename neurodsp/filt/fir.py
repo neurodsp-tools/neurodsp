@@ -6,7 +6,7 @@ from scipy.signal import firwin
 from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
-from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, remove_filter_edges
+from neurodsp.filt.utils import compute_frequency_response, remove_filter_edges
 from neurodsp.filt.checks import (check_filter_definition, check_filter_properties,
                                   check_filter_length)
 

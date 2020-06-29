@@ -89,16 +89,18 @@ def check_filter_definition(pass_type, f_range):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
+def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
                             transitions=(-20, -3), verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
     ----------
-    b_vals : 1d array
-        B value filter coefficients for a filter.
-    a_vals : 1d array
-        A value filter coefficients for a filter.
+    filter_coefs : 1d or 2d array
+        If 1d, interpreted as the B-value filter coefficients.
+        If 2d, interpreted as the second-order (sos) filter coefficients.
+    a_vals : 1d array or None
+        The A-value filter coefficients for a filter.
+        If second-order filter coefficients are provided in `filter_coefs`, must be None.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -143,93 +145,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range,
     passes = True
 
     # Compute the frequency response
-    f_db, db = compute_frequency_response(b_vals, a_vals, fs)
-
-    # Check that frequency response goes below transition level (has significant attenuation)
-    if np.min(db) >= transitions[0]:
-        passes = False
-        warn('The filter attenuation never goes below {} dB.'\
-             'Increase filter length.'.format(transitions[0]))
-        # If there is no attenuation, cannot calculate bands, so return here
-        return passes
-
-    # Check that both sides of a bandpass have significant attenuation
-    if pass_type == 'bandpass':
-        if db[0] >= transitions[0] or db[-1] >= transitions[0]:
-            passes = False
-            warn('The low or high frequency stopband never gets attenuated by'\
-                 'more than {} dB. Increase filter length.'.format(abs(transitions[0])))
-
-    # Compute pass & transition bandwidth
-    pass_bw = compute_pass_band(fs, pass_type, f_range)
-    transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
-
-    # Raise warning if transition bandwidth is too high
-    if transition_bw > pass_bw:
-        passes = False
-        warn('Transition bandwidth is  {:.1f}  Hz. This is greater than the desired'\
-             'pass/stop bandwidth of  {:.1f} Hz'.format(transition_bw, pass_bw))
-
-    # Print out transition bandwidth and pass bandwidth to the user
-    if verbose:
-        print('Transition bandwidth is {:.1f} Hz.'.format(transition_bw))
-        print('Pass/stop bandwidth is {:.1f} Hz.'.format(pass_bw))
-
-    return passes
-
-def sos_check_filter_properties(sos, fs, pass_type, f_range,
-                                transitions=(-20, -3), verbose=True):
-    """Check a filters properties, including pass band and transition band.
-
-    Parameters
-    ----------
-    sos : 2d array of shape (n, 6)
-        Second order series coefficients for an IIR filter.
-    fs : float
-        Sampling rate, in Hz.
-    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
-        Which kind of filter to apply:
-
-        * 'bandpass': apply a bandpass filter
-        * 'bandstop': apply a bandstop (notch) filter
-        * 'lowpass': apply a lowpass filter
-        * 'highpass' : apply a highpass filter
-    f_range : tuple of (float, float) or float
-        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
-        For 'bandpass' & 'bandstop', must be a tuple.
-        For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
-        a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    transitions : tuple of (float, float), optional, default: (-20, -3)
-        Cutoffs, in dB, that define the transition band.
-    verbose : bool, optional, default: True
-        Whether to print out transition and pass bands.
-
-    Returns
-    -------
-    passes : bool
-        Whether all the checks pass. False if one or more checks fail.
-
-    Examples
-    --------
-    Check the properties of an IIR filter:
-
-    >>> from neurodsp.filt.iir import design_iir_filter
-    >>> fs, pass_type, f_range, order = 500, 'bandstop', (55, 65), 7
-    >>> sos = design_iir_filter(fs, pass_type, f_range, order)
-    >>> passes = sos_check_filter_properties(sos, fs, pass_type, f_range)
-    Transition bandwidth is 1.5 Hz.
-    Pass/stop bandwidth is 10.0 Hz.
-    """
-
-    # Import utility functions inside function to avoid circular imports
-    from neurodsp.filt.utils import (sos_compute_frequency_response,
-                                     compute_pass_band, compute_transition_band)
-
-    # Initialize variable to keep track if all checks pass
-    passes = True
-
-    # Compute the frequency response
-    f_db, db = sos_compute_frequency_response(sos, fs)
+    f_db, db = compute_frequency_response(filter_coefs, a_vals, fs)
 
     # Check that frequency response goes below transition level (has significant attenuation)
     if np.min(db) >= transitions[0]:
