@@ -41,7 +41,4 @@ def check_spg_settings(fs, window, nperseg, noverlap):
     if noverlap is not None:
         noverlap = int(noverlap)
 
-    if noverlap >= nperseg:
-        raise ValueError(f'Windows of size {nperseg} cannot have an overlap of size {noverlap}.')
-
     return nperseg, noverlap
