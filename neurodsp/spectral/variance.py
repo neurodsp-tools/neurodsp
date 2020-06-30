@@ -233,7 +233,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
 
     # Get log10 power & limit to frequency range of interest before binning
-    ps = np.transpose(np.log10(spg))
+    ps = np.log10(spg)
     freqs, ps = trim_spectrum(freqs, ps, f_range)
 
     # Prepare bins for power - min and max of bins determined by power cutoff percentage
@@ -243,7 +243,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     # Compute histogram of power for each frequency
     spectral_hist = np.zeros((len(ps[0]), nbins))
     for ind in range(len(ps[0])):
-        spectral_hist[ind], _ = np.histogram(ps[:, ind], power_bins)
+        spectral_hist[ind], _ = np.histogram(ps[ind, :], power_bins)
         spectral_hist[ind] = spectral_hist[ind] / sum(spectral_hist[ind])
 
     # Flip output for more sensible plotting direction
