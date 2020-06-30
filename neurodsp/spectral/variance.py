@@ -148,7 +148,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
         # Repeated sub-sampling of spectrogram randomly, with replacement between draws
         for draw in range(ndraws):
-            idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
+            idx = np.random.choice(spg.shape[1], size=nslices, replace=True)
             scv_rs[:, draw] = np.std(
                 spg[:, idx], axis=-1) / np.mean(spg[:, idx], axis=-1)
 
