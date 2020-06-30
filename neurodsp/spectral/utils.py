@@ -46,8 +46,9 @@ def trim_spectrum(freqs, power_spectra, f_range):
 
     # Restrict freqs & psd to requested range. The if/else is to cover both 1d or 2d arrays
     freqs_ext = freqs[f_mask]
+
     power_spectra_ext = power_spectra[f_mask] if power_spectra.ndim == 1 \
-        else power_spectra[:, f_mask]
+        else power_spectra[f_mask, :]
 
     return freqs_ext, power_spectra_ext
 
