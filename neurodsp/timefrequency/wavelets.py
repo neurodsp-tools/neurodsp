@@ -11,7 +11,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 
 @multidim()
-def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
+def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='sss'):
     """Compute the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
@@ -28,6 +28,12 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
         Length of the filter, as the number of cycles for each frequency.
     scaling : float
         Scaling factor.
+
+    norm : {'sss', 'amp'}, optional
+        Normalization method:
+
+        * 'sss' - divide by the square root of the sum of squares
+        * 'amp' - divide by the sum of amplitudes
 
     Returns
     -------
@@ -48,9 +54,9 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
         freqs = create_freqs(*freqs)
     n_cycles = check_n_cycles(n_cycles, len(freqs))
 
-    mwt = np.zeros([len(sig), len(freqs)], dtype=complex)
+    mwt = np.zeros([len(freqs), len(sig)], dtype=complex)
     for ind, (freq, n_cycle) in enumerate(zip(freqs, n_cycles)):
-        mwt[:, ind] = convolve_wavelet(sig, fs, freq, n_cycle, scaling)
+        mwt[ind, :] = convolve_wavelet(sig, fs, freq, n_cycle, scaling, norm=norm)
 
     return mwt
 
