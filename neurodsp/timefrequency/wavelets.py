@@ -29,6 +29,12 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='sss
     scaling : float
         Scaling factor.
 
+    norm : {'sss', 'amp'}, optional
+        Normalization method:
+
+        * 'sss' - divide by the square root of the sum of squares
+        * 'amp' - divide by the sum of amplitudes
+
     Returns
     -------
     mwt : 2d array
