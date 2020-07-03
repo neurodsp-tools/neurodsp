@@ -24,8 +24,9 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='sss
         If array, frequency values to estimate with morlet wavelets.
         If list, define the frequency range, as [freq_start, freq_stop, freq_step].
         The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
-    n_cycles : float
+    n_cycles : float, or 1d array.
         Length of the filter, as the number of cycles for each frequency.
+        If 1d array, this defines n_cycles for each frequency.
     scaling : float
         Scaling factor.
 
