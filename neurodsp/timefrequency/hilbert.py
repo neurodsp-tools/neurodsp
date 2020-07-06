@@ -26,11 +26,11 @@ def robust_hilbert(sig, increase_n=False):
     Returns
     -------
     sig_hilb : 1d array
-        The Hilbert transform of the input signal.
+        The analytic signal, of which the imaginary part is the Hilbert transform of the input signal.
 
     Examples
     --------
-    Compute a Hilbert transform of a signal, using zero padding:
+    Compute the analytic signal, using zero padding:
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
@@ -194,13 +194,23 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     >>> instant_freq = freq_by_time(sig, fs=500, f_range=(8, 12))
     """
 
-    pha = phase_by_time(sig, fs, f_range, hilbert_increase_n,
-                        remove_edges, **filter_kwargs)
+    # Calculate instantaneous phase, from which we can compute instantaneous frequency
+    pha = phase_by_time(sig, fs, f_range, hilbert_increase_n, remove_edges, **filter_kwargs)
 
-    phadiff = np.diff(pha)
-    phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
+    # If filter edges were removed, temporarily drop nans for subsequent operations
+    pha, nans = remove_nans(pha)
 
-    i_f = fs * phadiff / (2 * np.pi)
+    # Differentiate the unwrapped phase, to estimate frequency as the rate of change of phase
+    pha_unwrapped = np.unwrap(pha)
+    pha_diff = np.diff(pha_unwrapped)
+
+    # Convert differentiated phase to frequency
+    i_f = fs * pha_diff / (2 * np.pi)
+
+    # Prepend nan value to re-align with original signal (necessary due to differentiation)
     i_f = np.insert(i_f, 0, np.nan)
+
+    # Restore nans, to re-align signal if filter edges were removed
+    i_f = restore_nans(i_f, nans)
 
     return i_f
