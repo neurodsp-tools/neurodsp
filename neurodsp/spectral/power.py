@@ -106,7 +106,10 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         freqs = create_freqs(*freqs)
 
     mwt = compute_wavelet_transform(sig, fs, freqs, **kwargs)
-    spectrum = get_avg_func(avg_type)(abs(mwt)**2, axis=1)
+    # Convert the wavelet coefficient outputs to power
+    mwt_power = abs(mwt)**2
+    # Create the power spectrum by averaging across the time dimension
+    spectrum = get_avg_func(avg_type)(mwt_power, axis=1)
 
     return freqs, spectrum
 
