@@ -11,7 +11,7 @@ from neurodsp.utils.decorators import multidim
 ###################################################################################################
 
 @multidim()
-def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='sss'):
+def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='amp'):
     """Compute the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
@@ -39,6 +39,12 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='sss
     -------
     mwt : 2d array
         Time frequency representation of the input signal.
+
+    Notes
+    -----
+
+    * This computes the continuous wavelet transform at the specified frequencies and
+        along all shifts.
 
     Examples
     --------
