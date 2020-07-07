@@ -106,7 +106,10 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         freqs = create_freqs(*freqs)
 
     mwt = compute_wavelet_transform(sig, fs, freqs, **kwargs)
-    spectrum = get_avg_func(avg_type)(abs(mwt)**2, axis=1)
+    # Convert the wavelet coefficient outputs to power
+    mwt_power = abs(mwt)**2
+    # Create the power spectrum by averaging across the time dimension
+    spectrum = get_avg_func(avg_type)(mwt_power, axis=1)
 
     return freqs, spectrum
 
@@ -214,7 +217,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
 
     # Convert median filter length from Hz to samples, and make sure it is odd
-    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])))
+    filt_len_samp = int(filt_len / (freqs[1] - freqs[0]))
     if filt_len_samp % 2 == 0:
         filt_len_samp += 1
 
