@@ -145,6 +145,7 @@ Spectral Utilities
     :toctree: generated/
 
     trim_spectrum
+    trim_spectrogram
     rotate_powerlaw
 
 Burst Detection
