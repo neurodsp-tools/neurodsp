@@ -12,3 +12,4 @@ FREQ2 = 25
 FREQS_LST = [8, 12, 1]
 FREQS_ARR = np.array([5, 10, 15])
 EPS = 10**(-10)
+FILT_EPS = 10**(-3)
