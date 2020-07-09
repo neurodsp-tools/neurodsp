@@ -10,10 +10,27 @@ from neurodsp.filt.fir import *
 ###################################################################################################
 ###################################################################################################
 
-def test_filter_signal_fir(tsig):
+def test_filter_signal_fir(tsig, tsig_sine):
 
     out = filter_signal_fir(tsig, FS, 'bandpass', (8, 12))
     assert out.shape == tsig.shape
+
+    # Apply lowpass to low-frequency sine. There should be little attenuation.
+    sig_filt_lp = filter_signal(tsig_sine, FS, pass_type='lowpass', f_range=(None, 10))
+    
+    # Compare the two signals only at those times where the filtered signal is not nan.
+    not_nan = ~np.isnan(sig_filt_lp)
+    assert np.allclose(tsig_sine[not_nan], sig_filt_lp[not_nan], atol=EPS_FILT)
+
+    # Now apply a high pass filter. The signal should be significantly attenuated.
+    sig_filt_hp = filter_signal(tsig_sine, FS, pass_type='highpass', f_range=(30, None))
+
+    # Get rid of nans.
+    not_nan = ~np.isnan(sig_filt_hp)
+    sig_filt_hp = sig_filt_hp[not_nan]
+
+    expected_answer = np.zeros_like(sig_filt_hp)
+    assert np.allclose(sig_filt_hp, expected_answer, atol=EPS_FILT)
 
 def test_filter_signal_fir_2d(tsig2d):
 
