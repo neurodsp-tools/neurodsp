@@ -26,18 +26,18 @@ def test_robust_hilbert(tsig_sine):
     hilb_sig = robust_hilbert(sig, True)
     assert sum(np.isnan(hilb_sig)) == n_nans
 
-    # Hilbert transform of sin(omega * t) = -sin(omega) * cos(omega * t)
+    # Hilbert transform of sin(omega * t) = -sign(omega) * cos(omega * t)
     times = create_times(N_SECONDS, FS)
 
     # omega = 1
     hilbert_sig = np.imag(robust_hilbert(tsig_sine))
-    answer = np.array([-np.cos(2*np.pi*time) for time in times])
-    assert np.max(abs(hilbert_sig-answer)) < EPS
+    expected_answer = np.array([-np.cos(2*np.pi*time) for time in times])
+    assert np.allclose(hilbert_sig, expected_answer, atol=EPS)
 
     # omega = -1
     hilbert_sig = np.imag(robust_hilbert(-tsig_sine))
-    answer = np.array([np.cos(2*np.pi*time) for time in times])
-    assert np.max(abs(hilbert_sig-answer)) < EPS
+    expected_answer = np.array([np.cos(2*np.pi*time) for time in times])
+    assert np.allclose(hilbert_sig, expected_answer, atol=EPS)
 
 def test_phase_by_time(tsig, tsig_sine):
 
@@ -51,10 +51,13 @@ def test_phase_by_time(tsig, tsig_sine):
 
     # Create a time axis, scaled to the range of [0, 2pi]
     times = 2 * np.pi * create_times(N_SECONDS, FS)
-    # Generate the expected instantaneous phase of the given signal
-    answer = np.array([time-np.pi/2 if time <= 3*np.pi/2 else time-5*np.pi/2 for time in times])
+    # Generate the expected instantaneous phase of the given signal. Phase is defined in
+    #    [-pi, pi]. Since sin(t) = cos(t - pi/2), the phase should begin at -pi/2 and increase with a slope
+    #    of 1 until phase hits pi, or when t=3pi/2. Phase then wraps around to -pi and again increases
+    #    linearly with a slope of 1.
+    expected_answer = np.array([time-np.pi/2 if time <= 3*np.pi/2 else time-5*np.pi/2 for time in times])
 
-    assert np.max(abs(answer-phase)) < EPS
+    assert np.allclose(expected_answer, phase, atol=EPS)
 
 def test_amp_by_time(tsig, tsig_sine):
 
@@ -64,8 +67,9 @@ def test_amp_by_time(tsig, tsig_sine):
 
     # Instantaneous amplitude of sinusoid should be 1 for all timepoints
     amp = amp_by_time(tsig_sine, FS)
-    answer = np.ones_like(amp)
-    assert np.max(abs(answer-amp)) < EPS
+    expected_answer = np.ones_like(amp)
+
+    assert np.allclose(expected_answer, amp, atol=EPS)
 
 def test_freq_by_time(tsig, tsig_sine):
 
@@ -75,8 +79,9 @@ def test_freq_by_time(tsig, tsig_sine):
 
     # Instantaneous frequency of sin(t) should be 1 for all timepoints
     freq = freq_by_time(tsig_sine, FS)
-    answer = np.ones_like(freq)
-    assert np.max(abs(answer[1:]-freq[1:])) < EPS
+    expected_answer = np.ones_like(freq)
+
+    assert np.allclose(expected_answer[1:], freq[1:], atol=EPS)
 
 def test_no_filters(tsig):
 
