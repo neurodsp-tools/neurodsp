@@ -5,6 +5,7 @@ import pytest
 import numpy as np
 
 from neurodsp.utils.sim import set_random_seed
+from neurodsp.tests.settings import FS, N_SECONDS, FREQ_SINE
 
 from neurodsp.sim import sim_oscillation
 
@@ -26,8 +27,6 @@ def tsig2d():
     yield np.random.randn(2, 1000)
 
 @pytest.fixture(scope='session')
-def sig_sine():
+def tsig_sine():
 
-	n_seconds = 1
-	fs = 100
-	yield (n_seconds, fs, sim_oscillation(n_seconds, fs, 1, variance=None, mean=None))
+	yield sim_oscillation(N_SECONDS, FS, freq=FREQ_SINE, variance=None, mean=None)
