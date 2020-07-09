@@ -11,7 +11,7 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def test_compute_spectrum(tsig, sig_sine):
+def test_compute_spectrum(tsig):
 
     freqs, spectrum = compute_spectrum(tsig, FS, method='welch')
     assert freqs.shape == spectrum.shape
