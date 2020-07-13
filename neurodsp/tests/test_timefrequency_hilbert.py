@@ -83,17 +83,6 @@ def test_freq_by_time(tsig, tsig_sine):
 
     assert np.allclose(expected_answer[1:], freq[1:], atol=EPS)
 
-def test_no_filters(tsig):
-
-    out = phase_by_time(tsig, FS)
-    assert out.shape == tsig.shape
-
-    out = amp_by_time(tsig, FS)
-    assert out.shape == tsig.shape
-
-    out = freq_by_time(tsig, FS)
-    assert out.shape == tsig.shape
-
 def test_2d(tsig2d):
 
     out = phase_by_time(tsig2d, FS, (8, 12))
