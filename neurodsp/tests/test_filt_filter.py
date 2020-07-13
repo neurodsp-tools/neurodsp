@@ -2,12 +2,10 @@
 
 from pytest import raises, warns
 
-from neurodsp.tests.settings import FS, EPS_FILT
+from neurodsp.tests.settings import FS
 
 from neurodsp.filt.filter import *
 from neurodsp.filt.filter import _iir_checks
-
-import numpy as np
 
 ###################################################################################################
 ###################################################################################################
