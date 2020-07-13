@@ -8,6 +8,7 @@ import numpy as np
 # Define general settings for simulations & tests
 FS = 100
 N_SECONDS = 1.0
+N_SECONDS_LONG = 10.0
 
 # Define frequency options for simulations
 FREQ1 = 10
