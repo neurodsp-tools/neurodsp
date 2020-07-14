@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from neurodsp.plts.settings import TITLE_FONTSIZE
 
-from neurodsp.tests.utils import plot_test
+from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.style import *
 

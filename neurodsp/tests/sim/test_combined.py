@@ -3,7 +3,7 @@
 from pytest import raises
 
 from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2
-from neurodsp.tests.utils import check_sim_output
+from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.combined import *
 
