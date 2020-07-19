@@ -25,6 +25,9 @@ __pycache__/
 # Ignore temp file for linter output
 _lint.txt
 
+# Ignore all files generated during testing
+*/tests/test_files/*
+
 # Ignore data files loaded for documentation
 tutorials/**/data/
 examples/**/data/
