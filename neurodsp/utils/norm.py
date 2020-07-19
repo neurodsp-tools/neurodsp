@@ -5,7 +5,7 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def normalize_sig(sig, variance=None, mean=None):
+def normalize_sig(sig, mean=None, variance=None):
     """Normalize the mean and variance of a signal.
 
     Parameters

@@ -16,15 +16,15 @@ def normalize(func, **kwargs):
     def decorated(*args, **kwargs):
 
         # Grab variance & mean as possible kwargs, with default values if not
-        variance = kwargs.pop('variance', 1.)
         mean = kwargs.pop('mean', 0.)
+        variance = kwargs.pop('variance', 1.)
 
         # Call sim function, and unpack to get sig variable, if there are multiple returns
         out = func(*args, **kwargs)
         sig = out[0] if isinstance(out, tuple) else out
 
         # Normalize signal, applying mean and variance transformations
-        sig = normalize_sig(sig, variance, mean)
+        sig = normalize_sig(sig, mean, variance)
 
         # Return sig & other outputs, if there were any, or just sig otherwise
         return (sig, out[1:]) if isinstance(out, tuple) else sig
