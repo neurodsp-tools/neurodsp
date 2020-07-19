@@ -33,16 +33,31 @@ def test_sim_cycle():
     with raises(ValueError):
         sim_cycle(N_SECONDS, FS, 'not_a_cycle')
 
-def test_asine_cycle():
+def test_sim_sine_cycle():
+
+    cycle = sim_sine_cycle(N_SECONDS, FS)
+    check_sim_output(cycle)
+
+def test_sim_asine_cycle():
 
     cycle = sim_asine_cycle(N_SECONDS, FS, 0.25)
+    check_sim_output(cycle)
+
+def test_sim_sawtooth_cycle():
+
+    cycle = sim_sawtooth_cycle(N_SECONDS, FS, 0.5)
+    check_sim_output(cycle)
+
+def test_sim_gaussian_cycle():
+
+    cycle = sim_gaussian_cycle(N_SECONDS, FS, 2)
     check_sim_output(cycle)
 
 def test_sim_make_synaptic_kernel():
 
     np.random.seed(0)
 
-    # smoke test that valid parameter configurations do not return negative values
+    # Check that valid parameter configurations do not return negative values
     t_ker, tau_r, tau_d = 1., 0., 0.02
     assert np.all(sim_synaptic_kernel(t_ker, FS, tau_r, tau_d) >= 0.)
 

@@ -5,6 +5,8 @@ from warnings import warn
 import numpy as np
 from scipy.signal import gaussian, sawtooth
 
+from neurodsp.utils import create_times
+
 ###################################################################################################
 ###################################################################################################
 
@@ -58,22 +60,44 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
         raise ValueError('Did not recognize cycle type.')
 
     if cycle_type == 'sine':
-        cycle = np.sin(create_cycle_time(n_seconds, fs))
+        cycle = sim_sine_cycle(n_seconds, fs)
 
     elif cycle_type == 'asine':
         cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
 
     elif cycle_type == 'sawtooth':
-        cycle = sawtooth(create_cycle_time(n_seconds, fs), cycle_params['width'])
+        cycle = sim_sawtooth_cycle(n_seconds, fs, cycle_params['width'])
 
     elif cycle_type == 'gaussian':
-        cycle = gaussian(n_seconds * fs, cycle_params['std'] * fs)
+        cycle = sim_gaussian_cycle(n_seconds, fs, cycle_params['std'])
 
     elif cycle_type == 'exp':
         cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params['tau_d'])
 
     elif cycle_type == '2exp':
         cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params['tau_r'], cycle_params['tau_d'])
+
+    return cycle
+
+
+def sim_sine_cycle(n_seconds, fs):
+    """Simulate a cycle of a sine wave.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated sine cycle.
+    """
+
+    times = create_cycle_time(n_seconds, fs)
+    cycle = np.sin(times)
 
     return cycle
 
@@ -121,6 +145,53 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     return cycle
 
 
+def sim_sawtooth_cycle(n_seconds, fs, width):
+    """Simulate a cycle of a sawtooth wave.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    width : float
+        Width of the rising ramp as a proportion of the total cycle.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated sawtooth cycle.
+    """
+
+    times = create_cycle_time(n_seconds, fs)
+    cycle = sawtooth(times, width)
+
+    return cycle
+
+
+def sim_gaussian_cycle(n_seconds, fs, std):
+    """Simulate a cycle of a gaussian.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    std : float
+        Standard deviation of the gaussian kernel, in seconds.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated gaussian cycle.
+    """
+
+    cycle = gaussian(n_seconds * fs, std * fs)
+
+    return cycle
+
+
 def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     """Simulate a synaptic kernel with specified time constants.
 
@@ -159,10 +230,8 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     >>> kernel = sim_synaptic_kernel(n_seconds=1, fs=500, tau_r=0.1, tau_d=0.3)
     """
 
-    # NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or
-    #   shorter times vector, which will affect final signal length
-    #   https://docs.python.org/2/tutorial/floatingpoint.html
-    times = np.arange(0, n_seconds, 1./fs)
+    # Create a times vector
+    times = create_times(n_seconds, fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
@@ -188,7 +257,7 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
 
 
 def create_cycle_time(n_seconds, fs):
-    """Create a vector of time indices for a single cycle.
+    """Create a vector of time indices, in radians, for a single cycle.
 
     Parameters
     ----------
