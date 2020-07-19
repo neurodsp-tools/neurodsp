@@ -22,7 +22,6 @@ from neurodsp.utils import create_times
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_bursts
 
-
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
@@ -93,8 +92,7 @@ bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
 
 ###################################################################################################
 #
-# You can plot detected bursts using
-# :func:`~.plot_bursts`.
+# You can plot detected bursts using :func:`~.plot_bursts`.
 #
 
 ###################################################################################################

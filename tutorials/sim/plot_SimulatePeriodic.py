@@ -36,7 +36,7 @@ fs = 1000
 #
 # Let's start by simulating an oscillation. We'll start with a simple, sinusoidal, oscillation.
 #
-# Continuous peridic signals can be created with :func:`~.sim_oscillation`.
+# Continuous periodic signals can be created with :func:`~.sim_oscillation`.
 #
 
 ###################################################################################################
@@ -92,16 +92,19 @@ plot_time_series(times, osc_sine)
 ###################################################################################################
 
 # Simulate a shape-y oscillations
-osc_shape = sim_oscillation(n_seconds, fs, osc_freq, cycle='asine', rdsym=.2)
+rdsym = 0.2
+osc_shape = sim_oscillation(n_seconds, fs, osc_freq,
+                            cycle='asine', rdsym=rdsym)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plot_time_series(times, [osc_sine, osc_shape], ['rdsym='+str(.5), 'rdsym='+str(.3)])
+plot_time_series(times, [osc_sine, osc_shape],
+                 labels=['rdsym='+str(.5), 'rdsym='+str(rdsym)])
 
 ###################################################################################################
 #
-# We can also compare these signals in the frequency.
+# We can also compare these signals in the frequency domain.
 #
 # Notice that the asymmetric oscillation has strong harmonics resulting from the
 # non-sinusoidal nature of the oscillation.
@@ -124,7 +127,7 @@ plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 #
 # You can simulate bursty oscillations with :func:`~.sim_bursty_oscillation`.
 #
-# To control the bursitness of the simulated signal, you can control the probability
+# To control the bursty-ness of the simulated signal, you can control the probability
 # that a burst will start or stop with each new cycle.
 #
 

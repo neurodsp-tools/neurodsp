@@ -76,8 +76,8 @@ win_len = .055
 win_spacing = .2
 
 # Apply the sliding window matching algorithm to the time series
-avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spacing,
-                                                       max_iterations=500)
+avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win_spacing,
+                                                           max_iterations=500)
 
 ###################################################################################################
 #

@@ -128,6 +128,7 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 
 # Calculate coherence for data with the burst - the 1st second of data
 lag_coh_burst = compute_lagged_coherence(sig[0:fs], fs, f_range)
+
 # Calculate coherence for data without the burst - the 2nd second of data
 lag_coh_noburst = compute_lagged_coherence(sig[fs:2*fs], fs, f_range)
 

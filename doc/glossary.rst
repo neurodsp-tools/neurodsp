@@ -65,7 +65,7 @@ Units
 Filters
 -------
 
-There are some available (paywalled) articles that present overviews and guides to filters, including:
+There are some available (pay-walled) articles that present overviews and guides to filters, including:
 
 - this `guide <https://doi.org/10.1016/j.jneumeth.2014.08.002>`_ on using filters for electrophysiological data
 - this `primer <https://doi.org/10.1016/j.neuron.2019.02.039>`_ on when, how, and why to use filters
@@ -129,7 +129,7 @@ We currently have two general approaches to time frequency analyses:
 .. glossary::
 
     frequency
-        The number of occurences over a unit of time, typically referred to as cycles per second, and measured in Hz.
+        The number of occurrences over a unit of time, typically referred to as cycles per second, and measured in Hz.
 
     phase
         The position, at a point in time, on a waveform cycle.
@@ -162,14 +162,14 @@ by 3Blue1Brown.
 
 .. glossary::
 
-    fourier transform
+    Fourier transform
         A mathematical transformation to decompose a time series into a frequency representation.
 
     power spectrum
         A frequency domain representation, as an estimate of the power across frequencies in a signal.
 
     median filter
-        A smoothing approach to replace each value in a signal with the median of the neighbouring entries.
+        A smoothing approach to replace each value in a signal with the median of the neighboring entries.
 
     coefficient of variation
         A standardized measure of dispersion, as the ratio of the standard deviation to the mean.
@@ -177,7 +177,7 @@ by 3Blue1Brown.
 Simulations
 -----------
 
-For an overview of the aperiodic signals avaible in terms of their 1/f characteristics, check out this
+For an overview of the aperiodic signals available in terms of their 1/f characteristics, check out this
 `article <http://www.scholarpedia.org/article/1/f_noise>`_
 from scholarpedia.
 
@@ -195,8 +195,8 @@ from scholarpedia.
         A signal for which the power spectrum can be described by a powerlaw of the form :math:`1/f^\chi`,
         where :math:`\chi` refers to the exponent of the powerlaw.
 
-    coloured noise
-        The 'colour' of noise refers to the 1/f exponent of the power spectrum of a noise signal.
+    colored noise
+        The 'color' of noise refers to the 1/f exponent of the power spectrum of a noise signal.
 
         * white noise: a signal with a :math:`1/f^0` power spectrum, which is flat with equal power across all frequencies
         * pink noise: a signal with a :math:`1/f^1` power spectrum

@@ -148,6 +148,6 @@ Bibtex:
         volume = {4},
         number = {36},
         issn = {2475-9066},
-        url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+        url = {https://joss.theoj.org/papers/10.21105/joss.01272},
         doi = {10.21105/joss.01272},
     }
