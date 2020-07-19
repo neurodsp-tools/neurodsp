@@ -132,7 +132,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     """
 
     # Determine number of samples in rise and decay periods
-    n_samples = int(n_seconds * fs)
+    n_samples = int(np.round(n_seconds * fs))
     n_rise = int(np.round(n_samples * rdsym))
     n_decay = n_samples - n_rise
 
@@ -187,7 +187,7 @@ def sim_gaussian_cycle(n_seconds, fs, std):
         Simulated gaussian cycle.
     """
 
-    cycle = gaussian(n_seconds * fs, std * fs)
+    cycle = gaussian(int(np.round(n_seconds * fs)), std * fs)
 
     return cycle
 
