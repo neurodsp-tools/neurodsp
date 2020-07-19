@@ -4,7 +4,7 @@ from functools import wraps
 
 import numpy as np
 
-from neurodsp.utils.norm import demean, normalize_variance
+from neurodsp.utils.norm import normalize_sig
 
 ###################################################################################################
 ###################################################################################################
@@ -23,11 +23,8 @@ def normalize(func, **kwargs):
         out = func(*args, **kwargs)
         sig = out[0] if isinstance(out, tuple) else out
 
-        # Apply variance & mean transformations
-        if variance is not None:
-            sig = normalize_variance(sig, variance=variance)
-        if mean is not None:
-            sig = demean(sig, mean=mean)
+        # Normalize signal, applying mean and variance transformations
+        sig = normalize_sig(sig, variance, mean)
 
         # Return sig & other outputs, if there were any, or just sig otherwise
         return (sig, out[1:]) if isinstance(out, tuple) else sig

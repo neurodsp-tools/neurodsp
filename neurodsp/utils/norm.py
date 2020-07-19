@@ -5,6 +5,33 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
+def normalize_sig(sig, variance=None, mean=None):
+    """Normalize the mean and variance of a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal to normalize.
+    variance : float, optional
+        Variance to normalize to.
+    mean : float, optional
+        New mean for data to have.
+
+    Returns
+    -------
+    sig : 1d array
+        Input signal, with normalizations applied.
+    """
+
+    # Apply variance & mean transformations
+    if variance is not None:
+        sig = normalize_variance(sig, variance=variance)
+    if mean is not None:
+        sig = demean(sig, mean=mean)
+
+    return sig
+
+
 def demean(array, mean=0.):
     """Demean an array, updating to specified mean.
 
