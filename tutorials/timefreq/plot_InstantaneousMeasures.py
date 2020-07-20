@@ -66,7 +66,7 @@ plot_time_series(times, sig)
 
 ###################################################################################################
 
-# Compute instaneous phase from a signal
+# Compute instantaneous phase from a signal
 pha = phase_by_time(sig, fs, f_range)
 
 ###################################################################################################
@@ -113,7 +113,7 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
 # Instantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
 # such as applying a median filter, is used to make it smoother.
 #
-# For example of this, see Samaha & Postle, 2015.
+# For an example of this, see Samaha & Postle, 2015.
 #
 # Instantaneous frequency can be analyzed with the
 # :func:`~.freq_by_time` function.
