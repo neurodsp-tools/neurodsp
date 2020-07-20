@@ -81,6 +81,12 @@ def sim_sine_cycle(n_seconds, fs):
     -------
     cycle : 1d array
         Simulated sine cycle.
+
+    Examples
+    --------
+    Simulate a cycle of a 1 Hz sine wave:
+
+    >>> cycle = sim_asine_cycle(n_seconds=1, fs=500)
     """
 
     times = create_cycle_time(n_seconds, fs)
@@ -153,6 +159,12 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     -------
     cycle : 1d array
         Simulated sawtooth cycle.
+
+    Examples
+    --------
+    Simulate a symmetric cycle of a sawtooth wave:
+
+    >>> cycle = sim_asine_cycle(n_seconds=0.25, fs=500, width=0.5)
     """
 
     check_param(width, 'width', [0., 1.])
@@ -179,6 +191,12 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     -------
     cycle : 1d array
         Simulated gaussian cycle.
+
+    Examples
+    --------
+    Simulate a cycle of a gaussian wave:
+
+    >>> cycle = sim_asine_cycle(n_seconds=0.2, fs=500, std=0.025)
     """
 
     cycle = gaussian(int(np.round(n_seconds * fs)), std * fs)
@@ -238,6 +256,13 @@ def phase_shift_cycle(cycle, shift):
     -------
     cycle : 1d array
         Rotated cycle.
+
+    Examples
+    --------
+    Phase shift a simulated sine wave cycle:
+
+    >>> cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type='sine')
+    >>> shifted_cycle = phase_shift_cycle(cycle, shift=0.5)
     """
 
     check_param(shift, 'shift', [0., 1.])

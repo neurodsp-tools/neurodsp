@@ -58,7 +58,7 @@ def get_sim_func(function_name, modules=SIM_MODULES):
     ----------
     function_name : str
         Name of the sim function to retrieve.
-    modules : list of str
+    modules : list of str, optional
         Which sim modules to look for the function in.
 
     Returns

@@ -24,7 +24,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
     phase : float, optional, default: 0
-        The amount to rotationally shift the cycle.
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
         The shift is defined as a relative proportion of cycle, between [0, 1].
     **cycle_params
         Parameters for the simulated oscillation cycle.
@@ -36,9 +36,14 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
 
     Examples
     --------
-    Simulate a continuous oscillation at 5 hz:
+    Simulate a continuous sinusoidal oscillation at 5 Hz:
 
     >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5)
+
+    Simulate an asymmetric oscillation at 15 Hz, with a phase shift:
+
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=15,
+    ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
