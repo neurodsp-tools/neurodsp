@@ -2,8 +2,8 @@
 
 import numpy as np
 
+from neurodsp.sim.cycles import sim_cycle
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_cycle
 
 ###################################################################################################
 ###################################################################################################
