@@ -6,6 +6,7 @@ import numpy as np
 from scipy.signal import gaussian, sawtooth
 
 from neurodsp.utils import create_times
+from neurodsp.utils.checks import check_param
 
 ###################################################################################################
 ###################################################################################################
@@ -131,16 +132,21 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
     """
 
+    check_param(rdsym, 'rdsym', [0., 1.])
+
     # Determine number of samples in rise and decay periods
     n_samples = int(np.round(n_seconds * fs))
     n_rise = int(np.round(n_samples * rdsym))
     n_decay = n_samples - n_rise
 
-    # Make phase array for the cycle, and convert to signal
+    # Make phase array for an asymmetric cycle
     #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
-    cycle = np.sin(np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
-                              np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
-                              np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]]))
+    phase = np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
+                       np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
+                       np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]])
+
+    # Convert phase definition to signal
+    cycle = np.sin(phase)
 
     return cycle
 
@@ -162,6 +168,8 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     cycle : 1d array
         Simulated sawtooth cycle.
     """
+
+    check_param(width, 'width', [0., 1.])
 
     times = create_cycle_time(n_seconds, fs)
     cycle = sawtooth(times, width)
