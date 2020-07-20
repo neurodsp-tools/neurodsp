@@ -4,7 +4,7 @@ import numpy as np
 from scipy.signal import morlet
 
 from neurodsp.utils.data import create_freqs
-from neurodsp.utils.core import check_n_cycles
+from neurodsp.utils.checks import check_n_cycles
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################

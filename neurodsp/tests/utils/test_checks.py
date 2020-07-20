@@ -19,3 +19,18 @@ def test_check_param():
         check_param(-1, 'test', [0., 1])
     with raises(ValueError):
         check_param(1.5, 'test', [0., 1])
+
+def test_check_n_cycles():
+
+    n_cycles = check_n_cycles(3)
+    n_cycles = check_n_cycles([3, 4, 5])
+    n_cycles = check_n_cycles([3, 4, 5], 3)
+
+    with raises(ValueError):
+        check_n_cycles(-1)
+
+    with raises(ValueError):
+        check_n_cycles([-1, 1])
+
+    with raises(ValueError):
+        check_n_cycles([1, 2], 3)
