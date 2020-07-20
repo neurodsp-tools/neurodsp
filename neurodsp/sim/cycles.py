@@ -10,7 +10,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 ###################################################################################################
 
-def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
+def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     """Simulate a single cycle of a periodic pattern.
 
     Parameters
@@ -221,3 +221,30 @@ def create_cycle_time(n_seconds, fs):
     """
 
     return 2 * np.pi * 1 / n_seconds * (np.arange(fs * n_seconds) / fs)
+
+
+def phase_shift_cycle(cycle, shift):
+    """Phase shift a simulated cycle time series.
+
+    Parameters
+    ----------
+    cycle : 1d array
+        Cycle values to apply a rotation shift to.
+    shift : float
+        The amount to rotationally shift the cycle.
+        The shift is defined as a relative proportion of cycle, between [0, 1].
+
+    Returns
+    -------
+    cycle : 1d array
+        Rotated cycle.
+    """
+
+    check_param(shift, 'shift', [0., 1.])
+
+    shift = int(np.round(shift * len(cycle)))
+
+    indices = range(shift, shift+len(cycle))
+    cycle = cycle.take(indices, mode='wrap')
+
+    return cycle

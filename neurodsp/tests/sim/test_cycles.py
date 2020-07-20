@@ -2,6 +2,8 @@
 
 from pytest import raises
 
+import numpy as np
+
 from neurodsp.tests.tutils import check_sim_output
 from neurodsp.tests.settings import N_SECONDS, FS
 
@@ -57,3 +59,17 @@ def test_create_cycle_time():
 
     times = create_cycle_time(N_SECONDS, FS)
     check_sim_output(times)
+
+def test_phase_shift_cycle():
+
+    cycle = sim_cycle(N_SECONDS, FS, 'sine')
+
+    # Check cycle does not change if not rotated
+    cycle_noshift = phase_shift_cycle(cycle, 0.)
+    check_sim_output(cycle_noshift)
+    assert np.array_equal(cycle, cycle_noshift)
+
+    # Check cycle does change if rotated
+    cycle_shifted = phase_shift_cycle(cycle, 0.25)
+    check_sim_output(cycle_shifted)
+    assert not np.array_equal(cycle, cycle_shifted)
