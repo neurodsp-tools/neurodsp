@@ -5,7 +5,7 @@ from warnings import warn
 import numpy as np
 from scipy.signal import gaussian, sawtooth
 
-from neurodsp.utils import create_times
+from neurodsp.utils.data import create_times
 from neurodsp.utils.checks import check_param
 
 ###################################################################################################
@@ -55,28 +55,17 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     Simulate a sawtooth cycle, corresponding to a 10 Hz cycle:
 
     >>> cycle = sim_cycle(n_seconds=0.1, fs=500, cycle_type='sawtooth', width=0.3)
+
+    Notes
+    -----
+    Any function defined as `sim_label_cycle(n_seconds, fs, **params)`, in which label is used as
+    the `cycle_type` input, is accessible by this function.
     """
 
-    if cycle_type not in ['sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp']:
-        raise ValueError('Did not recognize cycle type.')
+    from neurodsp.sim.info import get_sim_func
 
-    if cycle_type == 'sine':
-        cycle = sim_sine_cycle(n_seconds, fs)
-
-    elif cycle_type == 'asine':
-        cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
-
-    elif cycle_type == 'sawtooth':
-        cycle = sim_sawtooth_cycle(n_seconds, fs, cycle_params['width'])
-
-    elif cycle_type == 'gaussian':
-        cycle = sim_gaussian_cycle(n_seconds, fs, cycle_params['std'])
-
-    elif cycle_type == 'exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params['tau_d'])
-
-    elif cycle_type == '2exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params['tau_r'], cycle_params['tau_d'])
+    cycle_func = get_sim_func('sim_' + cycle_type + '_cycle')
+    cycle = cycle_func(n_seconds, fs, **cycle_params)
 
     return cycle
 
@@ -262,6 +251,18 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     kernel = kernel / np.sum(kernel)
 
     return kernel
+
+
+# Alias single exponential cycle from sim_synaptic kernel
+def sim_exp_cycle(n_seconds, fs, tau_d):
+    return sim_synaptic_kernel(n_seconds, fs, tau_r=0, tau_d=tau_d)
+sim_exp_cycle.__doc__ = sim_synaptic_kernel.__doc__
+
+
+# Alias double exponential cycle from sim_synaptic kernel
+def sim_2exp_cycle(n_seconds, fs, tau_r, tau_d):
+    return sim_synaptic_kernel(n_seconds, fs, tau_r=tau_r, tau_d=tau_d)
+sim_2exp_cycle.__doc__ = sim_synaptic_kernel.__doc__
 
 
 def create_cycle_time(n_seconds, fs):
