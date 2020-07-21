@@ -12,7 +12,7 @@ def check_spg_settings(fs, window, nperseg, noverlap):
         Sampling rate, in Hz.
     window : str or tuple or array_like
         Desired window to use. See scipy.signal.get_window for a list of available windows.
-        If array_like, the array will be used as the window and it's length must be nperseg.
+        If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int or None
         Length of each segment, in number of samples.
     noverlap : int or None

@@ -20,7 +20,7 @@ def robust_hilbert(sig, increase_n=False):
     sig : 1d array
         Time series.
     increase_n : bool, optional, default: False
-        If True, zero pad the signal to length the next power of 2 for the Hilbert transform.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
         This is because ``scipy.signal.hilbert`` can be very slow for some signal lengths.
 
     Returns
@@ -69,10 +69,10 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zero pad the signal to length the next power of 2 for the Hilbert transform.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
         This is because ``scipy.signal.hilbert`` can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
@@ -119,10 +119,10 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zero pad the signal to length the next power of 2 for the Hilbert transform.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
         This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
@@ -168,10 +168,10 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zero pad the signal to length the next power of 2 for the Hilbert transform.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
         This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.

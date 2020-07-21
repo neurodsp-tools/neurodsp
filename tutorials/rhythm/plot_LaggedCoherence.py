@@ -44,7 +44,7 @@ set_random_seed(0)
 # --------------------------
 #
 # First, we'll simulate an example signal that starts with a burst of alpha activity, followed
-# by a periodic of only aperiodic activity.
+# by a period of only aperiodic activity.
 #
 
 ###################################################################################################
@@ -97,7 +97,7 @@ print('Lagged coherence = ', lag_coh_alpha)
 #
 # Notice that lagged coherence peaks around 10Hz (the frequency of our oscillation).
 #
-# However, the peak it is not very specific to that frequency.
+# However, the peak is not very specific to that frequency.
 #
 
 ###################################################################################################
