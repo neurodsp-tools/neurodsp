@@ -21,6 +21,7 @@ def get_sim_funcs(module_name):
         A dictionary containing the available sim functions from the requested sub-module.
     """
 
+    # Note: imports done within function to avoid circular import
     from neurodsp.sim import periodic, aperiodic, transients, combined, cycles
 
     if module_name in SIM_MODULES:
