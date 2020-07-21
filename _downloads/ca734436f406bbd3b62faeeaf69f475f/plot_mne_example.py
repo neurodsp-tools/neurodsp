@@ -4,10 +4,10 @@ Using NeuroDSP with MNE
 
 This example explores using NeuroDSP in combination with MNE.
 
-NeuroDSP is a library designed to offer a large selection of methods and analyses
-that can be applied to neural time series. NeuroDSP itself does not offer
-functionality for managing multi-channel data and metadata, but can be used with
-tools that do, such as `MNE <https://mne-tools.github.io/>`_.
+NeuroDSP is designed to offer a selection of methods and analyses that can be applied
+to neural time series. NeuroDSP itself does not offer functionality for managing multi-channel
+data and metadata. To do so, NeuroDSP can be used with other tools, such as
+`MNE <https://mne-tools.github.io/>`_.
 
 Here, we explore an example of how analyses from NeuroDSP can be applied to data
 that is managed and processed by MNE. In particular, it explores applying some
@@ -16,8 +16,8 @@ dataset, including calculating power spectra, running burst detection,
 and applying lagged coherence.
 
 This tutorial requires that you have MNE installed. If you don't already have
-MNE, you can follow instructions to get it `here
-<https://mne-tools.github.io/stable/getting_started.html>`_.
+MNE, you can follow instructions to get it
+`here <https://mne-tools.github.io/stable/getting_started.html>`_.
 """
 
 ###################################################################################################
@@ -25,7 +25,7 @@ MNE, you can follow instructions to get it `here
 # General imports
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm, colors, colorbar
+from matplotlib import cm, colors
 
 # Import MNE, as well as the MNE sample dataset
 import mne
@@ -39,7 +39,8 @@ from neurodsp.burst import detect_bursts_dual_threshold
 from neurodsp.rhythm import compute_lagged_coherence
 
 # Import NeuroDSP plotting functions
-from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plot_lagged_coherence
+from neurodsp.plts import (plot_time_series, plot_power_spectra,
+                           plot_bursts, plot_lagged_coherence)
 
 ###################################################################################################
 # Load & Check MNE Data
@@ -48,12 +49,12 @@ from neurodsp.plts import plot_time_series, plot_power_spectra, plot_bursts, plo
 # First, we will load the example dataset from MNE, and have a quick look at the data.
 #
 # The MNE sample dataset is a combined MEG/EEG recording with an audiovisual task, as
-# described `here <https://martinos.org/mne/stable/manual/sample_dataset.html>`_.
+# described `here <https://mne.tools/stable/overview/datasets_index.html?#sample>`_.
 #
-# For the current example, we are going to sub-select only the EEG data,
+# For the current example, we are going to select only the EEG data,
 # and analyze it as continuous (non-epoched) data.
 #
-# Note that if you don't already have the data, the `data_path` command
+# Note that if you don't already have the data, the ``sample.data_path`` method
 # will download the MNE sample dataset.
 #
 
@@ -97,12 +98,12 @@ plot_time_series(times, sig)
 # -----------------------
 #
 # Next lets check the data in the frequency domain, calculating a power spectrum
-# with the median welch's procedure from NeuroDSP.
+# with the median Welch's procedure from NeuroDSP.
 #
 
 ###################################################################################################
 
-# Calculate the power spectrum, using a median welch & extract a frequency range of interest
+# Calculate the power spectrum, using median Welch's & extract a frequency range of interest
 freqs, powers = compute_spectrum(sig, fs, method='welch', avg_type='median')
 freqs, powers = trim_spectrum(freqs, powers, [3, 30])
 

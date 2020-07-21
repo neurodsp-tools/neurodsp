@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.filter_signal_fir &#8212; neurodsp 2.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="neurodsp-filt-filter-signal-fir">
+<h1>neurodsp.filt.filter_signal_fir<a class="headerlink" href="#neurodsp-filt-filter-signal-fir" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="neurodsp.filt.filter_signal_fir">
+<code class="sig-prename descclassname">neurodsp.filt.</code><code class="sig-name descname">filter_signal_fir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">pass_type</span></em>, <em class="sig-param"><span class="n">f_range</span></em>, <em class="sig-param"><span class="n">n_cycles</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">n_seconds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">remove_edges</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">print_transitions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_properties</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_filter</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/filt/fir.html#filter_signal_fir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.filt.filter_signal_fir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply an FIR filter to a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series to be filtered.</p>
+</dd>
+<dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
+</dd>
+<dt><strong>pass_type</strong><span class="classifier">{‘bandpass’, ‘bandstop’, ‘lowpass’, ‘highpass’}</span></dt><dd><p>Which kind of filter to apply:</p>
+<ul class="simple">
+<li><p>‘bandpass’: apply a bandpass filter</p></li>
+<li><p>‘bandstop’: apply a bandstop (notch) filter</p></li>
+<li><p>‘lowpass’: apply a lowpass filter</p></li>
+<li><p>‘highpass’ : apply a highpass filter</p></li>
+</ul>
+</dd>
+<dt><strong>f_range</strong><span class="classifier">tuple of (float, float) or float</span></dt><dd><p>Cutoff frequency(ies) used for filter, specified as f_lo &amp; f_hi.
+For ‘bandpass’ &amp; ‘bandstop’, must be a tuple.
+For ‘lowpass’ or ‘highpass’, can be a float that specifies pass frequency, or can be
+a tuple and is assumed to be (None, f_hi) for ‘lowpass’, and (f_lo, None) for ‘highpass’.</p>
+</dd>
+<dt><strong>n_cycles</strong><span class="classifier">float, optional, default: 3</span></dt><dd><p>Length of filter, in number of cycles, defined at the ‘f_lo’ frequency.
+This parameter is overwritten by <cite>n_seconds</cite>, if provided.</p>
+</dd>
+<dt><strong>n_seconds</strong><span class="classifier">float, optional</span></dt><dd><p>Length of filter, in seconds. This parameter overwrites <cite>n_cycles</cite>.</p>
+</dd>
+<dt><strong>remove_edges</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, replace samples within half the kernel length to be np.nan.</p>
+</dd>
+<dt><strong>print_transitions</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>If True, print out the transition and pass bandwidths.</p>
+</dd>
+<dt><strong>plot_properties</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>If True, plot the properties of the filter, including frequency response and/or kernel.</p>
+</dd>
+<dt><strong>return_filter</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>If True, return the filter coefficients of the FIR filter.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sig_filt</strong><span class="classifier">array</span></dt><dd><p>Filtered time series.</p>
+</dd>
+<dt><strong>filter_coefs</strong><span class="classifier">1d array</span></dt><dd><p>Filter coefficients of the FIR filter. Only returned if <cite>return_filter</cite> is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Apply a band pass FIR filter to a simulated signal:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_sig</span> <span class="o">=</span> <span class="n">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">pass_type</span><span class="o">=</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Apply a high pass FIR filter to a signal, with a specified number of cycles:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt_sig</span> <span class="o">=</span> <span class="n">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">pass_type</span><span class="o">=</span><span class="s1">&#39;highpass&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div style='clear:both'></div></div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

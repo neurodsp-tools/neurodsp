@@ -4,7 +4,7 @@ Spectral Domain Analysis: Variance
 
 Apply spectral domain analyses, calculating variance measures.
 
-This tutorial primarily covers ``neurodsp.spectral.variance``.
+This tutorial primarily covers the ``neurodsp.spectral.variance`` module.
 """
 
 ###################################################################################################
@@ -17,38 +17,48 @@ This tutorial primarily covers ``neurodsp.spectral.variance``.
 
 ###################################################################################################
 
-import numpy as np
+# Import spectral variance functions
+from neurodsp.spectral import compute_spectral_hist, compute_scv, compute_scv_rs
 
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
+
+# Import utilities for loading and plotting data
 from neurodsp.utils import create_times
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
-from neurodsp.plts.spectral import plot_spectral_hist
-from neurodsp.plts.spectral import plot_scv, plot_scv_rs_lines, plot_scv_rs_matrix
-
-from neurodsp import spectral
+from neurodsp.plts.spectral import (plot_spectral_hist, plot_scv,
+                                    plot_scv_rs_lines, plot_scv_rs_matrix)
 
 ###################################################################################################
 # Load example neural signal
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # First, we load the sample data, which is a segment of rat hippocampal LFP
-# taken from the publicly available neuro database CRCNS (hc2).
+# taken from the publicly available database CRCNS (specifically, from the 'hc2' dataset).
 #
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
 #
 
 ###################################################################################################
 
-# Load example data signal
-sig = np.load('../data/sample_data_2.npy')
+# sphinx_gallery_thumbnail_number = 4
+
+# Download, if needed, and load example data files
+sig = load_ndsp_data('sample_data_2.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
+times = create_times(len(sig)/fs, fs)
+
+###################################################################################################
 
 # Plot the loaded signal
-times = create_times(len(sig)/fs, fs)
 plot_time_series(times, sig, xlim=[0, 3])
 
 ###################################################################################################
 #
-# Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
+# Plotting the data, we observe a strong theta oscillation (~6-8 Hz).
 #
 
 ###################################################################################################
@@ -56,7 +66,7 @@ plot_time_series(times, sig, xlim=[0, 3])
 # ------------------
 #
 # First, let's look at computing spectral histograms, with
-# :func:`~neurodsp.spectral.variance.compute_spectral_hist`.
+# :func:`~.compute_spectral_hist`.
 #
 # The PSD is an estimate of the central tendency (mean/median) of the signal's power
 # at each frequency, with the assumption that the signal is relatively stationary and
@@ -72,19 +82,19 @@ plot_time_series(times, sig, xlim=[0, 3])
 ###################################################################################################
 
 # Calculate the spectral histogram
-freqs, bins, spect_hist = spectral.compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
-                                                         cut_pct=(0.1, 99.9))
+freqs, bins, spect_hist = compute_spectral_hist(sig, fs, nbins=50, f_range=(0, 80),
+                                                cut_pct=(0.1, 99.9))
 
 # Calculate a power spectrum, with median Welch
-freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch',
-                                              avg_type='median', nperseg=fs*2)
+freq_med, psd_med = compute_spectrum(sig, fs, method='welch',
+                                     avg_type='median', nperseg=fs*2)
 
 # Plot the spectral histogram
 plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 
 ###################################################################################################
 #
-# Notice in the below plot that not only is theta power higher overall (shifted up),
+# Notice in the plot that not only is theta power higher overall (shifted up),
 # it also has lower variance around its mean.
 #
 
@@ -93,7 +103,7 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 # ---------------------------------------
 #
 # Next, let's look at computing the spectral coefficient of variation, with
-# :func:`~neurodsp.spectral.variance.compute_scv`.
+# :func:`~.compute_scv`.
 #
 # As noted above, the range of log-power values in the theta frequency range is lower
 # compared to other frequencies, while that of 30-100Hz appear to be quite constant
@@ -106,11 +116,11 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 ###################################################################################################
 
 # Calculate SCV
-freqs, scv = spectral.compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
+freqs, scv = compute_scv(sig, fs, nperseg=int(fs), noverlap=0)
 
 ###################################################################################################
 #
-# There is also a plotting function for SCV, :func:`~neurodsp.plts.spectral.plot_scv`.
+# There is also a plotting function for SCV, :func:`~.plot_scv`.
 #
 
 ###################################################################################################
@@ -120,26 +130,24 @@ plot_scv(freqs, scv)
 
 ###################################################################################################
 #
-# As shown above, SCV calculated from the entire segment of data is quite noise due to the
+# As shown above, SCV calculated from the entire segment of data is quite noisy due to the
 # single estimate of mean and standard deviation.
 #
 # To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 # slices from the non-overlapping spectrogram and taking their average.
 #
-# The resample spectral coefficient of variation can be computed with
-# :func:`~neurodsp.spectral.variance.compute_scv_rs`.
+# The resampled spectral coefficient of variation can be computed with :func:`~.compute_scv_rs`.
 #
 
 ###################################################################################################
 
 # Calculate SCV with the resampling method
-freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
-                                                rs_params=(20, 200))
+freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
+                                       rs_params=(20, 200))
 
 ###################################################################################################
 #
-# You can plot the resampled scv, as lines, with
-# :func:`~neurodsp.plts.spectral.plot_scv_rs_lines`.
+# You can plot the resampled SCV, as lines, with :func:`~.plot_scv_rs_lines`.
 #
 
 ###################################################################################################
@@ -157,12 +165,11 @@ plot_scv_rs_lines(freqs, scv_rs)
 ###################################################################################################
 
 # Calculate SCV with the resampling method
-freqs, t_inds, scv_rs = spectral.compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
+freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='rolling', rs_params=(10, 2))
 
 ###################################################################################################
 #
-# You can plot the resampled scv, as a matrix, with
-# :func:`~neurodsp.plts.spectral.plot_scv_rs_matrix`.
+# You can plot the resampled SCV, as a matrix, with :func:`~.plot_scv_rs_matrix`.
 #
 
 ###################################################################################################
@@ -174,10 +181,4 @@ plot_scv_rs_matrix(freqs, t_inds, scv_rs)
 #
 # In the plot below, we see that the theta band (~7Hz) consistently has CV of less
 # than 1 (negative in log10).
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 4
 #

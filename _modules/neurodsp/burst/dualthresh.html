@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.burst.dualthresh &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.burst.dualthresh &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -96,9 +112,9 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="k">import</span> <span class="n">get_avg_func</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">multidim</span>
-<span class="kn">from</span> <span class="nn">neurodsp.timefrequency.hilbert</span> <span class="k">import</span> <span class="n">amp_by_time</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="kn">import</span> <span class="n">get_avg_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.timefrequency.hilbert</span> <span class="kn">import</span> <span class="n">amp_by_time</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
@@ -122,10 +138,10 @@
 <span class="sd">    f_range : tuple of (float, float), optional</span>
 <span class="sd">        Frequency range, to filter signal to, before running burst detection.</span>
 <span class="sd">        If f_range is None, then no filtering is applied prior to running burst detection.</span>
-<span class="sd">    min_n_cycles : float, optional, default=3</span>
+<span class="sd">    min_n_cycles : float, optional, default: 3</span>
 <span class="sd">        Minimum burst duration in to keep.</span>
 <span class="sd">        Only used if `f_range` is defined, and is used as the number of cycles at f_range[0].</span>
-<span class="sd">    min_burst_duration : float, optional, default=None</span>
+<span class="sd">    min_burst_duration : float, optional, default: None</span>
 <span class="sd">        Minimum length of a burst, in seconds. Must be defined if not filtering.</span>
 <span class="sd">        Only used if `f_range` is not defined, or if `min_n_cycles` is set to None.</span>
 <span class="sd">    avg_type : {&#39;median&#39;, &#39;mean&#39;}, optional</span>
@@ -140,6 +156,17 @@
 <span class="sd">    is_burst : 1d array</span>
 <span class="sd">        Boolean indication of where bursts are present in the input signal.</span>
 <span class="sd">        True indicates that a burst was detected at that sample, otherwise False.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Detect bursts using the dual threshold algorithm:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_synaptic_current&#39;: {},</span>
+<span class="sd">    ...                                &#39;sim_bursty_oscillation&#39; : {&#39;freq&#39;: 10}},</span>
+<span class="sd">    ...                    component_variances=[0.1, 0.9])</span>
+<span class="sd">    &gt;&gt;&gt; is_burst = detect_bursts_dual_threshold(sig, fs=500, dual_thresh=(1, 2), f_range=(8, 12))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dual_thresh</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
@@ -167,7 +194,7 @@
     <span class="c1"># Otherwise, make sure minimum duration is set, and use that</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">min_burst_duration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Minimum burst duration must be defined if not filtering&quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Minimum burst duration must be defined if not filtering &quot;</span>
                              <span class="s2">&quot;and using a number of cycles threshold.&quot;</span><span class="p">)</span>
         <span class="n">min_burst_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">min_burst_duration</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
 
@@ -263,7 +290,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

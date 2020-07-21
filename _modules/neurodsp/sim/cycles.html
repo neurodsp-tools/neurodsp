@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.cycles &#8212; neurodsp 2.1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.cycles</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulating individual cycles, of different types.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">gaussian</span><span class="p">,</span> <span class="n">sawtooth</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.info</span> <span class="kn">import</span> <span class="n">get_sim_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.transients</span> <span class="kn">import</span> <span class="n">sim_synaptic_kernel</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="sim_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_cycle.html#neurodsp.sim.cycles.sim_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle_type</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a single cycle of a periodic pattern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">        This is NOT the period of the cycle, but the length of the returned array of the cycle.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    cycle_type : {&#39;sine&#39;, &#39;asine&#39;, &#39;sawtooth&#39;, &#39;gaussian&#39;, &#39;exp&#39;, &#39;2exp&#39;}</span>
+<span class="sd">        What type of cycle to simulate. Options:</span>
+
+<span class="sd">        * sine: a sine wave cycle</span>
+<span class="sd">        * asine: an asymmetric sine wave</span>
+<span class="sd">        * sawtooth: a sawtooth wave</span>
+<span class="sd">        * gaussian: a gaussian cycle</span>
+<span class="sd">        * exp: a cycle with exponential decay</span>
+<span class="sd">        * 2exp: a cycle with exponential rise and decay</span>
+
+<span class="sd">    **cycle_params</span>
+<span class="sd">        Keyword arguments for parameters of the cycle, all as float:</span>
+
+<span class="sd">        * sine: None</span>
+<span class="sd">        * asine: `rdsym`, rise-decay symmetry, from 0-1</span>
+<span class="sd">        * sawtooth: `width`, width of the rising ramp as a proportion of the total cycle</span>
+<span class="sd">        * gaussian: `std`, standard deviation of the gaussian kernel, in seconds</span>
+<span class="sd">        * exp: `tau_d`, decay time, in seconds</span>
+<span class="sd">        * 2exp: `tau_r` &amp; `tau_d` rise time, and decay time, in seconds</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle: 1d array</span>
+<span class="sd">        Simulated cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a half second sinusoid, corresponding to a 2 Hz cycle (frequency=1/n_seconds):</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type=&#39;sine&#39;)</span>
+
+<span class="sd">    Simulate a sawtooth cycle, corresponding to a 10 Hz cycle:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_cycle(n_seconds=0.1, fs=500, cycle_type=&#39;sawtooth&#39;, width=0.3)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Any function defined in sim.cycles as `sim_label_cycle(n_seconds, fs, **params)`,</span>
+<span class="sd">    is accessible by this function. The `cycle_type` input must match the label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cycle_func</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="s1">&#39;sim_&#39;</span> <span class="o">+</span> <span class="n">cycle_type</span> <span class="o">+</span> <span class="s1">&#39;_cycle&#39;</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cycles&#39;</span><span class="p">])</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle_func</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="sim_sine_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.cycles.sim_sine_cycle.html#neurodsp.sim.cycles.sim_sine_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_sine_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a cycle of a sine wave.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated sine cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a cycle of a 1 Hz sine wave:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_sine_cycle(n_seconds=1, fs=500)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="sim_asine_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.cycles.sim_asine_cycle.html#neurodsp.sim.cycles.sim_asine_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_asine_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">rdsym</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a cycle of an asymmetric sine wave.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">        Note that this is NOT the period of the cycle, but the length of the returned array</span>
+<span class="sd">        that contains the cycle, which can be (and usually is) much shorter.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    rdsym : float</span>
+<span class="sd">        Rise-decay symmetry of the cycle, as fraction of the period in the rise time, where:</span>
+<span class="sd">        = 0.5 - symmetric (sine wave)</span>
+<span class="sd">        &lt; 0.5 - shorter rise, longer decay</span>
+<span class="sd">        &gt; 0.5 - longer rise, shorter decay</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated asymmetric cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a 2 Hz asymmetric sine cycle:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param</span><span class="p">(</span><span class="n">rdsym</span><span class="p">,</span> <span class="s1">&#39;rdsym&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+
+    <span class="c1"># Determine number of samples in rise and decay periods</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
+    <span class="n">n_rise</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">rdsym</span><span class="p">))</span>
+    <span class="n">n_decay</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="n">n_rise</span>
+
+    <span class="c1"># Make phase array for an asymmetric cycle</span>
+    <span class="c1">#   Note: the ceil &amp; floor are so the cycle has the right number of samples if n_decay is odd</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_rise</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_decay</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_rise</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="c1"># Convert phase definition to signal</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="sim_sawtooth_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.cycles.sim_sawtooth_cycle.html#neurodsp.sim.cycles.sim_sawtooth_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_sawtooth_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a cycle of a sawtooth wave.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    width : float</span>
+<span class="sd">        Width of the rising ramp as a proportion of the total cycle.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated sawtooth cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a symmetric cycle of a sawtooth wave:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_sawtooth_cycle(n_seconds=0.25, fs=500, width=0.5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">sawtooth</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="sim_gaussian_cycle"><a class="viewcode-back" href="../../../generated/neurodsp.sim.cycles.sim_gaussian_cycle.html#neurodsp.sim.cycles.sim_gaussian_cycle">[docs]</a><span class="k">def</span> <span class="nf">sim_gaussian_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a cycle of a gaussian.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    std : float</span>
+<span class="sd">        Standard deviation of the gaussian kernel, in seconds.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated gaussian cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a cycle of a gaussian wave:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)),</span> <span class="n">std</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<span class="c1"># Alias single exponential cycle from `sim_synaptic_kernel`</span>
+<span class="k">def</span> <span class="nf">sim_exp_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tau_d</span><span class="o">=</span><span class="n">tau_d</span><span class="p">)</span>
+<span class="n">sim_exp_cycle</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="o">.</span><span class="vm">__doc__</span>
+
+
+<span class="c1"># Alias double exponential cycle from `sim_synaptic_kernel`</span>
+<span class="k">def</span> <span class="nf">sim_2exp_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="o">=</span><span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="o">=</span><span class="n">tau_d</span><span class="p">)</span>
+<span class="n">sim_2exp_cycle</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="o">.</span><span class="vm">__doc__</span>
+
+
+<span class="k">def</span> <span class="nf">create_cycle_time</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a vector of time indices, in radians, for a single cycle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of simulated kernel in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    1d array</span>
+<span class="sd">        Time indices.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create time indices, in radians, for a single cycle:</span>
+
+<span class="sd">    &gt;&gt;&gt; indices = create_cycle_time(n_seconds=1, fs=500)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n_seconds</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">fs</span> <span class="o">*</span> <span class="n">n_seconds</span><span class="p">)</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">phase_shift_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Phase shift a simulated cycle time series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Cycle values to apply a rotation shift to.</span>
+<span class="sd">    shift : float</span>
+<span class="sd">        The amount to rotationally shift the cycle.</span>
+<span class="sd">        The shift is defined as a relative proportion of cycle, between [0, 1].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Rotated cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Phase shift a simulated sine wave cycle:</span>
+
+<span class="sd">    &gt;&gt;&gt; cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type=&#39;sine&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; shifted_cycle = phase_shift_cycle(cycle, shift=0.5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="s1">&#39;shift&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+
+    <span class="n">shift</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">shift</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cycle</span><span class="p">)))</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">shift</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wrap&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

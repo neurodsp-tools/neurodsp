@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.sim.periodic &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.periodic &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -96,14 +112,15 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">normalize</span>
-<span class="kn">from</span> <span class="nn">neurodsp.sim.transients</span> <span class="k">import</span> <span class="n">sim_cycle</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.norm</span> <span class="kn">import</span> <span class="n">normalize_sig</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.cycles</span> <span class="kn">import</span> <span class="n">sim_cycle</span><span class="p">,</span> <span class="n">phase_shift_cycle</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="sim_oscillation"><a class="viewcode-back" href="../../../generated/neurodsp.sim.periodic.sim_oscillation.html#neurodsp.sim.periodic.sim_oscillation">[docs]</a><span class="nd">@normalize</span>
-<span class="k">def</span> <span class="nf">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">):</span>
+<div class="viewcode-block" id="sim_oscillation"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate an oscillation.</span>
 
 <span class="sd">    Parameters</span>
@@ -117,6 +134,9 @@
 <span class="sd">    cycle : {&#39;sine&#39;, &#39;asine&#39;, &#39;sawtooth&#39;, &#39;gaussian&#39;, &#39;exp&#39;, &#39;2exp&#39;}</span>
 <span class="sd">        What type of oscillation cycle to simulate.</span>
 <span class="sd">        See `sim_cycle` for details on cycle types and parameters.</span>
+<span class="sd">    phase : float, optional, default: 0</span>
+<span class="sd">        If non-zero, applies a phase shift to the oscillation by rotating the cycle.</span>
+<span class="sd">        The shift is defined as a relative proportion of cycle, between [0, 1].</span>
 <span class="sd">    **cycle_params</span>
 <span class="sd">        Parameters for the simulated oscillation cycle.</span>
 
@@ -124,15 +144,31 @@
 <span class="sd">    -------</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Simulated oscillation.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a continuous sinusoidal oscillation at 5 Hz:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_oscillation(n_seconds=1, fs=500, freq=5)</span>
+
+<span class="sd">    Simulate an asymmetric oscillation at 15 Hz, with a phase shift:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_oscillation(n_seconds=1, fs=500, freq=15,</span>
+<span class="sd">    ...                       cycle=&#39;asine&#39;, phase=0.5, rdsym=0.75)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Figure out how many cycles are needed for the signal, &amp; length of each cycle</span>
     <span class="n">n_cycles</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">freq</span><span class="p">))</span>
     <span class="n">n_seconds_cycle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">fs</span> <span class="o">/</span> <span class="n">freq</span><span class="p">))</span> <span class="o">/</span> <span class="n">fs</span>
 
-    <span class="c1"># Create oscillation by tiling a single cycle of the desired oscillation</span>
-    <span class="n">osc_cycle</span> <span class="o">=</span> <span class="n">sim_cycle</span><span class="p">(</span><span class="n">n_seconds_cycle</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">)</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">osc_cycle</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">)</span>
+    <span class="c1"># Create a single cycle of an oscillation</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_cycle</span><span class="p">(</span><span class="n">n_seconds_cycle</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">)</span>
+
+    <span class="c1"># Phase shift the simulated cycle</span>
+    <span class="n">cycle</span> <span class="o">=</span> <span class="n">phase_shift_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
+
+    <span class="c1"># Tile the cycle, to create the desired oscillation</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">)</span>
 
     <span class="c1"># Truncate the length of the signal to be the number of expected samples</span>
     <span class="n">n_samps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
@@ -141,8 +177,7 @@
     <span class="k">return</span> <span class="n">sig</span></div>
 
 
-<div class="viewcode-block" id="sim_bursty_oscillation"><a class="viewcode-back" href="../../../generated/neurodsp.sim.periodic.sim_bursty_oscillation.html#neurodsp.sim.periodic.sim_bursty_oscillation">[docs]</a><span class="nd">@normalize</span>
-<span class="k">def</span> <span class="nf">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">enter_burst</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">leave_burst</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span>
+<div class="viewcode-block" id="sim_bursty_oscillation"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation">[docs]</a><span class="k">def</span> <span class="nf">sim_bursty_oscillation</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">enter_burst</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">leave_burst</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span>
                            <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate a bursty oscillation.</span>
 
@@ -154,9 +189,9 @@
 <span class="sd">        Sampling rate of simulated signal, in Hz.</span>
 <span class="sd">    freq : float</span>
 <span class="sd">        Oscillation frequency, in Hz.</span>
-<span class="sd">    enter_burst : float</span>
+<span class="sd">    enter_burst : float, optional, default: 0.2</span>
 <span class="sd">        Probability of a cycle being oscillating given the last cycle is not oscillating.</span>
-<span class="sd">    leave_burst : float</span>
+<span class="sd">    leave_burst : float, optional, default: 0.2</span>
 <span class="sd">        Probability of a cycle not being oscillating given the last cycle is oscillating.</span>
 <span class="sd">    cycle : {&#39;sine&#39;, &#39;asine&#39;, &#39;sawtooth&#39;, &#39;gaussian&#39;, &#39;exp&#39;, &#39;2exp&#39;}</span>
 <span class="sd">        What type of oscillation cycle to simulate.</span>
@@ -176,14 +211,35 @@
 
 <span class="sd">    If the cycle length does not fit evenly into the simulated data length,</span>
 <span class="sd">    then the last few samples will be non-oscillating.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a bursty oscillation, with a low probability of bursting:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.2, leave_burst=0.8)</span>
+
+<span class="sd">    Simulate a bursty oscillation, with a high probability of bursting:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.8, leave_burst=0.4)</span>
+
+<span class="sd">    Simulate a bursty oscillation, of sawtooth waves:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, cycle=&#39;sawtooth&#39;, width=0.3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Determine number of samples &amp; cycles</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
     <span class="n">n_seconds_cycle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">freq</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span>
 
-    <span class="c1"># Make a single cycle of an oscillation</span>
+    <span class="c1"># Grab normalization parameters, if any were provided</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">cycle_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">cycle_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;variance&#39;</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+
+    <span class="c1"># Make a single cycle of an oscillation, and normalize this cycle</span>
     <span class="n">osc_cycle</span> <span class="o">=</span> <span class="n">sim_cycle</span><span class="p">(</span><span class="n">n_seconds_cycle</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">cycle</span><span class="p">,</span> <span class="o">**</span><span class="n">cycle_params</span><span class="p">)</span>
+    <span class="n">osc_cycle</span> <span class="o">=</span> <span class="n">normalize_sig</span><span class="p">(</span><span class="n">osc_cycle</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">variance</span><span class="p">)</span>
+
+    <span class="c1"># Calculate how many cycles are needed to tile the full signal</span>
     <span class="n">n_samples_cycle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">osc_cycle</span><span class="p">)</span>
     <span class="n">n_cycles</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">/</span> <span class="n">n_samples_cycle</span><span class="p">))</span>
 
@@ -231,7 +287,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

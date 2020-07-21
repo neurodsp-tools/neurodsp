@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.spectral.utils &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.spectral.utils &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -99,7 +115,7 @@
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="trim_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.utils.trim_spectrum.html#neurodsp.spectral.utils.trim_spectrum">[docs]</a><span class="k">def</span> <span class="nf">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">power_spectra</span><span class="p">,</span> <span class="n">f_range</span><span class="p">):</span>
+<div class="viewcode-block" id="trim_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.trim_spectrum.html#neurodsp.spectral.trim_spectrum">[docs]</a><span class="k">def</span> <span class="nf">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">power_spectra</span><span class="p">,</span> <span class="n">f_range</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract a frequency range of interest from power spectra.</span>
 
 <span class="sd">    Parameters</span>
@@ -107,7 +123,7 @@
 <span class="sd">    freqs : 1d array</span>
 <span class="sd">        Frequency values for the power spectrum.</span>
 <span class="sd">    power_spectra : 1d or 2d array</span>
-<span class="sd">        Power spectral density values.</span>
+<span class="sd">        Power spectral density values. If 2d, should be as [n_spectra, n_freqs].</span>
 <span class="sd">    f_range: list of [float, float]</span>
 <span class="sd">        Frequency range to restrict to, as [f_low, f_high].</span>
 
@@ -122,20 +138,104 @@
 <span class="sd">    -----</span>
 <span class="sd">    This function extracts frequency ranges &gt;= f_low and &lt;= f_high.</span>
 <span class="sd">    It does not round to below or above f_low and f_high, respectively.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Trim the power spectrum of a simulated time series:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, spectrum = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; freqs_ext, spec_ext = trim_spectrum(freqs, spectrum, [1, 30])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Create mask to index only requested frequencies</span>
     <span class="n">f_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">freqs</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freqs</span> <span class="o">&lt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c1"># Restrict freqs &amp; psd to requested range. The if/else is to cover both 1d or 2d arrays</span>
+    <span class="c1"># Restrict freqs &amp; spectrum to requested range</span>
+    <span class="c1">#   The if/else is to cover both 1d or 2d arrays</span>
     <span class="n">freqs_ext</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">f_mask</span><span class="p">]</span>
     <span class="n">power_spectra_ext</span> <span class="o">=</span> <span class="n">power_spectra</span><span class="p">[</span><span class="n">f_mask</span><span class="p">]</span> <span class="k">if</span> <span class="n">power_spectra</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> \
         <span class="k">else</span> <span class="n">power_spectra</span><span class="p">[:,</span> <span class="n">f_mask</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">freqs_ext</span><span class="p">,</span> <span class="n">power_spectra_ext</span></div>
 
+<div class="viewcode-block" id="trim_spectrogram"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.trim_spectrogram.html#neurodsp.spectral.trim_spectrogram">[docs]</a><span class="k">def</span> <span class="nf">trim_spectrogram</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">spg</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract a frequency or time range of interest from a spectrogram.</span>
 
-<div class="viewcode-block" id="rotate_powerlaw"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.utils.rotate_powerlaw.html#neurodsp.spectral.utils.rotate_powerlaw">[docs]</a><span class="k">def</span> <span class="nf">rotate_powerlaw</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">delta_exponent</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequency values for the spectrogram.</span>
+<span class="sd">    times: 1d array</span>
+<span class="sd">        Time values for the spectrogram.</span>
+<span class="sd">    spg : 2d array</span>
+<span class="sd">        Spectrogram, or time frequency representation of a signal.</span>
+<span class="sd">        Formatted as [n_freqs, n_time_windows].</span>
+<span class="sd">    f_range: list of [float, float]</span>
+<span class="sd">        Frequency range to restrict to, as [f_low, f_high].</span>
+<span class="sd">    t_range: list of [float, float]</span>
+<span class="sd">        Time range to restrict to, as [t_low, t_high].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs_ext : 1d array</span>
+<span class="sd">        Extracted frequency values for the power spectrum.</span>
+<span class="sd">    times_ext: 1d array</span>
+<span class="sd">        Extracted segment time values</span>
+<span class="sd">    spg_ext : 2d array</span>
+<span class="sd">        Extracted spectrogram values.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function extracts frequency ranges &gt;= f_low and &lt;= f_high,</span>
+<span class="sd">    and time ranges &gt;= t_low and &lt;= t_high. It does not round to below</span>
+<span class="sd">    or above f_low and f_high, or t_low and t_high, respectively.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Trim the spectrogram of a simulated time series:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.timefrequency import compute_wavelet_transform</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.utils.data import create_times, create_freqs</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; n_seconds = 10</span>
+<span class="sd">    &gt;&gt;&gt; times = create_times(n_seconds, fs)</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds, fs,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs = create_freqs(1, 15)</span>
+<span class="sd">    &gt;&gt;&gt; mwt = compute_wavelet_transform(sig, fs, freqs)</span>
+<span class="sd">    &gt;&gt;&gt; spg = abs(mwt)**2</span>
+<span class="sd">    &gt;&gt;&gt; freqs_ext, times_ext, spg_ext = trim_spectrogram(freqs, times, spg,</span>
+<span class="sd">    ...                                                  f_range=[8, 12], t_range=[0, 5])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize spg_ext, to define for case in which neither f_range nor t_range is defined</span>
+    <span class="n">spg_ext</span> <span class="o">=</span> <span class="n">spg</span>
+
+    <span class="c1"># Restrict frequency range of the spectrogram</span>
+    <span class="k">if</span> <span class="n">f_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">f_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">freqs</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freqs</span> <span class="o">&lt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">freqs_ext</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">f_mask</span><span class="p">]</span>
+        <span class="n">spg_ext</span> <span class="o">=</span> <span class="n">spg_ext</span><span class="p">[</span><span class="n">f_mask</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">freqs_ext</span> <span class="o">=</span> <span class="n">freqs</span>
+
+    <span class="c1"># Restrict time range of the spectrogram</span>
+    <span class="k">if</span> <span class="n">t_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">times_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">times</span> <span class="o">&gt;=</span> <span class="n">t_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">times</span> <span class="o">&lt;=</span> <span class="n">t_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">times_ext</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="n">times_mask</span><span class="p">]</span>
+        <span class="n">spg_ext</span> <span class="o">=</span> <span class="n">spg_ext</span><span class="p">[:,</span> <span class="n">times_mask</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">times_ext</span> <span class="o">=</span> <span class="n">times</span>
+
+    <span class="k">return</span> <span class="n">freqs_ext</span><span class="p">,</span> <span class="n">times_ext</span><span class="p">,</span> <span class="n">spg_ext</span></div>
+
+
+<div class="viewcode-block" id="rotate_powerlaw"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.rotate_powerlaw.html#neurodsp.spectral.rotate_powerlaw">[docs]</a><span class="k">def</span> <span class="nf">rotate_powerlaw</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">delta_exponent</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Rotate the power law exponent of a power spectrum.</span>
 
 <span class="sd">    Parameters</span>
@@ -146,15 +246,26 @@
 <span class="sd">        Power spectrum to be rotated.</span>
 <span class="sd">    delta_exponent : float</span>
 <span class="sd">        Change in power law exponent to be applied.</span>
-<span class="sd">        Positive is counterclockwise rotation (flatten), negative is clockwise rotation (steepen).</span>
-<span class="sd">    f_rotation : float, optional, default=1</span>
-<span class="sd">        Frequency at which to rotate the spectrum, where power is unchanged by the rotation, in Hz.</span>
+<span class="sd">        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).</span>
+<span class="sd">    f_rotation : float, optional, default: 1</span>
+<span class="sd">        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.</span>
 <span class="sd">        This only matters if not further normalizing signal variance.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    rotated_spectrum : 1d array</span>
 <span class="sd">        Rotated spectrum.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Rotate a power spectrum, calculated on simulated data:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, spectrum = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; rotated_spectrum = rotate_powerlaw(freqs, spectrum, -1)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -186,7 +297,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

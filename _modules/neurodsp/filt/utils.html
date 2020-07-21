@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.filt.utils &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.utils &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -95,10 +111,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;Utility functions for filtering.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">freqz</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">freqz</span><span class="p">,</span> <span class="n">sosfreqz</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">multidim</span>
-<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="k">import</span> <span class="n">check_filter_definition</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="kn">import</span> <span class="n">check_filter_definition</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
@@ -134,15 +150,17 @@
     <span class="k">return</span> <span class="n">pass_type</span>
 
 
-<div class="viewcode-block" id="compute_frequency_response"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_frequency_response.html#neurodsp.filt.utils.compute_frequency_response">[docs]</a><span class="k">def</span> <span class="nf">compute_frequency_response</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_frequency_response"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_frequency_response.html#neurodsp.filt.utils.compute_frequency_response">[docs]</a><span class="k">def</span> <span class="nf">compute_frequency_response</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute the frequency response of a filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    b_vals : 1d array</span>
-<span class="sd">        B value filter coefficients for a filter.</span>
-<span class="sd">    a_vals : 1d array</span>
-<span class="sd">        A value filter coefficients for a filter.</span>
+<span class="sd">    filter_coefs : 1d or 2d array</span>
+<span class="sd">        If 1d, interpreted as the B-value filter coefficients.</span>
+<span class="sd">        If 2d, interpreted as the second-order (sos) filter coefficients.</span>
+<span class="sd">    a_vals : 1d array or None</span>
+<span class="sd">        The A-value filter coefficients for a filter.</span>
+<span class="sd">        If second-order filter coefficients are provided in `filter_coefs`, must be None.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
 
@@ -152,9 +170,32 @@
 <span class="sd">        Frequency vector corresponding to attenuation decibels, in Hz.</span>
 <span class="sd">    db : 1d array</span>
 <span class="sd">        Degree of attenuation for each frequency specified in `f_db`, in dB.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the frequency response for an FIR filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.fir import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(8, 12))</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)</span>
+
+<span class="sd">    Compute the frequency response for an IIR filter, which uses SOS coefficients:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.iir import design_iir_filter</span>
+<span class="sd">    &gt;&gt;&gt; sos_coefs = design_iir_filter(fs=500, pass_type=&#39;bandpass&#39;,</span>
+<span class="sd">    ...                               f_range=(8, 12), butterworth_order=3)</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(sos_coefs, None, fs=500)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">w_vals</span><span class="p">,</span> <span class="n">h_vals</span> <span class="o">=</span> <span class="n">freqz</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">worN</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">filter_coefs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">a_vals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Compute response for B &amp; A value filter coefficient inputs</span>
+        <span class="n">w_vals</span><span class="p">,</span> <span class="n">h_vals</span> <span class="o">=</span> <span class="n">freqz</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">worN</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">filter_coefs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">a_vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Compute response for sos filter coefficient inputs</span>
+        <span class="n">w_vals</span><span class="p">,</span> <span class="n">h_vals</span> <span class="o">=</span> <span class="n">sosfreqz</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">worN</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The organization of the filter coefficient inputs is not understood.&quot;</span><span class="p">)</span>
+
     <span class="n">f_db</span> <span class="o">=</span> <span class="n">w_vals</span> <span class="o">*</span> <span class="n">fs</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
     <span class="n">db</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">h_vals</span><span class="p">))</span>
 
@@ -185,6 +226,13 @@
 <span class="sd">    -------</span>
 <span class="sd">    pass_bw : float</span>
 <span class="sd">        The pass bandwidth of the filter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the bandwidth of a bandpass filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_pass_band(fs=500, pass_type=&#39;bandpass&#39;, f_range=(5, 25))</span>
+<span class="sd">    20.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span> <span class="o">=</span> <span class="n">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
@@ -216,6 +264,25 @@
 <span class="sd">    -------</span>
 <span class="sd">    transition_band : float</span>
 <span class="sd">        The transition bandwidth of the filter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the transition band of an FIR filter, using the computed frequency response:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.fir import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; compute_transition_band(f_db, db, low=-20, high=-3)</span>
+<span class="sd">    0.5</span>
+
+<span class="sd">    Compute the transition band of an IIR filter, using the computed frequency response:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.iir import design_iir_filter</span>
+<span class="sd">    &gt;&gt;&gt; sos = design_iir_filter(fs=500, pass_type=&#39;bandstop&#39;,</span>
+<span class="sd">    ...                         f_range=(10, 20), butterworth_order=7)</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(sos, None, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; compute_transition_band(f_db, db, low=-20, high=-3)</span>
+<span class="sd">    2.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># This gets the indices of transitions to the values in searched for range</span>
@@ -227,7 +294,7 @@
 
 
 <div class="viewcode-block" id="compute_nyquist"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_nyquist.html#neurodsp.filt.utils.compute_nyquist">[docs]</a><span class="k">def</span> <span class="nf">compute_nyquist</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the nyquist frequency.</span>
+    <span class="sd">&quot;&quot;&quot;Compute the Nyquist frequency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -237,7 +304,14 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
-<span class="sd">        The nyquist frequency of a signal with the given sampling rate, in Hz.</span>
+<span class="sd">        The Nyquist frequency of a signal with the given sampling rate, in Hz.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the Nyquist frequency for a 500 Hz sampling rate:</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_nyquist(fs=500)</span>
+<span class="sd">    250.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">fs</span> <span class="o">/</span> <span class="mf">2.</span></div>
@@ -258,6 +332,18 @@
 <span class="sd">    -------</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Filter signal with edge artifacts switched to NaNs.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply a filter and remove the filter edges of the filtered signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.fir import design_fir_filter, apply_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig = apply_fir_filter(sig, filter_coefs)</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig_no_edges = remove_filter_edges(filt_sig, filt_len=len(filter_coefs))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">n_rmv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">filt_len</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
@@ -279,7 +365,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Burst Detection &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burst Detection &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -93,23 +109,26 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="burst-detection">
 <span id="sphx-glr-auto-tutorials-burst-plot-burstdetection-py"></span><h1>Burst Detection<a class="headerlink" href="#burst-detection" title="Permalink to this headline">¶</a></h1>
 <p>Analyze neural signals for bursts of oscillations of interest.</p>
-<p>This tutorial primarily covers <code class="docutils literal notranslate"><span class="pre">neurodsp.burst</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.burst</span></code> module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import burst detection functions</span>
+<span class="kn">from</span> <span class="nn">neurodsp.burst</span> <span class="kn">import</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">,</span> <a href="../../generated/neurodsp.burst.compute_burst_stats.html#neurodsp.burst.compute_burst_stats" title="neurodsp.burst.compute_burst_stats" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">compute_burst_stats</span></a>
 
-<span class="kn">from</span> <span class="nn">neurodsp</span> <span class="k">import</span> <span class="n">sim</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">create_times</span>
-<span class="kn">from</span> <span class="nn">neurodsp.burst</span> <span class="k">import</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">,</span> <span class="n">compute_burst_stats</span>
+<span class="c1"># Import simulation code for creating test data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_combined.html#neurodsp.sim.sim_combined" title="neurodsp.sim.sim_combined" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_combined</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
 
-<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="k">import</span> <span class="n">plot_time_series</span><span class="p">,</span> <span class="n">plot_bursts</span>
+<span class="c1"># Import utilities for loading and plotting data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.download</span> <span class="kn">import</span> <span class="n">load_ndsp_data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
-<span class="n">sim</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="simulate-a-bursty-oscillation">
@@ -123,19 +142,18 @@ with an aperiodic component.</p>
 <span class="c1"># Define simulation components</span>
 <span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n_neurons&#39;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;firing_rate&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
                                         <span class="s1">&#39;t_ker&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;tau_r&#39;</span><span class="p">:</span><span class="mf">0.002</span><span class="p">,</span> <span class="s1">&#39;tau_d&#39;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">},</span>
-              <span class="s1">&#39;sim_bursty_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-                                          <span class="s1">&#39;prob_enter_burst&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;prob_leave_burst&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">}}</span>
+              <span class="s1">&#39;sim_bursty_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;enter_burst&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;leave_burst&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">}}</span>
 
 <span class="c1"># Simulate a signal with a bursty oscillation with an aperiodic component &amp; a time vector</span>
-<span class="n">sig</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_combined.html#neurodsp.sim.sim_combined" title="neurodsp.sim.sim_combined" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_combined</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;Simulated EEG&#39;</span><span class="p">)</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;Simulated EEG&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_BurstDetection_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_001.png" />
+<img alt="plot BurstDetection" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_001.png" />
 <p>In the simulated signal above, we can see some bursty 10 Hz oscillations.</p>
 </div>
 <div class="section" id="dual-amplitude-threshold-algorithm">
@@ -158,25 +176,24 @@ the lower amplitude threshold.</p>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 
 <span class="c1"># Detect bursts using dual threshold algorithm</span>
-<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp_dual_thresh</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp_dual_thresh</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can plot detected bursts using
-<a class="reference internal" href="../../generated/neurodsp.plts.time_series.plot_bursts.html#neurodsp.plts.time_series.plot_bursts" title="neurodsp.plts.time_series.plot_bursts"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_bursts()</span></code></a>.</p>
+<p>You can plot detected bursts using <a class="reference internal" href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_bursts()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<a href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Simulated EEG&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_BurstDetection_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_002.png" />
+<img alt="plot BurstDetection" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_002.png" />
 <p>The graph above shows the bursting activity in red.</p>
 <p>The algorithm was used with thresh=(1, 2), so any time point with more than 3 times the
 median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.</p>
 <div class="section" id="checking-burst-statistics">
 <h3>Checking Burst Statistics<a class="headerlink" href="#checking-burst-statistics" title="Permalink to this headline">¶</a></h3>
 <p>Once you have detected bursts, you can calculate some statistics on those bursts with
-<code class="xref py py-func docutils literal notranslate"><span class="pre">detect_bursts_dual_threshold()</span></code>.</p>
+<a class="reference internal" href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">detect_bursts_dual_threshold()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute burst statistics</span>
-<span class="n">burst_stats</span> <span class="o">=</span> <span class="n">compute_burst_stats</span><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">burst_stats</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.compute_burst_stats.html#neurodsp.burst.compute_burst_stats" title="neurodsp.burst.compute_burst_stats" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">compute_burst_stats</span></a><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
 <span class="c1"># Print out burst statistic information</span>
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">burst_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -185,58 +202,64 @@ median magnitude in the alpha range (8-12 Hz) was marked as bursting activity.</
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>n_bursts                : 2
-duration_mean           : 0.5515
-duration_std            : 0.10850000000000001
-percent_burst           : 22.06
+duration_mean           : 0.552
+duration_std            : 0.10800000000000001
+percent_burst           : 22.08
 bursts_per_second       : 0.4
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="burst-detection-applied-to-real-recordings">
-<h2>Burst detection applied to real recordings<a class="headerlink" href="#burst-detection-applied-to-real-recordings" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="burst-detection-on-real-data">
+<h2>Burst Detection on Real Data<a class="headerlink" href="#burst-detection-on-real-data" title="Permalink to this headline">¶</a></h2>
 <p>Next up, we’ll load a sample of real neural data, and try out the burst detection.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load data &amp; create an associated times vector</span>
-<span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../data/sample_data_1.npy&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data file</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_1.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set sampling rate, and create a times vector for plotting</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-
-<span class="c1"># Detect bursts using the dual threshold algorithm</span>
-<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
-
-<span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_BurstDetection_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_003.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency range to look for bursts</span>
+<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Detect bursts using the dual threshold algorithm</span>
+<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot original signal and burst activity</span>
+<a href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot BurstDetection" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_003.png" />
 <p>No bursts were detected! There could be a number of reasons for this.
 One of the easy things to do is to adjust the parameters for burst detection.</p>
 <p>Let’s try making the thresholds lower.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detect bursts using dual threshold algorithm</span>
-<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
+<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">f_range</span><span class="p">)</span>
 
 <span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<a href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_BurstDetection_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_004.png" />
+<img alt="plot BurstDetection" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_004.png" />
 <p>Better, but not very good. Note the undetected cycles just before 9s.</p>
 <p>There’s another serious issue: we’re looking for alpha bursts,
 but the bursts in this data are <em>beta</em> bursts.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detect bursts</span>
-<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="View documentation for neurodsp.burst.detect_bursts_dual_threshold"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+<span class="n">bursting</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
 
 <span class="c1"># Plot original signal and burst activity</span>
-<span class="n">plot_bursts</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
+<a href="../../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Burst&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_BurstDetection_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_005.png" />
+<img alt="plot BurstDetection" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_BurstDetection_005.png" />
 <p>Much better! This just goes to show that burst detection is an art that
 requires some knowledge of the data you’re working with.</p>
 <p>Finally, we can again check our burst statistics.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute burst statistics</span>
-<span class="n">burst_stats</span> <span class="o">=</span> <span class="n">compute_burst_stats</span><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">burst_stats</span> <span class="o">=</span> <a href="../../generated/neurodsp.burst.compute_burst_stats.html#neurodsp.burst.compute_burst_stats" title="neurodsp.burst.compute_burst_stats" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">compute_burst_stats</span></a><span class="p">(</span><span class="n">bursting</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
 <span class="c1"># Print out burst statistic information</span>
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">burst_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -251,14 +274,12 @@ percent_burst           : 34.91
 bursts_per_second       : 0.5
 </pre></div>
 </div>
-<p>Sphinx settings:
-sphinx_gallery_thumbnail_number = 2</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.602 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.511 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-burst-plot-burstdetection-py">
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/16691a9254c9356c13d0be52bcc5b22e/plot_BurstDetection.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_BurstDetection.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/d4bd9304f3abcdd0adfbe09e8f5f1836/plot_BurstDetection.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_BurstDetection.ipynb</span></code></a></p>
 </div>
 </div>
@@ -279,7 +300,7 @@ sphinx_gallery_thumbnail_number = 2</p>
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

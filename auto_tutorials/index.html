@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Tutorials &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorials &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -93,9 +109,9 @@
       
   <div class="section" id="tutorials">
 <span id="sphx-glr-auto-tutorials"></span><span id="id1"></span><h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
-<p>Below is a series of notebooks that provide an introduction to the tools in neurodsp.</p>
+<p>Tutorials, split up by each sub-module, introducing the tools available in NeuroDSP.</p>
 <div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
+<p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#burst-detection" id="id12">Burst Detection</a></p></li>
 <li><p><a class="reference internal" href="#filtering" id="id13">Filtering</a></p></li>
@@ -109,7 +125,7 @@
 <span id="sphx-glr-auto-tutorials-burst"></span><h2><a class="toc-backref" href="#id12">Burst Detection</a><a class="headerlink" href="#burst-detection" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the burst module.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><div class="figure align-default" id="id2">
-<img alt="../_images/sphx_glr_plot_BurstDetection_thumb.png" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
+<img alt="Burst Detection" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
@@ -118,8 +134,8 @@
 <div class="section" id="filtering">
 <span id="sphx-glr-auto-tutorials-filt"></span><h2><a class="toc-backref" href="#id13">Filtering</a><a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the filt module.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="Using digital filters on neural signals, including highpass, lowpass, bandpass &amp; bandstop."><div class="figure align-default" id="id3">
-<img alt="../_images/sphx_glr_plot_Filtering_thumb.png" src="../_images/sphx_glr_plot_Filtering_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="Apply digital filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filte..."><div class="figure align-default" id="id3">
+<img alt="Filtering" src="../_images/sphx_glr_plot_Filtering_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="filt/plot_Filtering.html#sphx-glr-auto-tutorials-filt-plot-filtering-py"><span class="std std-ref">Filtering</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
@@ -129,13 +145,13 @@
 <span id="sphx-glr-auto-tutorials-rhythm"></span><h2><a class="toc-backref" href="#id14">Rhythm Detection &amp; Analyses</a><a class="headerlink" href="#rhythm-detection-analyses" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the rhythm module.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Compute lagged coherence on neural signals."><div class="figure align-default" id="id4">
-<img alt="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
+<img alt="Lagged Coherence" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer" tooltip="Find recurrent patterns in a neural signal using Sliding Window Matching."><div class="figure align-default" id="id5">
-<img alt="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
+<img alt="Sliding Window Matching" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
@@ -145,19 +161,19 @@
 <span id="sphx-glr-auto-tutorials-sim"></span><h2><a class="toc-backref" href="#id15">Simulating Signals</a><a class="headerlink" href="#simulating-signals" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the sim module.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><div class="figure align-default" id="id6">
-<img alt="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
+<img alt="Simulating Aperiodic Signals" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer" tooltip="Simulate combined signals, with periodic and aperiodic components."><div class="figure align-default" id="id7">
-<img alt="../_images/sphx_glr_plot_SimulateCombined_thumb.png" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
+<img alt="Simulating Combined Signals" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="sim/plot_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic, or oscillatory, signals."><div class="figure align-default" id="id8">
-<img alt="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" src="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" />
+<img alt="Simulating Periodic Signals" src="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="sim/plot_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
@@ -167,13 +183,13 @@
 <span id="sphx-glr-auto-tutorials-spectral"></span><h2><a class="toc-backref" href="#id16">Spectral Analyses</a><a class="headerlink" href="#spectral-analyses" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the spectral module.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating power measures."><div class="figure align-default" id="id9">
-<img alt="../_images/sphx_glr_plot_SpectralPower_thumb.png" src="../_images/sphx_glr_plot_SpectralPower_thumb.png" />
+<img alt="Spectral Domain Analysis: Power" src="../_images/sphx_glr_plot_SpectralPower_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="spectral/plot_SpectralPower.html#sphx-glr-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">Spectral Domain Analysis: Power</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating variance measures."><div class="figure align-default" id="id10">
-<img alt="../_images/sphx_glr_plot_SpectralVariance_thumb.png" src="../_images/sphx_glr_plot_SpectralVariance_thumb.png" />
+<img alt="Spectral Domain Analysis: Variance" src="../_images/sphx_glr_plot_SpectralVariance_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="spectral/plot_SpectralVariance.html#sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Spectral Domain Analysis: Variance</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
@@ -183,17 +199,17 @@
 <span id="sphx-glr-auto-tutorials-timefreq"></span><h2><a class="toc-backref" href="#id17">Time Frequency Analyses</a><a class="headerlink" href="#time-frequency-analyses" title="Permalink to this headline">¶</a></h2>
 <p>Tutorials for the timefreq module.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="Estimate instantaneous measures of phase, amplitude, and frequency."><div class="figure align-default" id="id11">
-<img alt="../_images/sphx_glr_plot_InstantaneousMeasures_thumb.png" src="../_images/sphx_glr_plot_InstantaneousMeasures_thumb.png" />
+<img alt="Time-frequency analysis" src="../_images/sphx_glr_plot_InstantaneousMeasures_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="timefreq/plot_InstantaneousMeasures.html#sphx-glr-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">Time-frequency analysis</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
-<div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/bf249085d61f67bfd79e71cb542c921e/auto_tutorials_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_tutorials_python.zip</span></code></a></p>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/91b48d17728c4a9679a31980d0dbf8a5/auto_tutorials_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_tutorials_python.zip</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/945d08d2350b2de2c5e62e2a7c6892d2/auto_tutorials_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">auto_tutorials_jupyter.zip</span></code></a></p>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/b17fad5ed6d0832a1b95cdb7280f5fb6/auto_tutorials_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">auto_tutorials_jupyter.zip</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -213,7 +229,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

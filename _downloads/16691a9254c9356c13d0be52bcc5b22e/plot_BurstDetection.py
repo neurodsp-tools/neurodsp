@@ -4,23 +4,28 @@ Burst Detection
 
 Analyze neural signals for bursts of oscillations of interest.
 
-This tutorial primarily covers ``neurodsp.burst``.
+This tutorial primarily covers the ``neurodsp.burst`` module.
 """
 
 ###################################################################################################
 
-import numpy as np
+# sphinx_gallery_thumbnail_number = 2
 
-from neurodsp import sim
-from neurodsp.utils import create_times
+# Import burst detection functions
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
+# Import simulation code for creating test data
+from neurodsp.sim import sim_combined
+from neurodsp.utils import set_random_seed, create_times
+
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_bursts
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-sim.set_random_seed(0)
+set_random_seed(0)
 
 ###################################################################################################
 # Simulate a Bursty Oscillation
@@ -39,11 +44,10 @@ n_seconds = 5
 # Define simulation components
 components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
                                         't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
-              'sim_bursty_oscillation' : {'freq' : 10,
-                                          'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
+              'sim_bursty_oscillation' : {'freq' : 10, 'enter_burst' : .2, 'leave_burst' : .2}}
 
 # Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
-sig = sim.sim_combined(n_seconds, fs, components)
+sig = sim_combined(n_seconds, fs, components)
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
@@ -61,7 +65,7 @@ plot_time_series(times, sig, 'Simulated EEG')
 # ----------------------------------
 #
 # First, let's use the dual-amplitude threshold algorithm for burst detection, which
-# we can use with the :func:`~neurodsp.burst.detect_bursts_dual_threshold` function.
+# we can use with the :func:`~.detect_bursts_dual_threshold` function.
 #
 # This algorithm first computes the amplitude at each point in time for a given
 # frequency range. This amplitude is then normalized by the average (default: median)
@@ -87,8 +91,7 @@ bursting = detect_bursts_dual_threshold(sig, fs, amp_dual_thresh, f_range)
 
 ###################################################################################################
 #
-# You can plot detected bursts using
-# :func:`~neurodsp.plts.time_series.plot_bursts`.
+# You can plot detected bursts using :func:`~.plot_bursts`.
 #
 
 ###################################################################################################
@@ -109,7 +112,7 @@ plot_bursts(times, sig, bursting, labels=['Simulated EEG', 'Detected Burst'])
 # ~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Once you have detected bursts, you can calculate some statistics on those bursts with
-# :func:`~neurodsp.burst.utils.detect_bursts_dual_threshold`.
+# :func:`~.detect_bursts_dual_threshold`.
 #
 
 ###################################################################################################
@@ -122,22 +125,30 @@ for key, val in burst_stats.items():
     print('{:15} \t: {}'.format(key, val))
 
 ###################################################################################################
-# Burst detection applied to real recordings
-# ------------------------------------------
+# Burst Detection on Real Data
+# ----------------------------
 #
 # Next up, we'll load a sample of real neural data, and try out the burst detection.
 #
 
 ###################################################################################################
 
-# Load data & create an associated times vector
-sig = np.load('../data/sample_data_1.npy')
+# Download, if needed, and load example data file
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
-f_range = (8, 12)
 times = create_times(len(sig)/fs, fs)
+
+###################################################################################################
+
+# Set the frequency range to look for bursts
+f_range = (8, 12)
 
 # Detect bursts using the dual threshold algorithm
 bursting = detect_bursts_dual_threshold(sig, fs, (3, 3), f_range)
+
+###################################################################################################
 
 # Plot original signal and burst activity
 plot_bursts(times, sig, bursting, labels=['Data', 'Detected Burst'])
@@ -190,9 +201,3 @@ burst_stats = compute_burst_stats(bursting, fs)
 # Print out burst statistic information
 for key, val in burst_stats.items():
     print('{:15} \t: {}'.format(key, val))
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#

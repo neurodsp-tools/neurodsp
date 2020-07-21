@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.filt.checks &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.checks &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -94,7 +110,7 @@
   <h1>Source code for neurodsp.filt.checks</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Checker functions for filtering.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -102,7 +118,7 @@
 <span class="c1">###################################################################################################</span>
 
 <div class="viewcode-block" id="check_filter_definition"><a class="viewcode-back" href="../../../generated/neurodsp.filt.checks.check_filter_definition.html#neurodsp.filt.checks.check_filter_definition">[docs]</a><span class="k">def</span> <span class="nf">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check a filter definition for validity, and get f_lo and f_hi.</span>
+    <span class="sd">&quot;&quot;&quot;Check a filter definition for validity, and get filter frequency range of the filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -129,19 +145,34 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the filter passtype it not understood, or cutoff frequncies are incompatible.</span>
+<span class="sd">        If the filter passtype it not understood, or cutoff frequencies are incompatible.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Check a filter definition, and get the cutoff frequencies returned, if the filter is valid:</span>
+
+<span class="sd">    &gt;&gt;&gt; f_hi, f_lo = check_filter_definition(pass_type=&#39;bandpass&#39;, f_range=(5, 25))</span>
+
+<span class="sd">    Check a filter definition, for an invalid filter.</span>
+<span class="sd">    This example fails since a bandpass filter requires two values for ``f_range``.</span>
+
+<span class="sd">    &gt;&gt;&gt; try:</span>
+<span class="sd">    ...     f_hi, f_lo = check_filter_definition(pass_type=&#39;bandpass&#39;, f_range=(20))</span>
+<span class="sd">    ... except ValueError:</span>
+<span class="sd">    ...     print(&quot;The filter definition is invalid.&quot;)</span>
+<span class="sd">    The filter definition is invalid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">pass_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="s1">&#39;lowpass&#39;</span><span class="p">,</span> <span class="s1">&#39;highpass&#39;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Filter passtype not understood.&#39;</span><span class="p">)</span>
 
-    <span class="c1">## Check that frequency cutoff inputs are appropriate</span>
-    <span class="c1"># For band filters, 2 inputs required &amp; second entry must be &gt; first</span>
+    <span class="c1"># Check that frequency cutoff inputs are appropriate</span>
+    <span class="c1">#   For band filters, 2 inputs required &amp; second entry must be &gt; first</span>
     <span class="k">if</span> <span class="n">pass_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Second cutoff frequency must be greater than first.&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two cutoff frequencies required for bandpass and bandstop filters&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two cutoff frequencies required for bandpass and bandstop filters.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Map f_range to f_lo and f_hi</span>
         <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span> <span class="o">=</span> <span class="n">f_range</span>
@@ -150,14 +181,14 @@
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;lowpass&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
             <span class="n">f_hi</span> <span class="o">=</span> <span class="n">f_range</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
             <span class="n">f_hi</span> <span class="o">=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">f_lo</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;highpass&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
             <span class="n">f_lo</span> <span class="o">=</span> <span class="n">f_range</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
             <span class="n">f_lo</span> <span class="o">=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">f_hi</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -168,15 +199,18 @@
     <span class="k">return</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span></div>
 
 
-<div class="viewcode-block" id="check_filter_properties"><a class="viewcode-back" href="../../../generated/neurodsp.filt.checks.check_filter_properties.html#neurodsp.filt.checks.check_filter_properties">[docs]</a><span class="k">def</span> <span class="nf">check_filter_properties</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">transitions</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="check_filter_properties"><a class="viewcode-back" href="../../../generated/neurodsp.filt.checks.check_filter_properties.html#neurodsp.filt.checks.check_filter_properties">[docs]</a><span class="k">def</span> <span class="nf">check_filter_properties</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span>
+                            <span class="n">transitions</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check a filters properties, including pass band and transition band.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    b_vals : 1d array</span>
-<span class="sd">        B value filter coefficients for a filter.</span>
-<span class="sd">    a_vals : 1d array</span>
-<span class="sd">        A value filter coefficients for a filter.</span>
+<span class="sd">    filter_coefs : 1d or 2d array</span>
+<span class="sd">        If 1d, interpreted as the B-value filter coefficients.</span>
+<span class="sd">        If 2d, interpreted as the second-order (sos) filter coefficients.</span>
+<span class="sd">    a_vals : 1d array or None</span>
+<span class="sd">        The A-value filter coefficients for a filter.</span>
+<span class="sd">        If second-order filter coefficients are provided in `filter_coefs`, must be None.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
 <span class="sd">    pass_type : {&#39;bandpass&#39;, &#39;bandstop&#39;, &#39;lowpass&#39;, &#39;highpass&#39;}</span>
@@ -200,17 +234,28 @@
 <span class="sd">    -------</span>
 <span class="sd">    passes : bool</span>
 <span class="sd">        Whether all the checks pass. False if one or more checks fail.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Check the properties of an FIR filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.fir import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; fs, pass_type, f_range = 500, &#39;bandpass&#39;, (1, 25)</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs, pass_type, f_range)</span>
+<span class="sd">    &gt;&gt;&gt; passes = check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)</span>
+<span class="sd">    Transition bandwidth is 0.5 Hz.</span>
+<span class="sd">    Pass/stop bandwidth is 24.0 Hz.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Import utility functions inside function to avoid circular imports</span>
-    <span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">compute_frequency_response</span><span class="p">,</span>
+    <span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">compute_frequency_response</span><span class="p">,</span>
                                      <span class="n">compute_pass_band</span><span class="p">,</span> <span class="n">compute_transition_band</span><span class="p">)</span>
 
     <span class="c1"># Initialize variable to keep track if all checks pass</span>
     <span class="n">passes</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="c1"># Compute the frequency response</span>
-    <span class="n">f_db</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">compute_frequency_response</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">f_db</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">compute_frequency_response</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
     <span class="c1"># Check that frequency response goes below transition level (has significant attenuation)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">db</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -281,7 +326,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

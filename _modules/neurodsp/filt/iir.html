@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.filt.iir &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.iir &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -94,19 +110,17 @@
   <h1>Source code for neurodsp.filt.iir</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Filter signals with IIR filters.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span><span class="p">,</span> <span class="n">sosfiltfilt</span>
 
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">butter</span><span class="p">,</span> <span class="n">filtfilt</span>
-
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">remove_nans</span><span class="p">,</span> <span class="n">restore_nans</span>
-<span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="k">import</span> <span class="n">compute_nyquist</span><span class="p">,</span> <span class="n">compute_frequency_response</span>
-<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="k">import</span> <span class="n">check_filter_definition</span><span class="p">,</span> <span class="n">check_filter_properties</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.filt</span> <span class="k">import</span> <span class="n">plot_frequency_response</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">remove_nans</span><span class="p">,</span> <span class="n">restore_nans</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="kn">import</span> <span class="n">compute_nyquist</span><span class="p">,</span> <span class="n">compute_frequency_response</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="kn">import</span> <span class="n">check_filter_definition</span><span class="p">,</span> <span class="n">check_filter_properties</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.filt</span> <span class="kn">import</span> <span class="n">plot_frequency_response</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="filter_signal_iir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.iir.filter_signal_iir.html#neurodsp.filt.iir.filter_signal_iir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_iir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">,</span>
+<div class="viewcode-block" id="filter_signal_iir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.filter_signal_iir.html#neurodsp.filt.filter_signal_iir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_iir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">,</span>
                       <span class="n">print_transitions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Apply an IIR filter to a signal.</span>
 
@@ -136,65 +150,84 @@
 <span class="sd">    plot_properties : bool, optional, default: False</span>
 <span class="sd">        If True, plot the properties of the filter, including frequency response and/or kernel.</span>
 <span class="sd">    return_filter : bool, optional, default: False</span>
-<span class="sd">        If True, return the filter coefficients of the IIR filter.</span>
+<span class="sd">        If True, return the second order series coefficients of the IIR filter.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    sig_filt : 1d array</span>
 <span class="sd">        Filtered time series.</span>
-<span class="sd">    filter_coefs : tuple of (1d array, 1d array)</span>
-<span class="sd">        Filter coefficients of the IIR filter, as (b_vals, a_vals).</span>
+<span class="sd">    sos : 2d array</span>
+<span class="sd">        Second order series coefficients of the IIR filter. Has shape of (n_sections, 6).</span>
 <span class="sd">        Only returned if `return_filter` is True.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply a bandstop IIR filter to a simulated signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig = filter_signal_iir(sig, fs=500, pass_type=&#39;bandstop&#39;,</span>
+<span class="sd">    ...                              f_range=(55, 65), butterworth_order=7)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Design filter</span>
-    <span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span> <span class="o">=</span> <span class="n">design_iir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">)</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">design_iir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">)</span>
 
     <span class="c1"># Check filter properties: compute transition bandwidth &amp; run checks</span>
-    <span class="n">check_filter_properties</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">print_transitions</span><span class="p">)</span>
+    <span class="n">check_filter_properties</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">print_transitions</span><span class="p">)</span>
 
     <span class="c1"># Remove any NaN on the edges of &#39;sig&#39;</span>
     <span class="n">sig</span><span class="p">,</span> <span class="n">sig_nans</span> <span class="o">=</span> <span class="n">remove_nans</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
 
     <span class="c1"># Apply filter</span>
-    <span class="n">sig_filt</span> <span class="o">=</span> <span class="n">apply_iir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">)</span>
+    <span class="n">sig_filt</span> <span class="o">=</span> <span class="n">apply_iir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">sos</span><span class="p">)</span>
 
     <span class="c1"># Add NaN back on the edges of &#39;sig&#39;, if there were any at the beginning</span>
     <span class="n">sig_filt</span> <span class="o">=</span> <span class="n">restore_nans</span><span class="p">(</span><span class="n">sig_filt</span><span class="p">,</span> <span class="n">sig_nans</span><span class="p">)</span>
 
     <span class="c1"># Plot frequency response, if desired</span>
     <span class="k">if</span> <span class="n">plot_properties</span><span class="p">:</span>
-        <span class="n">f_db</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">compute_frequency_response</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+        <span class="n">f_db</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">compute_frequency_response</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
         <span class="n">plot_frequency_response</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">return_filter</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">sig_filt</span><span class="p">,</span> <span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sig_filt</span><span class="p">,</span> <span class="n">sos</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sig_filt</span></div>
 
 
-<span class="k">def</span> <span class="nf">apply_iir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">apply_iir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">sos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Apply an IIR filter to a signal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sig : array</span>
 <span class="sd">        Time series to be filtered.</span>
-<span class="sd">    b_vals : 1d array</span>
-<span class="sd">        B value filter coefficients for an IIR filter.</span>
-<span class="sd">    a_vals : 1d array</span>
-<span class="sd">        A value filter coefficients for an IIR filter.</span>
+<span class="sd">    sos : 2d array</span>
+<span class="sd">        Second order series coefficients for an IIR filter. Has shape of (n_sections, 6).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    array</span>
 <span class="sd">        Filtered time series.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply an IIR filter, after designing the filter coefficients:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; sos = design_iir_filter(fs=500, pass_type=&#39;bandstop&#39;,</span>
+<span class="sd">    ...                                    f_range=(55, 65), butterworth_order=7)</span>
+<span class="sd">    &gt;&gt;&gt; filt_signal = apply_iir_filter(sig, sos)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">filtfilt</span><span class="p">(</span><span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="design_iir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.iir.design_iir_filter.html#neurodsp.filt.iir.design_iir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_iir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">):</span>
+<div class="viewcode-block" id="design_iir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_iir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Design an IIR filter.</span>
 
 <span class="sd">    Parameters</span>
@@ -219,15 +252,16 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    b_vals : 1d array</span>
-<span class="sd">        B value filter coefficients for an IIR filter.</span>
-<span class="sd">    a_vals : 1d array</span>
-<span class="sd">        A value filter coefficients for an IIR filter.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    sos : 2d array</span>
+<span class="sd">        Second order series coefficients for an IIR filter. Has shape of (n_sections, 6).</span>
 
-    <span class="c1"># Warn about only recommending IIR for bandstop</span>
-    <span class="k">if</span> <span class="n">pass_type</span> <span class="o">!=</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">:</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;IIR filters are not recommended other than for notch filters.&#39;</span><span class="p">)</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute coefficients for a bandstop IIR filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; sos = design_iir_filter(fs=500, pass_type=&#39;bandstop&#39;,</span>
+<span class="sd">    ...                         f_range=(55, 65), butterworth_order=7)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Check filter definition</span>
     <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span> <span class="o">=</span> <span class="n">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
@@ -241,9 +275,9 @@
         <span class="n">win</span> <span class="o">=</span> <span class="n">f_hi</span> <span class="o">/</span> <span class="n">f_nyq</span>
 
     <span class="c1"># Design filter</span>
-    <span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">butterworth_order</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">)</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">butterworth_order</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">b_vals</span><span class="p">,</span> <span class="n">a_vals</span></div>
+    <span class="k">return</span> <span class="n">sos</span></div>
 </pre></div>
 
     </div>
@@ -258,7 +292,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

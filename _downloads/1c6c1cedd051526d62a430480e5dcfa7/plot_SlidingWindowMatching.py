@@ -4,7 +4,7 @@ Sliding Window Matching
 
 Find recurrent patterns in a neural signal using Sliding Window Matching.
 
-This tutorial primarily covers ``neurodsp.rhythm.swm``.
+This tutorial primarily covers the :func:`~.sliding_window_matching` function.
 """
 
 ###################################################################################################
@@ -19,17 +19,21 @@ This tutorial primarily covers ``neurodsp.rhythm.swm``.
 
 ###################################################################################################
 
-import numpy as np
+# sphinx_gallery_thumbnail_number = 2
 
-from neurodsp.utils import create_times
+# Import the sliding window matching function
 from neurodsp.rhythm import sliding_window_matching
+
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.rhythm import plot_swm_pattern
 from neurodsp.plts.time_series import plot_time_series
+from neurodsp.utils import set_random_seed, create_times
 
 ###################################################################################################
 
-# Set the random seed, for consistency simulating data
-np.random.seed(0)
+# Set random seed, for reproducibility
+set_random_seed(0)
 
 ###################################################################################################
 # Load neural signal
@@ -38,11 +42,14 @@ np.random.seed(0)
 
 ###################################################################################################
 
-# Load example data
-sig = np.load('../data/sample_data_1.npy')
+# Download, if needed, and load example data files
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
 times = create_times(len(sig)/fs, fs)
-f_range = (13, 30)
+
+###################################################################################################
 
 # Plot example signal
 plot_time_series(times, sig)
@@ -58,7 +65,7 @@ plot_time_series(times, sig)
 # the waveform shape of the neural oscillation.
 #
 # Sliding window matching can be applied with the
-# :func:`~neurodsp.rhythm.swm.sliding_window_matching` function.
+# :func:`~.sliding_window_matching` function.
 #
 
 ###################################################################################################
@@ -68,12 +75,12 @@ win_len = .055
 win_spacing = .2
 
 # Apply the sliding window matching algorithm to the time series
-avg_window, window_starts, J = sliding_window_matching(sig, fs, win_len, win_spacing,
-                                                       max_iterations=500)
+avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win_spacing,
+                                                           max_iterations=500)
 
 ###################################################################################################
 #
-# You can plot the resulting pattern with :func:`~neurodsp.plts.rhythm.plot_swm_pattern`.
+# You can plot the resulting pattern with :func:`~.plot_swm_pattern`.
 #
 
 ###################################################################################################
@@ -89,10 +96,4 @@ plot_swm_pattern(avg_window)
 # One thing to explore is how these results change by changing the random seed.
 #
 # Using more data and increasing the number of iterations helps the robustness of the algorithm.
-#
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
 #

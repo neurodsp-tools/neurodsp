@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.spectral.variance &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.spectral.variance &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -95,17 +111,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;Compute spectral measures that measure spectral variance.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">spectrogram</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">spectrogram</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">discard_outliers</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">multidim</span>
-<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="k">import</span> <span class="n">trim_spectrum</span>
-<span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="k">import</span> <span class="n">check_spg_settings</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">discard_outliers</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="kn">import</span> <span class="n">check_spg_settings</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="compute_scv"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.variance.compute_scv.html#neurodsp.spectral.variance.compute_scv">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class="viewcode-block" id="compute_scv"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">compute_scv</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hann&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outlier_pct</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute the spectral coefficient of variation (SCV) at each frequency.</span>
 
@@ -115,7 +131,7 @@
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
-<span class="sd">    window : str or tuple or array_like, optional, default=&#39;hann&#39;</span>
+<span class="sd">    window : str or tuple or array_like, optional, default: &#39;hann&#39;</span>
 <span class="sd">        Desired window to use. See scipy.signal.get_window for a list of available windows.</span>
 <span class="sd">        If array_like, the array will be used as the window and its length must be nperseg.</span>
 <span class="sd">    nperseg : int, optional</span>
@@ -138,6 +154,15 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    White noise should have a SCV of 1 at all frequencies.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the spectral coefficient of variation of a simulated time series:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, scv = compute_scv(sig, fs=500)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Compute spectrogram of data</span>
@@ -152,10 +177,10 @@
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span></div>
 
 
-<div class="viewcode-block" id="compute_scv_rs"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.variance.compute_scv_rs.html#neurodsp.spectral.variance.compute_scv_rs">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<div class="viewcode-block" id="compute_scv_rs"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hann&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute a resampled version of the the spectral coefficient of variation (SCV).</span>
+    <span class="sd">&quot;&quot;&quot;Compute a resampled version of the spectral coefficient of variation (SCV).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    -----------</span>
@@ -163,7 +188,7 @@
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
-<span class="sd">    window : str or tuple or array_like, optional, default=&#39;hann&#39;</span>
+<span class="sd">    window : str or tuple or array_like, optional, default: &#39;hann&#39;</span>
 <span class="sd">        Desired window to use. See scipy.signal.get_window for a list of available windows.</span>
 <span class="sd">        If array_like, the array will be used as the window and its length must be nperseg.</span>
 <span class="sd">    nperseg : int, optional</span>
@@ -195,17 +220,26 @@
 <span class="sd">        Frequencies at which the measure was calculated.</span>
 <span class="sd">    t_inds : 1d array or None</span>
 <span class="sd">        Time indices at which the measure was calculated.</span>
-<span class="sd">        This is only returnd for &#39;rolling&#39; resampling. If &#39;bootstrap&#39;, t_inds = None.</span>
+<span class="sd">        This is only returned for &#39;rolling&#39; resampling. If &#39;bootstrap&#39;, t_inds = None.</span>
 <span class="sd">    scv_rs : 2d array</span>
 <span class="sd">        Resampled spectral coefficient of variation.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    In the resampled verion, instead of a single estimate of mean and standard deviation,</span>
+<span class="sd">    In the resampled version, instead of a single estimate of mean and standard deviation,</span>
 <span class="sd">    the spectrogram is resampled.</span>
 
 <span class="sd">    Resampling can be done either randomly (method=&#39;bootstrap&#39;) or in a time-stepped</span>
 <span class="sd">    manner (method=&#39;rolling&#39;).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the resampled spectral coefficient of variation, using the bootstrap method:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method=&#39;bootstrap&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Compute spectrogram of data</span>
@@ -222,7 +256,7 @@
         <span class="n">nslices</span><span class="p">,</span> <span class="n">ndraws</span> <span class="o">=</span> <span class="n">rs_params</span>
         <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">freqs</span><span class="p">),</span> <span class="n">ndraws</span><span class="p">))</span>
 
-        <span class="c1"># Repeated subsampling of spectrogram randomly, with replacement between draws</span>
+        <span class="c1"># Repeated sub-sampling of spectrogram randomly, with replacement between draws</span>
         <span class="k">for</span> <span class="n">draw</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndraws</span><span class="p">):</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">spg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">nslices</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">scv_rs</span><span class="p">[:,</span> <span class="n">draw</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span>
@@ -254,7 +288,7 @@
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span></div>
 
 
-<div class="viewcode-block" id="compute_spectral_hist"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.variance.compute_spectral_hist.html#neurodsp.spectral.variance.compute_spectral_hist">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<div class="viewcode-block" id="compute_spectral_hist"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">compute_spectral_hist</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hann&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">],</span> <span class="n">cut_pct</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Compute the distribution of log10 power at each frequency from the signal spectrogram.</span>
@@ -265,7 +299,7 @@
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
-<span class="sd">    window : str or tuple or array_like, optional, default=&#39;hann&#39;</span>
+<span class="sd">    window : str or tuple or array_like, optional, default: &#39;hann&#39;</span>
 <span class="sd">        Desired window to use. See scipy.signal.get_window for a list of available windows.</span>
 <span class="sd">        If array_like, the array will be used as the window and its length must be nperseg.</span>
 <span class="sd">    nperseg : int, optional</span>
@@ -293,6 +327,15 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Histogram bins are the same for every frequency, evenly spacing the global min &amp; max power.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the distribution of power, which is the spectral histogram:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39;: {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs=500)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Compute spectrogram of data</span>
@@ -332,7 +375,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

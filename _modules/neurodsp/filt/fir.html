@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.filt.fir &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.fir &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -95,18 +111,19 @@
 <span></span><span class="sd">&quot;&quot;&quot;Filter signals with FIR filters.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">firwin</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">firwin</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">remove_nans</span><span class="p">,</span> <span class="n">restore_nans</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="k">import</span> <span class="n">multidim</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.filt</span> <span class="k">import</span> <span class="n">plot_filter_properties</span>
-<span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="k">import</span> <span class="n">compute_nyquist</span><span class="p">,</span> <span class="n">compute_frequency_response</span><span class="p">,</span> <span class="n">remove_filter_edges</span>
-<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="k">import</span> <span class="n">check_filter_definition</span><span class="p">,</span> <span class="n">check_filter_properties</span><span class="p">,</span> <span class="n">check_filter_length</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">remove_nans</span><span class="p">,</span> <span class="n">restore_nans</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.filt</span> <span class="kn">import</span> <span class="n">plot_filter_properties</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="kn">import</span> <span class="n">compute_frequency_response</span><span class="p">,</span> <span class="n">remove_filter_edges</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="kn">import</span> <span class="p">(</span><span class="n">check_filter_definition</span><span class="p">,</span> <span class="n">check_filter_properties</span><span class="p">,</span>
+                                  <span class="n">check_filter_length</span><span class="p">)</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="filter_signal_fir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.fir.filter_signal_fir.html#neurodsp.filt.fir.filter_signal_fir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="filter_signal_fir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.filter_signal_fir.html#neurodsp.filt.filter_signal_fir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                       <span class="n">print_transitions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Apply an FIR filter to a signal.</span>
 
@@ -144,10 +161,26 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sig_filt : 1d array</span>
+<span class="sd">    sig_filt : array</span>
 <span class="sd">        Filtered time series.</span>
 <span class="sd">    filter_coefs : 1d array</span>
 <span class="sd">        Filter coefficients of the FIR filter. Only returned if `return_filter` is True.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply a band pass FIR filter to a simulated signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig = filter_signal_fir(sig, fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
+
+<span class="sd">    Apply a high pass FIR filter to a signal, with a specified number of cycles:</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig = filter_signal_fir(sig, fs=500, pass_type=&#39;highpass&#39;,</span>
+<span class="sd">    ...                              f_range=(2, None), n_cycles=5)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Design filter &amp; check that the length is okay with signal</span>
@@ -196,12 +229,22 @@
 <span class="sd">    -------</span>
 <span class="sd">    array</span>
 <span class="sd">        Filtered time series.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply an FIR filter, from computed filter coefficients:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
+<span class="sd">    &gt;&gt;&gt; filt_sig = apply_fir_filter(sig, filter_coefs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;same&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="design_fir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.fir.design_fir_filter.html#neurodsp.filt.fir.design_fir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_fir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="design_fir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_fir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Design an FIR filter.</span>
 
 <span class="sd">    Parameters</span>
@@ -223,28 +266,33 @@
 <span class="sd">    n_cycles : float, optional, default: 3</span>
 <span class="sd">        Length of filter, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
 <span class="sd">        This parameter is overwritten by `n_seconds`, if provided.</span>
-<span class="sd">    n_seconds : float, optional</span>
+<span class="sd">    n_seconds : float or None, optional</span>
 <span class="sd">        Length of filter, in seconds. This parameter overwrites `n_cycles`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    filter_coefs : 1d array</span>
 <span class="sd">        The filter coefficients for an FIR filter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create the filter coefficients for an FIR filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Check filter definition</span>
     <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span> <span class="o">=</span> <span class="n">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
     <span class="n">filt_len</span> <span class="o">=</span> <span class="n">compute_filter_length</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">)</span>
 
-    <span class="n">f_nyq</span> <span class="o">=</span> <span class="n">compute_nyquist</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">:</span>
-        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="p">(</span><span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">),</span> <span class="n">pass_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nyq</span><span class="o">=</span><span class="n">f_nyq</span><span class="p">)</span>
+        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="p">(</span><span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">),</span> <span class="n">pass_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">:</span>
-        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="p">(</span><span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">),</span> <span class="n">nyq</span><span class="o">=</span><span class="n">f_nyq</span><span class="p">)</span>
+        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="p">(</span><span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">),</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;highpass&#39;</span><span class="p">:</span>
-        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">pass_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nyq</span><span class="o">=</span><span class="n">f_nyq</span><span class="p">)</span>
+        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">pass_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;lowpass&#39;</span><span class="p">:</span>
-        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">,</span> <span class="n">nyq</span><span class="o">=</span><span class="n">f_nyq</span><span class="p">)</span>
+        <span class="n">filter_coefs</span> <span class="o">=</span> <span class="n">firwin</span><span class="p">(</span><span class="n">filt_len</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">filter_coefs</span></div>
 
@@ -262,15 +310,21 @@
 <span class="sd">        The lower frequency range of the filter, specifying the highpass frequency, if specified.</span>
 <span class="sd">    f_hi : float or None</span>
 <span class="sd">        The higher frequency range of the filter, specifying the lowpass frequency, if specified.</span>
-<span class="sd">    n_cycles : float, optional, default: 3</span>
+<span class="sd">    n_cycles : float or None, optional</span>
 <span class="sd">        Length of filter, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
-<span class="sd">    n_seconds : float, optional</span>
+<span class="sd">    n_seconds : float or None, optional</span>
 <span class="sd">        Length of filter, in seconds.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    filt_len : int</span>
 <span class="sd">        The length of the specified filter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the length of bandpass (1 to 25 Hz) filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; filt_len = compute_filter_length(fs=500, pass_type=&#39;bandpass&#39;, f_lo=1, f_hi=25, n_cycles=3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Compute filter length if specified in seconds</span>
@@ -305,7 +359,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

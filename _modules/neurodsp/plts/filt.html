@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.plts.filt &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.plts.filt &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -97,13 +113,13 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.plts.style</span> <span class="k">import</span> <span class="n">style_plot</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.utils</span> <span class="k">import</span> <span class="n">check_ax</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.style</span> <span class="kn">import</span> <span class="n">style_plot</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.utils</span> <span class="kn">import</span> <span class="n">check_ax</span><span class="p">,</span> <span class="n">savefig</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="plot_filter_properties"><a class="viewcode-back" href="../../../generated/neurodsp.plts.filt.plot_filter_properties.html#neurodsp.plts.filt.plot_filter_properties">[docs]</a><span class="nd">@savefig</span>
+<div class="viewcode-block" id="plot_filter_properties"><a class="viewcode-back" href="../../../generated/neurodsp.plts.plot_filter_properties.html#neurodsp.plts.plot_filter_properties">[docs]</a><span class="nd">@savefig</span>
 <span class="k">def</span> <span class="nf">plot_filter_properties</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">impulse_response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot filter properties, including frequency response and filter kernel.</span>
 
@@ -117,17 +133,28 @@
 <span class="sd">        Sampling rate, in Hz.</span>
 <span class="sd">    impulse_response : 1d array</span>
 <span class="sd">        The impulse response of a filter. For an FIR filter, these are the filter coefficients.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Plot the properties of an FIR bandpass filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.utils import compute_frequency_response</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs, pass_type=&#39;bandpass&#39;, f_range=(1, 40))</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(filter_coefs, 1, fs)</span>
+<span class="sd">    &gt;&gt;&gt; plot_filter_properties(f_db, db, fs, filter_coefs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
     <span class="n">plot_frequency_response</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">plot_impulse_response</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">impulse_response</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="plot_frequency_response"><a class="viewcode-back" href="../../../generated/neurodsp.plts.filt.plot_frequency_response.html#neurodsp.plts.filt.plot_frequency_response">[docs]</a><span class="nd">@savefig</span>
+<div class="viewcode-block" id="plot_frequency_response"><a class="viewcode-back" href="../../../generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response">[docs]</a><span class="nd">@savefig</span>
 <span class="nd">@style_plot</span>
-<span class="k">def</span> <span class="nf">plot_frequency_response</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_frequency_response</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot the frequency response of a filter.</span>
 
 <span class="sd">    Parameters</span>
@@ -138,6 +165,18 @@
 <span class="sd">        Degree of attenuation for each frequency specified in f_db, in dB.</span>
 <span class="sd">    ax : matplotlib.Axes, optional</span>
 <span class="sd">        Figure axes upon which to plot.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments for customizing the plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Plot the frequency response of an FIR bandpass filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.utils import compute_frequency_response</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 40))</span>
+<span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; plot_frequency_response(f_db, db)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -149,9 +188,9 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Attenuation (dB)&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_impulse_response"><a class="viewcode-back" href="../../../generated/neurodsp.plts.filt.plot_impulse_response.html#neurodsp.plts.filt.plot_impulse_response">[docs]</a><span class="nd">@savefig</span>
+<div class="viewcode-block" id="plot_impulse_response"><a class="viewcode-back" href="../../../generated/neurodsp.plts.plot_impulse_response.html#neurodsp.plts.plot_impulse_response">[docs]</a><span class="nd">@savefig</span>
 <span class="nd">@style_plot</span>
-<span class="k">def</span> <span class="nf">plot_impulse_response</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">impulse_response</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_impulse_response</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">impulse_response</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot the impulse response of a filter.</span>
 
 <span class="sd">    Parameters</span>
@@ -162,6 +201,18 @@
 <span class="sd">        The impulse response of a filter.</span>
 <span class="sd">    ax : matplotlib.Axes, optional</span>
 <span class="sd">        Figure axes upon which to plot.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments for customizing the plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Plot the impulse response of an FIR bandpass filter:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt import design_fir_filter</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.filt.utils import compute_frequency_response</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs, pass_type=&#39;bandpass&#39;, f_range=(1, 40))</span>
+<span class="sd">    &gt;&gt;&gt; plot_impulse_response(fs, filter_coefs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -190,7 +241,7 @@
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

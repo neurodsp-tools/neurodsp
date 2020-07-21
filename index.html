@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="#">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -93,34 +109,24 @@
       
   <div class="section" id="neuro-digital-signal-processing-toolbox">
 <h1>Neuro Digital Signal Processing Toolbox<a class="headerlink" href="#neuro-digital-signal-processing-toolbox" title="Permalink to this headline">¶</a></h1>
-<a class="reference external image-reference" href="http://www.repostatus.org/#active"><img alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." src="http://www.repostatus.org/badges/latest/active.svg" /></a>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Latest Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.org/neurodsp-tools/neurodsp"><img alt="Build Status" src="https://travis-ci.org/neurodsp-tools/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="codecov" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg" /></a>
-<a class="reference external image-reference" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Supported Python Versions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a>
-<a class="reference external image-reference" href="https://doi.org/10.21105/joss.01272"><img alt="DOI" src="http://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a>
+<p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="ProjectStatus" src="https://www.repostatus.org/badges/latest/active.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a> <a class="reference external" href="https://travis-ci.com/github/neurodsp-tools/neurodsp"><img alt="BuildStatus" src="https://travis-ci.com/neurodsp-tools/neurodsp.svg" /></a> <a class="reference external" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="Coverage" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="PythonVersions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a> <a class="reference external" href="https://doi.org/10.21105/joss.01272"><img alt="Publication" src="https://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a></p>
 <p>Tools to analyze and simulate neural time series, using digital signal processing.</p>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
-<p>Documentation for the NeuroDSP module is available <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/">here</a>.</p>
+<p>Documentation for the <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> module is available <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/">here</a>.</p>
 <p>The documentation includes:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html">Tutorials</a>:
-which describe and work through each module in NeuroDSP</p></li>
-<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html">Examples</a>:
-demonstrating example applications and workflows</p></li>
-<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/api.html">API List</a>:
-which lists and describes all the code and functionality available in the module</p></li>
-<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/glossary.html">Glossary</a>:
-which defines all the key terms used in the module</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_tutorials/index.html">Tutorials</a>: which describe and work through each module in NeuroDSP</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/auto_examples/index.html">Examples</a>: demonstrating example applications and workflows</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/api.html">API List</a>: which lists and describes all the code and functionality available in the module</p></li>
+<li><p><a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/glossary.html">Glossary</a>: which defines all the key terms used in the module</p></li>
 </ul>
 <p>If you have a question about using NeuroDSP that doesn’t seem to be covered by the documentation, feel free to
 open an <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a> and ask!</p>
 </div>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>NeuroDSP is written in Python, and requires Python &gt;= 3.5 to run.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> is written in Python, and requires Python &gt;= 3.5 to run.</p>
 <p>It has the following dependencies:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/numpy/numpy">numpy</a></p></li>
@@ -131,31 +137,42 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/pytest-dev/pytest">pytest</a> is needed if you want to run the test suite locally</p></li>
 </ul>
-<p>We recommend using the <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> distribution to manage these requirements.</p>
+<p>We recommend using the <a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda</a> distribution to manage these requirements.</p>
 </div>
 <div class="section" id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>The current major release of NeuroDSP is the 2.X.X series.</p>
+<p>See the <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/changelog.html">changelog</a> for notes on major version releases.</p>
 <p><strong>Stable Release Version</strong></p>
-<p>To install the latest stable release, use pip:</p>
-<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">neurodsp</span></code></p>
+<p>To install the latest stable release, you can use pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install neurodsp
+</pre></div>
+</div>
+<p>NeuroDSP can also be installed with conda, from the conda-forge channel:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ conda install -c conda-forge neurodsp
+</pre></div>
+</div>
 <p><strong>Development Version</strong></p>
 <p>To get the current development version, first clone this repository:</p>
-<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/neurodsp-tools/neurodsp</span></code></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/neurodsp-tools/neurodsp
+</pre></div>
+</div>
 <p>To install this cloned copy, move into the directory you just cloned, and run:</p>
-<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install .
+</pre></div>
+</div>
 <p><strong>Editable Version</strong></p>
 <p>To install an editable version, download the development version as above, and run:</p>
-<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
+</pre></div>
 </div>
-<div class="section" id="bug-reports">
-<h2>Bug Reports<a class="headerlink" href="#bug-reports" title="Permalink to this headline">¶</a></h2>
 <p>Please use the
 <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">Github issue tracker</a>
 to file bug reports and/or ask questions about this project.</p>
 </div>
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
-<p>Available modules in NeuroDSP include:</p>
+<p>Available modules in <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> include:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillations in neural signals</p></li>
@@ -179,14 +196,14 @@ to file bug reports and/or ask questions about this project.</p>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <p>If you use this code in your project, please cite:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">Cole</span><span class="p">,</span> <span class="n">S</span><span class="p">.,</span> <span class="n">Donoghue</span><span class="p">,</span> <span class="n">T</span><span class="p">.,</span> <span class="n">Gao</span><span class="p">,</span> <span class="n">R</span><span class="p">.,</span> <span class="o">&amp;</span> <span class="n">Voytek</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span> <span class="p">(</span><span class="mi">2019</span><span class="p">).</span> <span class="n">NeuroDSP</span><span class="p">:</span> <span class="n">A</span> <span class="n">package</span> <span class="k">for</span>
-<span class="n">neural</span> <span class="n">digital</span> <span class="n">signal</span> <span class="n">processing</span><span class="p">.</span> <span class="n">Journal</span> <span class="k">of</span> <span class="k">Open</span> <span class="k">Source</span> <span class="n">Software</span><span class="p">,</span> <span class="mi">4</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="mi">1272</span><span class="p">.</span>
-<span class="n">DOI</span><span class="p">:</span> <span class="mi">10</span><span class="p">.</span><span class="mi">21105</span><span class="o">/</span><span class="n">joss</span><span class="p">.</span><span class="mi">01272</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Cole, S., Donoghue, T., Gao, R., &amp; Voytek, B. (2019). NeuroDSP: A package for
+neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
+DOI: 10.21105/joss.01272
 </pre></div>
 </div>
 <p>Direct Link: <a class="reference external" href="https://doi.org/10.21105/joss.01272">https://doi.org/10.21105/joss.01272</a></p>
 <p>Bibtex:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>@article{cole_neurodsp:_2019,
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@article{cole_neurodsp:_2019,
     title = {NeuroDSP: A package for neural digital signal processing},
     author = {Cole, Scott and Donoghue, Thomas and Gao, Richard and Voytek, Bradley},
     journal = {Journal of Open Source Software},
@@ -194,7 +211,7 @@ to file bug reports and/or ask questions about this project.</p>
     volume = {4},
     number = {36},
     issn = {2475-9066},
-    url = {http://joss.theoj.org/papers/10.21105/joss.01272},
+    url = {https://joss.theoj.org/papers/10.21105/joss.01272},
     doi = {10.21105/joss.01272},
 }
 </pre></div>
@@ -215,7 +232,7 @@ to file bug reports and/or ask questions about this project.</p>
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

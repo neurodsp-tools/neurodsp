@@ -4,7 +4,7 @@ Lagged Coherence
 
 Compute lagged coherence on neural signals.
 
-This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
+This tutorial primarily covers the :func:`~.compute_lagged_coherence` function.
 """
 
 ###################################################################################################
@@ -18,24 +18,33 @@ This tutorial primarily covers ``neurodsp.rhythm.laggedcoherence``.
 
 ###################################################################################################
 
+# sphinx_gallery_thumbnail_number = 2
+
 import numpy as np
 
+# Import the lagged coherence function
 from neurodsp.rhythm import compute_lagged_coherence
 
+# Import simulation code for creating test data
 from neurodsp.sim import sim_powerlaw, sim_combined
-from neurodsp.utils import create_times
+from neurodsp.utils import set_random_seed, create_times
 
+# Import utilities for loading and plotting data
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.rhythm import plot_lagged_coherence
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-np.random.seed(0)
+set_random_seed(0)
 
 ###################################################################################################
-# Simulate a Signal with a Bursty Oscillation
-# -------------------------------------------
+# Simulate an Example Signal
+# --------------------------
+#
+# First, we'll simulate an example signal that starts with a burst of alpha activity, followed
+# by a period of only aperiodic activity.
 #
 
 ###################################################################################################
@@ -68,8 +77,7 @@ plot_time_series(times, sig)
 # Compute lagged coherence for an alpha oscillation
 # -------------------------------------------------
 #
-# We can compute lagged coherence with the
-# :func:`~neurodsp.rhythm.lc.compute_lagged_coherence` function.
+# We can compute lagged coherence with the :func:`~.compute_lagged_coherence` function.
 #
 
 ###################################################################################################
@@ -87,8 +95,9 @@ print('Lagged coherence = ', lag_coh_alpha)
 # Compute lagged coherence across the frequency spectrum
 # ------------------------------------------------------
 #
-# Notice that lagged coherence peaks around 10Hz (the frequency of our
-# oscillation), but it is not very specific to that frequency.
+# Notice that lagged coherence peaks around 10Hz (the frequency of our oscillation).
+#
+# However, the peak is not very specific to that frequency.
 #
 
 ###################################################################################################
@@ -99,8 +108,7 @@ lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (5, 40),
 
 ###################################################################################################
 #
-# You can plot the lagged coherence results with
-# :func:`~neurodsp.plts.rhythm.plot_lagged_coherence`.
+# You can plot the lagged coherence results with :func:`~.plot_lagged_coherence`.
 #
 
 ###################################################################################################
@@ -120,6 +128,7 @@ plot_lagged_coherence(freqs, lag_coh_by_f)
 
 # Calculate coherence for data with the burst - the 1st second of data
 lag_coh_burst = compute_lagged_coherence(sig[0:fs], fs, f_range)
+
 # Calculate coherence for data without the burst - the 2nd second of data
 lag_coh_noburst = compute_lagged_coherence(sig[fs:2*fs], fs, f_range)
 
@@ -130,16 +139,18 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 # Compute lagged coherence of an example neural signal
 # ----------------------------------------------------
 #
+# Next, let's apply lagged coherence to some real data.
+#
 
 ###################################################################################################
 
-# Load signal
-sig = np.load('../data/sample_data_1.npy')
-sig_filt_true = np.load('../data/sample_data_1_filt.npy')
-fs = 1000
+# Download, if needed, and load example data files
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
+# Set sampling rate, and create a times vector for plotting
+fs = 1000
 times = create_times(len(sig)/fs, fs)
-f_range = (13, 30)
 
 ###################################################################################################
 
@@ -148,12 +159,11 @@ plot_time_series(times, sig)
 
 ###################################################################################################
 
+# Set the frequency range to compute lagged coherence across
 f_range = (13, 30)
-lag_coh_beta = compute_lagged_coherence(sig, fs, f_range)
-print('Lagged coherence = ', lag_coh_beta)
 
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#
+# Compute lagged coherence
+lag_coh_beta = compute_lagged_coherence(sig, fs, f_range)
+
+# Check lagged coherence result
+print('Lagged coherence = ', lag_coh_beta)

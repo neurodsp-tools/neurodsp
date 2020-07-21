@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.spectral.compute_spectral_hist &#8212; neurodsp 2.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="neurodsp-spectral-compute-spectral-hist">
+<h1>neurodsp.spectral.compute_spectral_hist<a class="headerlink" href="#neurodsp-spectral-compute-spectral-hist" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="neurodsp.spectral.compute_spectral_hist">
+<code class="sig-prename descclassname">neurodsp.spectral.</code><code class="sig-name descname">compute_spectral_hist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">window</span><span class="o">=</span><span class="default_value">'hann'</span></em>, <em class="sig-param"><span class="n">nperseg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">noverlap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nbins</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">f_range</span><span class="o">=</span><span class="default_value">[0.0, 100.0]</span></em>, <em class="sig-param"><span class="n">cut_pct</span><span class="o">=</span><span class="default_value">[0.0, 100.0]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/spectral/variance.html#compute_spectral_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.spectral.compute_spectral_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the distribution of log10 power at each frequency from the signal spectrogram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series of measurement values.</p>
+</dd>
+<dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
+</dd>
+<dt><strong>window</strong><span class="classifier">str or tuple or array_like, optional, default: ‘hann’</span></dt><dd><p>Desired window to use. See scipy.signal.get_window for a list of available windows.
+If array_like, the array will be used as the window and its length must be nperseg.</p>
+</dd>
+<dt><strong>nperseg</strong><span class="classifier">int, optional</span></dt><dd><p>Length of each segment, in number of samples.
+If None, and window is str or tuple, is set to 1 second of data.
+If None, and window is array_like, is set to the length of the window.</p>
+</dd>
+<dt><strong>noverlap</strong><span class="classifier">int, optional</span></dt><dd><p>Number of points to overlap between segments. If None, noverlap = nperseg // 2.</p>
+</dd>
+<dt><strong>nbins</strong><span class="classifier">int, optional, default: 50</span></dt><dd><p>Number of histogram bins to use.</p>
+</dd>
+<dt><strong>f_range</strong><span class="classifier">list of [float, float], optional, default: [0, 100]</span></dt><dd><p>Frequency range of the spectrogram to compute the histograms, as [start, end], in Hz.</p>
+</dd>
+<dt><strong>cut_pct</strong><span class="classifier">list of [float, float], optional, default: [0, 100]</span></dt><dd><p>Power percentile at which to draw the lower and upper bin limits, as [low, high], in Hz.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>freqs</strong><span class="classifier">1d array</span></dt><dd><p>Frequencies at which the measure was calculated.</p>
+</dd>
+<dt><strong>power_bins</strong><span class="classifier">1d array</span></dt><dd><p>Histogram bins used to compute the distribution.</p>
+</dd>
+<dt><strong>spectral_hist</strong><span class="classifier">2d array</span></dt><dd><p>Power distribution at every frequency, as [n_bins, freqs].</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Histogram bins are the same for every frequency, evenly spacing the global min &amp; max power.</p>
+<p class="rubric">Examples</p>
+<p>Compute the distribution of power, which is the spectral histogram:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;sim_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">freqs</span><span class="p">,</span> <span class="n">power_bins</span><span class="p">,</span> <span class="n">spectral_hist</span> <span class="o">=</span> <span class="n">compute_spectral_hist</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="examples-using-neurodsp-spectral-compute-spectral-hist">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.spectral.compute_spectral_hist</span></code><a class="headerlink" href="#examples-using-neurodsp-spectral-compute-spectral-hist" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating variance measures."><div class="figure align-default" id="id1">
+<img alt="Spectral Domain Analysis: Variance" src="../_images/sphx_glr_plot_SpectralVariance_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/spectral/plot_SpectralVariance.html#sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Spectral Domain Analysis: Variance</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div style='clear:both'></div></div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2020, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

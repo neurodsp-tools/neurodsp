@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -93,9 +109,9 @@
       
   <div class="section" id="neurodsp-burst-detect-bursts-dual-threshold">
 <h1>neurodsp.burst.detect_bursts_dual_threshold<a class="headerlink" href="#neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="neurodsp.burst.detect_bursts_dual_threshold">
-<code class="sig-prename descclassname">neurodsp.burst.</code><code class="sig-name descname">detect_bursts_dual_threshold</code><span class="sig-paren">(</span><em class="sig-param">sig</em>, <em class="sig-param">fs</em>, <em class="sig-param">dual_thresh</em>, <em class="sig-param">f_range=None</em>, <em class="sig-param">min_n_cycles=3</em>, <em class="sig-param">min_burst_duration=None</em>, <em class="sig-param">avg_type='median'</em>, <em class="sig-param">magnitude_type='amplitude'</em>, <em class="sig-param">**filter_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/burst/dualthresh.html#detect_bursts_dual_threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.burst.detect_bursts_dual_threshold" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">neurodsp.burst.</code><code class="sig-name descname">detect_bursts_dual_threshold</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">dual_thresh</span></em>, <em class="sig-param"><span class="n">f_range</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_n_cycles</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">min_burst_duration</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">avg_type</span><span class="o">=</span><span class="default_value">'median'</span></em>, <em class="sig-param"><span class="n">magnitude_type</span><span class="o">=</span><span class="default_value">'amplitude'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">filter_kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/burst/dualthresh.html#detect_bursts_dual_threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.burst.detect_bursts_dual_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect bursts in a signal using the dual threshold algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -110,10 +126,10 @@ Units are normalized by the average signal magnitude.</p>
 <dt><strong>f_range</strong><span class="classifier">tuple of (float, float), optional</span></dt><dd><p>Frequency range, to filter signal to, before running burst detection.
 If f_range is None, then no filtering is applied prior to running burst detection.</p>
 </dd>
-<dt><strong>min_n_cycles</strong><span class="classifier">float, optional, default=3</span></dt><dd><p>Minimum burst duration in to keep.
+<dt><strong>min_n_cycles</strong><span class="classifier">float, optional, default: 3</span></dt><dd><p>Minimum burst duration in to keep.
 Only used if <cite>f_range</cite> is defined, and is used as the number of cycles at f_range[0].</p>
 </dd>
-<dt><strong>min_burst_duration</strong><span class="classifier">float, optional, default=None</span></dt><dd><p>Minimum length of a burst, in seconds. Must be defined if not filtering.
+<dt><strong>min_burst_duration</strong><span class="classifier">float, optional, default: None</span></dt><dd><p>Minimum length of a burst, in seconds. Must be defined if not filtering.
 Only used if <cite>f_range</cite> is not defined, or if <cite>min_n_cycles</cite> is set to None.</p>
 </dd>
 <dt><strong>avg_type</strong><span class="classifier">{‘median’, ‘mean’}, optional</span></dt><dd><p>Averaging method to use to normalize the magnitude that is used for thresholding.</p>
@@ -132,8 +148,29 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Detect bursts using the dual threshold algorithm:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span><span class="p">:</span> <span class="p">{},</span>
+<span class="gp">... </span>                               <span class="s1">&#39;sim_bursty_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}},</span>
+<span class="gp">... </span>                   <span class="n">component_variances</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_burst</span> <span class="o">=</span> <span class="n">detect_bursts_dual_threshold</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dual_thresh</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
+<div class="section" id="examples-using-neurodsp-burst-detect-bursts-dual-threshold">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.detect_bursts_dual_threshold</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id1">
+<img alt="Using NeuroDSP with MNE" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><div class="figure align-default" id="id2">
+<img alt="Burst Detection" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div style='clear:both'></div></div>
 </div>
 
 
@@ -149,7 +186,7 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

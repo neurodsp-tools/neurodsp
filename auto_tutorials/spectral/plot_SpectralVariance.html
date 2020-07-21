@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Spectral Domain Analysis: Variance &#8212; neurodsp 2.0.0 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectral Domain Analysis: Variance &#8212; neurodsp 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -22,6 +30,18 @@
 <script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
 
   </head><body>
 
@@ -36,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.0.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -61,10 +81,6 @@
 </li>
               
             
-            
-              
-                
-              
             
             
             
@@ -93,48 +109,55 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="spectral-domain-analysis-variance">
 <span id="sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"></span><h1>Spectral Domain Analysis: Variance<a class="headerlink" href="#spectral-domain-analysis-variance" title="Permalink to this headline">¶</a></h1>
 <p>Apply spectral domain analyses, calculating variance measures.</p>
-<p>This tutorial primarily covers <code class="docutils literal notranslate"><span class="pre">neurodsp.spectral.variance</span></code>.</p>
+<p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.spectral.variance</span></code> module.</p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial covers computing and displaying a spectral histogram, and
 computing the spectral coefficient of variation (SCV).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import spectral variance functions</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <a href="../../generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectral_hist</span></a><span class="p">,</span> <a href="../../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_scv</span></a><span class="p">,</span> <a href="../../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_scv_rs</span></a>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="k">import</span> <span class="n">create_times</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="k">import</span> <span class="n">plot_time_series</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="k">import</span> <span class="n">plot_spectral_hist</span>
-<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="k">import</span> <span class="n">plot_scv</span><span class="p">,</span> <span class="n">plot_scv_rs_lines</span><span class="p">,</span> <span class="n">plot_scv_rs_matrix</span>
+<span class="c1"># Import function to compute power spectra</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a>
 
-<span class="kn">from</span> <span class="nn">neurodsp</span> <span class="k">import</span> <span class="n">spectral</span>
+<span class="c1"># Import utilities for loading and plotting data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.download</span> <span class="kn">import</span> <span class="n">load_ndsp_data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="p">(</span><a href="../../generated/neurodsp.plts.plot_spectral_hist.html#neurodsp.plts.plot_spectral_hist" title="neurodsp.plts.plot_spectral_hist" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_spectral_hist</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_scv.html#neurodsp.plts.plot_scv" title="neurodsp.plts.plot_scv" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv</span></a><span class="p">,</span>
+                                    <a href="../../generated/neurodsp.plts.plot_scv_rs_lines.html#neurodsp.plts.plot_scv_rs_lines" title="neurodsp.plts.plot_scv_rs_lines" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_lines</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_matrix</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="load-example-neural-signal">
 <h3>Load example neural signal<a class="headerlink" href="#load-example-neural-signal" title="Permalink to this headline">¶</a></h3>
 <p>First, we load the sample data, which is a segment of rat hippocampal LFP
-taken from the publicly available neuro database CRCNS (hc2).</p>
+taken from the publicly available database CRCNS (specifically, from the ‘hc2’ dataset).</p>
 <p>Relevant publication: Mizuseki et al, 2012, Nature Neuro</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load example data signal</span>
-<span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../data/sample_data_2.npy&#39;</span><span class="p">)</span>
-<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data files</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_2.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
-<span class="c1"># Plot the loaded signal</span>
-<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="c1"># Set sampling rate, and create a times vector for plotting</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_SpectralVariance_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_001.png" />
-<p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the loaded signal</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_001.png" />
+<p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz).</p>
 </div>
 </div>
 <div class="section" id="spectral-histogram">
 <h2>Spectral histogram<a class="headerlink" href="#spectral-histogram" title="Permalink to this headline">¶</a></h2>
 <p>First, let’s look at computing spectral histograms, with
-<a class="reference internal" href="../../generated/neurodsp.spectral.variance.compute_spectral_hist.html#neurodsp.spectral.variance.compute_spectral_hist" title="neurodsp.spectral.variance.compute_spectral_hist"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_spectral_hist()</span></code></a>.</p>
+<a class="reference internal" href="../../generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_spectral_hist()</span></code></a>.</p>
 <p>The PSD is an estimate of the central tendency (mean/median) of the signal’s power
 at each frequency, with the assumption that the signal is relatively stationary and
 that the variance around the mean comes from various forms of noise.</p>
@@ -144,82 +167,77 @@ short-time Fourier transform (STFT), since it may reveal non-stationarities in t
 or particular frequencies that are not like the rest. Here, we simply bin the log-power
 values across time, in a histogram, to observe the noise distribution at each frequency.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the spectral histogram</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectral_hist</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-                                                         <span class="n">cut_pct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">))</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectral_hist</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+                                                <span class="n">cut_pct</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">))</span>
 
 <span class="c1"># Calculate a power spectrum, with median Welch</span>
-<span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span>
-                                              <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span>
+                                     <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Plot the spectral histogram</span>
-<span class="n">plot_spectral_hist</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span><span class="p">,</span> <span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">)</span>
+<a href="../../generated/neurodsp.plts.plot_spectral_hist.html#neurodsp.plts.plot_spectral_hist" title="neurodsp.plts.plot_spectral_hist" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_spectral_hist</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span><span class="p">,</span> <span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_SpectralVariance_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_002.png" />
-<p>Notice in the below plot that not only is theta power higher overall (shifted up),
+<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_002.png" />
+<p>Notice in the plot that not only is theta power higher overall (shifted up),
 it also has lower variance around its mean.</p>
 </div>
 <div class="section" id="spectral-coefficient-of-variation-scv">
 <h2>Spectral Coefficient of Variation (SCV)<a class="headerlink" href="#spectral-coefficient-of-variation-scv" title="Permalink to this headline">¶</a></h2>
 <p>Next, let’s look at computing the spectral coefficient of variation, with
-<a class="reference internal" href="../../generated/neurodsp.spectral.variance.compute_scv.html#neurodsp.spectral.variance.compute_scv" title="neurodsp.spectral.variance.compute_scv"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_scv()</span></code></a>.</p>
+<a class="reference internal" href="../../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_scv()</span></code></a>.</p>
 <p>As noted above, the range of log-power values in the theta frequency range is lower
 compared to other frequencies, while that of 30-100Hz appear to be quite constant
 across the entire frequency axis (homoscedasticity).</p>
 <p>To quantify that, we compute the coefficient of variation (standard deviation/mean) as a
 normalized estimate of variance.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_scv</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="p">),</span> <span class="n">noverlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>There is also a plotting function for SCV, <a class="reference internal" href="../../generated/neurodsp.plts.spectral.plot_scv.html#neurodsp.plts.spectral.plot_scv" title="neurodsp.plts.spectral.plot_scv"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv()</span></code></a>.</p>
+<p>There is also a plotting function for SCV, <a class="reference internal" href="../../generated/neurodsp.plts.plot_scv.html#neurodsp.plts.plot_scv" title="neurodsp.plts.plot_scv"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the SCV</span>
-<span class="n">plot_scv</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span><span class="p">)</span>
+<a href="../../generated/neurodsp.plts.plot_scv.html#neurodsp.plts.plot_scv" title="neurodsp.plts.plot_scv" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_SpectralVariance_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_003.png" />
-<p>As shown above, SCV calculated from the entire segment of data is quite noise due to the
+<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_003.png" />
+<p>As shown above, SCV calculated from the entire segment of data is quite noisy due to the
 single estimate of mean and standard deviation.</p>
 <p>To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 slices from the non-overlapping spectrogram and taking their average.</p>
-<p>The resample spectral coefficient of variation can be computed with
-<a class="reference internal" href="../../generated/neurodsp.spectral.variance.compute_scv_rs.html#neurodsp.spectral.variance.compute_scv_rs" title="neurodsp.spectral.variance.compute_scv_rs"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_scv_rs()</span></code></a>.</p>
+<p>The resampled spectral coefficient of variation can be computed with <a class="reference internal" href="../../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_scv_rs()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span>
-                                                <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_scv_rs</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span>
+                                       <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>You can plot the resampled scv, as lines, with
-<a class="reference internal" href="../../generated/neurodsp.plts.spectral.plot_scv_rs_lines.html#neurodsp.plts.spectral.plot_scv_rs_lines" title="neurodsp.plts.spectral.plot_scv_rs_lines"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv_rs_lines()</span></code></a>.</p>
+<p>You can plot the resampled SCV, as lines, with <a class="reference internal" href="../../generated/neurodsp.plts.plot_scv_rs_lines.html#neurodsp.plts.plot_scv_rs_lines" title="neurodsp.plts.plot_scv_rs_lines"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv_rs_lines()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the SCV, from the resampling method</span>
-<span class="n">plot_scv_rs_lines</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
+<a href="../../generated/neurodsp.plts.plot_scv_rs_lines.html#neurodsp.plts.plot_scv_rs_lines" title="neurodsp.plts.plot_scv_rs_lines" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_lines</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_SpectralVariance_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_004.png" />
+<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_004.png" />
 <p>Another way to compute the resampled SCV is via a sliding window approach, essentially
 smoothing over consecutive slices of the spectrogram to compute the mean and standard
 deviation estimates.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
-<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">compute_scv_rs</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_scv_rs</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;rolling&#39;</span><span class="p">,</span> <span class="n">rs_params</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>You can plot the resampled scv, as a matrix, with
-<a class="reference internal" href="../../generated/neurodsp.plts.spectral.plot_scv_rs_matrix.html#neurodsp.plts.spectral.plot_scv_rs_matrix" title="neurodsp.plts.spectral.plot_scv_rs_matrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv_rs_matrix()</span></code></a>.</p>
+<p>You can plot the resampled SCV, as a matrix, with <a class="reference internal" href="../../generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_scv_rs_matrix()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the SCV, from the resampling method</span>
-<span class="n">plot_scv_rs_matrix</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
+<a href="../../generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_matrix</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_plot_SpectralVariance_005.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_005.png" />
+<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_005.png" />
 <p>In the plot below, we see that the theta band (~7Hz) consistently has CV of less
 than 1 (negative in log10).</p>
-<p>Sphinx settings:
-sphinx_gallery_thumbnail_number = 4</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.556 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.397 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py">
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fd029ca29a991c389527f1fcc8af602c/plot_SpectralVariance.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SpectralVariance.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0dc2fc13d59968bc3055ce53a3bc731b/plot_SpectralVariance.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_SpectralVariance.ipynb</span></code></a></p>
 </div>
 </div>
@@ -240,7 +258,7 @@ sphinx_gallery_thumbnail_number = 4</p>
     </p>
     <p>
         &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>
