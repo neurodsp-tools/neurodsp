@@ -43,7 +43,7 @@ def check_filter_definition(pass_type, f_range):
 
     >>> f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(5, 25))
 
-    Check a filter defition, for an invalid filter.
+    Check a filter definition, for an invalid filter.
     This example fails since a bandpass filter requires two values for ``f_range``.
 
     >>> try:
@@ -56,8 +56,8 @@ def check_filter_definition(pass_type, f_range):
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
         raise ValueError('Filter passtype not understood.')
 
-    ## Check that frequency cutoff inputs are appropriate
-    # For band filters, 2 inputs required & second entry must be > first
+    # Check that frequency cutoff inputs are appropriate
+    #   For band filters, 2 inputs required & second entry must be > first
     if pass_type in ('bandpass', 'bandstop'):
         if isinstance(f_range, (tuple, list)) and f_range[0] >= f_range[1]:
             raise ValueError('Second cutoff frequency must be greater than first.')

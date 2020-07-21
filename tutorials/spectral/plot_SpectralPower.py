@@ -18,7 +18,7 @@ This tutorial primarily covers the ``neurodsp.spectral.power`` module.
 
 # sphinx_gallery_thumbnail_number = 2
 
-# Import spectral module
+# Import spectral power functions
 from neurodsp.spectral import compute_spectrum, rotate_powerlaw
 
 # Import utilities for loading and plotting data
@@ -138,8 +138,7 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 # spectrum about a given axis frequency, by an amount indicated by the 'delta_exponent'
 # argument (negative is clockwise, positive is counterclockwise).
 #
-# You can perform spectral rotation with
-# :func:`~.rotate_powerlaw`.
+# You can perform spectral rotation with :func:`~.rotate_powerlaw`.
 #
 # This function is mostly useful for investigating the effect of rotating the spectrum
 # in frequency domain on the time domain signal. Effectively, this performs a very specific

@@ -7,9 +7,9 @@ from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.filt.fir import compute_filter_length
 from neurodsp.filt.checks import check_filter_definition
 from neurodsp.utils import remove_nans
-from neurodsp.spectral import rotate_powerlaw
 from neurodsp.utils.data import create_times
 from neurodsp.utils.decorators import normalize
+from neurodsp.spectral import rotate_powerlaw
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
@@ -213,7 +213,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     """
 
     # Get the number of samples to simulate for the signal
-    #   If filter is to be filtered, with FIR, add extra to compensate for edges
+    #   If signal is to be filtered, with FIR, add extra to compensate for edges
     if f_range and filter_kwargs.get('filter_type', None) != 'iir':
 
         pass_type = infer_passtype(f_range)
@@ -232,7 +232,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     if f_range is not None:
         sig = filter_signal(sig, fs, infer_passtype(f_range), f_range,
                             remove_edges=True, **filter_kwargs)
-        # Drop the edges, that were compensated for, if not using IIR (using FIR)
+        # Drop the edges, that were compensated for, if not using FIR filter
         if not filter_kwargs.get('filter_type', None) == 'iir':
             sig, _ = remove_nans(sig)
 
@@ -245,7 +245,7 @@ def _create_powerlaw(n_samples, fs, exponent):
     Parameters
     ----------
     n_samples : int
-        The number of samples to simulate
+        The number of samples to simulate.
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float
@@ -268,9 +268,8 @@ def _create_powerlaw(n_samples, fs, exponent):
     fft_output = np.fft.fft(sig)
     freqs = np.fft.fftfreq(len(sig), 1. / fs)
 
-    # Rotate spectrum and invert, z-score to normalize.
-    #   Note: the delta exponent to be applied is divided by two, as
-    #     the FFT output is in units of amplitude not power
+    # Rotate spectrum and invert back to time series, with a z-score to normalize
+    #   Delta exponent is divided by two, as the FFT output is in units of amplitude not power
     fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)
     sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
 

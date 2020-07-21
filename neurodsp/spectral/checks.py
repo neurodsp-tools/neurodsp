@@ -26,7 +26,7 @@ def check_spg_settings(fs, window, nperseg, noverlap):
         Number of points to overlap between segments.
     """
 
-    # Set the nperseg, if not provided:
+    # Set the nperseg, if not provided
     if nperseg is None:
 
         # If the window is a string or tuple, defaults to 1 second of data

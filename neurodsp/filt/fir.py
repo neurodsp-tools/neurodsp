@@ -69,7 +69,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
 
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
-    >>> filt_sig = filter_signal_fir(sig, fs=500, pass_type='highpass', f_range=(2, None), n_cycles=5)
+    >>> filt_sig = filter_signal_fir(sig, fs=500, pass_type='highpass',
+    ...                              f_range=(2, None), n_cycles=5)
     """
 
     # Design filter & check that the length is okay with signal
@@ -211,7 +212,7 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
 
     Examples
     --------
-    Compute the length of bandpass (1 to 25 hz) filter:
+    Compute the length of bandpass (1 to 25 Hz) filter:
 
     >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25, n_cycles=3)
     """

@@ -62,13 +62,23 @@ We recommend using the `Anaconda <https://www.anaconda.com/products/individual>`
 Install
 -------
 
+The current major release of NeuroDSP is the 2.X.X series.
+
+See the `changelog <https://neurodsp-tools.github.io/neurodsp/changelog.html>`_ for notes on major version releases.
+
 **Stable Release Version**
 
-To install the latest stable release, use pip:
+To install the latest stable release, you can use pip:
 
 .. code-block:: shell
 
     $ pip install neurodsp
+
+NeuroDSP can also be installed with conda, from the conda-forge channel:
+
+.. code-block:: shell
+
+    $ conda install -c conda-forge neurodsp
 
 **Development Version**
 

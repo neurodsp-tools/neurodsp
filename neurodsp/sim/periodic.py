@@ -110,7 +110,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     Simulate a bursty oscillation, with a high probability of bursting:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=15, enter_burst=0.8, leave_burst=0.4)
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.8, leave_burst=0.4)
 
     Simulate a bursty oscillation, of sawtooth waves:
 

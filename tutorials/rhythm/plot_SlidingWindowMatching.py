@@ -28,8 +28,7 @@ from neurodsp.rhythm import sliding_window_matching
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.rhythm import plot_swm_pattern
 from neurodsp.plts.time_series import plot_time_series
-from neurodsp.utils import create_times
-from neurodsp.sim import set_random_seed
+from neurodsp.utils import set_random_seed, create_times
 
 ###################################################################################################
 

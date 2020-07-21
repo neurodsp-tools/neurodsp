@@ -117,7 +117,7 @@ def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
     Notes
     -----
     This function wraps sub-functions which apply style to different plot elements.
-    Each of these sub-functions can be replaced by passing in replacement callables.
+    Each of these sub-functions can be replaced by passing in a replacement callable.
     """
 
     axis_styler(ax, **kwargs)

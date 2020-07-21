@@ -13,8 +13,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
     freqs : 1d array
         Frequency values for the power spectrum.
     power_spectra : 1d or 2d array
-        Power spectral density values. If 2d, formatted as
-        [n_spectra, n_freqs].
+        Power spectral density values. If 2d, should be as [n_spectra, n_freqs].
     f_range: list of [float, float]
         Frequency range to restrict to, as [f_low, f_high].
 
@@ -45,7 +44,8 @@ def trim_spectrum(freqs, power_spectra, f_range):
     # Create mask to index only requested frequencies
     f_mask = np.logical_and(freqs >= f_range[0], freqs <= f_range[1])
 
-    # Restrict freqs & psd to requested range. The if/else is to cover both 1d or 2d arrays
+    # Restrict freqs & spectrum to requested range
+    #   The if/else is to cover both 1d or 2d arrays
     freqs_ext = freqs[f_mask]
     power_spectra_ext = power_spectra[f_mask] if power_spectra.ndim == 1 \
         else power_spectra[:, f_mask]
@@ -73,7 +73,7 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     -------
     freqs_ext : 1d array
         Extracted frequency values for the power spectrum.
-    t_ext: 1d array
+    times_ext: 1d array
         Extracted segment time values
     spg_ext : 2d array
         Extracted spectrogram values.
@@ -81,7 +81,7 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     Notes
     -----
     This function extracts frequency ranges >= f_low and <= f_high,
-    and time ranges >= t_low and <= t_high. It does not round to below 
+    and time ranges >= t_low and <= t_high. It does not round to below
     or above f_low and f_high, or t_low and t_high, respectively.
 
     Examples
@@ -99,14 +99,14 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     >>> freqs = create_freqs(1, 15)
     >>> mwt = compute_wavelet_transform(sig, fs, freqs)
     >>> spg = abs(mwt)**2
-    >>> freqs_ext, t_ext, spg_ext = trim_spectrogram(freqs, times, spg, f_range=[8, 12], t_range=[0, 5])
+    >>> freqs_ext, times_ext, spg_ext = trim_spectrogram(freqs, times, spg,
+    ...                                                  f_range=[8, 12], t_range=[0, 5])
     """
 
-    # Initialize spg_ext to spg to avoid not defining it in the case where neither
-    # f_range nor t_range is defined.
+    # Initialize spg_ext, to define for case in which neither f_range nor t_range is defined
     spg_ext = spg
 
-    # Check which axes of spectrogram to trim.
+    # Restrict frequency range of the spectrogram
     if f_range is not None:
         f_mask = np.logical_and(freqs >= f_range[0], freqs <= f_range[1])
         freqs_ext = freqs[f_mask]
@@ -114,14 +114,15 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     else:
         freqs_ext = freqs
 
+    # Restrict time range of the spectrogram
     if t_range is not None:
-        t_mask = np.logical_and(times >= t_range[0], times <= t_range[1])
-        t_ext = times[t_mask]
-        spg_ext = spg_ext[:, t_mask]
+        times_mask = np.logical_and(times >= t_range[0], times <= t_range[1])
+        times_ext = times[times_mask]
+        spg_ext = spg_ext[:, times_mask]
     else:
         times_ext = times
-    
-    return freqs_ext, t_ext, spg_ext
+
+    return freqs_ext, times_ext, spg_ext
 
 
 def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
@@ -137,7 +138,7 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
         Change in power law exponent to be applied.
         Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).
     f_rotation : float, optional, default: 1
-        Frequency at which to rotate the spectrum, where power is unchanged by the rotation, in Hz.
+        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.
         This only matters if not further normalizing signal variance.
 
     Returns
@@ -147,7 +148,7 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
 
     Examples
     --------
-    Rotate a power spectrum, calculated on simualated data:
+    Rotate a power spectrum, calculated on simulated data:
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_spectrum

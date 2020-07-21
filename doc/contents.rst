@@ -6,5 +6,6 @@ Table of Contents
 
    api.rst
    glossary.rst
+   changelog.rst
    auto_tutorials/index.rst
    auto_examples/index.rst

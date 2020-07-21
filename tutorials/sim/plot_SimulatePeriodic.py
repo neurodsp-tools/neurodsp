@@ -11,8 +11,9 @@ This tutorial covers the ``neurodsp.sim.periodic`` module.
 
 # sphinx_gallery_thumbnail_number = 1
 
-# Import sim module
-from neurodsp.sim import set_random_seed, sim_oscillation, sim_bursty_oscillation
+# Import sim functions
+from neurodsp.sim import sim_oscillation, sim_bursty_oscillation
+from neurodsp.utils import set_random_seed
 
 # Import function to compute power spectra
 from neurodsp.spectral import compute_spectrum

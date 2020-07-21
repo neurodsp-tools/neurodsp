@@ -47,7 +47,7 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
     Examples
     --------
-    Simulate a half second sinusoidal cycle, corresponding to a 2 Hz cycle (frequency=1/n_seconds):
+    Simulate a half second sinusoid, corresponding to a 2 Hz cycle (frequency=1/n_seconds):
 
     >>> cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type='sine')
 
@@ -204,13 +204,13 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     return cycle
 
 
-# Alias single exponential cycle from sim_synaptic kernel
+# Alias single exponential cycle from `sim_synaptic_kernel`
 def sim_exp_cycle(n_seconds, fs, tau_d):
     return sim_synaptic_kernel(n_seconds, fs, tau_r=0, tau_d=tau_d)
 sim_exp_cycle.__doc__ = sim_synaptic_kernel.__doc__
 
 
-# Alias double exponential cycle from sim_synaptic kernel
+# Alias double exponential cycle from `sim_synaptic_kernel`
 def sim_2exp_cycle(n_seconds, fs, tau_r, tau_d):
     return sim_synaptic_kernel(n_seconds, fs, tau_r=tau_r, tau_d=tau_d)
 sim_2exp_cycle.__doc__ = sim_synaptic_kernel.__doc__
