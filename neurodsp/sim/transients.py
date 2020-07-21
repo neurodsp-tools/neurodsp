@@ -3,123 +3,11 @@
 from warnings import warn
 
 import numpy as np
-from scipy.signal import gaussian, sawtooth
+
+from neurodsp.utils.data import create_times
 
 ###################################################################################################
 ###################################################################################################
-
-def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
-    """Simulate a single cycle of a periodic pattern.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Length of cycle window in seconds.
-        This is NOT the period of the cycle, but the length of the returned array of the cycle.
-    fs : float
-        Sampling frequency of the cycle simulation.
-    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
-        What type of cycle to simulate. Options:
-
-        * sine: a sine wave cycle
-        * asine: an asymmetric sine wave
-        * sawtooth: a sawtooth wave
-        * gaussian: a gaussian cycle
-        * exp: a cycle with exponential decay
-        * 2exp: a cycle with exponential rise and decay
-
-    **cycle_params
-        Keyword arguments for parameters of the cycle, all as float:
-
-        * sine: None
-        * asine: `rdsym`, rise-decay symmetry, from 0-1
-        * sawtooth: `width`, width of the rising ramp as a proportion of the total cycle
-        * gaussian: `std`, standard deviation of the gaussian kernel, in seconds
-        * exp: `tau_d`, decay time, in seconds
-        * 2exp: `tau_r` & `tau_d` rise time, and decay time, in seconds
-
-    Returns
-    -------
-    cycle: 1d array
-        Simulated cycle.
-
-    Examples
-    --------
-    Simulate a half second sinusoidal cycle, corresponding to a 2 Hz cycle (frequency=1/n_seconds):
-
-    >>> cycle = sim_cycle(n_seconds=0.5, fs=500, cycle_type='sine')
-
-    Simulate a sawtooth cycle, corresponding to a 10 Hz cycle:
-
-    >>> cycle = sim_cycle(n_seconds=0.1, fs=500, cycle_type='sawtooth', width=0.3)
-    """
-
-    if cycle_type not in ['sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp']:
-        raise ValueError('Did not recognize cycle type.')
-
-    if cycle_type == 'sine':
-        cycle = np.sin(create_cycle_time(n_seconds, fs))
-
-    elif cycle_type == 'asine':
-        cycle = sim_asine_cycle(n_seconds, fs, cycle_params['rdsym'])
-
-    elif cycle_type == 'sawtooth':
-        cycle = sawtooth(create_cycle_time(n_seconds, fs), cycle_params['width'])
-
-    elif cycle_type == 'gaussian':
-        cycle = gaussian(n_seconds * fs, cycle_params['std'] * fs)
-
-    elif cycle_type == 'exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, 0, cycle_params['tau_d'])
-
-    elif cycle_type == '2exp':
-        cycle = sim_synaptic_kernel(n_seconds, fs, cycle_params['tau_r'], cycle_params['tau_d'])
-
-    return cycle
-
-
-def sim_asine_cycle(n_seconds, fs, rdsym):
-    """Simulate a cycle of an asymmetric sine wave.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Length of cycle window in seconds.
-        Note that this is NOT the period of the cycle, but the length of the returned array
-        that contains the cycle, which can be (and usually is) much shorter.
-    fs : float
-        Sampling frequency of the cycle simulation.
-    rdsym : float
-        Rise-decay symmetry of the cycle, as fraction of the period in the rise time, where:
-        = 0.5 - symmetric (sine wave)
-        < 0.5 - shorter rise, longer decay
-        > 0.5 - longer rise, shorter decay
-
-    Returns
-    -------
-    cycle : 1d array
-        Simulated asymmetric cycle.
-
-    Examples
-    --------
-    Simulate a 2 Hz asymmetric sine cycle:
-
-    >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
-    """
-
-    # Determine number of samples in rise and decay periods
-    n_samples = int(n_seconds * fs)
-    n_rise = int(np.round(n_samples * rdsym))
-    n_decay = n_samples - n_rise
-
-    # Make phase array for the cycle, and convert to signal
-    #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
-    cycle = np.sin(np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
-                              np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
-                              np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]]))
-
-    return cycle
-
 
 def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     """Simulate a synaptic kernel with specified time constants.
@@ -159,10 +47,8 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     >>> kernel = sim_synaptic_kernel(n_seconds=1, fs=500, tau_r=0.1, tau_d=0.3)
     """
 
-    # NOTE: sometimes n_seconds is not exact, resulting in a slightly longer or
-    #   shorter times vector, which will affect final signal length
-    #   https://docs.python.org/2/tutorial/floatingpoint.html
-    times = np.arange(0, n_seconds, 1./fs)
+    # Create a times vector
+    times = create_times(n_seconds, fs)
 
     # Kernel type: single exponential
     if tau_r == 0:
@@ -185,28 +71,3 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     kernel = kernel / np.sum(kernel)
 
     return kernel
-
-
-def create_cycle_time(n_seconds, fs):
-    """Create a vector of time indices for a single cycle.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Length of simulated kernel in seconds.
-    fs : float
-        Sampling rate of simulated signal, in Hz.
-
-    Returns
-    -------
-    1d array
-        Time indices.
-
-    Examples
-    --------
-    Create time indices, in radians, for a single cycle:
-
-    >>> indices = create_cycle_time(n_seconds=1, fs=500)
-    """
-
-    return 2 * np.pi * 1 / n_seconds * (np.arange(fs * n_seconds) / fs)

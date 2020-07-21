@@ -2,12 +2,10 @@
 
 from inspect import getmembers, isfunction
 
-from neurodsp.sim import periodic, aperiodic, transients, combined
-
 ###################################################################################################
 ###################################################################################################
 
-SIM_MODULES = ['periodic', 'aperiodic', 'transients', 'combined']
+SIM_MODULES = ['periodic', 'aperiodic', 'cycles', 'transients', 'combined']
 
 def get_sim_funcs(module_name):
     """Get the available sim functions from a specified sub-module.
@@ -22,6 +20,8 @@ def get_sim_funcs(module_name):
     funcs : dictionary
         A dictionary containing the available sim functions from the requested sub-module.
     """
+
+    from neurodsp.sim import periodic, aperiodic, transients, combined, cycles
 
     if module_name in SIM_MODULES:
         module = eval(module_name)
@@ -51,21 +51,23 @@ def get_sim_names(module_name):
     return list(get_sim_funcs(module_name).keys())
 
 
-def get_sim_func(function_name):
+def get_sim_func(function_name, modules=SIM_MODULES):
     """Get a specified sim function.
 
     Parameters
     ----------
     function_name : str
         Name of the sim function to retrieve.
+    modules : list of str, optional
+        Which sim modules to look for the function in.
 
     Returns
     -------
-    func : executable
+    func : callable
         Requested sim function.
     """
 
-    for module in SIM_MODULES:
+    for module in modules:
         try:
             func = get_sim_funcs(module)[function_name]
             break

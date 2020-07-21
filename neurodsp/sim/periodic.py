@@ -2,15 +2,15 @@
 
 import numpy as np
 
-from neurodsp.sim.transients import sim_cycle
 from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.decorators import normalize
+from neurodsp.sim.cycles import sim_cycle, phase_shift_cycle
 
 ###################################################################################################
 ###################################################################################################
 
 @normalize
-def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
+def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     """Simulate an oscillation.
 
     Parameters
@@ -24,6 +24,9 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
+    phase : float, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        The shift is defined as a relative proportion of cycle, between [0, 1].
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -34,18 +37,28 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
 
     Examples
     --------
-    Simulate a continuous oscillation at 5 hz:
+    Simulate a continuous sinusoidal oscillation at 5 Hz:
 
     >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5)
+
+    Simulate an asymmetric oscillation at 15 Hz, with a phase shift:
+
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=15,
+    ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
     n_cycles = int(np.ceil(n_seconds * freq))
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
-    # Create oscillation by tiling a single cycle of the desired oscillation
-    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-    sig = np.tile(osc_cycle, n_cycles)
+    # Create a single cycle of an oscillation
+    cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+
+    # Phase shift the simulated cycle
+    cycle = phase_shift_cycle(cycle, phase)
+
+    # Tile the cycle, to create the desired oscillation
+    sig = np.tile(cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
     n_samps = int(n_seconds * fs)
