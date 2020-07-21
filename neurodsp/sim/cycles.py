@@ -10,7 +10,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 ###################################################################################################
 
-def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
+def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     """Simulate a single cycle of a periodic pattern.
 
     Parameters
@@ -86,7 +86,7 @@ def sim_sine_cycle(n_seconds, fs):
     --------
     Simulate a cycle of a 1 Hz sine wave:
 
-    >>> cycle = sim_asine_cycle(n_seconds=1, fs=500)
+    >>> cycle = sim_sine_cycle(n_seconds=1, fs=500)
     """
 
     times = create_cycle_time(n_seconds, fs)
@@ -164,7 +164,7 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     --------
     Simulate a symmetric cycle of a sawtooth wave:
 
-    >>> cycle = sim_asine_cycle(n_seconds=0.25, fs=500, width=0.5)
+    >>> cycle = sim_sawtooth_cycle(n_seconds=0.25, fs=500, width=0.5)
     """
 
     check_param(width, 'width', [0., 1.])
@@ -196,7 +196,7 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     --------
     Simulate a cycle of a gaussian wave:
 
-    >>> cycle = sim_asine_cycle(n_seconds=0.2, fs=500, std=0.025)
+    >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
     """
 
     cycle = gaussian(int(np.round(n_seconds * fs)), std * fs)
