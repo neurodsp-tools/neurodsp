@@ -13,17 +13,15 @@ Table of Contents
     :local:
     :depth: 2
 
-
 Filtering
 ---------
 
-Functions and utilities for the ``filt`` module, for filtering time series.
+Functions and utilities in the ``filt`` module, for filtering time series.
 
 General Filter Function
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.filt
-
 .. autosummary::
     :toctree: generated/
 
@@ -34,7 +32,6 @@ FIR Filters
 ~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.filt
-
 .. autosummary::
     :toctree: generated/
 
@@ -45,7 +42,6 @@ IIR Filters
 ~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.filt
-
 .. autosummary::
     :toctree: generated/
 
@@ -56,7 +52,6 @@ Check Filter Properties
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.filt.checks
-
 .. autosummary::
     :toctree: generated/
 
@@ -67,7 +62,6 @@ Filter Utilities
 ~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.filt.utils
-
 .. autosummary::
     :toctree: generated/
 
@@ -86,7 +80,6 @@ Hilbert Methods
 ~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.timefrequency
-
 .. autosummary::
     :toctree: generated/
 
@@ -99,7 +92,6 @@ Wavelet Methods
 ~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.timefrequency
-
 .. autosummary::
   :toctree: generated/
 
@@ -115,7 +107,6 @@ Spectral Power Measures
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
-
 .. autosummary::
     :toctree: generated/
 
@@ -128,7 +119,6 @@ Spectral Variance Measures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
-
 .. autosummary::
     :toctree: generated/
 
@@ -140,7 +130,6 @@ Spectral Utilities
 ~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
-
 .. autosummary::
     :toctree: generated/
 
@@ -157,7 +146,6 @@ Burst Detection Algorithms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.burst
-
 .. autosummary::
     :toctree: generated/
 
@@ -167,7 +155,6 @@ Burst Utilities
 ~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.burst
-
 .. autosummary::
     :toctree: generated/
 
@@ -182,7 +169,6 @@ Sliding Window Matching
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.rhythm
-
 .. autosummary::
     :toctree: generated/
 
@@ -192,7 +178,6 @@ Lagged Coherence
 ~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.rhythm
-
 .. autosummary::
     :toctree: generated/
 
@@ -207,7 +192,6 @@ Periodic Signals
 ~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim
-
 .. autosummary::
     :toctree: generated/
 
@@ -218,7 +202,6 @@ Aperiodic Signals
 ~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim
-
 .. autosummary::
     :toctree: generated/
 
@@ -227,22 +210,29 @@ Aperiodic Signals
     sim_synaptic_current
     sim_random_walk
 
-Transients
-~~~~~~~~~~
+Transients & Cycles
+~~~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim
-
 .. autosummary::
     :toctree: generated/
 
-    sim_cycle
     sim_synaptic_kernel
+    sim_cycle
+
+.. currentmodule:: neurodsp.sim.cycles
+.. autosummary::
+    :toctree: generated/
+
+    sim_sine_cycle
+    sim_asine_cycle
+    sim_sawtooth_cycle
+    sim_gaussian_cycle
 
 Combined Signals
 ~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim
-
 .. autosummary::
     :toctree: generated/
 
@@ -252,7 +242,6 @@ Utilities
 ~~~~~~~~~
 
 .. currentmodule:: neurodsp.utils
-
 .. autosummary::
     :toctree: generated/
 
@@ -263,17 +252,15 @@ Random Seed
 ~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim
-
 .. autosummary::
     :toctree: generated/
 
     set_random_seed
 
-
 Plots
 -----
 
-Functions for in the ``plts`` module, for plotting time series and analysis outputs.
+Functions in the ``plts`` module, for plotting time series and analysis outputs.
 
 Time Series
 ~~~~~~~~~~~
@@ -291,7 +278,6 @@ Spectral
 ~~~~~~~~
 
 .. currentmodule:: neurodsp.plts
-
 .. autosummary::
     :toctree: generated/
 
@@ -305,7 +291,6 @@ Filter
 ~~~~~~
 
 .. currentmodule:: neurodsp.plts
-
 .. autosummary::
     :toctree: generated/
 
@@ -317,7 +302,6 @@ Rhythm
 ~~~~~~
 
 .. currentmodule:: neurodsp.plts
-
 .. autosummary::
     :toctree: generated/
 
