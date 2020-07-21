@@ -18,8 +18,6 @@ This tutorial primarily covers the :func:`~.compute_lagged_coherence` function.
 
 ###################################################################################################
 
-###################################################################################################
-
 # sphinx_gallery_thumbnail_number = 2
 
 import numpy as np
@@ -28,8 +26,8 @@ import numpy as np
 from neurodsp.rhythm import compute_lagged_coherence
 
 # Import simulation code for creating test data
-from neurodsp.sim import sim_powerlaw, sim_combined, set_random_seed
-from neurodsp.utils import create_times
+from neurodsp.sim import sim_powerlaw, sim_combined
+from neurodsp.utils import set_random_seed, create_times
 
 # Import utilities for loading and plotting data
 from neurodsp.utils.download import load_ndsp_data
@@ -42,8 +40,11 @@ from neurodsp.plts.rhythm import plot_lagged_coherence
 set_random_seed(0)
 
 ###################################################################################################
-# Simulate a Signal with a Bursty Oscillation
-# -------------------------------------------
+# Simulate an Example Signal
+# --------------------------
+#
+# First, we'll simulate an example signal that starts with a burst of alpha activity, followed
+# by a periodic of only aperiodic activity.
 #
 
 ###################################################################################################
@@ -76,8 +77,7 @@ plot_time_series(times, sig)
 # Compute lagged coherence for an alpha oscillation
 # -------------------------------------------------
 #
-# We can compute lagged coherence with the
-# :func:`~.compute_lagged_coherence` function.
+# We can compute lagged coherence with the :func:`~.compute_lagged_coherence` function.
 #
 
 ###################################################################################################
@@ -95,8 +95,9 @@ print('Lagged coherence = ', lag_coh_alpha)
 # Compute lagged coherence across the frequency spectrum
 # ------------------------------------------------------
 #
-# Notice that lagged coherence peaks around 10Hz (the frequency of our
-# oscillation), but it is not very specific to that frequency.
+# Notice that lagged coherence peaks around 10Hz (the frequency of our oscillation).
+#
+# However, the peak it is not very specific to that frequency.
 #
 
 ###################################################################################################
@@ -107,8 +108,7 @@ lag_coh_by_f, freqs = compute_lagged_coherence(sig, fs, (5, 40),
 
 ###################################################################################################
 #
-# You can plot the lagged coherence results with
-# :func:`~.plot_lagged_coherence`.
+# You can plot the lagged coherence results with :func:`~.plot_lagged_coherence`.
 #
 
 ###################################################################################################
@@ -138,6 +138,8 @@ print('Lagged coherence, not bursting = ', lag_coh_noburst)
 ###################################################################################################
 # Compute lagged coherence of an example neural signal
 # ----------------------------------------------------
+#
+# Next, let's apply lagged coherence to some real data.
 #
 
 ###################################################################################################

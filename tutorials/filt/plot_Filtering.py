@@ -2,7 +2,7 @@
 Filtering
 =========
 
-Using digital filters on neural signals, including highpass, lowpass, bandpass & bandstop.
+Apply digital filters to neural signals, including highpass, lowpass, bandpass & bandstop filters.
 
 This tutorial primarily covers the ``neurodsp.filt`` module.
 """
@@ -11,8 +11,7 @@ This tutorial primarily covers the ``neurodsp.filt`` module.
 # Filtering with NeuroDSP
 # -----------------------
 #
-# The :func:`~.filter_signal` function is the main function for applying
-# filtering using NeuroDSP.
+# The :func:`~.filter_signal` function is the main function for filtering using NeuroDSP.
 #
 # Sections
 # ~~~~~~~~
@@ -34,8 +33,8 @@ This tutorial primarily covers the ``neurodsp.filt`` module.
 from neurodsp.filt import filter_signal
 
 # Import simulation code for creating test data
-from neurodsp.sim import sim_combined, set_random_seed
-from neurodsp.utils import create_times
+from neurodsp.sim import sim_combined
+from neurodsp.utils import set_random_seed, create_times
 
 # Import utilities for loading and plotting data
 from neurodsp.utils.download import load_ndsp_data
@@ -195,7 +194,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 # Apply a short filter
 #   In this case, we won't achieve our desired attenuation
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
                          n_seconds=0.25, plot_properties=True)
 
 ###################################################################################################v

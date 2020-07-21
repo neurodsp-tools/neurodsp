@@ -15,8 +15,8 @@ This tutorial primarily covers the ``neurodsp.burst`` module.
 from neurodsp.burst import detect_bursts_dual_threshold, compute_burst_stats
 
 # Import simulation code for creating test data
-from neurodsp.sim import set_random_seed, sim_combined
-from neurodsp.utils import create_times
+from neurodsp.sim import sim_combined
+from neurodsp.utils import set_random_seed, create_times
 
 # Import utilities for loading and plotting data
 from neurodsp.utils.download import load_ndsp_data
@@ -44,8 +44,7 @@ n_seconds = 5
 # Define simulation components
 components = {'sim_synaptic_current' : {'n_neurons':1000, 'firing_rate':2,
                                         't_ker':1.0, 'tau_r':0.002, 'tau_d':0.02},
-              'sim_bursty_oscillation' : {'freq' : 10,
-                                          'prob_enter_burst' : .2, 'prob_leave_burst' : .2}}
+              'sim_bursty_oscillation' : {'freq' : 10, 'enter_burst' : .2, 'leave_burst' : .2}}
 
 # Simulate a signal with a bursty oscillation with an aperiodic component & a time vector
 sig = sim_combined(n_seconds, fs, components)
@@ -126,8 +125,8 @@ for key, val in burst_stats.items():
     print('{:15} \t: {}'.format(key, val))
 
 ###################################################################################################
-# Burst detection applied to real recordings
-# ------------------------------------------
+# Burst Detection on Real Data
+# ----------------------------
 #
 # Next up, we'll load a sample of real neural data, and try out the burst detection.
 #

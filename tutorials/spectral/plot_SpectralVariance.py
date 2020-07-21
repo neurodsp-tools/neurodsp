@@ -17,16 +17,18 @@ This tutorial primarily covers the ``neurodsp.spectral.variance`` module.
 
 ###################################################################################################
 
-# Import spectral module
-from neurodsp.spectral import (compute_spectral_hist, compute_spectrum,
-                               compute_scv, compute_scv_rs)
+# Import spectral variance functions
+from neurodsp.spectral import compute_spectral_hist, compute_scv, compute_scv_rs
+
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
 
 # Import utilities for loading and plotting data
 from neurodsp.utils import create_times
 from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
-from neurodsp.plts.spectral import plot_spectral_hist
-from neurodsp.plts.spectral import plot_scv, plot_scv_rs_lines, plot_scv_rs_matrix
+from neurodsp.plts.spectral import (plot_spectral_hist, plot_scv,
+                                    plot_scv_rs_lines, plot_scv_rs_matrix)
 
 ###################################################################################################
 # Load example neural signal
@@ -134,8 +136,7 @@ plot_scv(freqs, scv)
 # To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 # slices from the non-overlapping spectrogram and taking their average.
 #
-# The resampled spectral coefficient of variation can be computed with
-# :func:`~.compute_scv_rs`.
+# The resampled spectral coefficient of variation can be computed with :func:`~.compute_scv_rs`.
 #
 
 ###################################################################################################
@@ -146,8 +147,7 @@ freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
 
 ###################################################################################################
 #
-# You can plot the resampled SCV, as lines, with
-# :func:`~.plot_scv_rs_lines`.
+# You can plot the resampled SCV, as lines, with :func:`~.plot_scv_rs_lines`.
 #
 
 ###################################################################################################
@@ -169,8 +169,7 @@ freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='rolling', rs_params=(10,
 
 ###################################################################################################
 #
-# You can plot the resampled SCV, as a matrix, with
-# :func:`~.plot_scv_rs_matrix`.
+# You can plot the resampled SCV, as a matrix, with :func:`~.plot_scv_rs_matrix`.
 #
 
 ###################################################################################################
