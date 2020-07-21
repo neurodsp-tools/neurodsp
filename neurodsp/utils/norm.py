@@ -5,7 +5,34 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def demean(array, mean=0., select_nonzero=True):
+def normalize_sig(sig, mean=None, variance=None):
+    """Normalize the mean and variance of a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal to normalize.
+    variance : float, optional
+        Variance to normalize to.
+    mean : float, optional
+        New mean for data to have.
+
+    Returns
+    -------
+    sig : 1d array
+        Input signal, with normalizations applied.
+    """
+
+    # Apply variance & mean transformations
+    if variance is not None:
+        sig = normalize_variance(sig, variance=variance)
+    if mean is not None:
+        sig = demean(sig, mean=mean)
+
+    return sig
+
+
+def demean(array, mean=0.):
     """Demean an array, updating to specified mean.
 
     Parameters
@@ -14,8 +41,6 @@ def demean(array, mean=0., select_nonzero=True):
         Data to demean.
     mean : float, optional, default: 0
         New mean for data to have.
-    select_nonzero : bool, optional, default: True
-        Whether to calculate the mean of the array across only non-zero data points.
 
     Returns
     -------
@@ -23,19 +48,10 @@ def demean(array, mean=0., select_nonzero=True):
         Demeaned data.
     """
 
-    if select_nonzero:
-        nonzero = np.nonzero(array)
-        nonzero_mean = np.mean(array[nonzero])
-        out = array.copy()
-        out[nonzero] = array[nonzero] - nonzero_mean + mean
-
-    else:
-        out = array - array.mean() + mean
-
-    return out
+    return array - array.mean() + mean
 
 
-def normalize_variance(array, variance=1., select_nonzero=True):
+def normalize_variance(array, variance=1.):
     """Normalize the variance of an array, updating to specified variance.
 
     Parameters
@@ -44,8 +60,6 @@ def normalize_variance(array, variance=1., select_nonzero=True):
         Data to normalize variance to.
     variance : float, optional, default: 1.0
         Variance to normalize to.
-    select_nonzero : bool, optional, default: True
-        Whether to calculate the variance of the array across only non-zero data points.
 
     Returns
     -------
@@ -57,19 +71,11 @@ def normalize_variance(array, variance=1., select_nonzero=True):
     If the input array is all zeros, this function simply returns the input.
     """
 
-    # If array is all zero, set to return the same array
-    #   Can't update variance if it's zero
+    # If array is all zero, set to return the same array (can't update variance of 0)
     if not array.any():
         out = array
 
     else:
-
-        if select_nonzero:
-            nonzero = np.nonzero(array)
-            array_std = np.std(array[nonzero])
-            out = array.copy()
-            out[nonzero] = array[nonzero] / array_std * np.sqrt(variance)
-        else:
-            out = array / array.std() * np.sqrt(variance)
+        out = array / array.std() * np.sqrt(variance)
 
     return out

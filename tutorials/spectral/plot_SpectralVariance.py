@@ -33,7 +33,7 @@ from neurodsp.plts.spectral import plot_scv, plot_scv_rs_lines, plot_scv_rs_matr
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # First, we load the sample data, which is a segment of rat hippocampal LFP
-# taken from the publicly available neuro database CRCNS (hc2).
+# taken from the publicly available database CRCNS (specifically, from the 'hc2' dataset).
 #
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
 #
@@ -56,7 +56,7 @@ plot_time_series(times, sig, xlim=[0, 3])
 
 ###################################################################################################
 #
-# Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
+# Plotting the data, we observe a strong theta oscillation (~6-8 Hz).
 #
 
 ###################################################################################################
@@ -92,7 +92,7 @@ plot_spectral_hist(freqs, bins, spect_hist, freq_med, psd_med)
 
 ###################################################################################################
 #
-# Notice in the below plot that not only is theta power higher overall (shifted up),
+# Notice in the plot that not only is theta power higher overall (shifted up),
 # it also has lower variance around its mean.
 #
 
@@ -128,13 +128,13 @@ plot_scv(freqs, scv)
 
 ###################################################################################################
 #
-# As shown above, SCV calculated from the entire segment of data is quite noise due to the
+# As shown above, SCV calculated from the entire segment of data is quite noisy due to the
 # single estimate of mean and standard deviation.
 #
 # To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 # slices from the non-overlapping spectrogram and taking their average.
 #
-# The resample spectral coefficient of variation can be computed with
+# The resampled spectral coefficient of variation can be computed with
 # :func:`~.compute_scv_rs`.
 #
 
@@ -146,7 +146,7 @@ freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, nperseg=fs, method='bootstrap',
 
 ###################################################################################################
 #
-# You can plot the resampled scv, as lines, with
+# You can plot the resampled SCV, as lines, with
 # :func:`~.plot_scv_rs_lines`.
 #
 
@@ -169,7 +169,7 @@ freqs, t_inds, scv_rs = compute_scv_rs(sig, fs, method='rolling', rs_params=(10,
 
 ###################################################################################################
 #
-# You can plot the resampled scv, as a matrix, with
+# You can plot the resampled SCV, as a matrix, with
 # :func:`~.plot_scv_rs_matrix`.
 #
 

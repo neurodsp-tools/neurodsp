@@ -32,7 +32,7 @@ from neurodsp.plts.time_series import plot_time_series
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # First, we load the sample data, which is a segment of rat hippocampal LFP
-# taken from the publicly available neuro database CRCNS (hc2).
+# taken from the publicly available database CRCNS (specifically, from the 'hc2' dataset).
 #
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
 #
@@ -53,7 +53,7 @@ plot_time_series(times, sig, xlim=[0, 3])
 
 ###################################################################################################
 #
-# Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
+# Plotting the data, we observe a strong theta oscillation (~6-8 Hz).
 #
 
 ###################################################################################################
@@ -63,19 +63,19 @@ plot_time_series(times, sig, xlim=[0, 3])
 # A PSD is a frequency domain representation of a time series.
 #
 # Using the Fourier transform, the signal is split into orthogonal components
-# of different frequencies, and amount of power in each frequency is estimated.
+# of different frequencies, and the amount of power in each frequency is estimated.
 #
 # The main function for computing power spectra is
 # :func:`~.compute_spectrum`.
 #
 # There are a few ways of estimating the PSD, with different smoothing:
 #
-# - 'welch' : averages over windowed power estimates, using fourier transforms
+# - 'welch' : averages over windowed power estimates, using Fourier transforms
 #
 #   - in this approach, you can also choose how to average across windows
 #
 #     - 'mean' : the traditional welch's approach, which takes the mean over windows
-#     - 'median' : take the median across windows, which dimininishes the the effect of outlier power values
+#     - 'median' : take the median across windows, which diminishes the the effect of outlier power values
 #   - You can do this directly with :func:`~.compute_spectrum_welch`
 #
 # - 'wavelet' : uses wavelets to calculate power at designated frequencies
@@ -140,7 +140,6 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 #
 # You can perform spectral rotation with
 # :func:`~.rotate_powerlaw`.
-#
 #
 # This function is mostly useful for investigating the effect of rotating the spectrum
 # in frequency domain on the time domain signal. Effectively, this performs a very specific

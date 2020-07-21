@@ -7,6 +7,19 @@ from neurodsp.utils.norm import *
 ###################################################################################################
 ###################################################################################################
 
+def test_normalize_sig():
+
+    sig1 = np.array([1, 2, 3, 4, 5, 6])
+    sig2 = np.array([0, 1, 0, -1, 0, 1, 0, -1])
+
+    new_mean = 2
+    new_variance = 2
+
+    for sig in [sig1, sig2]:
+        out = normalize_sig(sig, new_mean, new_variance)
+        assert np.isclose(out.mean(), new_mean)
+        assert np.isclose(out.var(), new_variance)
+
 def test_demean():
 
     d1 = np.array([1, 2, 3])
@@ -17,16 +30,9 @@ def test_demean():
     assert np.isclose(out1.mean(), 0.)
 
     # Check demeaning and adding specific mean
-    out2 = demean(d1, mean=1.)
-    assert np.isclose(out2.mean(), 1.)
-
-    # Check dealing with zero entries
-    out3 = demean(d2)
-    assert np.isclose(out3[np.nonzero(out3)].mean(), 0)
-
-    # Check turning of non-zero selection
-    out3 = demean(d2, mean=1, select_nonzero=False)
-    assert np.isclose(out3.mean(), 1)
+    new_mean = 1.
+    out2 = demean(d1, mean=new_mean)
+    assert np.isclose(out2.mean(), new_mean)
 
 def test_normalize_variance():
 

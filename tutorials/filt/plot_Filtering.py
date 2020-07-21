@@ -21,8 +21,8 @@ This tutorial primarily covers the ``neurodsp.filt`` module.
 #
 # 1. Bandpass filter: extract a single oscillation from a signal
 # 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
-# 3. Time-frequency resolution trade off: Change the filter length
-# 4. Infinite-impulse-response (IIR) filter option.
+# 3. Time-frequency resolution trade off: changing the filter length
+# 4. Infinite-impulse-response (IIR) filter option
 # 5. Beta bandpass filter on a neural signal
 #
 
@@ -67,7 +67,7 @@ times = create_times(n_seconds, fs)
 # Set the frequency in our simulated signal
 freq = 6
 
-# Set up simulation for a signal with an oscillaton + noise
+# Set up simulation for a signal with an oscillation + noise
 components = {'sim_powerlaw' : {'exponent' : 0},
               'sim_oscillation' : {'freq' : 6}}
 variances = [0.1, 1]
@@ -114,12 +114,12 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 freq1 = 3
 freq2 = 0.5
 
-# Set up simulation for a signal with an oscillaton + noise + low frequency activity
+# Set up simulation for a signal with an oscillation + noise + low frequency activity
 components = {'sim_powerlaw' : {'exponent' : 0},
               'sim_oscillation' : [{'freq' : freq1}, {'freq' : freq2}]}
 variances = [0.1, 1, 1]
 
-# Generate a signal including low-frequency activty
+# Generate a signal including low-frequency activity
 sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
@@ -184,21 +184,25 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 #
 # You might sometimes see a user warning that warns about the level of attenuation.
 #
-# You will see this warning whenever the filter you construct has a frequency response does
-# not hit a certain level of attenuation in the stopband. By default, if it does not go below 20dB.
+# You will see this warning whenever the filter you construct has a frequency response that
+# does not hit a certain level of attenuation in the stopband. By default, the warning appears
+# if the level of attenuation does not go below 20dB.
 #
 # You can check filter properties by plotting the frequency response when you apply a filter.
 #
 
 ###################################################################################################
 
-# Apply a short filter. In this case, we won't achieve our desired attenuation
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.25, plot_properties=True)
+# Apply a short filter
+#   In this case, we won't achieve our desired attenuation
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range
+                         n_seconds=0.25, plot_properties=True)
 
 ###################################################################################################v
 
 # This user warning disappears if we elongate the filter
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=1, plot_properties=True)
+sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
+                         n_seconds=1, plot_properties=True)
 
 ###################################################################################################
 # 3. Time-frequency resolution trade off
@@ -272,7 +276,7 @@ sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 #
 # We often use these filters when removing 60 Hz line noise.
 #
-# Here we apply a 3rd order butterworth filter to remove 60Hz noise.
+# Here we apply a 3rd order Butterworth filter to remove 60Hz noise.
 #
 # Notice that some edge artifacts remain.
 #
