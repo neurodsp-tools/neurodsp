@@ -29,7 +29,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    method : {'welch', 'wavelet', 'medfilt'}
+    method : {'welch', 'wavelet', 'medfilt'}, optional
         Method to use to estimate the power spectrum.
     avg_type : {'mean', 'median'}, optional
         If relevant, the method to average across windows to create the spectrum.
@@ -42,6 +42,15 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
     if method == 'welch':
@@ -82,13 +91,28 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series using wavelets:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spectrum = compute_spectrum_wavelet(sig, fs=500, freqs=[1, 30])
     """
 
     if isinstance(freqs, (tuple, list)):
         freqs = create_freqs(*freqs)
 
+    # Compute the wavelet transform
     mwt = compute_wavelet_transform(sig, fs, freqs, **kwargs)
-    spectrum = get_avg_func(avg_type)(mwt, axis=0)
+
+    # Convert the wavelet coefficient outputs to units of power
+    mwt_power = abs(mwt)**2
+
+    # Create the power spectrum by averaging across the time dimension
+    spectrum = get_avg_func(avg_type)(mwt_power, axis=1)
 
     return freqs, spectrum
 
@@ -108,7 +132,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Method to average across the windows:
 
         * 'mean' is the same as Welch's method, taking the mean across FFT windows.
-        * 'median' uses median across FFT windows instead of the mean, to minimize outlier effect.
+        * 'median' uses median across FFT windows instead of the mean, to minimize outlier effects.
     window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
@@ -119,7 +143,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     noverlap : int, optional
         Number of points to overlap between segments.
         If None, noverlap = nperseg // 8.
-    f_range : list of [float, float] optional
+    f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
     outlier_percent : float, optional
         The percentage of outlier values to be removed. Must be between 0 and 100.
@@ -130,9 +154,18 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series using Welch's method:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
     """
 
-    # Calculate the short time fourier transform with signal.spectrogram
+    # Calculate the short time Fourier transform with signal.spectrogram
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
@@ -152,7 +185,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
 @multidim(select=[0])
 def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
-    """Compute the power spectral densitry as a smoothed FFT.
+    """Compute the power spectral density as a smoothed FFT.
 
     Parameters
     ----------
@@ -160,9 +193,9 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    filt_len : float, optional, default: 1.
+    filt_len : float, optional, default: 1
         Length of the median filter, in Hz.
-    f_range : list of [float, float] optional
+    f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
 
     Returns
@@ -171,14 +204,23 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series as a smoothed FFT:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
     """
 
-    # Take the positive half of the spectrum since it's symmetrical
+    # Take the positive half of the spectrum, since it's symmetrical
     ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
     freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
 
     # Convert median filter length from Hz to samples, and make sure it is odd
-    filt_len_samp = int(int(filt_len / (freqs[1] - freqs[0])))
+    filt_len_samp = int(filt_len / (freqs[1] - freqs[0]))
     if filt_len_samp % 2 == 0:
         filt_len_samp += 1
 

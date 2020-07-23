@@ -29,6 +29,7 @@ def check_ax(ax, figsize=None):
 
 
 def savefig(func):
+    """Decorator function to save out figures."""
 
     @wraps(func)
     def decorated(*args, **kwargs):

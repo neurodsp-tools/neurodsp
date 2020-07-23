@@ -28,10 +28,10 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
     f_range : tuple of (float, float), optional
         Frequency range, to filter signal to, before running burst detection.
         If f_range is None, then no filtering is applied prior to running burst detection.
-    min_n_cycles : float, optional, default=3
+    min_n_cycles : float, optional, default: 3
         Minimum burst duration in to keep.
         Only used if `f_range` is defined, and is used as the number of cycles at f_range[0].
-    min_burst_duration : float, optional, default=None
+    min_burst_duration : float, optional, default: None
         Minimum length of a burst, in seconds. Must be defined if not filtering.
         Only used if `f_range` is not defined, or if `min_n_cycles` is set to None.
     avg_type : {'median', 'mean'}, optional
@@ -46,6 +46,17 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
     is_burst : 1d array
         Boolean indication of where bursts are present in the input signal.
         True indicates that a burst was detected at that sample, otherwise False.
+
+    Examples
+    --------
+    Detect bursts using the dual threshold algorithm:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation' : {'freq': 10}},
+    ...                    component_variances=[0.1, 0.9])
+    >>> is_burst = detect_bursts_dual_threshold(sig, fs=500, dual_thresh=(1, 2), f_range=(8, 12))
     """
 
     if len(dual_thresh) != 2:
@@ -73,7 +84,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
     # Otherwise, make sure minimum duration is set, and use that
     else:
         if min_burst_duration is None:
-            raise ValueError("Minimum burst duration must be defined if not filtering"
+            raise ValueError("Minimum burst duration must be defined if not filtering "
                              "and using a number of cycles threshold.")
         min_burst_samples = int(np.ceil(min_burst_duration * fs))
 

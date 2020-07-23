@@ -8,7 +8,7 @@ import numpy as np
 ###################################################################################################
 
 def check_filter_definition(pass_type, f_range):
-    """Check a filter definition for validity, and get f_lo and f_hi.
+    """Check a filter definition for validity, and get filter frequency range of the filter.
 
     Parameters
     ----------
@@ -35,19 +35,34 @@ def check_filter_definition(pass_type, f_range):
     Raises
     ------
     ValueError
-        If the filter passtype it not understood, or cutoff frequncies are incompatible.
+        If the filter passtype it not understood, or cutoff frequencies are incompatible.
+
+    Examples
+    --------
+    Check a filter definition, and get the cutoff frequencies returned, if the filter is valid:
+
+    >>> f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(5, 25))
+
+    Check a filter definition, for an invalid filter.
+    This example fails since a bandpass filter requires two values for ``f_range``.
+
+    >>> try:
+    ...     f_hi, f_lo = check_filter_definition(pass_type='bandpass', f_range=(20))
+    ... except ValueError:
+    ...     print("The filter definition is invalid.")
+    The filter definition is invalid.
     """
 
     if pass_type not in ['bandpass', 'bandstop', 'lowpass', 'highpass']:
         raise ValueError('Filter passtype not understood.')
 
-    ## Check that frequency cutoff inputs are appropriate
-    # For band filters, 2 inputs required & second entry must be > first
+    # Check that frequency cutoff inputs are appropriate
+    #   For band filters, 2 inputs required & second entry must be > first
     if pass_type in ('bandpass', 'bandstop'):
-        if isinstance(f_range, tuple) and f_range[0] >= f_range[1]:
+        if isinstance(f_range, (tuple, list)) and f_range[0] >= f_range[1]:
             raise ValueError('Second cutoff frequency must be greater than first.')
         elif isinstance(f_range, (int, float)) or len(f_range) != 2:
-            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters')
+            raise ValueError('Two cutoff frequencies required for bandpass and bandstop filters.')
 
         # Map f_range to f_lo and f_hi
         f_lo, f_hi = f_range
@@ -56,14 +71,14 @@ def check_filter_definition(pass_type, f_range):
     if pass_type == 'lowpass':
         if isinstance(f_range, (int, float)):
             f_hi = f_range
-        elif isinstance(f_range, tuple):
+        elif isinstance(f_range, (tuple, list)):
             f_hi = f_range[1]
         f_lo = None
 
     if pass_type == 'highpass':
         if isinstance(f_range, (int, float)):
             f_lo = f_range
-        elif isinstance(f_range, tuple):
+        elif isinstance(f_range, (tuple, list)):
             f_lo = f_range[0]
         f_hi = None
 
@@ -74,15 +89,18 @@ def check_filter_definition(pass_type, f_range):
     return f_lo, f_hi
 
 
-def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=(-20, -3), verbose=True):
+def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
+                            transitions=(-20, -3), verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
     ----------
-    b_vals : 1d array
-        B value filter coefficients for a filter.
-    a_vals : 1d array
-        A value filter coefficients for a filter.
+    filter_coefs : 1d or 2d array
+        If 1d, interpreted as the B-value filter coefficients.
+        If 2d, interpreted as the second-order (sos) filter coefficients.
+    a_vals : 1d array or None
+        The A-value filter coefficients for a filter.
+        If second-order filter coefficients are provided in `filter_coefs`, must be None.
     fs : float
         Sampling rate, in Hz.
     pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
@@ -106,6 +124,17 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
     -------
     passes : bool
         Whether all the checks pass. False if one or more checks fail.
+
+    Examples
+    --------
+    Check the properties of an FIR filter:
+
+    >>> from neurodsp.filt.fir import design_fir_filter
+    >>> fs, pass_type, f_range = 500, 'bandpass', (1, 25)
+    >>> filter_coefs = design_fir_filter(fs, pass_type, f_range)
+    >>> passes = check_filter_properties(filter_coefs, 1, fs, pass_type, f_range)
+    Transition bandwidth is 0.5 Hz.
+    Pass/stop bandwidth is 24.0 Hz.
     """
 
     # Import utility functions inside function to avoid circular imports
@@ -116,7 +145,7 @@ def check_filter_properties(b_vals, a_vals, fs, pass_type, f_range, transitions=
     passes = True
 
     # Compute the frequency response
-    f_db, db = compute_frequency_response(b_vals, a_vals, fs)
+    f_db, db = compute_frequency_response(filter_coefs, a_vals, fs)
 
     # Check that frequency response goes below transition level (has significant attenuation)
     if np.min(db) >= transitions[0]:

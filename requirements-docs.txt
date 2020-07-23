@@ -2,8 +2,9 @@
 sphinx
 sphinx_gallery
 sphinx_bootstrap_theme
-m2r
+sphinx-copybutton
 numpydoc
 
 # Requirements for running the examples
 mne
+pillow

@@ -41,16 +41,30 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     References
     ----------
     .. [1] Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &
-           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological recordings.
-           Journal of Neuroscience Methods, 275, 66-79. DOI: 10.1016/j.jneumeth.2016.11.001
+           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological
+           recordings. Journal of Neuroscience Methods, 275, 66-79.
+           DOI: 10.1016/j.jneumeth.2016.11.001
            Matlab Code: https://github.com/bartgips/SWM
 
     Notes
     -----
-    * Apply a highpass filter if looking at high frequency activity, so that it does
+    - Apply a highpass filter if looking at high frequency activity, so that it does
       not converge on a low frequency motif.
-    * Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
+    - Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
       motif of interest, and the N derived should be about the number of occurrences.
+
+    Examples
+    --------
+    Search for reoccuring patterns using sliding window matching in a simulated beta signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {'f_range': (2, None)},
+    ...                                'sim_bursty_oscillation': {'freq': 20,
+    ...                                                           'enter_burst': .25,
+    ...                                                           'leave_burst': .25}})
+    >>> avg_window, window_starts, costs = sliding_window_matching(sig, fs=500, win_len=0.05,
+    ...                                                            win_spacing=0.20)
     """
 
     # Compute window length and spacing in samples
@@ -113,7 +127,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 def _compute_cost(sig, window_starts, win_n_samps):
     """Compute the cost, which is proportional to the difference between pairs of windows."""
 
-    # Get all windows and zscore them
+    # Get all windows and z-score them
     n_windows = len(window_starts)
     windows = np.zeros((n_windows, win_n_samps))
 

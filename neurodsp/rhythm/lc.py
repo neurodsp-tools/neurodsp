@@ -5,7 +5,7 @@ from warnings import warn
 import numpy as np
 from scipy.signal.windows import hann
 
-from neurodsp.utils.core import check_n_cycles
+from neurodsp.utils.checks import check_n_cycles
 from neurodsp.utils.data import create_freqs, split_signal
 from neurodsp.utils.decorators import multidim
 
@@ -48,6 +48,18 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     .. [1] Fransen, A. M., van Ede, F., & Maris, E. (2015).
            Identifying neuronal oscillations using rhythmicity.
            Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003
+
+    Examples
+    --------
+    Compute lagged coherence for a simulated signal with beta oscillations:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_synaptic_current': {},
+    ...                                'sim_bursty_oscillation': {'freq': 20,
+    ...                                                           'enter_burst': .50,
+    ...                                                           'leave_burst': .25}})
+    >>> lag_cohs = compute_lagged_coherence(sig, fs=500, freqs=(5, 35))
     """
 
     if isinstance(freqs, (tuple, list)):
@@ -101,7 +113,7 @@ def lagged_coherence_1freq(sig, fs, freq, n_cycles):
     chunks = split_signal(sig, n_samps)
     n_chunks = len(chunks)
 
-    # For each chunk, calculate the fourier coefficients at the frequency of interest
+    # For each chunk, calculate the Fourier coefficients at the frequency of interest
     hann_window = hann(n_samps)
     fft_freqs = np.fft.fftfreq(n_samps, 1 / float(fs))
     fft_freqs_idx = np.argmin(np.abs(fft_freqs - freq))

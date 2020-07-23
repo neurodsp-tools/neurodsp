@@ -1,4 +1,4 @@
-"""Tools for estimating time frequency properties, using hilbert methods."""
+"""Tools for estimating time frequency properties, using Hilbert methods."""
 
 import numpy as np
 from scipy.signal import hilbert
@@ -13,26 +13,35 @@ from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 @multidim()
 def robust_hilbert(sig, increase_n=False):
-    """Compute the hilbert transform, ignoring any boundaries that are NaN.
+    """Compute the Hilbert transform, ignoring any boundaries that are NaN.
 
     Parameters
     ----------
     sig : 1d array
         Time series.
     increase_n : bool, optional, default: False
-        If True, zeropad the signal to length the next power of 2 for the hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some signal lengths.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
+        This is because ``scipy.signal.hilbert`` can be very slow for some signal lengths.
 
     Returns
     -------
     sig_hilb : 1d array
-        The hilbert transform of the input signal.
+        The analytic signal, of which the imaginary part is the Hilbert transform of the input.
+
+    Examples
+    --------
+    Compute the analytic signal, using zero padding:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> sig_hilb = robust_hilbert(sig, increase_n=True)
     """
 
     # Extract the signal that is not nan
     sig_nonan, sig_nans = remove_nans(sig)
 
-    # Compute hilbert transform of signal without nans
+    # Compute Hilbert transform of signal without nans
     if increase_n:
         sig_len = len(sig_nonan)
         n_components = 2**(int(np.log2(sig_len)) + 1)
@@ -60,10 +69,10 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of x.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of x.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
@@ -72,11 +81,21 @@ def phase_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     -------
     pha : 1d array
         Instantaneous phase time series.
+
+    Examples
+    --------
+    Compute the instantaneous phase, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> pha = phase_by_time(sig, fs=500, f_range=(8, 12))
     """
 
     if f_range:
-        sig, filter_kernel = filter_signal(sig, fs, infer_passtype(f_range), f_range=f_range,
-                                           remove_edges=False, return_filter=True, **filter_kwargs)
+        sig, filter_kernel = filter_signal(sig, fs, infer_passtype(f_range),
+                                           f_range=f_range, remove_edges=False,
+                                           return_filter=True, **filter_kwargs)
 
     pha = np.angle(robust_hilbert(sig, increase_n=hilbert_increase_n))
 
@@ -100,10 +119,10 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
@@ -112,6 +131,15 @@ def amp_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     -------
     amp : 1d array
         Instantaneous amplitude time series.
+
+    Examples
+    --------
+    Compute the instantaneous amplitude, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> amp = amp_by_time(sig, fs=500, f_range=(8, 12))
     """
 
     if f_range:
@@ -140,10 +168,10 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     f_range : tuple of float or None, optional default: None
         Filter range, in Hz, as (low, high). If None, no filtering is applied.
     hilbert_increase_n : bool, optional, default: False
-        If True, zeropad the signal to length the next power of 2 when doing the hilbert transform.
-        This is because :func:`scipy.signal.hilbert` can be very slow for some lengths of sig.
+        If True, zero pad the signal's length to the next power of 2 for the Hilbert transform.
+        This is because ``scipy.signal.hilbert`` can be very slow for some lengths of sig.
     remove_edges : bool, optional, default: True
-        If True, replace samples that are within half of the filters length to the edge with np.nan.
+        If True, replace samples that are within half of the filter's length to the edge with nan.
         This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
     **filter_kwargs
         Keyword parameters to pass to `filter_signal`.
@@ -156,15 +184,34 @@ def freq_by_time(sig, fs, f_range=None, hilbert_increase_n=False,
     Notes
     -----
     This function assumes monotonic phase, so phase slips will be processed as high frequencies.
+
+    Examples
+    --------
+    Compute the instantaneous frequency, for the alpha range:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> instant_freq = freq_by_time(sig, fs=500, f_range=(8, 12))
     """
 
-    pha = phase_by_time(sig, fs, f_range, hilbert_increase_n,
-                        remove_edges, **filter_kwargs)
+    # Calculate instantaneous phase, from which we can compute instantaneous frequency
+    pha = phase_by_time(sig, fs, f_range, hilbert_increase_n, remove_edges, **filter_kwargs)
 
-    phadiff = np.diff(pha)
-    phadiff[phadiff < 0] = phadiff[phadiff < 0] + 2 * np.pi
+    # If filter edges were removed, temporarily drop nans for subsequent operations
+    pha, nans = remove_nans(pha)
 
-    i_f = fs * phadiff / (2 * np.pi)
+    # Differentiate the unwrapped phase, to estimate frequency as the rate of change of phase
+    pha_unwrapped = np.unwrap(pha)
+    pha_diff = np.diff(pha_unwrapped)
+
+    # Convert differentiated phase to frequency
+    i_f = fs * pha_diff / (2 * np.pi)
+
+    # Prepend nan value to re-align with original signal (necessary due to differentiation)
     i_f = np.insert(i_f, 0, np.nan)
+
+    # Restore nans, to re-align signal if filter edges were removed
+    i_f = restore_nans(i_f, nans)
 
     return i_f

@@ -4,11 +4,10 @@ Spectral Domain Analysis: Power
 
 Apply spectral domain analyses, calculating power measures.
 
-This tutorial primarily covers :mod:`neurodsp.spectral.power`.
+This tutorial primarily covers the ``neurodsp.spectral.power`` module.
 """
 
 ###################################################################################################
-#
 # Overview
 # --------
 #
@@ -17,22 +16,23 @@ This tutorial primarily covers :mod:`neurodsp.spectral.power`.
 
 ###################################################################################################
 
-import numpy as np
+# sphinx_gallery_thumbnail_number = 2
 
+# Import spectral power functions
+from neurodsp.spectral import compute_spectrum, rotate_powerlaw
+
+# Import utilities for loading and plotting data
 from neurodsp.utils import create_times
-
-from neurodsp.plts.spectral import *
+from neurodsp.utils.download import load_ndsp_data
+from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
-from neurodsp import spectral
-
 ###################################################################################################
-#
 # Load example neural signal
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # First, we load the sample data, which is a segment of rat hippocampal LFP
-# taken from the publicly available neuro database CRCNS (hc2).
+# taken from the publicly available database CRCNS (specifically, from the 'hc2' dataset).
 #
 # Relevant publication: Mizuseki et al, 2012, Nature Neuro
 #
@@ -40,49 +40,67 @@ from neurodsp import spectral
 ###################################################################################################
 
 # Load example data signal
-sig = np.load('../data/sample_data_2.npy')
+sig = load_ndsp_data('sample_data_2.npy', folder='data')
+
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
+times = create_times(len(sig)/fs, fs)
+
+###################################################################################################
 
 # Plot the loaded signal
-times = create_times(len(sig)/fs, fs)
 plot_time_series(times, sig, xlim=[0, 3])
 
 ###################################################################################################
 #
-# Plotting the data, we observe a strong theta oscillation (~6-8 Hz)
+# Plotting the data, we observe a strong theta oscillation (~6-8 Hz).
 #
 
 ###################################################################################################
-#
 # Computing the power spectral density (PSD)
 # ------------------------------------------
 #
 # A PSD is a frequency domain representation of a time series.
 #
 # Using the Fourier transform, the signal is split into orthogonal components
-# of different frequencies, and amount of power in each frequency is estimated.
+# of different frequencies, and the amount of power in each frequency is estimated.
 #
-# In this toolbox, there are a few ways of estimating the PSD, with different smoothing:
+# The main function for computing power spectra is
+# :func:`~.compute_spectrum`.
 #
-# - 'mean' : same as Welch's method; mean over spectrogram of data.
+# There are a few ways of estimating the PSD, with different smoothing:
 #
-#   - This is the most straightforward and "standard" way of computing the PSD.
-# - 'median' : similar to Welch's method; median (instead of mean) over spectrogram of data.
+# - 'welch' : averages over windowed power estimates, using Fourier transforms
 #
-#   - This diminishes the effect of outlier power values from signal artifacts.
+#   - in this approach, you can also choose how to average across windows
+#
+#     - 'mean' : the traditional welch's approach, which takes the mean over windows
+#     - 'median' : take the median across windows, which diminishes the the effect of outlier power values
+#   - You can do this directly with :func:`~.compute_spectrum_welch`
+#
+# - 'wavelet' : uses wavelets to calculate power at designated frequencies
+#
+#   - You can do this directly with :func:`~.compute_spectrum_wavelet`
 # - 'medfilt' : a median filter of the squared FFT magnitude.
+#
+#   - You can do this directly with :func:`~.compute_spectrum_medfilt`
 #
 
 ###################################################################################################
 
 # Mean of spectrogram (Welch)
-freq_mean, psd_mean = spectral.compute_spectrum(sig, fs, method='welch', avg_type='mean', nperseg=fs*2)
+freq_mean, psd_mean = compute_spectrum(sig, fs, method='welch', avg_type='mean', nperseg=fs*2)
 
 # Median of spectrogram ("median Welch")
-freq_med, psd_med = spectral.compute_spectrum(sig, fs, method='welch', avg_type='median', nperseg=fs*2)
+freq_med, psd_med = compute_spectrum(sig, fs, method='welch', avg_type='median', nperseg=fs*2)
 
 # Median filtered spectrum
-freq_mf, psd_mf = spectral.compute_spectrum(sig, fs, method='medfilt')
+freq_mf, psd_mf = compute_spectrum(sig, fs, method='medfilt')
+
+###################################################################################################
+#
+# You can plot power spectra with :func:`~.plot_power_spectra`.
+#
 
 ###################################################################################################
 
@@ -92,7 +110,6 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
                    ['Welch', 'Median Welch', 'Median Filter FFT'])
 
 ###################################################################################################
-#
 # Aside: Fitting 1/f and oscillations in power spectra
 # ----------------------------------------------------
 #
@@ -103,7 +120,7 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 # As well as a large body of work investigating oscillations, this "1/f-like" aperiodic
 # components has been found to correlate with aging, memory, and cognitive control in several
 # previous publications, and has been proposed to reflect the physiological balance between
-#  excitation and inhibition.
+# excitation and inhibition.
 #
 # See for example: Voytek et al., JNeuro, 2015; Podvalny et al.,
 # JNeurophysiol, 2015; Gao et al., NeuroImage, 2017; Lombardi et al., Chaos, 2017
@@ -114,13 +131,14 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 #
 
 ###################################################################################################
-#
 # Spectral Rotation
 # -----------------
 #
 # Another included utility function is spectral rotation, which rotates the power
 # spectrum about a given axis frequency, by an amount indicated by the 'delta_exponent'
 # argument (negative is clockwise, positive is counterclockwise).
+#
+# You can perform spectral rotation with :func:`~.rotate_powerlaw`.
 #
 # This function is mostly useful for investigating the effect of rotating the spectrum
 # in frequency domain on the time domain signal. Effectively, this performs a very specific
@@ -129,14 +147,8 @@ plot_power_spectra([freq_mean[:200], freq_med[:200], freq_mf[100:10000]],
 
 ###################################################################################################
 
-psd_rot = spectral.rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
+psd_rot = rotate_powerlaw(freq_med, psd_med, delta_exponent=-1, f_rotation=35)
 
 plot_power_spectra([freq_med[:200], freq_med[:200]],
                    [psd_med[:200], psd_rot[:200]],
                    ['Original', 'Rotated'])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 2
-#

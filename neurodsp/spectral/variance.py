@@ -21,7 +21,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
@@ -44,6 +44,15 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     Notes
     -----
     White noise should have a SCV of 1 at all frequencies.
+
+    Examples
+    --------
+    Compute the spectral coefficient of variation of a simulated time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, scv = compute_scv(sig, fs=500)
     """
 
     # Compute spectrogram of data
@@ -61,7 +70,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 @multidim(select=[0, 1])
 def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
                    method='bootstrap', rs_params=None):
-    """Compute a resampled version of the the spectral coefficient of variation (SCV).
+    """Compute a resampled version of the spectral coefficient of variation (SCV).
 
     Parameters
     -----------
@@ -69,7 +78,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
@@ -101,17 +110,26 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         Frequencies at which the measure was calculated.
     t_inds : 1d array or None
         Time indices at which the measure was calculated.
-        This is only returnd for 'rolling' resampling. If 'bootstrap', t_inds = None.
+        This is only returned for 'rolling' resampling. If 'bootstrap', t_inds = None.
     scv_rs : 2d array
         Resampled spectral coefficient of variation.
 
     Notes
     -----
-    In the resampled verion, instead of a single estimate of mean and standard deviation,
+    In the resampled version, instead of a single estimate of mean and standard deviation,
     the spectrogram is resampled.
 
     Resampling can be done either randomly (method='bootstrap') or in a time-stepped
     manner (method='rolling').
+
+    Examples
+    --------
+    Compute the resampled spectral coefficient of variation, using the bootstrap method:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='bootstrap')
     """
 
     # Compute spectrogram of data
@@ -128,7 +146,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
         nslices, ndraws = rs_params
         scv_rs = np.zeros((len(freqs), ndraws))
 
-        # Repeated subsampling of spectrogram randomly, with replacement between draws
+        # Repeated sub-sampling of spectrogram randomly, with replacement between draws
         for draw in range(ndraws):
             idx = np.random.choice(spg.shape[1], size=nslices, replace=False)
             scv_rs[:, draw] = np.std(
@@ -171,7 +189,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
-    window : str or tuple or array_like, optional, default='hann'
+    window : str or tuple or array_like, optional, default: 'hann'
         Desired window to use. See scipy.signal.get_window for a list of available windows.
         If array_like, the array will be used as the window and its length must be nperseg.
     nperseg : int, optional
@@ -199,6 +217,15 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     Notes
     -----
     Histogram bins are the same for every frequency, evenly spacing the global min & max power.
+
+    Examples
+    --------
+    Compute the distribution of power, which is the spectral histogram:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs=500)
     """
 
     # Compute spectrogram of data

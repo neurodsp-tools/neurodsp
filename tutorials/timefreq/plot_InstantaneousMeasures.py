@@ -4,20 +4,24 @@ Time-frequency analysis
 
 Estimate instantaneous measures of phase, amplitude, and frequency.
 
-This tutorial primarily covers :mod:`neurodsp.timefrequency`.
+This tutorial primarily covers the ``neurodsp.timefrequency`` module.
 """
 
 ###################################################################################################
 
-import numpy as np
+# sphinx_gallery_thumbnail_number = 3
+
 import matplotlib.pyplot as plt
 
-from neurodsp.utils import create_times
+# Import time-frequency functions
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
+
+# Import utilities for loading and plotting data
+from neurodsp.utils import create_times
+from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measure
 
 ###################################################################################################
-#
 # Load example neural signal
 # --------------------------
 #
@@ -27,10 +31,10 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 ###################################################################################################
 
 # Load a neural signal, as well as a filtered version of the same signal
-sig = np.load('../data/sample_data_1.npy')
-sig_filt_true = np.load('../data/sample_data_1_filt.npy')
+sig = load_ndsp_data('sample_data_1.npy', folder='data')
+sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
-# Set the sampling rate and create a times vector for the signal
+# Set sampling rate, and create a times vector for plotting
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 
@@ -38,21 +42,28 @@ times = create_times(len(sig)/fs, fs)
 f_range = (13, 30)
 
 ###################################################################################################
+#
+# Throughout this example, we will use :func:`~.plot_time_series` to plot time series,
+# and :func:`~.plot_instantaneous_measure` to plot instantaneous measures.
+#
+
+###################################################################################################
 
 # Plot signal
 plot_time_series(times, sig)
 
 ###################################################################################################
-#
 # Instantaneous Phase
 # -------------------
 #
 # Instantaneous phase is a measure of the phase of a signal, over time.
 #
+# Instantaneous phase can be analyzed with the :func:`~.phase_by_time` function.
+#
 
 ###################################################################################################
 
-# Compute instaneous phase from a signal
+# Compute instantaneous phase from a signal
 pha = phase_by_time(sig, fs, f_range)
 
 ###################################################################################################
@@ -60,19 +71,20 @@ pha = phase_by_time(sig, fs, f_range)
 # Plot example signal
 _, axs = plt.subplots(2, 1, figsize=(15, 6))
 plot_time_series(times, sig, xlim=[4, 5], xlabel=None, ax=axs[0])
-plot_instantaneous_measure(times, pha, xlim=[4, 5], ax=axs[1])
+plot_instantaneous_measure(times, pha, colors='r', xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
-#
 # Instantaneous Amplitude
 # -----------------------
 #
 # Instantaneous amplitude is a measure of the amplitude of a signal, over time.
 #
+# Instantaneous amplitude can be analyzed with the :func:`~.amp_by_time` function.
+#
 
 ###################################################################################################
 
-# Compute instaneous amplitude from a signal
+# Compute instantaneous amplitude from a signal
 amp = amp_by_time(sig, fs, f_range)
 
 ###################################################################################################
@@ -80,14 +92,13 @@ amp = amp_by_time(sig, fs, f_range)
 # Plot example signal
 _, axs = plt.subplots(2, 1, figsize=(15, 6))
 plot_instantaneous_measure(times, [sig, amp], 'amplitude',
-                           labels=['Raw Voltage', 'Amplitude'],
+                           labels=['Raw Signal', 'Amplitude'],
                            xlim=[4, 5], xlabel=None, ax=axs[0])
 plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
-                           labels=['Raw Voltage', 'Amplitude'], colors=['b', 'r'],
+                           labels=['Filtered Signal', 'Amplitude'], colors=['b', 'r'],
                            xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
-#
 # Instantaneous Frequency
 # -----------------------
 #
@@ -95,30 +106,25 @@ plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
 #
 # It is measured as the temporal derivative of the instantaneous phase.
 #
-# Intstantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
-# such as appling a median filter, is used to make it smoother.
+# Instantaneous frequency measures can exhibit abrupt shifts. Sometimes, a transform,
+# such as applying a median filter, is used to make it smoother.
 #
-# For example of this, see Samaha & Postle, 2015.
+# For an example of this, see Samaha & Postle, 2015.
+#
+# Instantaneous frequency can be analyzed with the :func:`~.freq_by_time` function.
 #
 
 ###################################################################################################
 
-# Compute instaneous frequency from a signal
+# Compute instantaneous frequency from a signal
 i_f = freq_by_time(sig, fs, f_range)
 
 ###################################################################################################
 
 # Plot example signal
 _, axs = plt.subplots(3, 1, figsize=(15, 9))
-plot_time_series(times, sig, 'Raw Voltage', xlim=[4, 5], xlabel=None, ax=axs[0])
-plot_time_series(times, sig_filt_true,
-                 labels='Beta Filtered Voltage', colors='b',
-                 xlim=[4, 5], xlabel=None, ax=axs[1])
-plot_instantaneous_measure(times, i_f, 'frequency', colors='r',
-                           xlim=[4, 5], ylim=[10, 30], ax=axs[2])
-
-###################################################################################################
-#
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 3
-#
+plot_time_series(times, sig, 'Raw Signal', xlim=[4, 5], xlabel=None, ax=axs[0])
+plot_time_series(times, sig_filt_true, labels='Beta Filtered Signal',
+                 colors='b', xlim=[4, 5], xlabel=None, ax=axs[1])
+plot_instantaneous_measure(times, i_f, 'frequency', label='Instantaneous Frequency',
+                           colors='r', xlim=[4, 5], ylim=[10, 30], ax=axs[2])

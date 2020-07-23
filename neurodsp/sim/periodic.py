@@ -2,14 +2,15 @@
 
 import numpy as np
 
+from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_cycle
+from neurodsp.sim.cycles import sim_cycle, phase_shift_cycle
 
 ###################################################################################################
 ###################################################################################################
 
 @normalize
-def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
+def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     """Simulate an oscillation.
 
     Parameters
@@ -23,6 +24,9 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
+    phase : float, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        The shift is defined as a relative proportion of cycle, between [0, 1].
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -30,15 +34,31 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     -------
     sig : 1d array
         Simulated oscillation.
+
+    Examples
+    --------
+    Simulate a continuous sinusoidal oscillation at 5 Hz:
+
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=5)
+
+    Simulate an asymmetric oscillation at 15 Hz, with a phase shift:
+
+    >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=15,
+    ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
 
     # Figure out how many cycles are needed for the signal, & length of each cycle
     n_cycles = int(np.ceil(n_seconds * freq))
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
-    # Create oscillation by tiling a single cycle of the desired oscillation
-    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-    sig = np.tile(osc_cycle, n_cycles)
+    # Create a single cycle of an oscillation
+    cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+
+    # Phase shift the simulated cycle
+    cycle = phase_shift_cycle(cycle, phase)
+
+    # Tile the cycle, to create the desired oscillation
+    sig = np.tile(cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
     n_samps = int(n_seconds * fs)
@@ -47,7 +67,6 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', **cycle_params):
     return sig
 
 
-@normalize
 def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
                            cycle='sine', **cycle_params):
     """Simulate a bursty oscillation.
@@ -60,9 +79,9 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
         Sampling rate of simulated signal, in Hz.
     freq : float
         Oscillation frequency, in Hz.
-    enter_burst : float
+    enter_burst : float, optional, default: 0.2
         Probability of a cycle being oscillating given the last cycle is not oscillating.
-    leave_burst : float
+    leave_burst : float, optional, default: 0.2
         Probability of a cycle not being oscillating given the last cycle is oscillating.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
@@ -82,14 +101,35 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     If the cycle length does not fit evenly into the simulated data length,
     then the last few samples will be non-oscillating.
+
+    Examples
+    --------
+    Simulate a bursty oscillation, with a low probability of bursting:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.2, leave_burst=0.8)
+
+    Simulate a bursty oscillation, with a high probability of bursting:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.8, leave_burst=0.4)
+
+    Simulate a bursty oscillation, of sawtooth waves:
+
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, cycle='sawtooth', width=0.3)
     """
 
     # Determine number of samples & cycles
     n_samples = int(n_seconds * fs)
     n_seconds_cycle = (1/freq * fs)/fs
 
-    # Make a single cycle of an oscillation
+    # Grab normalization parameters, if any were provided
+    mean = cycle_params.pop('mean', 0.)
+    variance = cycle_params.pop('variance', 1.)
+
+    # Make a single cycle of an oscillation, and normalize this cycle
     osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    osc_cycle = normalize_sig(osc_cycle, mean, variance)
+
+    # Calculate how many cycles are needed to tile the full signal
     n_samples_cycle = len(osc_cycle)
     n_cycles = int(np.floor(n_samples / n_samples_cycle))
 

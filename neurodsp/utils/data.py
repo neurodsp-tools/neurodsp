@@ -14,7 +14,7 @@ def create_freqs(freq_start, freq_stop, freq_step=1):
         Starting value for the frequency definition.
     freq_stop : float
         Stopping value for the frequency definition, inclusive.
-    freq_step : float, optional, default=1
+    freq_step : float, optional, default: 1
         Step value, for linearly spaced values between start and stop.
 
     Returns
@@ -35,7 +35,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Signal duration, in seconds.
     fs : float
         Signal sampling rate, in Hz.
-    start_val : float, optional, default=0.
+    start_val : float, optional, default: 0
         Starting value for the time definition.
 
     Returns
@@ -44,7 +44,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Time indices.
     """
 
-    return np.arange(start_val, n_seconds, 1/fs)
+    return np.arange(start_val, n_seconds + start_val, 1/fs)
 
 
 def create_samples(n_samples, start_val=0):
@@ -54,7 +54,7 @@ def create_samples(n_samples, start_val=0):
     ----------
     n_seconds : int
         Number of sample.
-    start_val : int, optional, default=0
+    start_val : int, optional, default: 0
         Starting value for the samples definition.
 
     Returns

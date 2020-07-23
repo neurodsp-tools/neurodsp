@@ -4,66 +4,54 @@ import os
 from setuptools import setup, find_packages
 
 # Get the current version number from inside the module
-with open(os.path.join('neurodsp', 'version.py')) as vf:
-    exec(vf.read())
+with open(os.path.join('neurodsp', 'version.py')) as version_file:
+    exec(version_file.read())
 
-# Copy in long description.
-#  Note: this is a partial copy from the README
-#    Only update here in coordination with the README, to keep things consistent.
-long_description = \
-"""
-========
-Neurodsp
-========
+# Load the long description from the README
+with open('README.rst') as readme_file:
+    long_description = readme_file.read()
 
-NeuroDSP is package of tools to analyze and simulate neural time series, using digital signal processing.
-
-Available modules in NeuroDSP include:
-
-- filt : Filter data with bandpass, highpass, lowpass, or notch filters
-- burst : Detect bursting oscillations in neural signals
-- rhythm : Find and analyze rhythmic and recurrent patterns in time series
-- spectral : Compute spectral domain features such as power spectra
-- timefrequency : Estimate instantaneous measures of oscillatory activity
-- sim : Simulate time series, including periodic and aperiodic signal components
-- plts : Plotting functions
-
-If you use this code in your project, please cite:
-
-Cole, S., Donoghue, T., Gao, R., & Voytek, B. (2019). NeuroDSP: A package for
-neural digital signal processing. Journal of Open Source Software, 4(36), 1272.
-https://doi.org/10.21105/joss.01272
-
-Direct Link: https://doi.org/10.21105/joss.01272
-"""
+# Load the required dependencies from the requirements file
+with open("requirements.txt") as requirements_file:
+    install_requires = requirements_file.read().splitlines()
 
 setup(
     name = 'neurodsp',
     version = __version__,
     description = 'Digital signal processing for neural time series.',
     long_description = long_description,
+    python_requires = '>=3.5',
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
+    maintainer = 'Thomas Donoghue',
+    maintainer_email = 'tdonoghue.research@gmail.com',
     url = 'https://github.com/neurodsp-tools/neurodsp',
     packages = find_packages(),
     license = 'Apache License, 2.0',
     download_url = 'https://github.com/neurodsp-tools/neurodsp/releases',
     keywords = ['neuroscience', 'neural oscillations', 'time series analysis', 'local field potentials',
                 'spectral analysis', 'time frequency analysis', 'electrophysiology'],
-    install_requires = ['numpy', 'scipy', 'matplotlib'],
+    install_requires = install_requires,
     tests_require = ['pytest'],
     classifiers = [
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: Apache Software License',
-        'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX :: Linux',
+        'Operating System :: MacOS',
+        'Operating System :: POSIX',
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7'
-        ]
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8'
+        ],
+    platforms = 'any',
+    project_urls = {
+        'Documentation' : 'https://neurodsp-tools.github.io/',
+        'Bug Reports' : 'https://github.com/neurodsp-tools/neurodsp/issues',
+        'Source' : 'https://github.com/neurodsp-tools/neurodsp'
+    },
 )

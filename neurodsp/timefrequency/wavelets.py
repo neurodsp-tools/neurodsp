@@ -4,14 +4,14 @@ import numpy as np
 from scipy.signal import morlet
 
 from neurodsp.utils.data import create_freqs
-from neurodsp.utils.core import check_n_cycles
+from neurodsp.utils.checks import check_n_cycles
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
 @multidim()
-def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
+def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='amp'):
     """Compute the time-frequency representation of a signal using morlet wavelets.
 
     Parameters
@@ -24,24 +24,45 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5):
         If array, frequency values to estimate with morlet wavelets.
         If list, define the frequency range, as [freq_start, freq_stop, freq_step].
         The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
-    n_cycles : float
+    n_cycles : float or 1d array
         Length of the filter, as the number of cycles for each frequency.
+        If 1d array, this defines n_cycles for each frequency.
     scaling : float
         Scaling factor.
+    norm : {'sss', 'amp'}, optional
+        Normalization method:
+
+        * 'sss' - divide by the square root of the sum of squares
+        * 'amp' - divide by the sum of amplitudes
 
     Returns
     -------
     mwt : 2d array
         Time frequency representation of the input signal.
+
+    Notes
+    -----
+
+    * This computes the continuous wavelet transform at the specified frequencies and
+        along all shifts.
+
+    Examples
+    --------
+    Compute a Morlet wavelet time-frequency representation of a signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> mwt = compute_wavelet_transform(sig, fs=500, freqs=[1, 30])
     """
 
     if isinstance(freqs, (tuple, list)):
         freqs = create_freqs(*freqs)
     n_cycles = check_n_cycles(n_cycles, len(freqs))
 
-    mwt = np.zeros([len(sig), len(freqs)], dtype=complex)
+    mwt = np.zeros([len(freqs), len(sig)], dtype=complex)
     for ind, (freq, n_cycle) in enumerate(zip(freqs, n_cycles)):
-        mwt[:, ind] = convolve_wavelet(sig, fs, freq, n_cycle, scaling)
+        mwt[ind, :] = convolve_wavelet(sig, fs, freq, n_cycle, scaling, norm=norm)
 
     return mwt
 
@@ -58,11 +79,11 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
         Sampling rate, in Hz.
     freq : float
         Center frequency of bandpass filter.
-    n_cycles : float, optional, default=7
+    n_cycles : float, optional, default: 7
         Length of the filter, as the number of cycles of the oscillation with specified frequency.
-    scaling : float, optional, default=0.5
+    scaling : float, optional, default: 0.5
         Scaling factor for the morlet wavelet.
-    wavelet_len : integer, optional
+    wavelet_len : int, optional
         Length of the wavelet. If defined, this overrides the freq and n_cycles inputs.
     norm : {'sss', 'amp'}, optional
         Normalization method:
@@ -81,10 +102,19 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
     * The real part of the returned array is the filtered signal.
     * Taking np.abs() of output gives the analytic amplitude.
     * Taking np.angle() of output gives the analytic phase.
+
+    Examples
+    --------
+    Convolve a complex wavelet with a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> cts = convolve_wavelet(sig, fs=500, freq=10)
     """
 
     if wavelet_len is None:
-        wavelet_len = n_cycles * fs / freq
+        wavelet_len = int(n_cycles * fs / freq)
 
     if wavelet_len > sig.shape[-1]:
         raise ValueError('The length of the wavelet is greater than the signal. Can not proceed.')

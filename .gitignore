@@ -1,116 +1,39 @@
-# Byte-compiled / optimized / DLL files
+# Ignore source release files
+/dist/*
+/neurodsp.egg-info/*
+/build/*
+
+# Ignore notebook checkpoints
+*.ipynb_checkpoints*
+
+# Ignore cache files
 __pycache__/
-*.py[cod]
-*$py.class
+*.cache*
 
-# C extensions
-*.so
+# Ignore compiled files
+*.pyc
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Ignore Mac folder profile files
+*DS_Store*
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
+# Ignore coverage file
 .coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
 
-# Translations
-*.mo
-*.pot
+# Ignore testing related files
+.pytest_cache/*
 
-# Django stuff:
-*.log
-.static_storage/
-.media/
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# sphinx html
-_build/
-auto_examples/
-auto_tutorials/
-generated/
-
-# custom
-.DS_Store
-neurodsp/*_sandbox.ipynb
-*_old
+# Ignore temp file for linter output
 _lint.txt
+
+# Ignore all files generated during testing
+*/tests/test_files/*
+
+# Ignore data files loaded for documentation
+tutorials/**/data/
+examples/**/data/
+
+# Ignore any files generated in the documentation
+doc/_build/
+doc/auto_examples/
+doc/auto_tutorials/
+doc/generated/

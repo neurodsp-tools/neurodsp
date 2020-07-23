@@ -4,21 +4,29 @@ Simulating Combined Signals
 
 Simulate combined signals, with periodic and aperiodic components.
 
-This tutorial primarily covers :mod:`neurodsp.sim.combined`
+This tutorial covers the ``neurodsp.sim.combined`` module.
 """
 
 ###################################################################################################
 
-from neurodsp import sim, spectral
-from neurodsp.utils import create_times, create_samples
+# sphinx_gallery_thumbnail_number = 1
 
+# Import sim functions
+from neurodsp.sim import sim_combined
+from neurodsp.utils import set_random_seed
+
+# Import function to compute power spectra
+from neurodsp.spectral import compute_spectrum
+
+# Import utilities for plotting data
+from neurodsp.utils import create_times
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 
 ###################################################################################################
 
 # Set the random seed, for consistency simulating data
-sim.set_random_seed(0)
+set_random_seed(0)
 
 # Set some general settings, to be used across all simulations
 fs = 1000
@@ -26,17 +34,17 @@ n_seconds = 3
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
-#
 # Simulate Combined Periodic & Aperiodic Signals
 # ----------------------------------------------
 #
 # In order to simulate a signal that looks more like a brain signal, you may want
 # to simulate an oscillation together with aperiodic activity.
 #
-# We can do this with the `sim_combined` function, in which you specify a set of
-# components that you want to add together to create a complex signal.
+# We can do this with the :func:`~.sim_combined` function, in which you specify
+# a set of components that you want to add together to create a complex signal.
 #
-# You can use `sim_combined` with any combination of any of the other simulation functions.
+# You can use :func:`~.sim_combined` with any combination
+# of any of the other simulation functions.
 #
 # Each component is indicated as a string label, indicating the desired function to use,
 # in a dictionary, with an associated dictionary of any and all parameters to use for that
@@ -53,7 +61,7 @@ components = {'sim_synaptic_current' : {'n_neurons' : 1000, 'firing_rate' : 2, '
 ###################################################################################################
 
 # Simulate an oscillation over an aperiodic component
-signal = sim.sim_combined(n_seconds, fs, components)
+signal = sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 
@@ -63,7 +71,7 @@ plot_time_series(times, signal)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(signal, fs)
+freqs, psd = compute_spectrum(signal, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
@@ -86,7 +94,7 @@ component_variances = [1, 0.5]
 ###################################################################################################
 
 # Simulate a bursty oscillation combined with aperiodic activity
-sig = sim.combined.sim_combined(n_seconds, fs, components, component_variances)
+sig = sim_combined(n_seconds, fs, components, component_variances)
 
 ###################################################################################################
 
@@ -96,30 +104,26 @@ plot_time_series(times, sig)
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, psd = spectral.compute_spectrum(sig, fs)
+freqs, psd = compute_spectrum(sig, fs)
 plot_power_spectra(freqs, psd)
 
 ###################################################################################################
-#
 # Simulating Multiple Components from the Same Function
 # -----------------------------------------------------
 #
 # If you wish, you can also combine multiple components from the same simulation function.
 #
-# To do so, replace the dictionay of parameters with a list of parameters, where each
+# To do so, replace the dictionary of parameters with a list of parameters, where each
 # entry is a dictionary for each component, using the same simulation function.
-#
-# For example, here we can combine an aperiodic component with two different oscillations.
 #
 
 ###################################################################################################
 
-# Define the components of the combined signal to simulate
-components = {'sim_powerlaw' : {'exponent': -2},
-              'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
+# Define the components of a signal with multiple oscillatory components
+components = {'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
 
 # Simulate a combined signal with multiple oscillations
-sig = sim.sim_combined(n_seconds, fs, components)
+sig = sim_combined(n_seconds, fs, components)
 
 ###################################################################################################
 
@@ -128,6 +132,23 @@ plot_time_series(times, sig)
 
 ###################################################################################################
 #
-# Sphinx settings:
-# sphinx_gallery_thumbnail_number = 1
+# This can also be combined with other types of components.
 #
+# For example, here we can combine multiple oscillations with an aperiodic component,
+# while also controlling the relative proportions of each.
+#
+
+###################################################################################################
+
+# Define the components of the combined signal to simulate
+components = {'sim_powerlaw' : {'exponent': -2, 'f_range' : [2, None]},
+              'sim_oscillation' : [{'freq' : 10}, {'freq' : 20}]}
+component_variances = [0.5, 1, 1]
+
+# Simulate a combined signal with multiple oscillations
+sig = sim_combined(n_seconds, fs, components)
+
+###################################################################################################
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, sig)
