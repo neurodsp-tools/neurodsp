@@ -69,7 +69,9 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     fluctuations = np.zeros_like(t_scales)
     for idx, win_len in enumerate(win_lens):
 
-        if method == 'dfa':
+        if win_len <= 1:
+            fluctuations[idx] = np.nan
+        elif method == 'dfa':
             fluctuations[idx] = compute_detrended_fluctuation(sig, win_len=win_len, deg=deg)
         elif method == 'rs':
             fluctuations[idx] = compute_rescaled_range(sig, win_len=win_len)
@@ -77,7 +79,8 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
             raise ValueError('Fluctuation method not understood.')
 
     # Calculate the relationship between between fluctuations & time scales
-    exp = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
+    exp = np.polyfit(np.log10(t_scales[~np.isnan(fluctuations)]),
+                     np.log10(fluctuations[~np.isnan(fluctuations)]), deg=1)[0]
 
     return t_scales, fluctuations, exp
 
