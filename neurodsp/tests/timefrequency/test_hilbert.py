@@ -18,12 +18,8 @@ def test_robust_hilbert(tsig_sine):
     sig = np.random.randn(n_points)
     sig[0:n_nans] = np.nan
 
-    # Check has correct number of nans (not all nan), without increase_n
-    hilb_sig = robust_hilbert(sig, False)
-    assert sum(np.isnan(hilb_sig)) == n_nans
-
-    # Check has correct number of nans (not all nan), with increase_n
-    hilb_sig = robust_hilbert(sig, True)
+    # Check has correct number of nans (not all nan)
+    hilb_sig = robust_hilbert(sig)
     assert sum(np.isnan(hilb_sig)) == n_nans
 
     # Hilbert transform of sin(omega * t) = -sign(omega) * cos(omega * t)
