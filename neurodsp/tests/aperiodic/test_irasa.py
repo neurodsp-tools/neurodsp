@@ -2,52 +2,37 @@
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, N_SECONDS_LONG
+from neurodsp.tests.settings import FS, N_SECONDS_LONG, EXP1
 
 from neurodsp.sim import sim_combined
 from neurodsp.spectral import compute_spectrum, trim_spectrum
-from neurodsp.aperiodic.irasa import irasa, fit_irasa, fit_func
+
+from neurodsp.aperiodic.irasa import *
 
 ###################################################################################################
 ###################################################################################################
 
-
-def test_irasa():
-
-    # Simulate a signal
-    sim_components = {'sim_powerlaw': {'exponent' : -2},
-                      'sim_oscillation': {'freq' : 10}}
-    sig = sim_combined(n_seconds=N_SECONDS_LONG, fs=FS, components=sim_components)
-    _, powers = trim_spectrum(*compute_spectrum(sig, FS, nperseg=int(4*FS)), [1, 30])
+def test_irasa(tsig_comb):
 
     # Estimate periodic and aperiodic components with IRASA
-    freqs, psd_ap, psd_pe = irasa(sig, FS, noverlap=int(2*FS))
+    f_range = [1, 30]
+    freqs, psd_ap, psd_pe = irasa(tsig_comb, FS, f_range, noverlap=int(2*FS))
 
-    # Compute r-squared for the full model
-    r_sq = np.corrcoef(np.array([powers, psd_ap+psd_pe]))[0][1]
-
-    assert r_sq > .95
     assert len(freqs) == len(psd_ap) == len(psd_pe)
 
+    # Compute r-squared for the full model, comparing to a standard power spectrum
+    _, powers = trim_spectrum(*compute_spectrum(tsig_comb, FS, nperseg=int(4*FS)), f_range)
+    r_sq = np.corrcoef(np.array([powers, psd_ap+psd_pe]))[0][1]
+    assert r_sq > .95
 
-def test_fit_irasa():
+def test_fit_irasa(tsig_comb):
 
-    knee = -1
-
-    # Simulate a signal
-    sim_components = {'sim_powerlaw': {'exponent' : knee},
-                      'sim_oscillation': {'freq' : 10}}
-    sig = sim_combined(n_seconds=N_SECONDS_LONG, fs=FS, components=sim_components)
-
-    # Estimate periodic and aperiodic components with IRASA
-    freqs, psd_ap, _ = irasa(sig, FS, noverlap=int(2*FS))
-
-    # Get aperiodic coefficients
+    # Estimate periodic and aperiodic components with IRASA & fit aperiodic
+    freqs, psd_ap, _ = irasa(tsig_comb, FS, noverlap=int(2*FS))
     b0, b1 = fit_irasa(freqs, psd_ap)
 
-    assert round(b1) == knee
+    assert round(b1) == EXP1
     assert np.abs(b0 - np.log((psd_ap)[0])) < 1
-
 
 def test_fit_func():
 
