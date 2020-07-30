@@ -15,7 +15,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     ----------
     sig : 1d array
         Time series.
-    fs : float, Hz
+    fs : float
         Sampling rate, in Hz.
     n_scales : int, optional, default=10
         Number of scales to estimate fluctuations over.
@@ -41,7 +41,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     fluctuations : 1d array
         Average fluctuation at each scale.
     exp : float
-        Slope of line in loglog when plotting time scales against fluctuations.
+        Slope of line in log-log when plotting time scales against fluctuations.
         This is the alpha value for DFA, or the Hurst exponent for rescaled range.
 
     Notes
@@ -53,7 +53,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     The relationship of this fluctuation measure across window sizes provides
     information on the fractal properties of a signal.
 
-    Measures available are:
+    Available measures are:
 
     - DFA: detrended fluctuation analysis
         - computes ordinary least squares fits across signal windows
@@ -65,13 +65,17 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     t_scales = np.logspace(np.log10(min_scale), np.log10(max_scale), n_scales)
     win_lens = np.round(t_scales * fs).astype('int')
 
+    # Check that all window sizes are fit-able
+    if np.any(win_lens <= 1):
+        raise ValueError("Some of window sizes are too small to run. "
+                         "Try updating `min_scale` to a value that works "
+                         "better for the current sampling rate.")
+
     # Step through each scale and measure fluctuations
     fluctuations = np.zeros_like(t_scales)
     for idx, win_len in enumerate(win_lens):
 
-        if win_len <= 1:
-            fluctuations[idx] = np.nan
-        elif method == 'dfa':
+        if method == 'dfa':
             fluctuations[idx] = compute_detrended_fluctuation(sig, win_len=win_len, deg=deg)
         elif method == 'rs':
             fluctuations[idx] = compute_rescaled_range(sig, win_len=win_len)
@@ -79,8 +83,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
             raise ValueError('Fluctuation method not understood.')
 
     # Calculate the relationship between between fluctuations & time scales
-    exp = np.polyfit(np.log10(t_scales[~np.isnan(fluctuations)]),
-                     np.log10(fluctuations[~np.isnan(fluctuations)]), deg=1)[0]
+    exp = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
 
     return t_scales, fluctuations, exp
 
@@ -141,6 +144,6 @@ def compute_detrended_fluctuation(sig, win_len, deg=1):
     _, fluc, _, _, _ = np.polyfit(np.arange(win_len), segments, deg=deg, full=True)
 
     # Convert to root-mean squared error, from squared error
-    det_fluc = np.mean((fluc / win_len)**0.5)
+    det_fluc = np.mean((fluc / win_len))**0.5
 
     return det_fluc
