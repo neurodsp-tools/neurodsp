@@ -6,11 +6,10 @@ import pytest
 
 import numpy as np
 
+from neurodsp.sim import sim_oscillation, sim_powerlaw
 from neurodsp.utils.sim import set_random_seed
-from neurodsp.tests.settings import (FS, N_SECONDS, N_SECONDS_LONG, FREQ_SINE,
+from neurodsp.tests.settings import (FS, FS_HIGH, N_SECONDS, N_SECONDS_LONG, FREQ_SINE,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
-
-from neurodsp.sim import sim_oscillation
 
 ###################################################################################################
 ###################################################################################################
@@ -38,6 +37,16 @@ def tsig_sine():
 def tsig_sine_long():
 
 	yield sim_oscillation(N_SECONDS_LONG, FS, freq=FREQ_SINE, variance=None, mean=None)
+
+@pytest.fixture(scope='session')
+def tsig_white():
+
+    yield sim_powerlaw(N_SECONDS_LONG, FS_HIGH, exponent=0)
+
+@pytest.fixture(scope='session')
+def tsig_brown():
+
+    yield sim_powerlaw(N_SECONDS_LONG, FS_HIGH, exponent=-2)
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():
