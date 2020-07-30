@@ -1,4 +1,4 @@
-"""IRASA method."""
+"""The IRASA method for separating periodic and aperiodic activity."""
 
 import fractions
 
@@ -25,7 +25,7 @@ def irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
         Frequency range.
     hset : 1d array
         Resampling factors used in IRASA calculation.
-        If not provided, defautls to values from 1.1 to 1.9 with an increment of 0.05.
+        If not provided, defaults to values from 1.1 to 1.9 with an increment of 0.05.
     spectrum_kwargs : dict
         Optional keywords arguments that are passed to `compute_spectrum`.
 
@@ -50,11 +50,11 @@ def irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
     of Neurophysiological Signal. Brain Topography, 29(1), 13–26. DOI: 10.1007/s10548-015-0448-0
     """
 
-    # Check & get hset. The rounding avoids floating precision errors
+    # Check & get the resampling factors, with rounding to avoid floating point precision errors
     hset = np.arange(1.1, 1.95, 0.05) if not hset else hset
     hset = np.round(hset, 4)
 
-    # `nperseg` needs to be set to lock in the size of the FFT's
+    # The `nperseg` input needs to be set to lock in the size of the FFT's
     if 'nperseg' not in spectrum_kwargs:
         spectrum_kwargs['nperseg'] = int(4 * fs)
 
@@ -63,20 +63,19 @@ def irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
 
     # Do the IRASA resampling procedure
     psds = np.zeros((len(hset), *psd.shape))
+    for ind, h_val in enumerate(hset):
 
-    for ind, h in enumerate(hset):
-
-        # Get the upsampling/downsampling (h, 1/h) factors as integer
-        rat = fractions.Fraction(str(h))
+        # Get the up-sampling / down-sampling (h, 1/h) factors as integers
+        rat = fractions.Fraction(str(h_val))
         up, dn = rat.numerator, rat.denominator
 
         # Resample signal
         sig_up = signal.resample_poly(sig, up, dn, axis=-1)
         sig_dn = signal.resample_poly(sig, dn, up, axis=-1)
 
-        # Calculate the PSD using same params as original
-        freqs_up, psd_up = compute_spectrum(sig_up, h * fs, **spectrum_kwargs)
-        freqs_dn, psd_dn = compute_spectrum(sig_dn, fs / h, **spectrum_kwargs)
+        # Calculate the power spectrum using the same params as original
+        freqs_up, psd_up = compute_spectrum(sig_up, h_val * fs, **spectrum_kwargs)
+        freqs_dn, psd_dn = compute_spectrum(sig_dn, fs / h_val, **spectrum_kwargs)
 
         # Geometric mean of h and 1/h
         psds[ind, :] = np.sqrt(psd_up * psd_dn)
@@ -111,6 +110,10 @@ def fit_irasa(freqs, psd_aperiodic):
         Fit intercept value.
     slope : float
         Fit slope value.
+
+    Notes
+    -----
+    This fits a linear function of the form `y = ax + b` to the log-log aperiodic power spectrum.
     """
 
     popt, _ = curve_fit(fit_func, np.log(freqs), np.log(psd_aperiodic))
@@ -120,4 +123,6 @@ def fit_irasa(freqs, psd_aperiodic):
 
 
 def fit_func(freqs, intercept, slope):
+    """A fit function to use for fitting IRASA separated 1/f power spectra components."""
+
     return slope * freqs + intercept
