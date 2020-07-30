@@ -8,9 +8,11 @@ import numpy as np
 
 from neurodsp.utils.sim import set_random_seed
 from neurodsp.tests.settings import (FS, N_SECONDS, N_SECONDS_LONG, FREQ_SINE,
+                                     FREQ1, EXP1,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
 
 from neurodsp.sim import sim_oscillation
+from neurodsp.sim import sim_combined
 
 ###################################################################################################
 ###################################################################################################
@@ -38,6 +40,13 @@ def tsig_sine():
 def tsig_sine_long():
 
 	yield sim_oscillation(N_SECONDS_LONG, FS, freq=FREQ_SINE, variance=None, mean=None)
+
+@pytest.fixture(scope='session')
+def tsig_comb():
+
+    components = {'sim_powerlaw': {'exponent' : EXP1},
+                  'sim_oscillation': {'freq' : FREQ1}}
+    yield sim_combined(n_seconds=N_SECONDS_LONG, fs=FS, components=components)
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():
