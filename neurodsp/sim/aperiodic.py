@@ -270,7 +270,7 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
     """
 
     # Construct the autocovariance function.
-    n_samples = n_seconds * fs
+    n_samples = int(n_seconds * fs)
     gamma = np.zeros(n_samples)
     for k in range(n_samples):
         gamma[k] = 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
