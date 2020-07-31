@@ -239,6 +239,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     return sig
 
+@normalize
 def sim_fgn(n_seconds, fs, hurst=0.5):
     """Simulate a fractional gaussian noise time series with specified Hurst exponent.
 
@@ -281,6 +282,7 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
     white_noise = np.random.randn(n_samples)
     return L @ white_noise
 
+@normalize
 def sim_fbm(n_seconds, fs, hurst=0.5):
     """Simulate a fractional brownian motion with specified Hurst exponent.
 
