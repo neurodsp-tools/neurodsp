@@ -196,6 +196,8 @@ Fluctuation Analyses
     :toctree: generated/
 
     compute_fluctuations
+    compute_irasa
+    fit_irasa
 
 Simulations
 -----------

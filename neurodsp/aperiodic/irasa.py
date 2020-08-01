@@ -12,7 +12,7 @@ from neurodsp.spectral import compute_spectrum, trim_spectrum
 ###################################################################################################
 ###################################################################################################
 
-def irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
+def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
     """Separate the aperiodic and periodic components using the IRASA method.
 
     Parameters
