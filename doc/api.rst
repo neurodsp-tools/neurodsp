@@ -183,6 +183,20 @@ Lagged Coherence
 
     compute_lagged_coherence
 
+Aperiodic Analyses
+------------------
+
+Functions and utilities in the ``aperiodic`` module, for analyzing aperiodic activity in time series.
+
+Fluctuation Analyses
+~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.aperiodic
+.. autosummary::
+    :toctree: generated/
+
+    compute_fluctuations
+
 Simulations
 -----------
 

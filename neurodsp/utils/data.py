@@ -67,7 +67,7 @@ def create_samples(n_samples, start_val=0):
 
 
 def split_signal(sig, n_samples):
-    """Split a signal into non-overlapping chunks.
+    """Split a signal into non-overlapping segments.
 
     Parameters
     ----------
@@ -78,17 +78,17 @@ def split_signal(sig, n_samples):
 
     Returns
     -------
-    chunks : 2d array
-        The signal, split into chunks, with shape [n_chunks, chunk_size].
+    segs : 2d array
+        The signal, split into segments, with shape [n_segment, segment_size].
 
     Notes
     -----
-    If the signal does not divide evenly into the number of chunks, this approach
-    will truncate the signal, returning the maximum number of chunks, and dropping
+    If the signal does not divide evenly into the number of segments, this approach
+    will truncate the signal, returning the maximum number of segments, and dropping
     any leftover samples.
     """
 
-    n_chunks = int(np.floor(len(sig) / float(n_samples)))
-    chunks = np.reshape(sig[:int(n_chunks * n_samples)], (n_chunks, int(n_samples)))
+    n_segments = int(np.floor(len(sig) / float(n_samples)))
+    segments = np.reshape(sig[:int(n_segments * n_samples)], (n_segments, int(n_samples)))
 
-    return chunks
+    return segments
