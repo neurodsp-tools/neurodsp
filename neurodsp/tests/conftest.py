@@ -8,7 +8,8 @@ import numpy as np
 
 from neurodsp.sim import sim_oscillation, sim_powerlaw, sim_combined
 from neurodsp.utils.sim import set_random_seed
-from neurodsp.tests.settings import (FS, N_SECONDS, N_SECONDS_LONG, FREQ_SINE, FREQ1, EXP1,
+from neurodsp.tests.settings import (N_SECONDS, N_SECONDS_LONG,
+                                     FS, FS_HIGH, FREQ_SINE, FREQ1, EXP1,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
 
 ###################################################################################################
