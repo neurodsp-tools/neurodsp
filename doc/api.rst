@@ -195,6 +195,7 @@ Fluctuation Analyses
 .. autosummary::
     :toctree: generated/
 
+    compute_autocorr
     compute_fluctuations
     compute_irasa
     fit_irasa
