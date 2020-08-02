@@ -12,10 +12,10 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1):
     ----------
     sig : array 1D
         Time series to compute autocorrelation over.
-    max_lag : int (default=1000)
+    max_lag : int, optional, default: 1000
         Maximum delay to compute autocorrelations for, in samples.
-    lag_step : int (default=1)
-        Step size (lag advance) for computing correlations.
+    lag_step : int, optional, default: 1
+        Step size (lag advance) for computing autocorrelations.
 
     Returns
     -------
