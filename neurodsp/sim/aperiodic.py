@@ -249,7 +249,7 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    hurst : float, optional, default: -0.5
+    hurst : float, optional, default: 0.5
         Desired Hurst exponent.
 
     Returns
@@ -259,23 +259,27 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
 
     Notes
     -----
-    The relationship between the power law exponent beta and the Hurst exponent for fractional
-    gaussian noise is hurst = (beta + 1)/2.
+    The relationship between the power law exponent chi and the Hurst exponent for fractional
+    gaussian noise is hurst = (chi + 1)/2.
 
     Examples
     --------
-    Simulate fractional gaussian noise with an exponent of -0.5 (white noise):
+    Simulate fractional gaussian noise with a Hurst exponent of 0.5 (white noise):
 
     >>> sig = sim_fgn(n_seconds=1, fs=500, hurst=0.5)
     """
 
-    # Construct the autocovariance function.
+    if hurst <= 0 or hurst >= 1:
+        raise ValueError("Hurst exponent must be chosen from the open interval (0,1).")
+
+    # Construct the autocovariance function
     n_samples = int(n_seconds * fs)
     gamma = np.zeros(n_samples)
     for k in range(n_samples):
         gamma[k] = 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
 
-    # Build the autocovariance matix. Use the Cholesky factor to transform white noise to get the desired time series.
+    # Build the autocovariance matrix. 
+    # Use the Cholesky factor to transform white noise to get the desired time series.
     G = toeplitz(gamma)
     L = cholesky(G, lower=True)
 
@@ -292,7 +296,7 @@ def sim_fbm(n_seconds, fs, hurst=0.5):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    hurst : float, optional, default: -0.5
+    hurst : float, optional, default: 0.5
         Desired Hurst exponent.
 
     Returns
@@ -302,17 +306,20 @@ def sim_fbm(n_seconds, fs, hurst=0.5):
 
     Notes
     -----
-    The relationship between the power law exponent beta and the Hurst exponent for fractional
-    brownian motion is hurst = (beta - 1)/2.
+    The relationship between the power law exponent chi and the Hurst exponent for fractional
+    brownian motion is hurst = (chi - 1)/2.
 
     Examples
     --------
-    Simulate fractional brownian motion with an exponent of -0.5 (brown noise):
+    Simulate fractional brownian motion with a Hurst exponent of 0.5 (brown noise):
 
     >>> sig = sim_fbm(n_seconds=1, fs=500, hurst=0.5)
     """
 
-    # Fractional brownian motion is just the cumulative sum of fractional gaussian noise.
+    if hurst <= 0 or hurst >= 1:
+        raise ValueError("Hurst exponent must be chosen from the open interval (0,1).")
+
+    # Fractional brownian motion is the cumulative sum of fractional gaussian noise
     fgn = sim_fgn(n_seconds, fs, hurst)
     return np.cumsum(fgn)
 
