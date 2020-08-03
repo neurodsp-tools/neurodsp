@@ -1,12 +1,13 @@
 """Test aperiodic simulation functions."""
 
-from neurodsp.tests.settings import FS, N_SECONDS
+from neurodsp.tests.settings import FS, N_SECONDS, N_SECONDS_LONG
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.aperiodic import *
 from neurodsp.sim.aperiodic import _create_powerlaw
 
 import numpy as np
+from scipy.stats import skew, kurtosis
 
 ###################################################################################################
 ###################################################################################################
@@ -37,23 +38,27 @@ def test_sim_powerlaw():
 
 def test_sim_fgn():
 
-    # Simulate white noise.
-    sig = sim_fgn(N_SECONDS, FS)
-    check_sim_output(sig)
+    # Simulate white noise. Do not normalize.
+    np.random.seed(0)
+    sig = sim_fgn(N_SECONDS_LONG, FS, mean=None, variance=None)
 
-    # Check the accuracy of the mean and standard deviation.
-    np.allclose(np.mean(sig), 0, atol=0.1)
-    np.allclose(np.std(sig), 1, atol=0.1)
+    # Check the accuracy of the mean and standard deviation
+    np.allclose(np.mean(sig), 0, atol=0.01)
+    np.allclose(np.std(sig), 1, atol=0.01)
+    np.allclose(skew(sig), 0, atol=0.01)
+    np.allclose(kurtosis(sig), 3, atol=0.01)
 
 def test_sim_fbm():
 
-    # Simulate standard brownian motion.
-    sig = sim_fbm(N_SECONDS, FS)
-    check_sim_output(sig)
+    # Simulate standard brownian motion. Do not normalize.
+    np.random.seed(0)
+    sig = sim_fbm(N_SECONDS_LONG, FS)
 
-    # Check the accuracy of the mean and standard deviation of the increments.
-    np.allclose(np.mean(np.diff(sig)), 0, atol=0.1)
-    np.allclose(np.std(np.diff(sig)), 1, atol=0.1)
+    # Check the accuracy of the mean and standard deviation of the increments
+    np.allclose(np.mean(np.diff(sig)), 0, atol=0.01)
+    np.allclose(np.std(np.diff(sig)), 1, atol=0.01)
+    np.allclose(skew(sig), 0, atol=0.01)
+    np.allclose(kurtosis(sig), 3, atol=0.01)
 
 def test_create_powerlaw():
 
