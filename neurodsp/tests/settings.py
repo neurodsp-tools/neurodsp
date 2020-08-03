@@ -10,15 +10,17 @@ import numpy as np
 
 # Define general settings for simulations & tests
 FS = 100
+FS_HIGH = 1000
 N_SECONDS = 1.0
 N_SECONDS_LONG = 10.0
 
-# Define frequency options for simulations
+# Define parameter options for simulations
 FREQ1 = 10
 FREQ2 = 25
 FREQ_SINE = 1
 FREQS_LST = [8, 12, 1]
 FREQS_ARR = np.array([5, 10, 15])
+EXP1 = -1
 
 # Define error tolerance levels for test comparisons
 EPS = 10**(-10)
