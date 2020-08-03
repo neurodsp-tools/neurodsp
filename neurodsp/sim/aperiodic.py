@@ -240,7 +240,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     return sig
 
 @normalize
-def sim_fgn(n_seconds, fs, hurst=0.5):
+def sim_frac_gaussian_noise(n_seconds, fs, hurst=0.5):
     """Simulate a fractional gaussian noise time series with specified Hurst exponent.
 
     Parameters
@@ -282,14 +282,14 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
 
     # Build the autocovariance matrix. 
     # Use the Cholesky factor to transform white noise to get the desired time series.
-    G = toeplitz(gamma)
-    L = cholesky(G, lower=True)
+    autocov_matrix = toeplitz(gamma)
+    cholesky_factor = cholesky(autocov_matrix, lower=True)
 
     white_noise = np.random.randn(n_samples)
-    return L @ white_noise
+    return cholesky_factor @ white_noise
 
 @normalize
-def sim_fbm(n_seconds, fs, hurst=0.5):
+def sim_frac_brownian_motion(n_seconds, fs, hurst=0.5):
     """Simulate a fractional brownian motion with specified Hurst exponent.
 
     Parameters
@@ -322,7 +322,7 @@ def sim_fbm(n_seconds, fs, hurst=0.5):
         raise ValueError("Hurst exponent must be chosen from the open interval (0,1).")
 
     # Fractional brownian motion is the cumulative sum of fractional gaussian noise
-    fgn = sim_fgn(n_seconds, fs, hurst)
+    fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst)
     return np.cumsum(fgn)
 
 def _create_powerlaw(n_samples, fs, exponent):

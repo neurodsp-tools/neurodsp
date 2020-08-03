@@ -36,11 +36,11 @@ def test_sim_powerlaw():
     sig = sim_powerlaw(N_SECONDS, FS, f_range=(2, None))
     check_sim_output(sig)
 
-def test_sim_fgn():
+def test_sim_frac_gaussian_noise():
 
     # Simulate white noise. Do not normalize.
     np.random.seed(0)
-    sig = sim_fgn(N_SECONDS_LONG, FS, mean=None, variance=None)
+    sig = sim_frac_gaussian_noise(N_SECONDS_LONG, FS, mean=None, variance=None)
 
     # Check the accuracy of the mean and standard deviation
     np.allclose(np.mean(sig), 0, atol=0.01)
@@ -48,11 +48,11 @@ def test_sim_fgn():
     np.allclose(skew(sig), 0, atol=0.01)
     np.allclose(kurtosis(sig), 3, atol=0.01)
 
-def test_sim_fbm():
+def test_sim_frac_brownian_motion():
 
     # Simulate standard brownian motion. Do not normalize.
     np.random.seed(0)
-    sig = sim_fbm(N_SECONDS_LONG, FS)
+    sig = sim_frac_brownian_motion(N_SECONDS_LONG, FS)
 
     # Check the accuracy of the mean and standard deviation of the increments
     np.allclose(np.mean(np.diff(sig)), 0, atol=0.01)
