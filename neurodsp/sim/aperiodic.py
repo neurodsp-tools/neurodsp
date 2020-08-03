@@ -274,9 +274,11 @@ def sim_fgn(n_seconds, fs, hurst=0.5):
 
     # Construct the autocovariance function
     n_samples = int(n_seconds * fs)
-    gamma = np.zeros(n_samples)
-    for k in range(n_samples):
-        gamma[k] = 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
+    gamma = np.arange(0, n_samples)
+    def autocov(hurst):
+        """   """
+        return lambda k : 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
+    gamma = np.apply_along_axis(autocov(hurst), 0, gamma)
 
     # Build the autocovariance matrix. 
     # Use the Cholesky factor to transform white noise to get the desired time series.
