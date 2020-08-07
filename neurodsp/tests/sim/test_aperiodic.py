@@ -39,7 +39,6 @@ def test_sim_powerlaw():
 def test_sim_frac_gaussian_noise():
 
     # Simulate white noise. Do not normalize.
-    np.random.seed(0)
     sig = sim_frac_gaussian_noise(N_SECONDS_LONG, FS, mean=None, variance=None)
 
     # Check the accuracy of the mean and standard deviation
@@ -51,7 +50,6 @@ def test_sim_frac_gaussian_noise():
 def test_sim_frac_brownian_motion():
 
     # Simulate standard brownian motion. Do not normalize.
-    np.random.seed(0)
     sig = sim_frac_brownian_motion(N_SECONDS_LONG, FS)
 
     # Check the accuracy of the mean and standard deviation of the increments
