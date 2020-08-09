@@ -17,7 +17,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     lag_step : int, optional, default: 1
         Step size (lag advance) for computing autocorrelations.
     demean : bool, optional, default: True
-        Whether to demean the signal before computing autcorralations.
+        Whether to demean the signal before computing autocorrelations.
 
     Returns
     -------
