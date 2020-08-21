@@ -32,7 +32,7 @@ def test_fit_irasa(tsig_comb):
     b0, b1 = fit_irasa(freqs, psd_ap)
 
     assert round(b1) == EXP1
-    assert np.abs(b0 - np.log((psd_ap)[0])) < 1
+    assert np.abs(b0 - np.log10((psd_ap)[0])) < 1
 
 def test_fit_func():
 
