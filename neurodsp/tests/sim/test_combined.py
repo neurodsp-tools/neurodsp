@@ -2,7 +2,7 @@
 
 from pytest import raises
 
-from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2
+from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2, EXP1
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.combined import *
@@ -29,3 +29,8 @@ def test_sim_combined():
     variances = [0.5, 1]
     with raises(ValueError):
         out = sim_combined(N_SECONDS, FS, simulations, variances)
+
+def test_sim_central_freq():
+
+    sig = sim_central_freq(N_SECONDS, FS, EXP1, FREQ1, bw=5, ht=5)
+    check_sim_output(sig)
