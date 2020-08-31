@@ -42,22 +42,28 @@ def compute_burst_stats(bursting, fs):
 
     tot_time = len(bursting) / fs
 
-    starts = np.array([])
-    ends = np.array([])
+    change = np.diff(bursting)
+    idcs, = change.nonzero()
 
-    for ii, index in enumerate(np.where(np.diff(bursting) != 0)[0]):
+    idcs += 1    # Get indices following the change.
 
-        if (ii % 2) == 0:
-            starts = np.append(starts, index)
-        else:
-            ends = np.append(ends, index)
+    if bursting[0]:
+        # If the first sample is part of a burst, prepend a zero.
+        idcs = np.r_[0, idcs]
 
+    if bursting[-1]:
+        # If the last sample is part of a burst, append an index corresponding
+        # to the length of signal.
+        idcs = np.r_[idcs, bursting.size]
+
+    starts = idcs[0::2]
+    ends = idcs[1::2]
     durations = (ends - starts) / fs
 
-    stats_dict = {'n_bursts': len(starts),
-                  'duration_mean': np.mean(durations),
-                  'duration_std': np.std(durations),
-                  'percent_burst': 100 * np.sum(bursting) / len(bursting),
-                  'bursts_per_second': len(starts) / tot_time}
+    stats_dict = {'n_bursts': durations.size,
+                  'duration_mean': durations.mean(),
+                  'duration_std': durations.std(),
+                  'percent_burst': 100 * sum(bursting) / len(bursting),
+                  'bursts_per_second': durations.size / tot_time}
 
     return stats_dict

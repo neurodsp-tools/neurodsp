@@ -1,16 +1,18 @@
 """Tests for burst detection functions."""
 
 from neurodsp.burst.utils import *
+import pytest
 
 ###################################################################################################
 ###################################################################################################
 
-def test_compute_burst_stats():
+@pytest.mark.parametrize('bursting, n_bursts, duration_mean, percent_burst',
+                         [(np.array([False, False, True, True, False]), 1, 2, 40),
+                          (np.array([True, False, False, True, False, True]), 3, 1, 50)])
+def test_compute_burst_stats(bursting, n_bursts, duration_mean, percent_burst):
 
-    bursts = np.array([False, False, True, True, False])
+    stats = compute_burst_stats(bursting, 1)
 
-    stats = compute_burst_stats(bursts, 1)
-
-    assert stats['n_bursts'] == 1
-    assert stats['duration_mean'] == 2
-    assert stats['percent_burst'] == 40.0
+    assert stats['n_bursts'] == n_bursts
+    assert stats['duration_mean'] == duration_mean
+    assert stats['percent_burst'] == percent_burst
