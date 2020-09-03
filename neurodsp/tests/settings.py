@@ -21,6 +21,8 @@ FREQ_SINE = 1
 FREQS_LST = [8, 12, 1]
 FREQS_ARR = np.array([5, 10, 15])
 EXP1 = -1
+EXP2 = -2
+KNEE = 10**2
 
 # Define error tolerance levels for test comparisons
 EPS = 10**(-10)
