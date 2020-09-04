@@ -85,12 +85,14 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
 
     return sig
 
+
 @normalize
-def sim_central_freq(n_seconds, fs, chi, central_freq, bw, ht):
+def sim_central_freq(n_seconds, fs, central_freq, bw, ht, ap_func='sim_powerlaw',
+                     ap_kwargs={'exponent': -2}):
     """
-    Returns a time series whose full power spectrum consists of a power law with exponent chi
+    Returns a time series whose full power spectrum consists of an aperiodic component
     and a gaussian peak at central_freq with standard deviation bw and relative height ht.
-    
+
 
     Parameters
     -----------
@@ -98,14 +100,17 @@ def sim_central_freq(n_seconds, fs, chi, central_freq, bw, ht):
         Number of seconds elapsed in the time series.
     fs: float
         Sampling rate.
-    chi: float
-        Power law exponent.
     central_freq: float
         Central frequency for the gaussian peak in Hz.
     bw: float
         Bandwidth, or standard deviation, of gaussian peak in Hz.
     ht: float
-        Relative height in log_10(Hz) over the aperiodic component of the gaussian peak at central_freq.
+        Relative height in log_10(Hz) over the aperiodic component of the gaussian peak at
+        central_freq.
+    ap_func : str, optional, default: 'sim_powerlaw'
+        An aperiodic simulation function from ``neurodsp.sim.aperiodic``.
+    ap_kwargs : dict, optional, default: {'exponent': -2}
+        Keyword arguments to use with ``ap_func``.
 
     Returns
     -------
@@ -114,17 +119,18 @@ def sim_central_freq(n_seconds, fs, chi, central_freq, bw, ht):
 
     Examples
     --------
-    Simulate aperiodic noise with exponent -2 superimposed over an oscillatory component with
-    central frequency 20.
+    Simulate an aperiodic component with exponent -2 superimposed over
+    an oscillatory component with central frequency 20.
 
-    >>> sig = sim_gauss_peak(n_seconds=50, fs=500, chi=-2, central_freq=20, bw=5, ht=7)
+    >>> sig = sim_central_freq(n_seconds=50, fs=500, central_freq=20, bw=5, ht=7,
+    ...                        ap_func='sim_powerlaw', ap_params={'exponent': -2})
     """
 
     times = create_times(n_seconds, fs)
 
     # Construct the aperiodic component and compute its Fourier transform. Only use the
     # first half of the frequencies from the Fourier transform since the signal is real.
-    sig_components = {'sim_powerlaw': {'exponent': chi}}
+    sig_components = {ap_func: ap_kwargs}
     sig_ap = sim_combined(n_seconds, fs, sig_components)
     sig_len = sig_ap.shape[0]
 
@@ -147,17 +153,19 @@ def sim_central_freq(n_seconds, fs, chi, central_freq, bw, ht):
 
     # Build an array of the amplitude coefficients
     cosine_coeffs = np.array([
-                    (-np.real(sig_ap_hat[ell]) + np.sqrt(np.real(sig_ap_hat[ell])**2 + (10**rel_heights[ell] - 1)*np.abs(sig_ap_hat[ell])**2))/cosine_norms[ell]
+                    (-np.real(sig_ap_hat[ell]) + np.sqrt(np.real(sig_ap_hat[ell])**2 + \
+                        (10**rel_heights[ell] - 1)*np.abs(sig_ap_hat[ell])**2))/cosine_norms[ell]
                     for ell in range(cosine_norms.shape[0])]
                 )
 
     # Add cosines with the respective coefficients and with a random phase shift for each one
     sig_periodic = np.sum(
                     np.array(
-                        [cosine_coeffs[ell]*np.cos(2*np.pi*freqs[ell]*times + 2*np.pi*np.random.rand()) for ell in range(cosine_norms.shape[0])]
+                        [cosine_coeffs[ell]*np.cos(2*np.pi*freqs[ell]*times + \
+                            2*np.pi*np.random.rand()) for ell in range(cosine_norms.shape[0])]
                     ),
                     axis=0
-                    )
+                )
 
     sig = sig_ap + sig_periodic
 

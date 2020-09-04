@@ -32,5 +32,6 @@ def test_sim_combined():
 
 def test_sim_central_freq():
 
-    sig = sim_central_freq(N_SECONDS, FS, EXP1, FREQ1, bw=5, ht=5)
+    sig = sim_central_freq(N_SECONDS, FS, FREQ1, bw=5, ht=5, ap_func='sim_powerlaw',
+                           ap_kwargs={'exponent': EXP1})
     check_sim_output(sig)
