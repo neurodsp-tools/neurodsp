@@ -116,8 +116,9 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
     return sig
 
+
 @normalize
-def sim_knee(n_seconds, fs, chi1, chi2, k):
+def sim_knee(n_seconds, fs, chi1, chi2, knee):
     """
     Returns a time series whose power spectrum follows the Lorentzian equation
 
@@ -135,7 +136,7 @@ def sim_knee(n_seconds, fs, chi1, chi2, k):
         Power law exponent before the knee.
     chi2: float
         Power law exponent added to chi1 after the knee.
-    k: float
+    knee: float
         Knee parameter.
 
     Returns
@@ -145,13 +146,14 @@ def sim_knee(n_seconds, fs, chi1, chi2, k):
 
     Notes
     -----
-    The slope of the log power spectrum before the knee is -chi1 whereas after the knee it is -(chi1 + chi2).
+    The slope of the log power spectrum before the knee is -chi1 whereas after the knee it is
+    -(chi1 + chi2).
 
     Examples
     --------
-    Simulate a time series with (chi1, chi2, k) = (1, 2, 100)
+    Simulate a time series with (chi1, chi2, knee) = (1, 2, 100)
 
-    >> sim_knee(n_seconds=10, fs=10**3, chi1=1, chi2=2, k=100)
+    >> sim_knee(n_seconds=10, fs=10**3, chi1=1, chi2=2, knee=100)
     """
 
     times = create_times(n_seconds, fs)
@@ -159,22 +161,23 @@ def sim_knee(n_seconds, fs, chi1, chi2, k):
 
     # Create the range of frequencies that appear in the power spectrum since these
     # will be the frequencies in the cosines we sum below
-    freqs = np.linspace(0, fs/2, num=sig_len//2 + 1, endpoint=True)
+    freqs = np.linspace(0, fs/2, num=int(sig_len//2 + 1), endpoint=True)
 
     # Drop the DC component
     freqs = freqs[1:]
 
-    # Map the frequencies under the (square root) Lorentzian. This will give us the amplitude coefficients
-    # for the sinusoids.
-    cosine_coeffs = np.array([np.sqrt(1/(f**chi1*(f**chi2 + k))) for f in freqs])
+    # Map the frequencies under the (square root) Lorentzian.
+    # This will give us the amplitude coefficients for the sinusoids.
+    cosine_coeffs = np.array([np.sqrt(1/(f**chi1*(f**chi2 + knee))) for f in freqs])
 
     # Add sinusoids with a random phase shift
     sig = np.sum(
-                np.array(
-                    [cosine_coeffs[ell]*np.cos(2*np.pi*f*times + 2*np.pi*np.random.rand()) for ell, f in enumerate(freqs)]
-                ),
-                axis=0
-                )
+        np.array(
+            [cosine_coeffs[ell]*np.cos(2*np.pi*f*times + 2*np.pi*np.random.rand())
+             for ell, f in enumerate(freqs)]
+        ),
+        axis=0
+    )
 
     return sig
 
