@@ -51,7 +51,7 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
     """
 
     # Check & get the resampling factors, with rounding to avoid floating point precision errors
-    hset = np.arange(1.1, 1.95, 0.05) if not hset else hset
+    hset = np.arange(1.1, 1.95, 0.05) if hset is None else hset
     hset = np.round(hset, 4)
 
     # The `nperseg` input needs to be set to lock in the size of the FFT's
