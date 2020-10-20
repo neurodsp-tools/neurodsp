@@ -146,14 +146,14 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
 
     Notes
     -----
-    The slope of the log power spectrum before the knee is -chi1 whereas after the knee it is
-    -(chi1 + chi2).
+    The slope of the log power spectrum before the knee is chi1 whereas after the knee it is
+    (chi1 + chi2).
 
     Examples
     --------
     Simulate a time series with (chi1, chi2, knee) = (1, 2, 100)
 
-    >> sim_knee(n_seconds=10, fs=10**3, chi1=1, chi2=2, knee=100)
+    >> sim_knee(n_seconds=10, fs=10**3, chi1=-1, chi2=-2, knee=100)
     """
 
     times = create_times(n_seconds, fs)
@@ -168,7 +168,7 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
 
     # Map the frequencies under the (square root) Lorentzian.
     # This will give us the amplitude coefficients for the sinusoids.
-    cosine_coeffs = np.array([np.sqrt(1/(f**chi1*(f**chi2 + knee))) for f in freqs])
+    cosine_coeffs = np.array([np.sqrt(1/(f**-chi1*(f**-chi2 + knee))) for f in freqs])
 
     # Add sinusoids with a random phase shift
     sig = np.sum(
