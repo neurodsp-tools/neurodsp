@@ -2,10 +2,12 @@
 
 from pytest import raises
 
-from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2
+from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2, EXP1
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.combined import *
+from neurodsp.sim import sim_powerlaw
+from neurodsp.spectral import compute_spectrum
 
 ###################################################################################################
 ###################################################################################################
@@ -29,3 +31,16 @@ def test_sim_combined():
     variances = [0.5, 1]
     with raises(ValueError):
         out = sim_combined(N_SECONDS, FS, simulations, variances)
+
+def test_sim_peak_oscillation():
+
+    sig_ap = sim_powerlaw(N_SECONDS, FS)
+    sig = sim_peak_oscillation(sig_ap, FS, FREQ1, bw=5, height=10)
+
+    check_sim_output(sig)
+
+    # Ensure the peak is at or close (+/- 5hz) to FREQ1
+    _, powers_ap = compute_spectrum(sig_ap, FS)
+    _, powers = compute_spectrum(sig, FS)
+
+    assert abs(np.argmax(powers-powers_ap) - FREQ1) < 5
