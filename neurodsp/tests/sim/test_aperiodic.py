@@ -1,10 +1,14 @@
 """Test aperiodic simulation functions."""
 
+import numpy as np
+from scipy.optimize import curve_fit
+
 from neurodsp.tests.settings import FS, N_SECONDS, N_SECONDS_LONG, EXP1, EXP2, KNEE, EPS
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.aperiodic import *
 from neurodsp.sim.aperiodic import _create_powerlaw
+from neurodsp.spectral import compute_spectrum
 
 ###################################################################################################
 ###################################################################################################
@@ -42,6 +46,20 @@ def test_sim_knee():
     numerical_psd = np.abs(sig_hat)**2
 
     np.allclose(true_psd, numerical_psd, atol=EPS)
+
+    # Accuracy test for a single exponent
+    sig = sim_knee(n_seconds=N_SECONDS, fs=FS, chi1=0, chi2=EXP2, knee=KNEE)
+
+    freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
+
+    def _estimate_single_knee(xs, offset, knee, chi2):
+        return np.zeros_like(xs) + offset - np.log10(xs**chi2 + knee)
+
+    ap_params, _ = curve_fit(_estimate_single_knee, freqs, np.log10(powers))
+    _, _, chi2_hat = ap_params[:]
+
+    assert -round(chi2_hat) == EXP2
+
 
 def test_sim_random_walk():
 
