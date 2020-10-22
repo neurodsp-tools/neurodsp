@@ -368,7 +368,7 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=2, hurst=None):
         hurst = (chi - 1.)/2
 
     # Fractional brownian motion is the cumulative sum of fractional gaussian noise
-    fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst)
+    fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst=hurst)
     return np.cumsum(fgn)
 
 def _create_powerlaw(n_samples, fs, exponent):
