@@ -302,8 +302,8 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
         return lambda k : 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
     gamma = np.apply_along_axis(autocov(hurst), 0, gamma)
 
-    # Build the autocovariance matrix.
-    # Use the Cholesky factor to transform white noise to get the desired time series.
+    # Build the autocovariance matrix
+    #   Use the Cholesky factor to transform white noise to get the desired time series
     autocov_matrix = toeplitz(gamma)
     cholesky_factor = cholesky(autocov_matrix, lower=True)
 

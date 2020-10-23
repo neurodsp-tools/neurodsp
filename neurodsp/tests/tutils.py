@@ -40,3 +40,6 @@ def plot_test(func):
         assert ax.has_data()
 
     return wrapper
+
+def check_exponent(xs, offset, chi):
+    return xs*chi + offset

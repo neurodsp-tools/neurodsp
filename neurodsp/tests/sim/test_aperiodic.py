@@ -1,13 +1,14 @@
 """Test aperiodic simulation functions."""
 
-from neurodsp.tests.settings import FS, N_SECONDS, N_SECONDS_LONG
-from neurodsp.tests.tutils import check_sim_output
+from neurodsp.tests.settings import FS, FS_HIGH, N_SECONDS
+from neurodsp.tests.tutils import check_sim_output, check_exponent
 
 from neurodsp.sim.aperiodic import *
 from neurodsp.sim.aperiodic import _create_powerlaw
 
 import numpy as np
 from scipy.stats import skew, kurtosis
+from scipy.optimize import curve_fit
 
 ###################################################################################################
 ###################################################################################################
@@ -38,25 +39,45 @@ def test_sim_powerlaw():
 
 def test_sim_frac_gaussian_noise():
 
-    # Simulate white noise. Do not normalize.
-    sig = sim_frac_gaussian_noise(N_SECONDS_LONG, FS, mean=None, variance=None)
+    chis = np.array([-.5, 0, .5])
+    freqs = np.linspace(1, FS_HIGH//2, num=FS_HIGH//2)
+    error = np.zeros_like(chis)
 
-    # Check the accuracy of the mean and standard deviation
-    np.allclose(np.mean(sig), 0, atol=0.01)
-    np.allclose(np.std(sig), 1, atol=0.01)
-    np.allclose(skew(sig), 0, atol=0.01)
-    np.allclose(kurtosis(sig), 3, atol=0.01)
+    for idx, chi in enumerate(chis):
+
+        # Simulate
+        sig = sim_frac_gaussian_noise(N_SECONDS, FS_HIGH, chi=chi)
+        powers = np.abs(np.fft.fft(sig)[1:FS_HIGH//2+1])**2
+
+        # Linear fit in log-log
+        [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+
+        # Compute error
+        error[idx] = abs(chi_hat - chi)
+
+    # Ensure mean error is less than 0.2 exponent
+    assert np.mean(error) < 0.2
 
 def test_sim_frac_brownian_motion():
 
-    # Simulate standard brownian motion. Do not normalize.
-    sig = sim_frac_brownian_motion(N_SECONDS_LONG, FS)
+    chis = np.array([-1.5, -2, -2.5])
+    freqs = np.linspace(1, FS_HIGH//2, num=FS_HIGH//2)
+    error = np.zeros_like(chis)
 
-    # Check the accuracy of the mean and standard deviation of the increments
-    np.allclose(np.mean(np.diff(sig)), 0, atol=0.01)
-    np.allclose(np.std(np.diff(sig)), 1, atol=0.01)
-    np.allclose(skew(sig), 0, atol=0.01)
-    np.allclose(kurtosis(sig), 3, atol=0.01)
+    for idx, chi in enumerate(chis):
+
+        # Simulate
+        sig = sim_frac_brownian_motion(N_SECONDS, FS_HIGH, chi=chi)
+        powers = np.abs(np.fft.fft(sig)[1:FS_HIGH//2+1])**2
+
+        # Linear fit in log-log
+        [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+
+        # Compute error
+        error[idx] = abs(chi_hat - chi)
+
+    # Ensure mean error less than 0.4 exponent
+    assert np.mean(error) < 0.4
 
 def test_create_powerlaw():
 
