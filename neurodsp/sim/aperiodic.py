@@ -293,13 +293,12 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
             raise ValueError("Chi must be chosen from the open interval (-1, 1).")
 
         # Infer the hurst parameter from chi
-        hurst = (chi + 1.)/2
+        hurst = (-chi + 1.)/2
 
     # Construct the autocovariance function
     n_samples = int(n_seconds * fs)
     gamma = np.arange(0, n_samples)
     def autocov(hurst):
-        """   """
         return lambda k : 0.5*(np.abs(k-1)**(2 * hurst) - 2*k**(2*hurst) + (k+1)**(2*hurst))
     gamma = np.apply_along_axis(autocov(hurst), 0, gamma)
 
@@ -312,7 +311,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
     return cholesky_factor @ white_noise
 
 @normalize
-def sim_frac_brownian_motion(n_seconds, fs, chi=2, hurst=None):
+def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     """Simulate a fractional brownian motion with a specified power law exponent,
     or alternatively with a specified Hurst parameter.
 
@@ -322,8 +321,8 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=2, hurst=None):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    chi: float, optional, default: 2
-        Desired power law exponent for the spectrogram. Must be in the range (1, 3).
+    chi: float, optional, default: -2
+        Desired power law exponent for the spectrogram. Must be in the range (-3, -1).
     hurst : float, optional, default: None
         Desired Hurst parameter. Overwrites chi if defined. Must be in the range (0, 1).
 
@@ -349,7 +348,7 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=2, hurst=None):
 
     Examples
     --------
-    Simulate fractional brownian motion with a power law exponent of 2, or
+    Simulate fractional brownian motion with a power law exponent of -2, or
     equivalently with a Hurst parameter of 0.5 (brown noise):
 
     >>> sig = sim_fbm(n_seconds=1, fs=500)
@@ -361,11 +360,11 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=2, hurst=None):
             raise ValueError("Hurst parameter must be chosen from the open interval (0,1).")
     else:
         # Check that chi is defined in (1, 3)
-        if chi <= 1 or chi >= 3:
-            raise ValueError("Chi must be chosen from the open interval (1, 3).")
+        if chi <= -3 or chi >= -1:
+            raise ValueError("Chi must be chosen from the open interval (-3, -1).")
 
         # Infer the hurst parameter from chi
-        hurst = (chi - 1.)/2
+        hurst = (-chi - 1.)/2
 
     # Fractional brownian motion is the cumulative sum of fractional gaussian noise
     fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst=hurst)
