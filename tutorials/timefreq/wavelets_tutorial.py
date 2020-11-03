@@ -4,7 +4,7 @@ Wavelets
 
 Perform time-frequency decomposition using wavelets.
 
-This tutorial will follow the ``neurodsp.timefrequency.wavelets`` module.
+This tutorial will explore the ``neurodsp.timefrequency.wavelets`` module.
 It uses Morlet wavelets to transform time series data to a time-frequency
 representation of the data.
 """
