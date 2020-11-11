@@ -13,6 +13,7 @@ representation of the data.
 
 # Import neccessary functions and packages
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.signal import morlet
 
 from neurodsp.utils.data import create_freqs
@@ -46,8 +47,33 @@ set_random_seed(0)
 # It also takes components which include 'sim_powerlaw',
 # 'sim_oscillation', and 'freq'.
 # These components must be specified separately.
+#
 # The 'sim_powerlaw' function can be found under neurodsp.aperiodic.py.
-# It simulates a power law time series with a specified exponent.
+# It simulates a power law time series with a specified exponent. We'll also need
+# the key word arguments to pass to the function filter_signal, which can be found under
+# neurodsp.filt.filter.py.
+#
+# The filter_signal function has input parameters sig, fs, pass_type, f_range,
+# filter_type, n_cycles, n_seconds, remove_edges, butterworth_order,
+# print_transitions, plot_properties, and return_filter.
+# The sig parameter defines the time series to be filtered.
+# The fs parameter is the sampling rate.
+# The pass_type parameter specifies the type of filter to apply. The options include
+# bandpass, bandstop, lowpass, and highpass.
+# The f_range parameter defines the cutoff frequency or frequencies used for the filter,
+# specified as f_lo and f_hi.
+# The filter_type parameter is optional and determines whether to use a FIR or IIR
+# filter (the only IIR filter option is a butterworth filter).
+# The n_cycles parameter is the length of the filter, in number of cycles, at the 'f_lo'
+# frequency if using a FIR filter.
+# The n_seconds parameter is the length of the filter, in seconds, if using a FIR filter.
+# The remove_edges parameter is an optional boolean parameter. If set to True, it replaces
+# samples within half the kernel length to be np.nan (only for FIR filters).
+# The butterworth_order parameter is the order of the butterworth filter, if using
+# an IIR filter.
+#
+# For this tutorial, we will use a lowpass filter FIR filter.
+#
 # The 'sim_oscillation' function can be found under neurodsp.periodic.py.
 # It simulates an oscillation, and takes input parameters n_seconds, fs, freq,
 # cycle, phase, and cycle_params.
@@ -69,7 +95,7 @@ fs = 500
 n_seconds = 10
 
 # Define simulation components
-components = {'sim_powerlaw': {exponent=-2.0, f_range=None, **filter_kwargs}, 'sim_oscillation' : {'freq': 10}})
+components = {'sim_powerlaw': {'exponent' : {-2.0}}, {'f_range' : {None}}, {'**filter_kwargs' : {'sig' : {'sim_combined' : {n_seconds, fs}}, {'pass_type': {'lowpass'}}}}, 'sim_oscillation' : {'freq': 10}})
 
 # Simulate a signal with a power-law time series with oscillations at 10 Hz.
 sig = sim_combined(n_seconds, fs, components)
@@ -112,14 +138,13 @@ plot_time_series(times, sig, 'Simulated EEG')
 freqs=[1, 30]
 
 # Compute wavelet transform using compute morlet wavelet transform algorithm
-mwt = compute_wavelet_transform(sig, fs=500, freqs)
+mwt = compute_wavelet_transform(fs=500, sig, freqs)
 
 ###################################################################################################
 # Plot morlet wavelet transform
 # You can plot the wavelet-transformed data using matplotlib:
 
-import matplotlib.pyplot as plt
-plt.imshow(mwt)
+plt.imshow(abs(mwt), aspect='auto')
 plt.show()
 
 
