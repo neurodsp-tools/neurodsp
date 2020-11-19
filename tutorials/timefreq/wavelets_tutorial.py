@@ -19,6 +19,7 @@ from scipy.signal import morlet
 from neurodsp.utils.data import create_freqs
 from neurodsp.utils.checks import check_n_cycles
 from neurodsp.utils.decorators import multidim
+from neurodsp.filt.filter import filter_signal
 
 # Import simulation code to create test Data
 from neurodsp.sim import sim_combined
@@ -94,8 +95,14 @@ set_random_seed(0)
 fs = 500
 n_seconds = 10
 
+# Define filter key word arguments, and filter_signal. Let's use a lowpass filter with a high frequency cutoff at 14 Hz.
+
+f_hi = 14
+pass_type = 'lowpass'
+filter_kwargs = {'pass_type':pass_type}
+
 # Define simulation components
-components = {'sim_powerlaw': {'exponent' : {-2.0}}, {'f_range' : {None}}, {'**filter_kwargs' : {'sig' : {'sim_combined' : {n_seconds, fs}}, {'pass_type': {'lowpass'}}}}, 'sim_oscillation' : {'freq': 10}})
+components = {'sim_powerlaw': {'exponent':-2.0, **filter_kwargs}, 'sim_oscillation' : {'freq':10}}
 
 # Simulate a signal with a power-law time series with oscillations at 10 Hz.
 sig = sim_combined(n_seconds, fs, components)
@@ -105,10 +112,12 @@ times = create_times(n_seconds, fs)
 
 # Plot the simulated data
 plot_time_series(times, sig, 'Simulated EEG')
+plt.show()
 
 ###################################################################################################
 #
 # In the simulated signal above, we can see the time series data.
+#The time ranges from 0 to 10 seconds, and the voltage oscillates between -2 and 2 microvolts.
 #
 
 ###################################################################################################
@@ -138,7 +147,7 @@ plot_time_series(times, sig, 'Simulated EEG')
 freqs=[1, 30]
 
 # Compute wavelet transform using compute morlet wavelet transform algorithm
-mwt = compute_wavelet_transform(fs=500, sig, freqs)
+mwt = compute_wavelet_transform(sig, fs=500, freqs=freqs)
 
 ###################################################################################################
 # Plot morlet wavelet transform
@@ -184,8 +193,22 @@ freq=10
 cts = convolve_wavelet(sig, fs=500, freq=10)
 
 ###################################################################################################
-# Plot convolved wavelet
+# Plot the analytic amplitude and the analytic phase as functions of time for the convolved wavelet.
 
-# You can plot the filtered signal by plotting the real part of the convolved wavelet:
-plt.imshow(mwt_real)
+# Let's look at the analytic amplitude and the analytic phase of the convolved signal.
+analytic_amp = np.abs(cts)
+analytic_phase = np.angle(cts)
+
+# Looking at analytic_amp, you can see that the returned analytic amplitude is an array of 5000 elements,
+# and looking at analytic_phase, you can see that the returned analytic phase is also an array of 5000 elements.
+# Let's look at the analytic amplitude vs. time, and the analytic phase vs. time.
+
+# For the analytic amplitude vs. time:
+
+plt.imshow((times, analytic_amp), aspect='auto')
+plt.show()
+
+# For the analytic phase vs. time:
+
+plt.imshow((times, analytic_phase), aspect='auto')
 plt.show()
