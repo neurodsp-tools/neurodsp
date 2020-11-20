@@ -204,6 +204,48 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     return cycle
 
 
+def sim_gaussian_asym_cycle(n_seconds, fs, beta):
+    """Simulate an asymmetrical guassian cycle.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    beta : float
+        Exponent controlling the amplitude asymmetry of peaks relative to the troughs.
+
+        - `beta=0` : zeros
+        - `beta=.5`: wide peaks, narrow troughs
+        - `beta=1.`: symetrical peaks and troughs (sine wave)
+        - `beta=5.`: wide troughs, narrow peaks
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated asymmetrical gaussian cycle.
+
+    Notes
+    -----
+    - beta=1:
+
+    Examples
+    --------
+    Simulate a cycle of an asymmetrical gaussian wave:
+
+    >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
+    """
+
+    check_param(beta, 'beta', [0., np.inf])
+
+    times = create_cycle_time(n_seconds, fs)
+
+    cycle = ((np.sin(times) + 1) / 2)**beta
+
+    return cycle
+
+
 # Alias single exponential cycle from `sim_synaptic_kernel`
 def sim_exp_cycle(n_seconds, fs, tau_d):
     return sim_synaptic_kernel(n_seconds, fs, tau_r=0, tau_d=tau_d)
