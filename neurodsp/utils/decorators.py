@@ -23,6 +23,10 @@ def normalize(func, **kwargs):
         out = func(*args, **kwargs)
         sig = out[0] if isinstance(out, tuple) else out
 
+        # Skip normalization if scale or shift is passed
+        if 'scale' in kwargs.keys() or 'shift' in kwargs.keys():
+            return sig
+
         # Normalize signal, applying mean and variance transformations
         sig = normalize_sig(sig, mean, variance)
 

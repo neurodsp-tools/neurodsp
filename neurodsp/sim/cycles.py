@@ -204,7 +204,7 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     return cycle
 
 
-def sim_gaussian_asym_cycle(n_seconds, fs, beta):
+def sim_gaussian_asym_cycle(n_seconds, fs, beta, scale=2, shift=1):
     """Simulate an asymmetrical guassian cycle.
 
     Parameters
@@ -221,6 +221,11 @@ def sim_gaussian_asym_cycle(n_seconds, fs, beta):
         - `beta=1.`: symetrical peaks and troughs (sine wave)
         - `beta=5.`: wide troughs, narrow peaks
 
+    scale : float, optional, default: 2
+        Rescales the amplitude of the signal.
+    shift : float, optional, default: 1
+        Translate the signal along the y-axis.
+
     Returns
     -------
     cycle : 1d array
@@ -228,20 +233,26 @@ def sim_gaussian_asym_cycle(n_seconds, fs, beta):
 
     Notes
     -----
-    - beta=1:
+    If shift or scale keyword arguments are given, default signal normalization will be bypassed.
+
+    References
+    ----------
+    Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal Oscillations with
+    Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude Coupling and Directionality.
+    Frontiers in Computational Neuroscience, 10. doi:10.3389/fncom.2016.00087
 
     Examples
     --------
     Simulate a cycle of an asymmetrical gaussian wave:
 
-    >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
+    >>> cycle = sim_gaussian_asym_cycle(n_seconds=1, fs=500, beta=3)
     """
 
     check_param(beta, 'beta', [0., np.inf])
 
     times = create_cycle_time(n_seconds, fs)
 
-    cycle = ((-np.cos(times) + 1) / 2)**beta
+    cycle = ((-np.cos(times) + shift) / scale)**beta
 
     return cycle
 
