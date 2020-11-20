@@ -241,7 +241,7 @@ def sim_gaussian_asym_cycle(n_seconds, fs, beta):
 
     times = create_cycle_time(n_seconds, fs)
 
-    cycle = ((np.sin(times) + 1) / 2)**beta
+    cycle = ((-np.cos(times) + 1) / 2)**beta
 
     return cycle
 
