@@ -172,8 +172,8 @@ plt.show()
 # The n_seconds parameter is the simulation time.
 # The fs parameter is the sampling rate of the simulated signal.
 # The freq parameter is the oscillation frequency.
-# The enter_burst parameter is the probability of a cycle being oscillating given the last cycle is not oscillating.
-# The leave_burst parameter is the probability of a cycle not being oscillating given the last cycle is oscillating.
+# The enter_burst parameter is the probability of a cycle being oscillating given the last cycle is not oscillating. The default argument is .2.
+# The leave_burst parameter is the probability of a cycle not being oscillating given the last cycle is oscillating. The default argument is .2.
 # The cycle parameter is the type of oscillation cycle being simulated, with options including 'sine', 'asine', 'sawtooth', 'gaussian', 'exp', and '2exp'.
 
 # For this example, let's use a cycle with exponential decay. The 'exp' parameter takes a key word argument of 'tau_d', which specifies the decay time.
@@ -181,18 +181,22 @@ plt.show()
 
 # For our filter keyword arguments, our highpass filter will have a low frequency cutoff will be at 5 Hz.
 
+# Simulation settings
 fs = 500
 n_seconds = 10
-freq = 14
+freq = 20
 
+# Filter key word arguments
 f_lo = 5
 pass_type = 'highpass'
 filter_kwargs = {'pass_type':pass_type}
 
+# Cycle key word arguments
 tau_d = 2
 cycle = 'exp'
 cycle_kwargs = {'cycle':cycle, 'tau_d':tau_d}
 
+# Simulate a signal with bursty oscillations at 20 Hz with a decay time of 2 seconds
 sig = sim_bursty_oscillation(n_seconds, fs, freq, **cycle_kwargs)
 times = create_times(n_seconds, fs)
 
@@ -203,6 +207,30 @@ plot_time_series(times, sig, 'Simulated EEG')
 plt.show()
 
 ###################################################################################################
+#
+# In the simulated signal above, we can see the time series data for our signal.
+#
+###################################################################################################
+
+# Now, let's again apply our wavelet-transform algorithm. This time, lets use frequencies from 6 Hz to 40 Hz.
+
+# Settings for the wavelet transform Algorithm
+freqs= [6, 40]
+
+# Compute wavelet transform using compute morlet wavelet transform algorithm
+mwt = compute_wavelet_transform(sig, fs=500, freqs=freqs)
+
+###################################################################################################
+# Plot morlet wavelet transform
+
+plt.imshow(abs(mwt), aspect='auto')
+plt.show()
+
+###################################################################################################
+#
+# The plot above shows the morlet-wavelet transformation of the simulated signal
+# using a highpass filter with a low-frequency cutoff at 5 Hz, and time-varying oscillations at 20 Hz with a decay time of 2 s.
+#
 
 ###################################################################################################
 # Convolve Wavelet Algorithm
