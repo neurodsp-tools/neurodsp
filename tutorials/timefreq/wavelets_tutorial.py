@@ -22,7 +22,8 @@ from neurodsp.utils.decorators import multidim
 from neurodsp.filt.filter import filter_signal
 
 # Import simulation code to create test Data
-from neurodsp.sim import sim_combined
+from neurodsp.sim import sim_combined, sim_bursty_oscillation
+from neurodsp.sim.cycles import sim_cycle
 from neurodsp.utils import set_random_seed, create_times
 
 # Import utilities for loading and plotting data
@@ -96,7 +97,6 @@ fs = 500
 n_seconds = 10
 
 # Define filter key word arguments, and filter_signal. Let's use a lowpass filter with a high frequency cutoff at 14 Hz.
-
 f_hi = 14
 pass_type = 'lowpass'
 filter_kwargs = {'pass_type':pass_type}
@@ -156,6 +156,53 @@ mwt = compute_wavelet_transform(sig, fs=500, freqs=freqs)
 plt.imshow(abs(mwt), aspect='auto')
 plt.show()
 
+###################################################################################################
+#
+# The plot above shows the morlet-wavelet transformation of the simulated signal
+# using a lowpass filter with a high-frequency cutoff at 14 Hz, and oscillations at 10 Hz.
+# You can change the parameters of the filter and of the simulated signal and still apply the
+# morlet-wavelet transformation algorithm. We can do this be changing the filter keyword arguments,
+# and by using a different algorithm to simulate oscillations.
+# For example, let's use a highpass filter with a low frequency cutoff at 5 Hz, and simulate some time-varying oscillations.
+#
+
+###################################################################################################
+# To simulate the time-varying oscillations, we will use the function 'sim_bursty_oscillation', which can be found under neurodsp.periodic.py.
+# It takes input parameters n_seconds, fs, freq, enter_burst, leave_burst, and cycle.
+# The n_seconds parameter is the simulation time.
+# The fs parameter is the sampling rate of the simulated signal.
+# The freq parameter is the oscillation frequency.
+# The enter_burst parameter is the probability of a cycle being oscillating given the last cycle is not oscillating.
+# The leave_burst parameter is the probability of a cycle not being oscillating given the last cycle is oscillating.
+# The cycle parameter is the type of oscillation cycle being simulated, with options including 'sine', 'asine', 'sawtooth', 'gaussian', 'exp', and '2exp'.
+
+# For this example, let's use a cycle with exponential decay. The 'exp' parameter takes a key word argument of 'tau_d', which specifies the decay time.
+# We will use a decay time of 2 seconds. Our oscillation frequency will be 20 Hz, with a sampling rate of 500 s, and a simulation time of 10 seconds.
+
+# For our filter keyword arguments, our highpass filter will have a low frequency cutoff will be at 5 Hz.
+
+fs = 500
+n_seconds = 10
+freq = 14
+
+f_lo = 5
+pass_type = 'highpass'
+filter_kwargs = {'pass_type':pass_type}
+
+tau_d = 2
+cycle = 'exp'
+cycle_kwargs = {'cycle':cycle, 'tau_d':tau_d}
+
+sig = sim_bursty_oscillation(n_seconds, fs, freq, **cycle_kwargs)
+times = create_times(n_seconds, fs)
+
+###################################################################################################
+
+# Plot the simulated data
+plot_time_series(times, sig, 'Simulated EEG')
+plt.show()
+
+###################################################################################################
 
 ###################################################################################################
 # Convolve Wavelet Algorithm
