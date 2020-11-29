@@ -212,18 +212,35 @@ plt.show()
 #
 ###################################################################################################
 
-# Now, let's again apply our wavelet-transform algorithm. This time, lets use frequencies from 6 Hz to 40 Hz.
+# Now, let's again apply our wavelet-transform algorithm.
 
-# Settings for the wavelet transform Algorithm
-freqs= [6, 40]
+# Settings for the wavelet transform Algorithm.
+#
+# The frequencies can be specified as a 1D array, or as a list. If
+# specified as an array, the frequency inputs inform which frequency values to estimate with Morlet wavelets.
+# If specified as a list, the frequency inputs define the frequency range over which to estimate with wavelets.
+#
+# I will do an example of both below.
+
+# Estimate frequencies 6 Hz and 40 Hz with Morlet Wavelets:
+freqs_1= [6, 40]
+
+# Estimate range of frequencies from 15 Hz to 30 Hz:
+freqs_2= (15, 30)
 
 # Compute wavelet transform using compute morlet wavelet transform algorithm
-mwt = compute_wavelet_transform(sig, fs=500, freqs=freqs)
+mwt_1 = compute_wavelet_transform(sig, fs=500, n_cycles=7, freqs=freqs_1)
+mwt_2 = compute_wavelet_transform(sig, fs=500, n_cycles=7, freqs=freqs_2)
 
 ###################################################################################################
 # Plot morlet wavelet transform
 
-plt.imshow(abs(mwt), aspect='auto')
+# For estimated frequencies 6 Hz and 40 Hz:
+plt.imshow(abs(mwt_1), aspect='auto')
+plt.show()
+
+# For estimated range of frequencies from 15 Hz to 30 Hz:
+plt.imshow(abs(mwt_2), aspect='auto')
 plt.show()
 
 ###################################################################################################
