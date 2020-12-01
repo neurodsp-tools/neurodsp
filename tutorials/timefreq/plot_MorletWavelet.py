@@ -1,5 +1,5 @@
 """
-Wavelets
+Morlet Wavelet Analysis
 ===============
 
 Perform time-frequency decomposition using wavelets.
@@ -39,6 +39,15 @@ from neurodsp.timefrequency.wavelets import compute_wavelet_transform, convolve_
 set_random_seed(0)
 
 ###################################################################################################
+# Simulate time-frequency series data
+# -----------------------------
+#
+# First, we'll simulate the time frequency series using the function 'sim_bursty_oscillation'. This will simulate time-varying oscillations.
+# For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 s, and a simulation time of 10 seconds.
+
+###################################################################################################
+
+# Define keyword arguments for bursty oscillation function
 fs = 500
 n_seconds = 10
 freq = 20
@@ -47,9 +56,26 @@ freq = 20
 sig = sim_bursty_oscillation(n_seconds, fs, freq)
 times = create_times(n_seconds, fs)
 
+###################################################################################################
+# Compute Wavelet Transform Algorithm
+# ----------------------------------
+#
+# Now, lets use the Compute Morlet Wavlet Transform algorithm to transform our simulated time-series Data
+# to a time-frequency representation using morlet wavelets.
+# The algorithm computes the continuous morlet wavelet transform at the specified frequencies and across all shifts.
+# For this example, we'll compute the Morlet wavelet transform on 50 equally spaced frequencies from 5 Hz to 100 Hz.
+
+###################################################################################################
+
+# Settings for the wavelet transform Algorithm
 freqs = np.linspace(5, 100, 50)
+
+# Compute wavelet transform using compute morlet wavelet transform algorithm
 mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=7, freqs=freqs)
 
+###################################################################################################
+
+# Plot morlet wavelet transform
 fig, ax = plt.subplots()
 ax.imshow(abs(mwt), aspect='auto')
 ax.invert_yaxis()
