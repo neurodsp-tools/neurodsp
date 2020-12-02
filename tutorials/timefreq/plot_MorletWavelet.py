@@ -52,7 +52,7 @@ fs = 500
 n_seconds = 10
 freq = 20
 
-# Simulate a signal with bursty oscillations at 20 Hz with a decay time of 2 seconds
+# Simulate a signal with bursty oscillations at 20 Hz
 sig = sim_bursty_oscillation(n_seconds, fs, freq)
 times = create_times(n_seconds, fs)
 
@@ -86,3 +86,10 @@ ax.set_ylabel('freq (Hz)')
 ax.set_yticks(np.linspace(0, freqs.size, 5))
 ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
 fig.show()
+
+###################################################################################################
+#
+# From the plot above, you can see the Morlet-wavelet transformed signal.
+#
+
+###################################################################################################
