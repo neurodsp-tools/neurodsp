@@ -93,3 +93,35 @@ fig.show()
 #
 
 ###################################################################################################
+#
+# We can also change the frequencies passed to the morlet-wavelet transform algorithm.
+# For example, let's use an array of frequencies from 15 Hz to 50 Hz with a spacing of 5 Hz.
+
+###################################################################################################
+
+# Settings for the wavelet transform Algorithm
+freqs = np.arange(15, 50, 5)
+
+# Compute wavelet transform using compute morlet wavelet transform algorithm
+mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=7, freqs=freqs)
+
+###################################################################################################
+
+# Plot morlet wavelet transform
+fig, ax = plt.subplots()
+ax.imshow(abs(mwt), aspect='auto')
+ax.invert_yaxis()
+ax.set_xlabel('time (s)')
+ax.set_xticks(np.linspace(0, times.size, 5))
+ax.set_xticklabels(np.round(np.linspace(times[0], times[-1], 5), 2))
+ax.set_ylabel('freq (Hz)')
+ax.set_yticks(np.linspace(0, freqs.size, 5))
+ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+fig.show()
+
+###################################################################################################
+#
+# From the plot above, you can see the morlet-wavelet transformed signal for the newly specified frequency range.
+#
+
+###################################################################################################
