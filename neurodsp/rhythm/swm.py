@@ -1,4 +1,4 @@
-"""The sliding window matching algorithm for identifying rhythmic components of a neural signal."""
+"""The sliding window matching algorithm for identifying recurring patterns in a neural signal."""
 
 import numpy as np
 
@@ -21,18 +21,18 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     win_len : float
         Window length, in seconds.
     win_spacing : float
-        Minimum window spacing, in seconds.
-    max_iterations : int
+        Minimum spacing between start positions of successive windows, in seconds.
+    max_iterations : int, optional, default: 500
         Maximum number of iterations of potential changes in window placement.
-    temperature : float
-        Temperature parameter. Controls probability of accepting a new window.
+    temperature : float, optional, default: 1
+        Controls the probability of accepting a new window.
     window_starts_custom : 1d array, optional
         Custom pre-set locations of initial windows.
 
     Returns
     -------
     avg_window : 1d array
-        The average waveform in 'sig' in the frequency 'f_range' triggered on 'trigger'.
+        The average pattern discovered in the input signal.
     window_starts : 1d array
         Indices at which each window begins for the final set of windows.
     costs : 1d array
@@ -44,14 +44,15 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
            van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological
            recordings. Journal of Neuroscience Methods, 275, 66-79.
            DOI: 10.1016/j.jneumeth.2016.11.001
-           Matlab Code: https://github.com/bartgips/SWM
+    .. [2] Matlab Code implementation: https://github.com/bartgips/SWM
 
     Notes
     -----
-    - Apply a highpass filter if looking at high frequency activity, so that it does
-      not converge on a low frequency motif.
-    - Parameters `win_len` and `win_spacing` should be chosen to be about the size of the
-      motif of interest, and the N derived should be about the number of occurrences.
+    - The `win_len` parameter should be chosen to be about the size of the motif of interest.
+      The larger this window size, the more likely the pattern to reflect slower patterns.
+    - The `win_spacing` parameter also determines the number of windows that are used.
+    - If looking at high frequency activity, you may want to apply a highpass filter,
+      so that the algorithm does not converge on a low frequency motif.
 
     Examples
     --------
@@ -87,8 +88,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     for iter_num in range(1, max_iterations):
 
-        # Pick a random window position to randomly replace with a
-        # new window to improve cross-window similarity
+        # Pick a random window position to replace, to improve cross-window similarity
         window_idx_replace = random_window_idx[iter_num]
 
         # Find a new allowed position for the window
@@ -103,7 +103,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         # Calculate the acceptance probability
         p_accept = np.exp(-delta_cost / float(temperature))
 
-        # Accept update to J with a certain probability
+        # Accept update, based on the calculated acceptance probability
         if np.random.rand() < p_accept:
 
             # Update costs & windows
@@ -158,6 +158,8 @@ def _find_new_window_idx(window_starts, spacing_n_samps, n_samp, tries_limit=100
         new_samp = np.random.randint(n_samp)
         dists = np.abs(window_starts - new_samp)
 
+        # TODO note: I think this should be less than.
+        #   See comments in Issue #196 on this function
         if np.min(dists) > spacing_n_samps:
             break
 
