@@ -51,6 +51,9 @@ set_random_seed(0)
 fs = 1000
 n_seconds = 5
 
+# Set the default aperiodic exponent
+exp = -1
+
 # Generate a times vector, for plotting
 times = create_times(n_seconds, fs)
 
@@ -66,8 +69,8 @@ times = create_times(n_seconds, fs)
 # Set the frequency in our simulated signal
 freq = 6
 
-# Set up simulation for a signal with an oscillation + noise
-components = {'sim_powerlaw' : {'exponent' : 0},
+# Set up simulation for a signal with aperiodic activity and an oscillation
+components = {'sim_powerlaw' : {'exponent' : exp},
               'sim_oscillation' : {'freq' : 6}}
 variances = [0.1, 1]
 
@@ -113,8 +116,8 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 freq1 = 3
 freq2 = 0.5
 
-# Set up simulation for a signal with an oscillation + noise + low frequency activity
-components = {'sim_powerlaw' : {'exponent' : 0},
+# Set up simulation for a signal with aperiodic activity, an oscillation, and low frequency drift
+components = {'sim_powerlaw' : {'exponent' : exp},
               'sim_oscillation' : [{'freq' : freq1}, {'freq' : freq2}]}
 variances = [0.1, 1, 1]
 
@@ -123,7 +126,7 @@ sig = sim_combined(n_seconds, fs, components, variances)
 
 ###################################################################################################
 
-# Filter the data
+# Filter the data with a highpass filter
 f_range = (2, None)
 sig_filt = filter_signal(sig, fs, 'highpass', f_range)
 
@@ -154,7 +157,7 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # 2c. Bandstop filter
 # ~~~~~~~~~~~~~~~~~~~
 #
-# Next let's try a bandstop filter, for the example use case of removing 60Hz noise from data.
+# Next let's try a bandstop filter, to remove 60Hz line noise from data.
 #
 # Notice that it is necessary to set a non-default filter length because
 # a filter of length 3 cycles of a 58Hz oscillation would not attenuate
@@ -207,8 +210,7 @@ sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
 # 3. Time-frequency resolution trade off
 # --------------------------------------
 #
-# With longer filter kernels, we get improved frequency resolution,
-# but worse time resolution.
+# With longer filter kernels, we get improved frequency resolution, but worse time resolution.
 #
 # Two bandpass filters (one long and one short)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -227,8 +229,8 @@ fs = 100
 n_seconds = 3
 times = create_times(n_seconds, fs)
 
-# Generate a signal with an oscillation, noise, and a low frequency oscillation
-components = {'sim_powerlaw' : {'exponent' : 0},
+# Generate a signal with aperiodic activity, an oscillation and, and low frequency drift
+components = {'sim_powerlaw' : {'exponent' : exp},
               'sim_oscillation' : [{'freq' : 6}, {'freq' : 1}]}
 variances = [0.1, 1, 1]
 sig = sim_combined(n_seconds, fs, components, variances)
@@ -273,7 +275,7 @@ sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
 # However, sometimes we may not be as concerned with the precise filter properties,
 # and so there is a faster option: IIR filters.
 #
-# We often use these filters when removing 60 Hz line noise.
+# We often use these filters for removing 60 Hz line noise.
 #
 # Here we apply a 3rd order Butterworth filter to remove 60Hz noise.
 #
@@ -307,6 +309,8 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 ###################################################################################################
 # 5. Beta bandpass filter on neural signal
 # ----------------------------------------
+#
+# Next, we'll load an example time series of real data, and filter that.
 #
 
 ###################################################################################################
