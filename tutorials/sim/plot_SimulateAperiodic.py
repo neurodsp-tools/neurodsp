@@ -56,11 +56,7 @@ times = create_times(n_seconds, fs)
 # Set the exponent for brown noise, which is -2
 exponent = -2
 
-<<<<<<< HEAD
-# Simulate brown noise powerlaw activity
-=======
 # Simulate powerlaw activity
->>>>>>> update word noise -> ap & misc
 br_noise = sim_powerlaw(n_seconds, fs, exponent)
 
 ###################################################################################################
