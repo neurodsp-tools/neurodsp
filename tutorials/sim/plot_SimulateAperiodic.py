@@ -32,11 +32,14 @@ set_random_seed(0)
 fs = 1000
 n_seconds = 10
 
+# Create a times vector for the simulations
+times = create_times(n_seconds, fs)
+
 ###################################################################################################
 # Simulate 1/f Activity
 # ---------------------
 #
-# Often, we want to simulate noise that is comparable to what we see in neural recordings.
+# Often, we want to simulate aperiodic activity similar to what we see in neural recordings.
 #
 # Neural signals display 1/f-like activity, whereby power decreases linearly across
 # increasing frequencies, when plotted in log-log.
@@ -50,11 +53,10 @@ n_seconds = 10
 
 ###################################################################################################
 
-# Setting for the simulation
+# Set the exponent for brown noise, which is -2
 exponent = -2
 
-# Simulate powerlaw activity, specifically brown noise
-times = create_times(n_seconds, fs)
+# Simulate brown noise powerlaw activity
 br_noise = sim_powerlaw(n_seconds, fs, exponent)
 
 ###################################################################################################
@@ -77,14 +79,15 @@ plot_power_spectra(freqs, psd)
 # to remove the very slow drifts that we see in the pure 1/f simulations.
 #
 # To filter a simulated power law signal, simply pass in a filter range, and the filter will
-# be applied to the simulated data before being returned. Here we will apply a high-pass filter.
+# be applied to the simulated data before being returned.
 #
-# We can see that the resulting signal has much less low-frequency drift than the first one.
+# Here we will apply a high-pass filter. We can see that the resulting signal has much less
+# low-frequency activity than the first one.
 #
 
 ###################################################################################################
 
-# Simulate highpass-filtered brown noise with a 1Hz cutoff frequency
+# Simulate filtered brown noise with a 1 Hz highpass filter
 f_hipass_brown = 1
 brown_filt = sim_powerlaw(n_seconds, fs, exponent, f_range=(f_hipass_brown, None))
 
@@ -117,12 +120,12 @@ plot_power_spectra(freqs, psd)
 ###################################################################################################
 
 # Simulate aperiodic signals from a random walk process
-rw_noise = sim_random_walk(n_seconds, fs)
+rw_ap = sim_random_walk(n_seconds, fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plot_time_series(times, rw_noise, title='Random Walk')
+plot_time_series(times, rw_ap, title='Random Walk')
 
 ###################################################################################################
 # Simulate Synaptic Activity
@@ -136,19 +139,19 @@ plot_time_series(times, rw_noise, title='Random Walk')
 # The synaptic current model is Poisson activity convolved with exponential kernels
 # that mimic the shape of post-synaptic potentials.
 #
-# For more details on the usage of such models for simulating neural signals,
-# see Destexhe et al., 2001 and/or Gao et al., 2017.
+# For more details on the usage of such models for simulating neural signals, see
+# `Gao et al, 2017 <https://doi.org/10.1016/j.neuroimage.2017.06.078>`_.
 #
 
 ###################################################################################################
 
 # Simulate aperiodic activity from the synaptic kernel model
-syn_noise = sim_synaptic_current(n_seconds, fs)
+syn_ap = sim_synaptic_current(n_seconds, fs)
 
 ###################################################################################################
 
 # Plot the simulated data, in the time domain
-plot_time_series(times, syn_noise, title='Simulated Synaptic Activity')
+plot_time_series(times, syn_ap, title='Simulated Synaptic Activity')
 
 ###################################################################################################
 #
@@ -159,7 +162,7 @@ plot_time_series(times, syn_noise, title='Simulated Synaptic Activity')
 ###################################################################################################
 
 # Plot the simulated data, in the frequency domain
-freqs, rw_psd = compute_spectrum(rw_noise, fs)
-freqs, syn_psd = compute_spectrum(syn_noise, fs)
+freqs, rw_psd = compute_spectrum(rw_ap, fs)
+freqs, syn_psd = compute_spectrum(syn_ap, fs)
 
 plot_power_spectra(freqs, [rw_psd, syn_psd], ['Random Walk', 'Synaptic'])
