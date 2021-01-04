@@ -3,14 +3,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Filtering &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
@@ -109,7 +110,8 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-filtering-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-filtering-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="filtering">
 <span id="sphx-glr-auto-tutorials-filt-plot-filtering-py"></span><h1>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h1>
@@ -247,7 +249,7 @@ the 60Hz oscillation much (try this yourself!).</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB.Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB.Increase filter length.
   warn(&#39;The filter attenuation never goes below {} dB.&#39;\
 </pre></div>
 </div>
@@ -269,7 +271,7 @@ if the level of attenuation does not go below 20dB.</p>
 </div>
 <img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Filtering_005.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB.Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB.Increase filter length.
   warn(&#39;The filter attenuation never goes below {} dB.&#39;\
 </pre></div>
 </div>
@@ -315,9 +317,9 @@ did not (i.e. better frequency resolution).</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated bymore than 20 dB. Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated bymore than 20 dB. Increase filter length.
   warn(&#39;The low or high frequency stopband never gets attenuated by&#39;\
-/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is  10.0  Hz. This is greater than the desiredpass/stop bandwidth of  4.0 Hz
+/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is  10.0  Hz. This is greater than the desiredpass/stop bandwidth of  4.0 Hz
   warn(&#39;Transition bandwidth is  {:.1f}  Hz. This is greater than the desired&#39;\
 </pre></div>
 </div>
@@ -344,9 +346,9 @@ did not (i.e. better frequency resolution).</p>
 </ul>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Short filter
-/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated bymore than 20 dB. Increase filter length.
+/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated bymore than 20 dB. Increase filter length.
   warn(&#39;The low or high frequency stopband never gets attenuated by&#39;\
-/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is  10.0  Hz. This is greater than the desiredpass/stop bandwidth of  4.0 Hz
+/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is  10.0  Hz. This is greater than the desiredpass/stop bandwidth of  4.0 Hz
   warn(&#39;Transition bandwidth is  {:.1f}  Hz. This is greater than the desired&#39;\
 
 
@@ -383,7 +385,7 @@ and so there is a faster option: IIR filters.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/filter.py:96: UserWarning: Edge artifacts are not removed when using an IIR filter.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/.env/lib/python3.8/site-packages/neurodsp/filt/filter.py:96: UserWarning: Edge artifacts are not removed when using an IIR filter.
   warn(&#39;Edge artifacts are not removed when using an IIR filter.&#39;)
 </pre></div>
 </div>
@@ -420,7 +422,7 @@ more sinusoidal than the original signal really is.</p>
 <p>If you are interested in this problem, and how to deal with it, you should check out
 <a class="reference external" href="https://bycycle-tools.github.io/bycycle/">bycycle</a>,
 which is a tool for time-domain analyses of waveform shape.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.275 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.203 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-filtering-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7308b26242158e9c8cabeaaa2bd9ed0e/plot_Filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_Filtering.py</span></code></a></p>
@@ -445,8 +447,8 @@ which is a tool for time-domain analyses of waveform shape.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+        &copy; Copyright 2018-2021, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>

@@ -3,14 +3,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Documentation &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -148,22 +149,27 @@
 <li><p><a class="reference internal" href="#lagged-coherence" id="id20">Lagged Coherence</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#simulations" id="id21">Simulations</a></p>
+<li><p><a class="reference internal" href="#aperiodic-analyses" id="id21">Aperiodic Analyses</a></p>
 <ul>
-<li><p><a class="reference internal" href="#periodic-signals" id="id22">Periodic Signals</a></p></li>
-<li><p><a class="reference internal" href="#aperiodic-signals" id="id23">Aperiodic Signals</a></p></li>
-<li><p><a class="reference internal" href="#transients-cycles" id="id24">Transients &amp; Cycles</a></p></li>
-<li><p><a class="reference internal" href="#combined-signals" id="id25">Combined Signals</a></p></li>
-<li><p><a class="reference internal" href="#utilities" id="id26">Utilities</a></p></li>
-<li><p><a class="reference internal" href="#random-seed" id="id27">Random Seed</a></p></li>
+<li><p><a class="reference internal" href="#fluctuation-analyses" id="id22">Fluctuation Analyses</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#plots" id="id28">Plots</a></p>
+<li><p><a class="reference internal" href="#simulations" id="id23">Simulations</a></p>
 <ul>
-<li><p><a class="reference internal" href="#time-series" id="id29">Time Series</a></p></li>
-<li><p><a class="reference internal" href="#spectral" id="id30">Spectral</a></p></li>
-<li><p><a class="reference internal" href="#filter" id="id31">Filter</a></p></li>
-<li><p><a class="reference internal" href="#rhythm" id="id32">Rhythm</a></p></li>
+<li><p><a class="reference internal" href="#periodic-signals" id="id24">Periodic Signals</a></p></li>
+<li><p><a class="reference internal" href="#aperiodic-signals" id="id25">Aperiodic Signals</a></p></li>
+<li><p><a class="reference internal" href="#transients-cycles" id="id26">Transients &amp; Cycles</a></p></li>
+<li><p><a class="reference internal" href="#combined-signals" id="id27">Combined Signals</a></p></li>
+<li><p><a class="reference internal" href="#utilities" id="id28">Utilities</a></p></li>
+<li><p><a class="reference internal" href="#random-seed" id="id29">Random Seed</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#plots" id="id30">Plots</a></p>
+<ul>
+<li><p><a class="reference internal" href="#time-series" id="id31">Time Series</a></p></li>
+<li><p><a class="reference internal" href="#spectral" id="id32">Spectral</a></p></li>
+<li><p><a class="reference internal" href="#filter" id="id33">Filter</a></p></li>
+<li><p><a class="reference internal" href="#rhythm" id="id34">Rhythm</a></p></li>
 </ul>
 </li>
 </ul>
@@ -438,11 +444,26 @@
 </table>
 </div>
 </div>
+<div class="section" id="aperiodic-analyses">
+<h3><a class="toc-backref" href="#id21">Aperiodic Analyses</a><a class="headerlink" href="#aperiodic-analyses" title="Permalink to this headline">¶</a></h3>
+<p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">aperiodic</span></code> module, for analyzing aperiodic activity in time series.</p>
+<div class="section" id="fluctuation-analyses">
+<h4><a class="toc-backref" href="#id22">Fluctuation Analyses</a><a class="headerlink" href="#fluctuation-analyses" title="Permalink to this headline">¶</a></h4>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
 <div class="section" id="simulations">
-<h3><a class="toc-backref" href="#id21">Simulations</a><a class="headerlink" href="#simulations" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">Simulations</a><a class="headerlink" href="#simulations" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">sim</span></code> module, for simulating time series.</p>
 <div class="section" id="periodic-signals">
-<h4><a class="toc-backref" href="#id22">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id24">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -459,7 +480,7 @@
 </table>
 </div>
 <div class="section" id="aperiodic-signals">
-<h4><a class="toc-backref" href="#id23">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id25">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -482,7 +503,7 @@
 </table>
 </div>
 <div class="section" id="transients-cycles">
-<h4><a class="toc-backref" href="#id24">Transients &amp; Cycles</a><a class="headerlink" href="#transients-cycles" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id26">Transients &amp; Cycles</a><a class="headerlink" href="#transients-cycles" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -519,7 +540,7 @@
 </table>
 </div>
 <div class="section" id="combined-signals">
-<h4><a class="toc-backref" href="#id25">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id27">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -533,7 +554,7 @@
 </table>
 </div>
 <div class="section" id="utilities">
-<h4><a class="toc-backref" href="#id26">Utilities</a><a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id28">Utilities</a><a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -550,7 +571,7 @@
 </table>
 </div>
 <div class="section" id="random-seed">
-<h4><a class="toc-backref" href="#id27">Random Seed</a><a class="headerlink" href="#random-seed" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id29">Random Seed</a><a class="headerlink" href="#random-seed" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -565,10 +586,10 @@
 </div>
 </div>
 <div class="section" id="plots">
-<h3><a class="toc-backref" href="#id28">Plots</a><a class="headerlink" href="#plots" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id30">Plots</a><a class="headerlink" href="#plots" title="Permalink to this headline">¶</a></h3>
 <p>Functions in the <code class="docutils literal notranslate"><span class="pre">plts</span></code> module, for plotting time series and analysis outputs.</p>
 <div class="section" id="time-series">
-<h4><a class="toc-backref" href="#id29">Time Series</a><a class="headerlink" href="#time-series" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id31">Time Series</a><a class="headerlink" href="#time-series" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -588,7 +609,7 @@
 </table>
 </div>
 <div class="section" id="spectral">
-<h4><a class="toc-backref" href="#id30">Spectral</a><a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id32">Spectral</a><a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -614,7 +635,7 @@
 </table>
 </div>
 <div class="section" id="filter">
-<h4><a class="toc-backref" href="#id31">Filter</a><a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id33">Filter</a><a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -634,7 +655,7 @@
 </table>
 </div>
 <div class="section" id="rhythm">
-<h4><a class="toc-backref" href="#id32">Rhythm</a><a class="headerlink" href="#rhythm" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id34">Rhythm</a><a class="headerlink" href="#rhythm" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -666,8 +687,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2020, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+        &copy; Copyright 2018-2021, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>
