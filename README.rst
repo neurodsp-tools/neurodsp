@@ -161,3 +161,13 @@ Bibtex:
         url = {https://joss.theoj.org/papers/10.21105/joss.01272},
         doi = {10.21105/joss.01272},
     }
+
+Funding
+-------
+
+Supported by NIH award R01 GM134363
+
+`NIGMS <https://www.nigms.nih.gov/>`_
+
+.. image:: https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png
+  :width: 400
