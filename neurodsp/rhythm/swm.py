@@ -93,11 +93,15 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
         # Find a new allowed position for the window
         window_starts_temp = np.copy(window_starts)
+
+        current_window_idx = window_starts_temp[window_idx_replace]
+
         window_starts_temp[window_idx_replace] = _find_new_window_idx(
-            window_starts, spacing_n_samps, len(sig) - win_n_samps)
+            len(sig) - win_n_samps, spacing_n_samps, current_window_idx)
 
         # Calculate the cost & the change in the cost function
         cost_temp = _compute_cost(sig, window_starts_temp, win_n_samps)
+
         delta_cost = cost_temp - costs[iter_num - 1]
 
         # Calculate the acceptance probability
@@ -130,7 +134,6 @@ def _compute_cost(sig, window_starts, win_n_samps):
     # Get all windows and z-score them
     n_windows = len(window_starts)
     windows = np.zeros((n_windows, win_n_samps))
-
     for ind, window in enumerate(window_starts):
         temp = sig[window:window_starts[ind] + win_n_samps]
         windows[ind] = (temp - np.mean(temp)) / np.std(temp)
@@ -149,19 +152,29 @@ def _compute_cost(sig, window_starts, win_n_samps):
     return cost
 
 
-def _find_new_window_idx(window_starts, spacing_n_samps, n_samp, tries_limit=1000):
+def _find_new_window_idx(max_start, spacing_n_samps, current_window_idx, tries_limit=1000):
     """Find a new sample for the starting window."""
 
-    for n_try in range(tries_limit):
+    for _ in range(tries_limit):
 
-        # Generate a random sample & check how close it is to other window starts
-        new_samp = np.random.randint(n_samp)
-        dists = np.abs(window_starts - new_samp)
+        # Find adjacent window starts
+        prev_idx = current_window_idx - (2*spacing_n_samps)
+        next_idx = current_window_idx + (2*spacing_n_samps)
 
-        # TODO note: I think this should be less than.
-        #   See comments in Issue #196 on this function
-        if np.min(dists) > spacing_n_samps:
-            break
+        # Create allowed random sample positions/indices
+        new_samps = np.arange(prev_idx + spacing_n_samps, next_idx - spacing_n_samps)
+        new_samps = new_samps[np.where((new_samps >= 0) & (new_samps <= max_start))[0]]
+
+        if len(new_samps) <= 1:
+            # All new samples are too close to adjacent window starts
+            continue
+        else:
+            # Drop current window index
+            new_samps = np.delete(new_samps, np.where(new_samps == current_window_idx)[0][0])
+
+        # Randomly select allowed sample position
+        new_samp = np.random.choice(new_samps)
+        break
 
     else:
         raise RuntimeError('SWM algorithm has difficulty finding a new window. \
