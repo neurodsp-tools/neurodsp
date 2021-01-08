@@ -18,7 +18,6 @@ from scipy.signal import morlet
 
 # Import simulation code to create test Data
 from neurodsp.sim import sim_bursty_oscillation
-from neurodsp.sim.cycles import sim_cycle
 from neurodsp.utils import set_random_seed, create_times
 
 # Import utilities for loading and plotting data
@@ -26,7 +25,7 @@ from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.time_series import plot_time_series
 
 # Import functions for morlet Wavelets
-from neurodsp.timefrequency.wavelets import compute_wavelet_transform, convolve_wavelet
+from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 
 ###################################################################################################
 
