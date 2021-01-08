@@ -16,13 +16,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import morlet
 
-from neurodsp.utils.data import create_freqs
-from neurodsp.utils.checks import check_n_cycles
-from neurodsp.utils.decorators import multidim
-from neurodsp.filt.filter import filter_signal
-
 # Import simulation code to create test Data
-from neurodsp.sim import sim_combined, sim_bursty_oscillation
+from neurodsp.sim import sim_bursty_oscillation
 from neurodsp.sim.cycles import sim_cycle
 from neurodsp.utils import set_random_seed, create_times
 
@@ -40,7 +35,7 @@ set_random_seed(0)
 
 ###################################################################################################
 # Simulate time-frequency series data
-# -----------------------------
+# -----------------------------------
 #
 # First, we'll simulate the time frequency series using the function 'sim_bursty_oscillation'. This will simulate time-varying oscillations.
 # For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 s, and a simulation time of 10 seconds.
