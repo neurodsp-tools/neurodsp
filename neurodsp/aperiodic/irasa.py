@@ -12,7 +12,7 @@ from neurodsp.spectral import compute_spectrum, trim_spectrum
 ###################################################################################################
 ###################################################################################################
 
-def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
+def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, thresh=None, **spectrum_kwargs):
     """Separate the aperiodic and periodic components using the IRASA method.
 
     Parameters
@@ -26,6 +26,9 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
     hset : 1d array
         Resampling factors used in IRASA calculation.
         If not provided, defaults to values from 1.1 to 1.9 with an increment of 0.05.
+    thresh : float, optional, default: None
+        A relative threshold, in standard deviations of the original spectrum, to apply to the
+        aperiodic and periodic results.
     spectrum_kwargs : dict
         Optional keywords arguments that are passed to `compute_spectrum`.
 
@@ -85,6 +88,12 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
 
     # Subtract aperiodic from original, to get the periodic component
     psd_periodic = psd - psd_aperiodic
+
+    # Apply a relative threshold
+    if thresh is not None:
+        sub_thresh = np.where(psd_periodic - psd_aperiodic < thresh * np.std(psd))[0]
+        psd_periodic[sub_thresh] = 0
+        psd_aperiodic[sub_thresh] = psd[sub_thresh]
 
     # Restrict spectrum to requested range
     if f_range:
