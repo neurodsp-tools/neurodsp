@@ -119,3 +119,35 @@ fig.show()
 #
 
 ###################################################################################################
+#
+# It is useful to describe what the Morlet wavelet is in the context of this tutorial. Simply put,
+# a morlet wavelet takes a raw input signal and multiplies it by a Gaussian envelope. It is useful
+# in cases where a signal's amplitude varies over time.
+#
+# For more information on Morlet wavelets, see Mike X Cohen, 2019, "Morlet wavelets in time and frequency," YouTube, https://www.youtube.com/watch?v=7ahrcB5HL0k.
+#
+
+###################################################################################################
+
+# Example plot of morlet wavelet
+# ------------------------------
+#
+# Here, I provide an example plot of a morlet wavelet to demonstrate my previous description
+
+###################################################################################################
+
+# Use the scipy.signal function 'morlet' to create a wavelet. Here, I used a length of 175 with a total of 7 cycles.
+
+# Define sampling rate, number of cycles, fundamental frequency, and length for the wavelet.
+fs = 500
+n_cycles = 7
+freq = 20
+s = 1.0
+w = n_cycles
+M = int(n_cycles * fs / freq)
+
+# Create wavelet
+wavelet = morlet(M, w, s)
+amp = np.abs(wavelet)
+
+# Plot wavelet
