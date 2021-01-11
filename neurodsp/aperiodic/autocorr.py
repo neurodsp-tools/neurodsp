@@ -31,9 +31,9 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
         sig = sig - sig.mean()
 
     autocorrs = np.correlate(sig, sig, "full")[len(sig)-1:]
-    autocorrs = autocorrs[:max_lag] / autocorrs[0]
+    autocorrs = autocorrs[:max_lag+1] / autocorrs[0]
     autocorrs = autocorrs[::lag_step]
 
-    timepoints = np.arange(0, max_lag, lag_step)
+    timepoints = np.arange(0, max_lag+1, lag_step)
 
     return timepoints, autocorrs
