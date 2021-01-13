@@ -90,7 +90,7 @@ def check_filter_definition(pass_type, f_range):
 
 
 def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
-                            transitions=(-20, -3), verbose=True):
+                            transitions=(-20, -3), filt_type=None, verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
@@ -164,7 +164,8 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
 
     # Compute pass & transition bandwidth
     pass_bw = compute_pass_band(fs, pass_type, f_range)
-    transition_bw = compute_transition_band(f_db, db, transitions[0], transitions[1])
+    transition_bw, f_range_trans = compute_transition_band(f_db, db, transitions[0], transitions[1],
+                                                           return_freqs=True)
 
     # Raise warning if transition bandwidth is too high
     if transition_bw > pass_bw:
@@ -174,8 +175,50 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
 
     # Print out transition bandwidth and pass bandwidth to the user
     if verbose:
-        print('Transition bandwidth is {:.1f} Hz.'.format(transition_bw))
-        print('Pass/stop bandwidth is {:.1f} Hz.'.format(pass_bw))
+
+        # Filter type (high-pass, low-pass, band-pass, band-stop, FIR, IIR)
+        print('Pass Type: {pass_type}'.format(pass_type=pass_type))
+
+        # Cutoff frequency (including definition)
+        cutoff = round(np.min(f_range) + (0.5 * transition_bw), 3)
+        print('Cutoff (half-amplitude): {cutoff} Hz'.format(cutoff=cutoff))
+
+        # Filter order (or length)
+        print('Filter order: {order}'.format(order=len(f_db)-1))
+
+        # Roll-off or transition bandwidth
+        print('Transition bandwidth: {:.1f} Hz'.format(transition_bw))
+        print('Pass/stop bandwidth: {:.1f} Hz'.format(pass_bw))
+
+        # Passband ripple and stopband attenuation
+        pb_ripple = np.max(db[:np.where(f_db < f_range_trans[0])[0][-1]])
+        sb_atten = np.max(db[np.where(f_db > f_range_trans[1])[0][0]:])
+        print('Passband Ripple: {pb_ripple} db'.format(pb_ripple=pb_ripple))
+        print('Stopband Attenuation: {sb_atten} db'.format(sb_atten=sb_atten))
+
+        # Filter delay (zero-phase, linear-phase, non-linear phase)
+        if filt_type == 'FIR' and pass_type in ['bandstop', 'lowpass']:
+            filt_class = 'linear-phase'
+        elif filt_type == 'FIR' and pass_type in ['bandpass', 'highpass']:
+            filt_class = 'zero-phase'
+        elif filt_type == 'IIR':
+            filt_class = 'non-linear-phase'
+        else:
+            filt_class = None
+
+        if filt_type is not None:
+            print('Filter Class: {filt_class}'.format(filt_class=filt_class))
+
+        if filt_class == 'linear-phase':
+            print('Group Delay: {delay}s'.format(delay=(len(f_db)-1) / 2 * fs))
+        elif filt_class == 'zero-phase':
+            print('Group Delay: 0s')
+
+        # Direction of computation (one-pass forward/reverse, or two-pass forward and reverse)
+        if filt_type == 'FIR':
+            print('Direction: one-pass reverse.')
+        else:
+            print('Direction: two-pass forward and reverse')
 
     return passes
 

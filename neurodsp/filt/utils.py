@@ -136,7 +136,7 @@ def compute_pass_band(fs, pass_type, f_range):
     return pass_bw
 
 
-def compute_transition_band(f_db, db, low=-20, high=-3):
+def compute_transition_band(f_db, db, low=-20, high=-3, return_freqs=False):
     """Compute transition bandwidth of a filter.
 
     Parameters
@@ -149,11 +149,15 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
         The lower limit that defines the transition band, in dB.
     high : float, optional, default: -3
         The upper limit that defines the transition band, in dB.
+    return_freqs : bool, optional, default: False
+        Whether to return a tuple of (lower, upper) frequency bounds for the transition band.
 
     Returns
     -------
     transition_band : float
         The transition bandwidth of the filter.
+    f_range : tuple of (float, float), optional, default: False
+        The lower and upper frequencies of the transition band.
 
     Examples
     --------
@@ -178,7 +182,15 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     # This gets the indices of transitions to the values in searched for range
     inds = np.where(np.diff(np.logical_and(db > low, db < high)))[0]
     # This steps through the indices, in pairs, selecting from the vector to select from
-    transition_band = np.max([(b - a) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])])
+    transition_pairs = [(a, b) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])]
+    pair_idx = np.argmax([(tran[1] - tran[0]) for tran in transition_pairs])
+    f_lo = transition_pairs[pair_idx][0]
+    f_hi = transition_pairs[pair_idx][1]
+    transition_band = f_hi - f_lo
+
+    if return_freqs:
+
+        return transition_band, (f_lo, f_hi)
 
     return transition_band
 
