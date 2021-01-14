@@ -294,14 +294,14 @@ def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
     filt_report['Pass Type'] = '{pass_type}'.format(pass_type=pass_type)
 
     # Cutoff frequenc(ies) (including definition)
-    filt_report['Cutoff (half-amplitude)'] = '{cutoff} Hz'.format(cutoff=f_range)
+    filt_report['Cutoff (Half-Amplitude)'] = '{cutoff} Hz'.format(cutoff=f_range)
 
     # Filter order (or length)
-    filt_report['Filter order'] = '{order}'.format(order=len(f_db)-1)
+    filt_report['Filter Order'] = '{order}'.format(order=len(f_db)-1)
 
     # Roll-off or transition bandwidth
-    filt_report['Transition bandwidth'] = '{:.1f} Hz'.format(transition_bw)
-    filt_report['Pass/stop bandwidth'] = '{:.1f} Hz'.format(pass_bw)
+    filt_report['Transition Bandwidth'] = '{:.1f} Hz'.format(transition_bw)
+    filt_report['Pass/Stop Bandwidth'] = '{:.1f} Hz'.format(pass_bw)
 
     # Passband ripple and stopband attenuation
     pb_ripple = np.max(db[:np.where(f_db < f_range_trans[0])[0][-1]])
@@ -312,25 +312,16 @@ def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
     # Filter delay (zero-phase, linear-phase, non-linear phase)
     filt_report['Filter Type'] = filt_type
 
-    if filt_type == 'FIR' and pass_type in ['bandstop', 'lowpass']:
+    if filt_type == 'FIR':
 
-        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='linear-phase')
+        filt_report['Phase'] = '{filt_class}'.format(filt_class='linear-phase')
         filt_report['Group Delay'] = '{delay}s'.format(delay=(len(f_db)-1) / 2 * fs)
-
-    elif filt_type == 'FIR' and pass_type in ['bandpass', 'highpass']:
-
-        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='zero-phase')
-        filt_report['Group Delay'] = '0s'
+        filt_report['Direction'] = 'one-pass reverse'
 
     elif filt_type == 'IIR':
 
         # Group delay isn't reported for IIR since it varies from sample to sample
-        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='non-linear-phase')
-
-    # Direction of computation (one-pass forward/reverse, or two-pass forward and reverse)
-    if filt_type == 'FIR':
-        filt_report['Direction'] = 'one-pass reverse'
-    else:
+        filt_report['Phase'] = '{filt_class}'.format(filt_class='non-linear-phase')
         filt_report['Direction'] = 'two-pass forward and reverse'
 
     return filt_report
