@@ -141,7 +141,7 @@ fig.show()
 # Define sampling rate, number of cycles, fundamental frequency, and length for the wavelet.
 fs = 500
 n_cycles = 7
-freq = 20
+freq = 5
 s = 1.0
 w = n_cycles
 M = int(n_cycles * fs / freq)
@@ -151,3 +151,14 @@ wavelet = morlet(M, w, s)
 amp = np.abs(wavelet)
 
 # Plot wavelet
+delta_t = ((1) % (fs))
+time = np.arange(-50,50,delta_t)
+sigma = ((n_cycles) / (2*np.pi*freq))
+sin = np.cos(2*np.pi*freq*time)
+gauss = np.exp((-time**2) / ((2*sigma)**2))
+morlet_wavelet = sin*gauss
+
+plt.title('Frequency vs. Time')
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.plot(time, morlet_wavelet)
