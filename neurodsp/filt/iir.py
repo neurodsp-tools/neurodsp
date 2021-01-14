@@ -12,7 +12,8 @@ from neurodsp.plts.filt import plot_frequency_response
 ###################################################################################################
 
 def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_transitions=False,
-                       plot_properties=False, return_filter=False, verbose=False):
+                      plot_properties=False, save_properties=None, return_filter=False,
+                      verbose=False):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -40,6 +41,8 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_tran
         If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
+    save_properties : str
+        Path, including file name, to save filter properites to as a json.
     return_filter : bool, optional, default: False
         If True, return the second order series coefficients of the IIR filter.
     verbose : bool, optional, default: False
@@ -69,7 +72,8 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_tran
 
     # Check filter properties: compute transition bandwidth & run checks
     check_filter_properties(sos, None, fs, pass_type, f_range, filt_type="IIR",
-                            verbose=np.any([print_transitions, verbose]))
+                            verbose=np.any([print_transitions, verbose]),
+                            save_properties=save_properties)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)

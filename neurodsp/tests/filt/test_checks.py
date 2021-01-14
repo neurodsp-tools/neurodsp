@@ -1,5 +1,6 @@
 """Tests for filter check functions."""
 
+import tempfile
 from pytest import raises
 
 from neurodsp.tests.settings import FS
@@ -46,7 +47,7 @@ def test_check_filter_definition():
 def test_check_filter_properties():
 
     filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
-    
+
     passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is True
 
@@ -58,6 +59,10 @@ def test_check_filter_properties():
     passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
 
+    temp_path = tempfile.NamedTemporaryFile()
+    check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12),
+                            verbose=True, save_properties=temp_path.name)
+    temp_path.close()
 
 def test_check_filter_length():
 

@@ -1,8 +1,11 @@
 """Tests for filter utilities."""
 
-from pytest import raises
-from neurodsp.tests.settings import FS
+import tempfile
+from pytest import raises, mark, param
 
+import numpy as np
+
+from neurodsp.tests.settings import FS
 from neurodsp.filt.utils import *
 from neurodsp.filt.fir import design_fir_filter, compute_filter_length
 
@@ -53,3 +56,34 @@ def test_remove_filter_edges():
     assert np.all(np.isnan(dropped_sig[:n_rmv]))
     assert np.all(np.isnan(dropped_sig[-n_rmv:]))
     assert np.all(~np.isnan(dropped_sig[n_rmv:-n_rmv]))
+
+
+@mark.parametrize("pass_type", ['bandpass', 'bandstop', 'lowpass', 'highpass'])
+@mark.parametrize("filt_type", ['IIR', 'FIR'])
+def test_gen_filt_report(pass_type, filt_type):
+
+    fs = 1000
+    f_db = np.arange(0, 50)
+    db = np.random.rand(50)
+    pass_bw = 10
+    transition_bw = 4
+    f_range = (10, 40)
+    f_range_trans = (40, 44)
+
+    report = gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
+                             transition_bw, f_range, f_range_trans)
+
+    assert pass_type in report.values()
+    assert filt_type in report.values()
+
+
+@mark.parametrize("dir_exists", [True, param(False, marks=mark.xfail)])
+def test_save_filt_report(dir_exists):
+
+    filt_report = {'Pass Type': 'bandpass', 'Cutoff (half-amplitude)': 50}
+    temp_path = tempfile.NamedTemporaryFile()
+    if not dir_exists:
+        save_filt_report('/bad/path/', filt_report)
+    else:
+        save_filt_report(temp_path.name, filt_report)
+    temp_path.close()

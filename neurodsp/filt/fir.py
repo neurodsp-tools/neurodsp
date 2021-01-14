@@ -14,8 +14,8 @@ from neurodsp.filt.checks import (check_filter_definition, check_filter_properti
 ###################################################################################################
 
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
-                      print_transitions=False, plot_properties=False, return_filter=False,
-                      verbose=False):
+                      print_transitions=False, plot_properties=False, save_properties=None,
+                      return_filter=False, verbose=False, file_path=None, file_name=None):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -47,6 +47,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
+    save_properties : str
+        Path, including file name, to save filter properites to as a json.
     return_filter : bool, optional, default: False
         If True, return the filter coefficients of the FIR filter.
     verbose : bool, optional, default: False
@@ -82,7 +84,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
 
     # Check filter properties: compute transition bandwidth & run checks
     check_filter_properties(filter_coefs, 1, fs, pass_type, f_range, filt_type="FIR",
-                            verbose=np.any([print_transitions, verbose]))
+                            verbose=np.any([print_transitions, verbose]),
+                            save_properties=save_properties)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)

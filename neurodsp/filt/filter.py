@@ -8,10 +8,9 @@ from neurodsp.filt.iir import filter_signal_iir
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
-                  n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
-                  print_transitions=False, plot_properties=False, return_filter=False,
-                  verbose=False):
+def filter_signal(sig, fs, pass_type, f_range, filter_type='fir', n_cycles=3, n_seconds=None,
+                  remove_edges=True, butterworth_order=None, print_transitions=False,
+                  plot_properties=False, save_properties=None, return_filter=False, verbose=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
     Parameters
@@ -51,6 +50,8 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
         If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
+    save_properties : str, optional, default: None
+        Path, including file name, to save filter properites to as a json.
     return_filter : bool, optional, default: False
         If True, return the filter coefficients.
     verbose : bool, optional, default: False
@@ -76,13 +77,13 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
 
     if filter_type.lower() == 'fir':
         return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
-                                 remove_edges, print_transitions,
-                                 plot_properties, return_filter, verbose=verbose)
+                                 remove_edges, print_transitions, plot_properties,
+                                 save_properties, return_filter, verbose)
     elif filter_type.lower() == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edges)
         return filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
-                                 print_transitions, plot_properties,
-                                 return_filter, verbose=verbose)
+                                 print_transitions, plot_properties, save_properties,
+                                 return_filter, verbose)
     else:
         raise ValueError('Filter type not understood.')
 

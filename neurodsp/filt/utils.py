@@ -1,5 +1,8 @@
 """Utility functions for filtering."""
 
+import os
+import json
+
 import numpy as np
 from scipy.signal import freqz, sosfreqz
 
@@ -253,3 +256,105 @@ def remove_filter_edges(sig, filt_len):
     sig[-n_rmv:] = np.nan
 
     return sig
+
+
+def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
+                    transition_bw, f_range, f_range_trans):
+    """Create a filter report.
+
+    Parameters
+    ----------
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which type of filter was applied.
+    filt_type : str, {'FIR', 'IIR'}
+        The type of filter being applied.
+    fs : float
+        Sampling rate, in Hz.
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in `f_db`, in dB.
+    pass_bw : float
+        The pass bandwidth of the filter.
+    transition_band : float
+        The transition bandwidth of the filter.
+    f_range : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+    f_range_trans : tuple of (float, float)
+        The lower and upper frequencies of the transition band.
+
+    Returns
+    -------
+    filt_report : dict
+        A dicionary of filter parameter keys and corresponding values.
+    """
+    filt_report = {}
+
+    # Filter type (high-pass, low-pass, band-pass, band-stop, FIR, IIR)
+    filt_report['Pass Type'] = '{pass_type}'.format(pass_type=pass_type)
+
+    # Cutoff frequenc(ies) (including definition)
+    filt_report['Cutoff (half-amplitude)'] = '{cutoff} Hz'.format(cutoff=f_range)
+
+    # Filter order (or length)
+    filt_report['Filter order'] = '{order}'.format(order=len(f_db)-1)
+
+    # Roll-off or transition bandwidth
+    filt_report['Transition bandwidth'] = '{:.1f} Hz'.format(transition_bw)
+    filt_report['Pass/stop bandwidth'] = '{:.1f} Hz'.format(pass_bw)
+
+    # Passband ripple and stopband attenuation
+    pb_ripple = np.max(db[:np.where(f_db < f_range_trans[0])[0][-1]])
+    sb_atten = np.max(db[np.where(f_db > f_range_trans[1])[0][0]:])
+    filt_report['Passband Ripple'] = '{pb_ripple} db'.format(pb_ripple=pb_ripple)
+    filt_report['Stopband Attenuation'] = '{sb_atten} db'.format(sb_atten=sb_atten)
+
+    # Filter delay (zero-phase, linear-phase, non-linear phase)
+    filt_report['Filter Type'] = filt_type
+
+    if filt_type == 'FIR' and pass_type in ['bandstop', 'lowpass']:
+
+        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='linear-phase')
+        filt_report['Group Delay'] = '{delay}s'.format(delay=(len(f_db)-1) / 2 * fs)
+
+    elif filt_type == 'FIR' and pass_type in ['bandpass', 'highpass']:
+
+        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='zero-phase')
+        filt_report['Group Delay'] = '0s'
+
+    elif filt_type == 'IIR':
+
+        # Group delay isn't reported for IIR since it varies from sample to sample
+        filt_report['Filter Class'] = '{filt_class}'.format(filt_class='non-linear-phase')
+
+    # Direction of computation (one-pass forward/reverse, or two-pass forward and reverse)
+    if filt_type == 'FIR':
+        filt_report['Direction'] = 'one-pass reverse'
+    else:
+        filt_report['Direction'] = 'two-pass forward and reverse'
+
+    return filt_report
+
+
+def save_filt_report(save_properties, filt_report):
+    """Save filter properties as a json file.
+
+    Parameters
+    ----------
+    save_properties : str
+        Path, including file name, to save filter properites to as a json.
+    filt_report : dict
+        Contains filter report info.
+    """
+
+    # Ensure parents exists
+    if not os.path.isdir(os.path.dirname(save_properties)):
+        raise ValueError("Unable to save properties. Parent directory does not exist.")
+
+    # Enforce file extension
+    if not save_properties.endswith('.json'):
+        save_properties = save_properties + '.json'
+
+    # Save
+    with open(save_properties, 'w') as file_path:
+        json.dump(filt_report, file_path)
