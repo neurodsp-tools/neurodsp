@@ -48,7 +48,7 @@ def test_sim_knee():
     np.allclose(true_psd, numerical_psd, atol=EPS)
 
     # Accuracy test for a single exponent
-    sig = sim_knee(n_seconds=N_SECONDS, fs=FS, chi1=0, chi2=EXP2, knee=KNEE)
+    sig = sim_knee(n_seconds=N_SECONDS_LONG, fs=1000, chi1=0, chi2=EXP2, knee=KNEE)
 
     freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
 
