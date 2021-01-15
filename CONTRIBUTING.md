@@ -76,3 +76,4 @@ and continuous integration checks running this test code must all pass
     * If you add any new public functions, note this function in the doc/api.rst file,
 so that this function gets included in the documentation site API listing
     * If a new public function is added, it should should be added and described in the relevant tutorials section, with a quick description and demonstration of using it
+    * To build the documentation to test changes, install the requirements (`pip install -r requirements-doc.txt`), change to the `neurodsp/doc` directory (`cd doc`) and run `make html`. The documentation can be opened in a web browser by opening the file `neurodsp/doc/_build/html/index.html`
