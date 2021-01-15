@@ -315,7 +315,7 @@ def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
     if filt_type == 'FIR':
 
         filt_report['Phase'] = '{filt_class}'.format(filt_class='linear-phase')
-        filt_report['Group Delay'] = '{delay}s'.format(delay=(len(f_db)-1) / 2 * fs)
+        filt_report['Group Delay'] = '{delay}s'.format(delay=(len(f_db)-1) / (2 * fs))
         filt_report['Direction'] = 'one-pass reverse'
 
     elif filt_type == 'IIR':
