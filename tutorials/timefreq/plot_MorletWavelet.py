@@ -14,15 +14,13 @@ representation of the data.
 # Import neccessary functions and packages
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import morlet
+from scipy import signal
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # Import simulation code to create test Data
 from neurodsp.sim import sim_bursty_oscillation
 from neurodsp.utils import set_random_seed, create_times
-
-# Import utilities for loading and plotting data
-from neurodsp.utils.download import load_ndsp_data
-from neurodsp.plts.time_series import plot_time_series
 
 # Import functions for morlet Wavelets
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
@@ -36,7 +34,7 @@ set_random_seed(0)
 # Simulate time-frequency series data
 # -----------------------------------
 #
-# First, we'll simulate the time frequency series using the function 'sim_bursty_oscillation'. This will simulate time-varying oscillations.
+# First, we'll simulate the time frequency series using the function ':func:sim_bursty_oscillation'. This will simulate time-varying oscillations.
 # For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 s, and a simulation time of 10 seconds.
 
 ###################################################################################################
@@ -54,14 +52,14 @@ times = create_times(n_seconds, fs)
 # Compute Wavelet Transform Algorithm
 # ----------------------------------
 #
-# Now, lets use the Compute Morlet Wavlet Transform algorithm to transform our simulated time-series Data
+# Now, lets use the compute Morlet wavlet transform algorithm to transform our simulated time-series Data
 # to a time-frequency representation using morlet wavelets.
 # The algorithm computes the continuous morlet wavelet transform at the specified frequencies and across all shifts.
 # For this example, we'll compute the Morlet wavelet transform on 50 equally spaced frequencies from 5 Hz to 100 Hz.
 
 ###################################################################################################
 
-# Settings for the wavelet transform Algorithm
+# Settings for the wavelet transform algorithm
 freqs = np.linspace(5, 100, 50)
 
 # Compute wavelet transform using compute morlet wavelet transform algorithm
@@ -93,7 +91,7 @@ fig.show()
 
 ###################################################################################################
 
-# Settings for the wavelet transform Algorithm
+# Settings for the wavelet transform algorithm
 freqs = np.arange(15, 50, 5)
 
 # Compute wavelet transform using compute morlet wavelet transform algorithm
@@ -147,18 +145,89 @@ w = n_cycles
 M = int(n_cycles * fs / freq)
 
 # Create wavelet
-wavelet = morlet(M, w, s)
-amp = np.abs(wavelet)
+wavelet = signal.morlet(M, w, s)
 
 # Plot wavelet
-delta_t = ((1) % (fs))
-time = np.arange(-50,50,delta_t)
-sigma = ((n_cycles) / (2*np.pi*freq))
-sin = np.cos(2*np.pi*freq*time)
-gauss = np.exp((-time**2) / ((2*sigma)**2))
-morlet_wavelet = sin*gauss
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
+fig.show()
 
-plt.title('Frequency vs. Time')
-plt.ylabel('Frequency [Hz]')
-plt.xlabel('Time [sec]')
-plt.plot(time, morlet_wavelet)
+###################################################################################################
+#
+# From the plot above, you can see the morlet-wavelet. The y-axis shows the amplitude of the signal, and the z-axis shows the rotation.
+#
+# Adjusting the input parameters, such as the number of cycles per frequency, results in a different image. For example, let's try:
+# this same plot but with a different number of cycles:
+
+###################################################################################################
+
+fs = 500
+n_cycles = 15
+freq = 5
+s = 1.0
+w = n_cycles
+M = int(n_cycles * fs / freq)
+
+# Create wavelet
+wavelet = signal.morlet(M, w, s)
+
+# Plot wavelet
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
+fig.show()
+
+###################################################################################################
+#
+# As you can see, when you increase the n_cycles parameter, you get more oscillations or peaks within the plotted signal.
+#
+# If we return to the Morlet-wavelet transform algorithm, we can adjust input parameters to demonstrate how changes in the number of cycles per frequency
+# affect our plot of the signal.
+
+###################################################################################################
+
+freqs = np.arange(15, 50, 5)
+
+mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=15, freqs=freqs)
+
+fig, ax = plt.subplots()
+ax.imshow(abs(mwt), aspect='auto')
+ax.invert_yaxis()
+ax.set_xlabel('time (s)')
+ax.set_xticks(np.linspace(0, times.size, 5))
+ax.set_xticklabels(np.round(np.linspace(times[0], times[-1], 5), 2))
+ax.set_ylabel('freq (Hz)')
+ax.set_yticks(np.linspace(0, freqs.size, 5))
+ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+fig.show()
+
+###################################################################################################
+#
+# As you can see, increasing n_cycles results in a higher number of oscillations within the time-frequency domain.
+# If we adjust other input parameters, such as the frequency range, we can also get a different result.
+
+###################################################################################################
+
+# Here, I made the range of frequencies passed to the algorithm smaller.
+freqs = np.arange(15, 50, 10)
+
+mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=15, freqs=freqs)
+
+fig, ax = plt.subplots()
+ax.imshow(abs(mwt), aspect='auto')
+ax.invert_yaxis()
+ax.set_xlabel('time (s)')
+ax.set_xticks(np.linspace(0, times.size, 5))
+ax.set_xticklabels(np.round(np.linspace(times[0], times[-1], 5), 2))
+ax.set_ylabel('freq (Hz)')
+ax.set_yticks(np.linspace(0, freqs.size, 5))
+ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+fig.show()
+
+###################################################################################################
+#
+# From this plot, you can see that with a larger frequency step, with the same starting and ending frequencies, the amplitude
+# of the estimated frequencies is larger in the time-frequency domain.
+
+###################################################################################################
