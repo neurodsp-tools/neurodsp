@@ -3,6 +3,7 @@
 import numpy as np
 
 from neurodsp.utils.norm import normalize_sig
+from neurodsp.utils.checks import check_param
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, phase_shift_cycle
 
@@ -134,7 +135,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
     n_cycles = int(np.floor(n_samples / n_samples_cycle))
 
     # Determine which periods will be oscillating
-    is_oscillating = _make_is_osc(n_cycles, enter_burst, leave_burst)
+    is_oscillating = make_is_osc_prob(n_cycles, enter_burst, leave_burst)
 
     # Fill in the signal with cycle oscillations, for all bursting cycles
     sig = np.zeros([n_samples])
@@ -147,19 +148,39 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 ###################################################################################################
 ###################################################################################################
 
-def _make_is_osc(n_cycles, enter_burst, leave_burst):
-    """Create a vector describing if each cycle is oscillating, for bursting oscillations."""
+def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
+    """Create bursting definition, based on probabilistic burst starts and stops.
 
-    is_oscillating = [None] * (n_cycles)
-    is_oscillating[0] = False
+    Parameters
+    ----------
+    n_cycles : int
+        The number of cycles to simulate the burst definiton for.
+    enter_burst : float, optional, default: 0.2
+        Probability of a cycle being oscillating given the last cycle is not oscillating.
+    leave_burst : float, optional, default: 0.2
+        Probability of a cycle not being oscillating given the last cycle is oscillating.
 
-    for ii in range(1, n_cycles):
+    Returns
+    -------
+    is_oscillations : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    """
+
+    check_param(enter_burst, 'enter_burst', [0., 1.])
+    check_param(leave_burst, 'leave_burst', [0., 1.])
+
+    # Initialize vector of burst definitions
+    is_oscillating = np.array([False] * (n_cycles))
+
+    for ind in range(1, n_cycles):
 
         rand_num = np.random.rand()
 
-        if is_oscillating[ii-1]:
-            is_oscillating[ii] = rand_num > leave_burst
+        # If prior cycle bursting, leave burst with given probability
+        if is_oscillating[ind-1]:
+            is_oscillating[ind] = rand_num > leave_burst
+        # Otherwise, with prior cycle not bursting, enter burst with given probability
         else:
-            is_oscillating[ii] = rand_num < enter_burst
+            is_oscillating[ind] = rand_num < enter_burst
 
     return is_oscillating
