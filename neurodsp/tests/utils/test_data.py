@@ -34,6 +34,12 @@ def test_create_samples():
     samples = create_samples(10)
     assert_equal(samples, np.arange(0, 10, 1))
 
+def test_calc_nsamples():
+
+    n_samples = calc_nsamples(1, 100)
+    assert isinstance(n_samples, int)
+    assert n_samples == 100
+
 def test_split_signal(tsig):
 
     chunks = split_signal(tsig, 100)

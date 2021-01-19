@@ -66,6 +66,25 @@ def create_samples(n_samples, start_val=0):
     return np.arange(start_val, n_samples, 1)
 
 
+def calc_nsamples(n_seconds, fs):
+    """Calculate the number of samples.
+
+    Parameters
+    ----------
+    n_seconds : int
+        Number of sample.
+    fs : float
+        Signal sampling rate, in Hz.
+
+    Returns
+    -------
+    int
+        The number of samples needed.
+    """
+
+    return int(np.ceil(n_seconds * fs))
+
+
 def split_signal(sig, n_samples):
     """Split a signal into non-overlapping segments.
 
