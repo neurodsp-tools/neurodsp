@@ -20,5 +20,13 @@ def test_sim_bursty_oscillation():
 
 def test_make_is_osc_prob():
 
-    is_osc = make_is_osc_prob(10, 0.5, 0.5)
+    is_osc = make_is_osc_prob(15, 0.5, 0.5)
     assert is_osc.dtype == 'bool'
+    assert sum(is_osc) < len(is_osc)
+
+def test_make_is_osc_durations():
+
+    is_osc = make_is_osc_durations(15, 2, 2)
+    assert is_osc.dtype == 'bool'
+    assert list(is_osc[1:3]) == [True, True]
+    assert list(is_osc[3:5]) == [False, False]

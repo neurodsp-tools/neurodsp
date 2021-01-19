@@ -1,5 +1,7 @@
 """Simulating time series, with periodic activity."""
 
+from itertools import repeat
+
 import numpy as np
 
 from neurodsp.utils.norm import normalize_sig
@@ -182,5 +184,47 @@ def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
         # Otherwise, with prior cycle not bursting, enter burst with given probability
         else:
             is_oscillating[ind] = rand_num < enter_burst
+
+    return is_oscillating
+
+
+def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
+    """Create bursting definition, based on cycle lengths and intervals.
+
+    Parameters
+    ----------
+    n_cycles : int
+        The number of cycles to simulate the burst definiton for.
+    n_cycles_burst : int
+        Number of cycles per burst.
+    n_cycles_off : int
+        Number of cycles between bursts.
+
+    Returns
+    -------
+    is_oscillations : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    """
+
+    # Make the burst parameters iterators
+    n_cycles_burst = repeat(n_cycles_burst) if isinstance(n_cycles_burst, int) else n_cycles_burst
+    n_cycles_off = repeat(n_cycles_off) if isinstance(n_cycles_off, int) else n_cycles_off
+
+    # Initialize is oscillating
+    is_oscillating = np.array([False] * (n_cycles))
+
+    # Set the first bursting index
+    ind = 1
+
+    # Fill in bursts
+    while ind < len(is_oscillating):
+
+        # Within a burst, set specified cycles as bursting
+        b_len = next(n_cycles_burst)
+        is_oscillating[ind: ind+b_len] = True
+
+        # Update index to the next burst start definition
+        off_len = next(n_cycles_off)
+        ind = ind + b_len + off_len
 
     return is_oscillating
