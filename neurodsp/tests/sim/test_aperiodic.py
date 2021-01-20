@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-from neurodsp.tests.settings import FS, N_SECONDS, N_SECONDS_LONG, EXP1, EXP2, KNEE, EPS
+from neurodsp.tests.settings import FS, FS_HIGH, N_SECONDS, N_SECONDS_LONG, EXP1, EXP2, KNEE, EPS
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.aperiodic import *
@@ -48,9 +48,9 @@ def test_sim_knee():
     np.allclose(true_psd, numerical_psd, atol=EPS)
 
     # Accuracy test for a single exponent
-    sig = sim_knee(n_seconds=N_SECONDS_LONG, fs=1000, chi1=0, chi2=EXP2, knee=KNEE)
+    sig = sim_knee(n_seconds=N_SECONDS_LONG, fs=FS_HIGH, chi1=0, chi2=EXP2, knee=KNEE)
 
-    freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
+    freqs, powers = compute_spectrum(sig, FS_HIGH, f_range=(1, 200))
 
     def _estimate_single_knee(xs, offset, knee, chi2):
         return np.zeros_like(xs) + offset - np.log10(xs**chi2 + knee)
