@@ -16,7 +16,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # Import simulation code to create test Data
 from neurodsp.sim import sim_bursty_oscillation
@@ -27,14 +26,10 @@ from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 
 ###################################################################################################
 
-# Set the random seed, for consistency simulating data
-set_random_seed(0)
-
-###################################################################################################
 # Simulate time-frequency series data
 # -----------------------------------
 #
-# First, we'll simulate the time frequency series using the function ':func:sim_bursty_oscillation'.
+# First, we'll simulate the time frequency series using the function :func:`~.sim_bursty_oscillation`.
 # This will simulate time-varying oscillations.
 # For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 s, and a
 # simulation time of 10 seconds.
@@ -131,11 +126,9 @@ fig.show()
 #
 # For more information on Morlet wavelets, see:
 # Mike X Cohen, 2019, "Morlet wavelets in time and frequency,"
-# YouTube, https://www.youtube.com/watch?v=7ahrcB5HL0k.
-#
+# `Youtube <https://www.youtube.com/watch?v=7ahrcB5HL0k>`_
 
 ###################################################################################################
-
 # Example plot of morlet wavelet
 # ------------------------------
 #
@@ -143,30 +136,39 @@ fig.show()
 
 ###################################################################################################
 
-# Use the scipy.signal function 'morlet' to create a wavelet.
+# Use the :func:`~.compute_wavelet_transform` function to create a wavelet.
 # Here, we use a length of 175 with a total of 7 cycles.
 
 # Define sampling rate, number of cycles, fundamental frequency, and length for the wavelet.
 fs = 500
 n_cycles = 7
 freq = 5
-s = 1.0
-w = n_cycles
-M = int(n_cycles * fs / freq)
+scaling = 1.0
+omega = n_cycles
+wavelet_len = int(n_cycles * fs / freq)
 
 # Create wavelet
-wavelet = signal.morlet(M, w, s)
+wavelet = compute_wavelet_transform(wavelet_len, omega, scaling)
 
 # Plot wavelet
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
+ax.set_xlabel('time (s)')
+ax.set_ylabel('freq (Hz)')
 fig.show()
 
 ###################################################################################################
 #
 # From the plot above, you can see the Morlet-wavelet.
-# The y-axis shows the amplitude of the signal, and the z-axis shows the rotation.
+# The y-axis shows the amplitude of the wavelet, and the z-axis shows the rotation.
+#
+# The function :func:`~.compute_wavelet_transform` works to create Morlet
+# wavelets by using the function :func:`~.convolve_wavelet`. This function
+# uses a convolution of a raw signal with a complex Morlet wavelet. The complex
+# Morlet wavelet can be thought of as a complex sine tapered by a Gaussian. The
+# result of the convolution returns a complex array, like shown above in the
+# example.
 #
 # Adjusting the input parameters results in a different image.
 # For example, let's try this same plot but with a different number of cycles:
@@ -176,22 +178,25 @@ fig.show()
 fs = 500
 n_cycles = 15
 freq = 5
-s = 1.0
-w = n_cycles
-M = int(n_cycles * fs / freq)
+scaling = 1.0
+omega = n_cycles
+wavelet_len = int(n_cycles * fs / freq)
 
 # Create wavelet
-wavelet = signal.morlet(M, w, s)
+wavelet = compute_wavelet_transform(wavelet_len, omega, scaling)
 
 # Plot wavelet
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
+ax.set_xlabel('time (s)')
+ax.set_ylabel('freq (Hz)')
 fig.show()
 
 ###################################################################################################
 #
-# As you can see, when you increase the n_cycles parameter, you get more oscillations in the signal.
+# As you can see, when you increase the n_cycles parameter, you get more oscillations in the wavelet.
+# This is because the function uses more cycles per each frequency to estimate with Morlet wavelets.
 #
 # If we return to the Morlet-wavelet transform algorithm, we can adjust input parameters
 # to demonstrate how changes in the number of cycles per frequency affect our plot of the signal.
@@ -218,7 +223,7 @@ fig.show()
 # As you can see, increasing n_cycles results in a higher number of oscillations
 # within the time-frequency domain.
 #
-# If we adjust other input parameters, such as the frequency range, we can also get a different result.
+# If we adjust other input parameters, such as the frequency resolution, we can also get a different result.
 
 ###################################################################################################
 
