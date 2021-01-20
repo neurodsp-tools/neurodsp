@@ -7,7 +7,7 @@ import numpy as np
 from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.checks import check_param
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.cycles import sim_cycle, phase_shift_cycle
+from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -151,14 +151,9 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
         if burst_approach == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
 
-    # Grab normalization parameters, if any were provided
-    mean = cycle_params.pop('mean', 0.)
-    variance = cycle_params.pop('variance', 1.)
-
-    # Make a single cycle of an oscillation, and normalize this cycle
+    # Simulate a normalized cycle to use for bursts
     n_seconds_cycle = 1/freq
-    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-    osc_cycle = normalize_sig(osc_cycle, mean, variance)
+    osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
 
     # Calculate the number of cycles needed to tile the full signal
     n_cycles = int(np.floor(n_seconds * freq))

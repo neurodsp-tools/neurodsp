@@ -5,6 +5,7 @@ from scipy.signal import gaussian, sawtooth
 
 from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.checks import check_param
+from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
@@ -65,6 +66,12 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     cycle = cycle_func(n_seconds, fs, **cycle_params)
 
     return cycle
+
+
+@normalize
+def sim_normalized_cycle(n_seconds, fs, cycle_type, **cycle_params):
+    return sim_cycle(n_seconds, fs, cycle_type, **cycle_params)
+sim_normalized_cycle.__doc__ = sim_cycle.__doc__
 
 
 def sim_sine_cycle(n_seconds, fs):

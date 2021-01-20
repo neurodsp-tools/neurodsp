@@ -35,6 +35,11 @@ def test_sim_cycle():
     with raises(ValueError):
         sim_cycle(N_SECONDS, FS, 'not_a_cycle')
 
+def test_sim_normalized_cycle():
+
+    cycle = sim_normalized_cycle(N_SECONDS, FS, 'sine')
+    check_sim_output(cycle)
+
 def test_sim_sine_cycle():
 
     cycle = sim_sine_cycle(N_SECONDS, FS)
