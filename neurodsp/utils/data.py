@@ -44,7 +44,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Time indices.
     """
 
-    return np.arange(start_val, n_seconds + start_val, 1/fs)
+    return np.linspace(start_val, n_seconds, int(fs * n_seconds)+1)[:-1]
 
 
 def create_samples(n_samples, start_val=0):
@@ -53,7 +53,7 @@ def create_samples(n_samples, start_val=0):
     Parameters
     ----------
     n_seconds : int
-        Number of sample.
+        Signal duration, in seconds.
     start_val : int, optional, default: 0
         Starting value for the samples definition.
 
@@ -66,23 +66,29 @@ def create_samples(n_samples, start_val=0):
     return np.arange(start_val, n_samples, 1)
 
 
-def calc_nsamples(n_seconds, fs):
-    """Calculate the number of samples.
+def compute_nsamples(n_seconds, fs):
+    """Calculate the number of samples for a given time definition.
 
     Parameters
     ----------
     n_seconds : int
-        Number of sample.
+        Signal duration, in seconds.
     fs : float
         Signal sampling rate, in Hz.
 
     Returns
     -------
     int
-        The number of samples needed.
+        The number of samples.
+
+    Notes
+    -----
+    The result has to be rounded, in order to ensure that the number of samples is a whole number.
+
+    The `int` function rounds down, by default, which is the convention across the module.
     """
 
-    return int(np.ceil(n_seconds * fs))
+    return int(n_seconds * fs)
 
 
 def split_signal(sig, n_samples):

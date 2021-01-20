@@ -36,7 +36,7 @@ def test_create_samples():
 
 def test_calc_nsamples():
 
-    n_samples = calc_nsamples(1, 100)
+    n_samples = compute_nsamples(1, 100)
     assert isinstance(n_samples, int)
     assert n_samples == 100
 

@@ -3,9 +3,8 @@
 import numpy as np
 from scipy.signal import gaussian, sawtooth
 
-from neurodsp.utils.checks import check_param
-from neurodsp.utils.data import calc_nsamples
 from neurodsp.sim.info import get_sim_func
+from neurodsp.utils.checks import check_param
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
@@ -128,7 +127,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     check_param(rdsym, 'rdsym', [0., 1.])
 
     # Determine number of samples in rise and decay periods
-    n_samples = calc_nsamples(n_seconds, fs)
+    n_samples = int(n_seconds * fs)
     n_rise = int(np.round(n_samples * rdsym))
     n_decay = n_samples - n_rise
 
@@ -200,7 +199,7 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
     """
 
-    cycle = gaussian(calc_nsamples(n_seconds, fs), std * fs)
+    cycle = gaussian(int(n_seconds * fs), std * fs)
 
     return cycle
 
@@ -239,7 +238,7 @@ def create_cycle_time(n_seconds, fs):
     >>> indices = create_cycle_time(n_seconds=1, fs=500)
     """
 
-    return 2 * np.pi * 1 / n_seconds * (np.arange(fs * n_seconds) / fs)
+    return 2 * np.pi * 1 / n_seconds * (np.arange(int(fs * n_seconds)) / fs)
 
 
 def phase_shift_cycle(cycle, shift):
