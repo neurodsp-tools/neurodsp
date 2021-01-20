@@ -70,7 +70,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     return sig
 
 
-def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_params={},
+def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={},
                            cycle='sine', **cycle_params):
     """Simulate a bursty oscillation.
 
@@ -82,14 +82,15 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
         Sampling rate of simulated signal, in Hz.
     freq : float
         Oscillation frequency, in Hz.
-    burst_approach : {'prob', 'durations'}
-        Which approach to take for simulating bursts:
+    burst_def : {'prob', 'durations'} or 1d array
+        Which approach to take to define the bursts:
 
         - 'prob' : simulate bursts based on probabilities of entering and leaving bursts states.
-        - 'durations' : simulate bursts based on lenghts of bursts and inter-burst periods.
+        - 'durations' : simulate bursts based on lengths of bursts and inter-burst periods.
+        - 1d array: use the given array as a definition of the bursts
 
     burst_params : dict
-        Parameters for the burst approach.
+        Parameters for the burst definition approach.
 
         For the `prob` approach:
 
@@ -123,8 +124,6 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
     If the cycle length does not fit evenly into the simulated data length,
     then the last few samples will be non-oscillating.
 
-    By default, this function uses the 'prob' approach.
-
     Examples
     --------
     Simulate a probabilistic bursty oscillation, with a low probability of bursting:
@@ -134,13 +133,13 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
 
     Simulate a probabilistic bursty sawtooth oscillation, with a high probability of bursting:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, burst_approach='prob',
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, burst_def='prob',
     ...                              burst_params = {'enter_burst' : 0.8, 'leave_burst' : 0.4},
     ...                              cycle='sawtooth', width=0.3)
 
     Simulate a bursty oscillation, with specified durations:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, burst_approach='durations',
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, burst_def='durations',
     ...                              burst_params={'n_cycles_burst' : 3, 'n_cycles_off' : 3})
     """
 
@@ -148,7 +147,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
     #   This preserves the prior default values, and makes the old API work the same
     for burst_param in ['enter_burst', 'leave_burst']:
         temp = cycle_params.pop(burst_param, 0.2)
-        if burst_approach == 'prob' and burst_param not in burst_params:
+        if burst_def == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
 
     # Simulate a normalized cycle to use for bursts
@@ -159,12 +158,14 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
     n_cycles = int(np.floor(n_seconds * freq))
 
     # Determine which periods will be oscillating
-    if burst_approach == 'prob':
+    if isinstance(burst_def, np.ndarray):
+        is_oscillating = burst_def
+    elif burst_def == 'prob':
         is_oscillating = make_is_osc_prob(n_cycles, **burst_params)
-    elif burst_approach == 'durations':
+    elif burst_def == 'durations':
         is_oscillating = make_is_osc_durations(n_cycles, **burst_params)
     else:
-        raise ValueError('Requested burst_approach not understood.')
+        raise ValueError('Requested burst_def not understood.')
 
     sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
 
@@ -208,11 +209,11 @@ def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
     Parameters
     ----------
     n_cycles : int
-        The number of cycles to simulate the burst definiton for.
+        The number of cycles to simulate the burst definition for.
     enter_burst : float, optional, default: 0.2
-        Probability of a cycle being oscillating given the last cycle is not oscillating.
+        Probability of a cycle entering a burst, given the last cycle is not oscillating.
     leave_burst : float, optional, default: 0.2
-        Probability of a cycle not being oscillating given the last cycle is oscillating.
+        Probability of a cycle leaving a burst, given the last cycle is oscillating.
 
     Returns
     -------
@@ -246,9 +247,9 @@ def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
     Parameters
     ----------
     n_cycles : int
-        The number of cycles to simulate the burst definiton for.
+        The number of cycles to simulate the burst definition for.
     n_cycles_burst : int
-        Number of cycles per burst.
+        Number of cycles within a burst burst.
     n_cycles_off : int
         Number of cycles between bursts.
 
