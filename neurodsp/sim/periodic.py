@@ -50,11 +50,11 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
 
-    # Figure out how many cycles are needed for the signal, & length of each cycle
+    # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
-    n_seconds_cycle = 1/freq
 
-    # Create a single cycle of an oscillation
+    # Create a single cycle of an oscillation, for the requested frequency
+    n_seconds_cycle = 1/freq
     cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
 
     # Phase shift the simulated cycle
@@ -151,21 +151,17 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
         if burst_approach == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
 
-    # Determine number of samples & cycles
-    n_samples = int(n_seconds * fs)
-    n_seconds_cycle = 1/freq
-
     # Grab normalization parameters, if any were provided
     mean = cycle_params.pop('mean', 0.)
     variance = cycle_params.pop('variance', 1.)
 
     # Make a single cycle of an oscillation, and normalize this cycle
+    n_seconds_cycle = 1/freq
     osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
     osc_cycle = normalize_sig(osc_cycle, mean, variance)
 
-    # Calculate how many cycles are needed to tile the full signal
-    n_samples_cycle = len(osc_cycle)
-    n_cycles = int(np.floor(n_samples / n_samples_cycle))
+    # Calculate the number of cycles needed to tile the full signal
+    n_cycles = int(np.floor(n_seconds * freq))
 
     # Determine which periods will be oscillating
     if burst_approach == 'prob':
@@ -175,13 +171,40 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_approach='prob', burst_par
     else:
         raise ValueError('Requested burst_approach not understood.')
 
-    # Fill in the signal with cycle oscillations, for all bursting cycles
-    sig = np.zeros([n_samples])
-    for is_osc, cycle_ind in zip(is_oscillating, range(0, n_samples, n_samples_cycle)):
-        if is_osc:
-            sig[cycle_ind:cycle_ind+n_samples_cycle] = osc_cycle
+    sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
 
     return sig
+
+
+def make_bursts(n_seconds, fs, is_oscillating, cycle):
+    """Create a bursting time series by tiling when oscillations occur.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    is_oscillating : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    cycle : 1d array
+        The cycle to use for bursts.
+
+    Returns
+    -------
+    burst_sig : 1d array
+        Simulated bursty oscillation.
+    """
+
+    n_samples = int(n_seconds * fs)
+    n_samples_cycle = len(cycle)
+
+    burst_sig = np.zeros([n_samples])
+    for sig_ind, is_osc in zip(range(0, n_samples, n_samples_cycle), is_oscillating):
+        if is_osc:
+            burst_sig[sig_ind:sig_ind+n_samples_cycle] = cycle
+
+    return burst_sig
 
 
 def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
@@ -262,3 +285,31 @@ def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
         ind = ind + b_len + off_len
 
     return is_oscillating
+
+
+def get_burst_samples(is_oscillating, fs, freq):
+    """Convert a burst definition from cycles to samples.
+
+    Parameters
+    ----------
+    is_oscillating : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    freq : float
+        Oscillation frequency, in Hz.
+
+    Returns
+    -------
+    1d array of bool
+        Definition of whether each sample is part of a burst or not.
+    """
+
+    n_seconds_cycle = 1/freq
+    n_samples_cycle = int(n_seconds_cycle * fs)
+
+    bursts = []
+    for cycle in is_oscillating:
+        bursts.extend(n_samples_cycle * [True if cycle else False])
+
+    return np.array(bursts)

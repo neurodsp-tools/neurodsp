@@ -29,6 +29,14 @@ def test_sim_bursty_oscillation():
         burst_approach='durations', burst_params={'n_cycles_burst' : 2, 'n_cycles_off' : 2})
     check_sim_output(sig3)
 
+def test_make_bursts():
+
+    is_osc = np.array([False, False, True, True, False, True, False, True, True, False])
+    cycle = np.ones([10])
+
+    sig = make_bursts(N_SECONDS, FS, is_osc, cycle)
+    check_sim_output(sig)
+
 def test_make_is_osc_prob():
 
     is_osc = make_is_osc_prob(15, 0.5, 0.5)
