@@ -17,7 +17,6 @@ def test_compute_irasa(tsig_comb):
     # Estimate periodic and aperiodic components with IRASA
     f_range = [1, 30]
     freqs, psd_ap, psd_pe = compute_irasa(tsig_comb, FS, f_range, noverlap=int(2*FS))
-
     assert len(freqs) == len(psd_ap) == len(psd_pe)
 
     # Compute r-squared for the full model, comparing to a standard power spectrum
@@ -28,7 +27,7 @@ def test_compute_irasa(tsig_comb):
 def test_fit_irasa(tsig_comb):
 
     # Estimate periodic and aperiodic components with IRASA & fit aperiodic
-    freqs, psd_ap, _ = compute_irasa(tsig_comb, FS, noverlap=int(2*FS))
+    freqs, psd_ap, _ = compute_irasa(tsig_comb, FS, f_range=[1, 30], noverlap=int(2*FS))
     b0, b1 = fit_irasa(freqs, psd_ap)
 
     assert round(b1) == EXP1
