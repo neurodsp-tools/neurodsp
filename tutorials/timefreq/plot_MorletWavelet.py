@@ -156,7 +156,6 @@ ax = fig.add_subplot(111, projection='3d')
 ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
 ax.set_xlabel('time (s)')
 ax.set_ylabel('freq (Hz)')
-fig.show()
 
 ###################################################################################################
 #
@@ -191,7 +190,6 @@ ax = fig.add_subplot(111, projection='3d')
 ax.plot(np.linspace(0, s, wavelet.size), wavelet.real, wavelet.imag)
 ax.set_xlabel('time (s)')
 ax.set_ylabel('freq (Hz)')
-fig.show()
 
 ###################################################################################################
 #
@@ -216,7 +214,6 @@ ax.set_xticklabels(np.round(np.linspace(times[0], times[-1], 5), 2))
 ax.set_ylabel('freq (Hz)')
 ax.set_yticks(np.linspace(0, freqs.size, 5))
 ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
-fig.show()
 
 ###################################################################################################
 #
@@ -241,7 +238,6 @@ ax.set_xticklabels(np.round(np.linspace(times[0], times[-1], 5), 2))
 ax.set_ylabel('freq (Hz)')
 ax.set_yticks(np.linspace(0, freqs.size, 5))
 ax.set_yticklabels(np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
-fig.show()
 
 ###################################################################################################
 #
