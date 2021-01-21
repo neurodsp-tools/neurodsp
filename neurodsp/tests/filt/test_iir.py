@@ -1,5 +1,7 @@
 """Tests for IIR filters."""
 
+import tempfile
+
 import numpy as np
 
 from neurodsp.tests.settings import FS
@@ -11,7 +13,12 @@ from neurodsp.filt.iir import *
 
 def test_filter_signal_iir(tsig):
 
-    out = filter_signal_iir(tsig, FS, 'bandpass', (8, 12), 3)
+    temp_path = tempfile.NamedTemporaryFile()
+
+    out = filter_signal_iir(tsig, FS, 'bandpass', (8, 12), 3, save_report=temp_path.name)
+
+    temp_path.close()
+
     assert out.shape == tsig.shape
 
 def test_filter_signal_iir_2d(tsig2d):
