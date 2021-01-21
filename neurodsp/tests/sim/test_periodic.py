@@ -47,5 +47,14 @@ def test_make_is_osc_durations():
 
     is_osc = make_is_osc_durations(15, 2, 2)
     assert is_osc.dtype == 'bool'
-    assert list(is_osc[1:3]) == [True, True]
-    assert list(is_osc[3:5]) == [False, False]
+    assert list(is_osc[0:2]) == [True, True]
+    assert list(is_osc[2:4]) == [False, False]
+
+def test_get_burst_samples():
+
+    is_oscillating = np.array([False, True, True, False])
+    burst_samples = get_burst_samples(is_oscillating, FS, 10)
+
+    # First ten samples should be false & next ten samples should by true
+    assert sum(burst_samples[0:10]) == 0
+    assert sum(burst_samples[10:20]) == 10
