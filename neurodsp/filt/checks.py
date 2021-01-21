@@ -1,8 +1,6 @@
 """Checker functions for filtering."""
 
 from warnings import warn
-import os
-import json
 
 import numpy as np
 
@@ -92,7 +90,7 @@ def check_filter_definition(pass_type, f_range):
 
 
 def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range, transitions=(-20, -3),
-                            filt_type=None, verbose=True, save_properties=None):
+                            return_properties=False, verbose=True):
     """Check a filters properties, including pass band and transition band.
 
     Parameters
@@ -119,17 +117,18 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range, transi
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
     transitions : tuple of (float, float), optional, default: (-20, -3)
         Cutoffs, in dB, that define the transition band.
-    filt_type : str, optional, {'FIR', 'IIR'}
-        The type of filter being applied.
+    return_properties : bool, optional, default: False
+        Returns the frequency response, pass band and transition band.
     verbose : bool, optional, default: True
-        Whether to print out filter properties.
-    save_properties : str
-        Path, including file name, to save filter properites to as a json.
+        Whether to print out transition and pass bands.
 
     Returns
     -------
     passes : bool
         Whether all the checks pass. False if one or more checks fail.
+    properties : dict
+        The frequency response, pass band and transition band.
+        Only returned if return_properties is True.
 
     Examples
     --------
@@ -145,7 +144,7 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range, transi
 
     # Import utility functions inside function to avoid circular imports
     from neurodsp.filt.utils import (compute_frequency_response, compute_pass_band,
-                                     compute_transition_band, gen_filt_report, save_filt_report)
+                                     compute_transition_band)
 
     # Initialize variable to keep track if all checks pass
     passes = True
@@ -179,16 +178,18 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range, transi
         warn('Transition bandwidth is  {:.1f}  Hz. This is greater than the desired'\
              'pass/stop bandwidth of  {:.1f} Hz'.format(transition_bw, pass_bw))
 
-    # Report filter properties
-    if verbose or save_properties:
-        filt_report = gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
-                                      transition_bw, f_range, f_range_trans)
-
+    # Print out transition bandwidth and pass bandwidth to the user
     if verbose:
-        print('\n'.join('{} : {}'.format(key, value) for key, value in filt_report.items()))
+        print('Transition bandwidth is {:.1f} Hz.'.format(transition_bw))
+        print('Pass/stop bandwidth is {:.1f} Hz.'.format(pass_bw))
 
-    if save_properties is not None:
-        save_filt_report(save_properties, filt_report)
+    # Return the filter properties
+    if return_properties:
+
+        properties = {'f_db': f_db, 'db': db, 'pass_bw': pass_bw, 'transition_bw': transition_bw,
+                      'f_range_trans': f_range_trans}
+
+        return passes, properties
 
     return passes
 

@@ -1,13 +1,14 @@
 """Utility functions for filtering."""
 
 import os
-import json
 
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import freqz, sosfreqz
 
 from neurodsp.utils.decorators import multidim
 from neurodsp.filt.checks import check_filter_definition
+from neurodsp.plts.filt import plot_frequency_response, plot_impulse_response
 
 ###################################################################################################
 ###################################################################################################
@@ -159,8 +160,9 @@ def compute_transition_band(f_db, db, low=-20, high=-3, return_freqs=False):
     -------
     transition_band : float
         The transition bandwidth of the filter.
-    f_range : tuple of (float, float), optional, default: False
+    f_range : tuple of (float, float)
         The lower and upper frequencies of the transition band.
+        Only returned is return_freqs is True.
 
     Examples
     --------
@@ -184,7 +186,8 @@ def compute_transition_band(f_db, db, low=-20, high=-3, return_freqs=False):
 
     # This gets the indices of transitions to the values in searched for range
     inds = np.where(np.diff(np.logical_and(db > low, db < high)))[0]
-    # This steps through the indices, in pairs, selecting from the vector to select from
+
+    # This determines at which frequencies the transition band occurs
     transition_pairs = [(a, b) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])]
     pair_idx = np.argmax([(tran[1] - tran[0]) for tran in transition_pairs])
     f_lo = transition_pairs[pair_idx][0]
@@ -258,8 +261,8 @@ def remove_filter_edges(sig, filt_len):
     return sig
 
 
-def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
-                    transition_bw, f_range, f_range_trans):
+def gen_filt_str(pass_type, filt_type, fs, f_db, db, pass_bw,
+                 transition_bw, f_range, f_range_trans, order):
     """Create a filter report.
 
     Parameters
@@ -282,70 +285,149 @@ def gen_filt_report(pass_type, filt_type, fs, f_db, db, pass_bw,
         Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
     f_range_trans : tuple of (float, float)
         The lower and upper frequencies of the transition band.
+    order : int
+        The filter length for FIR filter or butterworth order for IIR filters.
 
     Returns
     -------
-    filt_report : dict
-        A dicionary of filter parameter keys and corresponding values.
+    filt_str : str
+        Filter properties as a string that is ready to embed into a pdf report.
     """
-    filt_report = {}
+
+    filt_str = []
 
     # Filter type (high-pass, low-pass, band-pass, band-stop, FIR, IIR)
-    filt_report['Pass Type'] = '{pass_type}'.format(pass_type=pass_type)
+    filt_str.append('Pass Type: {pass_type}'.format(pass_type=pass_type))
 
     # Cutoff frequenc(ies) (including definition)
-    filt_report['Cutoff (Half-Amplitude)'] = '{cutoff} Hz'.format(cutoff=f_range)
+    filt_str.append('Cutoff (Half-Amplitude): {cutoff} Hz'.format(cutoff=f_range))
 
-    # Filter order (or length)
-    filt_report['Filter Order'] = '{order}'.format(order=len(f_db)-1)
+    # Filter order (or length-1) for FIR or butterworth order for IIR
+    filt_str.append('Filter Order: {order}'.format(order=order))
 
     # Roll-off or transition bandwidth
-    filt_report['Transition Bandwidth'] = '{:.1f} Hz'.format(transition_bw)
-    filt_report['Pass/Stop Bandwidth'] = '{:.1f} Hz'.format(pass_bw)
+    filt_str.append('Transition Bandwidth: {:.1f} Hz'.format(transition_bw))
+    filt_str.append('Pass/Stop Bandwidth: {:.1f} Hz'.format(pass_bw))
 
     # Passband ripple and stopband attenuation
     pb_ripple = np.max(db[:np.where(f_db < f_range_trans[0])[0][-1]])
     sb_atten = np.max(db[np.where(f_db > f_range_trans[1])[0][0]:])
-    filt_report['Passband Ripple'] = '{pb_ripple} db'.format(pb_ripple=pb_ripple)
-    filt_report['Stopband Attenuation'] = '{sb_atten} db'.format(sb_atten=sb_atten)
+    filt_str.append('Passband Ripple: {:1.4f} db'.format(pb_ripple))
+    filt_str.append('Stopband Attenuation: {:1.4f} db'.format(sb_atten))
 
     # Filter delay (zero-phase, linear-phase, non-linear phase)
-    filt_report['Filter Type'] = filt_type
+    filt_str.append('Filter Type: {filt_type}'.format(filt_type=filt_type))
 
     if filt_type == 'FIR':
 
-        filt_report['Phase'] = '{filt_class}'.format(filt_class='linear-phase')
-        filt_report['Group Delay'] = '{delay}s'.format(delay=(len(f_db)-1) / (2 * fs))
-        filt_report['Direction'] = 'one-pass reverse'
+        filt_str.append('Phase: linear-phase')
+        filt_str.append('Group Delay: {:1.4f} s'.format((len(f_db)-1) / (2 * fs)))
+        filt_str.append('Direction: one-pass reverse')
 
     elif filt_type == 'IIR':
 
         # Group delay isn't reported for IIR since it varies from sample to sample
-        filt_report['Phase'] = '{filt_class}'.format(filt_class='non-linear-phase')
-        filt_report['Direction'] = 'two-pass forward and reverse'
+        filt_str.append('Phase: non-linear-phase')
+        filt_str.append('Direction: two-pass forward and reverse')
 
-    return filt_report
+    # Format the list into a string
+    filt_str = [
+
+        # Header
+        '=',
+        '',
+        'FILTER REPORT',
+        '',
+
+        # Settings
+        *filt_str,
+
+        # Footer
+        '',
+        '='
+    ]
+
+    str_len = 50
+    filt_str [0] = filt_str [0] * str_len
+    filt_str [-1] = filt_str [-1] * str_len
+
+    filt_str  = '\n'.join([string.center(str_len) for string in filt_str])
+
+    return filt_str
 
 
-def save_filt_report(save_properties, filt_report):
+def save_filt_report(pdf_path, pass_type, filt_type, fs, f_db, db,  pass_bw, transition_bw,
+                     f_range, f_range_trans, order, filter_coefs=None):
     """Save filter properties as a json file.
 
-    Parameters
+     Parameters
     ----------
-    save_properties : str
-        Path, including file name, to save filter properites to as a json.
-    filt_report : dict
-        Contains filter report info.
+    pdf_path: str
+        Path, including file name, to save a filter report to as a pdf.
+    pass_type : {'bandpass', 'bandstop', 'lowpass', 'highpass'}
+        Which type of filter was applied.
+    filt_type : str, {'FIR', 'IIR'}
+        The type of filter being applied.
+    fs : float
+        Sampling rate, in Hz.
+    f_db : 1d array
+        Frequency vector corresponding to attenuation decibels, in Hz.
+    db : 1d array
+        Degree of attenuation for each frequency specified in `f_db`, in dB.
+    pass_bw : float
+        The pass bandwidth of the filter.
+    transition_band : float
+        The transition bandwidth of the filter.
+    f_range : tuple of (float, float) or float
+        Cutoff frequency(ies) used for filter, specified as f_lo & f_hi.
+    f_range_trans : tuple of (float, float)
+        The lower and upper frequencies of the transition band.
+    order : int
+        The filter length for FIR filter or butterworth order for IIR filters.
+    filter_coefs : 1d array, optional, default: None
+        Filter coefficients of the FIR filter.
     """
 
-    # Ensure parents exists
-    if not os.path.isdir(os.path.dirname(save_properties)):
+    # Ensure valid path
+    if not pdf_path.startswith('/') and not pdf_path.startswith('./'):
+        pdf_path = './' + pdf_path
+
+    if not os.path.isdir(os.path.dirname(pdf_path)):
+        print(pdf_path)
         raise ValueError("Unable to save properties. Parent directory does not exist.")
 
     # Enforce file extension
-    if not save_properties.endswith('.json'):
-        save_properties = save_properties + '.json'
+    if not pdf_path.endswith('.pdf'):
+        pdf_path = pdf_path + '.pdf'
+
+    # Create properties string
+    filt_str = gen_filt_str(pass_type, filt_type, fs, f_db, db, pass_bw,
+                            transition_bw, f_range, f_range_trans, order)
+
+    # Plot
+    if filter_coefs is not None:
+
+        _, axes = plt.subplots(nrows=3, ncols=1, figsize=(8, 18),
+                                 gridspec_kw={'height_ratios': [1, 4, 4]})
+
+        # Plot impulse response for IIR filters
+        plot_impulse_response(fs, filter_coefs, ax=axes[2])
+
+    else:
+
+        _, axes = plt.subplots(nrows=2, ncols=1, figsize=(8, 10),
+                                 gridspec_kw={'height_ratios': [1, 4]})
+
+    # Plot filter parameter string
+    font = {'family': 'monospace', 'weight': 'normal', 'size': 16}
+    axes[0].text(0.5, 0.7, filt_str, font, ha='center', va='center')
+    axes[0].set_frame_on(False)
+    axes[0].set_xticks([])
+    axes[0].set_yticks([])
+
+    # Plot filter responses
+    plot_frequency_response(f_db, db, ax=axes[1])
 
     # Save
-    with open(save_properties, 'w') as file_path:
-        json.dump(filt_report, file_path)
+    plt.savefig(pdf_path)
+    plt.close()

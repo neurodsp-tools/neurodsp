@@ -6,7 +6,7 @@ from scipy.signal import firwin
 from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
 from neurodsp.plts.filt import plot_filter_properties
-from neurodsp.filt.utils import compute_frequency_response, remove_filter_edges
+from neurodsp.filt.utils import compute_frequency_response, remove_filter_edges, save_filt_report
 from neurodsp.filt.checks import (check_filter_definition, check_filter_properties,
                                   check_filter_length)
 
@@ -14,8 +14,8 @@ from neurodsp.filt.checks import (check_filter_definition, check_filter_properti
 ###################################################################################################
 
 def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
-                      print_transitions=False, plot_properties=False, save_properties=None,
-                      return_filter=False, verbose=False, file_path=None, file_name=None):
+                      print_transitions=False, plot_properties=False, return_filter=False,
+                      save_report=None):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -47,12 +47,10 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         If True, print out the transition and pass bandwidths.
     plot_properties : bool, optional, default: False
         If True, plot the properties of the filter, including frequency response and/or kernel.
-    save_properties : str
-        Path, including file name, to save filter properites to as a json.
     return_filter : bool, optional, default: False
         If True, return the filter coefficients of the FIR filter.
-    verbose : bool, optional, default: False
-        If True, print out detailed filter information.
+    save_report : str, optional, default: None
+        Path, including file name, to save a filter report to as a pdf.
 
     Returns
     -------
@@ -83,9 +81,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
     check_filter_length(sig.shape[-1], len(filter_coefs))
 
     # Check filter properties: compute transition bandwidth & run checks
-    check_filter_properties(filter_coefs, 1, fs, pass_type, f_range, filt_type="FIR",
-                            verbose=np.any([print_transitions, verbose]),
-                            save_properties=save_properties)
+    _, properties = check_filter_properties(filter_coefs, 1, fs, pass_type, f_range,
+                                            return_properties=True, verbose=print_transitions)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -100,10 +97,24 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = restore_nans(sig_filt, sig_nans)
 
+    # Unpack filter properties
+    if plot_properties or save_report is not None:
+        f_db = properties['f_db']
+        db = properties['db']
+
+    if save_report is not None:
+        pass_bw = properties['pass_bw']
+        transition_bw = properties['transition_bw']
+        f_range_trans = properties['f_range_trans']
+
     # Plot filter properties, if specified
     if plot_properties:
-        f_db, db = compute_frequency_response(filter_coefs, 1, fs)
         plot_filter_properties(f_db, db, fs, filter_coefs)
+
+    # Save a pdf filter report containing plots and parameters
+    if save_report is not None:
+        save_filt_report(save_report, pass_type, 'IIR', fs, f_db, db, pass_bw, transition_bw,
+                         f_range, f_range_trans, len(f_db)-1, filter_coefs=filter_coefs)
 
     if return_filter:
         return sig_filt, filter_coefs
