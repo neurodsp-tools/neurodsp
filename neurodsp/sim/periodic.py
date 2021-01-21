@@ -225,7 +225,7 @@ def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
     check_param(leave_burst, 'leave_burst', [0., 1.])
 
     # Initialize vector of burst definitions
-    is_oscillating = np.array([False] * (n_cycles))
+    is_oscillating = np.zeros(n_cycles, dtype=bool)
 
     for ind in range(1, n_cycles):
 
@@ -249,7 +249,7 @@ def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
     n_cycles : int
         The number of cycles to simulate the burst definition for.
     n_cycles_burst : int
-        Number of cycles within a burst burst.
+        Number of cycles within a burst.
     n_cycles_off : int
         Number of cycles between bursts.
 
@@ -264,19 +264,17 @@ def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
     n_cycles_off = repeat(n_cycles_off) if isinstance(n_cycles_off, int) else n_cycles_off
 
     # Initialize is oscillating
-    is_oscillating = np.array([False] * (n_cycles))
-
-    # Set the first bursting index
-    ind = 1
+    is_oscillating = np.zeros(n_cycles, dtype=bool)
 
     # Fill in bursts
+    ind = 0
     while ind < len(is_oscillating):
 
         # Within a burst, set specified cycles as bursting
         b_len = next(n_cycles_burst)
         is_oscillating[ind: ind+b_len] = True
 
-        # Update index to the next burst start definition
+        # Update index for the next burst
         off_len = next(n_cycles_off)
         ind = ind + b_len + off_len
 
@@ -301,11 +299,7 @@ def get_burst_samples(is_oscillating, fs, freq):
         Definition of whether each sample is part of a burst or not.
     """
 
-    n_seconds_cycle = 1/freq
-    n_samples_cycle = int(n_seconds_cycle * fs)
+    n_samples_cycle = int(1/freq * fs)
+    bursts = np.repeat(is_oscillating, n_samples_cycle)
 
-    bursts = []
-    for cycle in is_oscillating:
-        bursts.extend(n_samples_cycle * [True if cycle else False])
-
-    return np.array(bursts)
+    return bursts
