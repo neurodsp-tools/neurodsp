@@ -1,4 +1,4 @@
-"""Test the sliding window matching function."""
+"""Tests for neurodsp.rhythm.swm (sliding window matching)."""
 
 from neurodsp.tests.settings import FS
 

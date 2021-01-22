@@ -1,4 +1,4 @@
-"""Tests for autocorrelation measures."""
+"""Tests for neurodsp.aperiodic.autocorr."""
 
 from neurodsp.aperiodic.autocorr import *
 

@@ -1,4 +1,4 @@
-"""Test time series plots."""
+"""Tests for neurodsp.plts.time_series."""
 
 from pytest import raises
 
@@ -15,10 +15,10 @@ def test_plot_time_series(tsig):
 
     times = np.arange(0, len(tsig), 1)
 
-    # Run single time series plot
+    # Check single time series plot
     plot_time_series(times, tsig)
 
-    # Run multi time series plot, with colors & labels
+    # Check multi time series plot, with colors & labels
     plot_time_series(times, [tsig, tsig[::-1]], labels=['signal', 'signal reversed'],
                      colors=['k', 'r'], save_fig=True, file_name='test_plot_time_series.png',
                      file_path=TEST_PLOTS_PATH)

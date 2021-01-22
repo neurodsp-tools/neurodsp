@@ -1,4 +1,4 @@
-"""Test aperiodic simulation functions."""
+"""Tests for neurodsp.sim.aperiodic."""
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -59,7 +59,6 @@ def test_sim_knee():
     _, _, chi2_hat = ap_params[:]
 
     assert -round(chi2_hat) == EXP2
-
 
 def test_sim_random_walk():
 

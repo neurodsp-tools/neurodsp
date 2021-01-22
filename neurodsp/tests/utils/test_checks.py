@@ -1,4 +1,4 @@
-"""Tests for checker utility functions."""
+"""Tests for neurodsp.utils.checks."""
 
 from pytest import raises
 

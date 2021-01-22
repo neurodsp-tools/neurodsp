@@ -1,4 +1,4 @@
-"""Test plot utilities."""
+"""Tests for neurodsp.plts.utils."""
 
 import os
 import tempfile
@@ -10,7 +10,7 @@ from neurodsp.plts.utils import *
 
 def test_check_ax():
 
-    # Check running will None Input
+    # Check running with None Input
     ax = check_ax(None)
 
     # Check running with pre-created axis

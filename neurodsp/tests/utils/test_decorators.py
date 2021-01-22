@@ -1,4 +1,4 @@
-"""Tests for decorator functions."""
+"""Tests for neurodsp.utils.decorators."""
 
 from neurodsp.utils.decorators import *
 
