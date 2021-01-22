@@ -1,11 +1,11 @@
-"""Tests for IRASA functions."""
+"""Tests for neurodsp.aperiodic.irasa."""
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, N_SECONDS_LONG, EXP1
-
 from neurodsp.sim import sim_combined
 from neurodsp.spectral import compute_spectrum, trim_spectrum
+
+from neurodsp.tests.settings import FS, N_SECONDS_LONG, EXP1
 
 from neurodsp.aperiodic.irasa import *
 

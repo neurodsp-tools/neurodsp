@@ -1,4 +1,4 @@
-"""Configuration file for pytest for NDSP."""
+"""Pytest configuration file for testing neurodsp."""
 
 import os
 import shutil
