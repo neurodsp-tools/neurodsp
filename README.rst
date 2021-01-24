@@ -102,10 +102,6 @@ To install an editable version, download the development version as above, and r
 
     $ pip install -e .
 
-Please use the
-`Github issue tracker <https://github.com/neurodsp-tools/neurodsp/issues>`_
-to file bug reports and/or ask questions about this project.
-
 Modules
 -------
 
@@ -122,16 +118,20 @@ Available modules in ``NeuroDSP`` include:
 Contribute
 ----------
 
-``NeuroDSP`` welcomes and encourages contributions from the community!
+This project welcomes and encourages contributions from the community!
 
-If you have an idea of something to add to NeuroDSP, please start by opening an
-`issue <https://github.com/neurodsp-tools/neurodsp/issues>`_.
+To file bug reports and/or ask questions about this project, please use the
+`Github issue tracker <https://github.com/neurodsp-tools/neurodsp/issues>`_.
 
-When writing code to add to NeuroDSP, please follow the
-`Contribution Guidelines <https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md>`_.
+To see and get involved in discussions about the module, check out:
 
-We also require that all contributors follow our
-`Code of Conduct <https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md>`_.
+- the `issues board <https://github.com/neurodsp-tools/neurodsp/issues>`_ for topics relating to code updates, bugs, and fixes
+- the `development page <https://github.com/neurodsp-tools/Development>`_ for discussion of potential major updates to the module
+
+When interacting with this project, please use the
+`contribution guidelines <https://github.com/neurodsp-tools/fooof/blob/master/CONTRIBUTING.md>`_
+and follow the
+`code of conduct <https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md>`_.
 
 Reference
 ---------
