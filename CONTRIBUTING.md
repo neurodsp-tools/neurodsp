@@ -53,7 +53,7 @@ and see if there is anything you would be interested in helping with. If so, joi
 
 ## Project Scope
 
-All contributions to the module must be within it's scope.
+All contributions must be within the scope of the module.
 
 `neurodsp` is a module that collects digital signal processing approaches for neural data that operate on neural time series. This includes filtering, spectral estimation, time-frequency analyses, and more. The majority of the methods operate on single time-series, though multivariate approaches may be added on a case-by-case basis.
 
