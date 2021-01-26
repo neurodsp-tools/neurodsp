@@ -13,7 +13,7 @@
 .. |BuildStatus| image:: https://travis-ci.com/neurodsp-tools/neurodsp.svg
 .. _BuildStatus: https://travis-ci.com/github/neurodsp-tools/neurodsp
 
-.. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
+.. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg
 .. _Coverage: https://codecov.io/gh/neurodsp-tools/neurodsp
 
 .. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
@@ -131,9 +131,9 @@ To see and get involved in discussions about the module, check out:
 - the `development page <https://github.com/neurodsp-tools/Development>`_ for discussion of potential major updates to the module
 
 When interacting with this project, please use the
-`contribution guidelines <https://github.com/neurodsp-tools/fooof/blob/master/CONTRIBUTING.md>`_
+`contribution guidelines <https://github.com/neurodsp-tools/fooof/blob/main/CONTRIBUTING.md>`_
 and follow the
-`code of conduct <https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md>`_.
+`code of conduct <https://github.com/neurodsp-tools/neurodsp/blob/main/CODE_OF_CONDUCT.md>`_.
 
 Reference
 ---------
