@@ -83,8 +83,6 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
         window_starts = window_starts_custom
     n_windows = len(window_starts)
 
-    # Randomly sample windows with replacement
-    random_window_idx = np.random.choice(range(n_windows), size=max_iterations)
 
     # Calculate initial cost
     costs = np.zeros(max_iterations)
@@ -92,16 +90,9 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
     for iter_num in range(1, max_iterations):
 
-        # Pick a random window position to replace, to improve cross-window similarity
-        window_idx_replace = random_window_idx[iter_num]
-
-        # Find a new allowed position for the window
-        window_starts_temp = np.copy(window_starts)
-
-        current_window_idx = window_starts_temp[window_idx_replace]
-
-        window_starts_temp[window_idx_replace] = _find_new_window_idx(
-            len(sig) - win_n_samps, spacing_n_samps, current_window_idx)
+        # Find a new, random window start
+        window_starts_temp = _find_new_window_idx(np.copy(window_starts), len(sig) - win_n_samps,
+                                                  spacing_n_samps)
 
         # Calculate the cost & the change in the cost function
         cost_temp = _compute_cost(sig, window_starts_temp, win_n_samps)
@@ -170,49 +161,65 @@ def _compute_cost(sig, window_starts, win_n_samps):
     return cost
 
 
-def _find_new_window_idx(max_start, spacing_n_samps, current_window_idx, tries_limit=1000):
+def _find_new_window_idx(windows, max_start, spacing_n_samps, tries_limit=1000):
     """Find a new sample for the starting window.
 
     Parameters
     ----------
+    windows : 1d array
+        Indices at which each window begins.
     max_start : int
         The largest possible start index for the window.
     spacing_n_samps : int
         The minimum spacing required between windows, in samples.
-    current_window_idx : int
-        The current index of the window.
     tries_limit : int, optional, default: False
         The maximum number of iterations to attempt to find a new window.
 
     Returns
     -------
-    new_samp : int
-        The index for the new window.
+    windows : 1d array
+        Indices, including the updated window, at which each window begins.
     """
+
+    new_win = None
 
     for _ in range(tries_limit):
 
+        # Randomly select current window
+        current_idx = np.random.choice(range(len(windows)))
+        current_win = windows[current_idx]
+
         # Find adjacent window starts
-        prev_idx = current_window_idx - (2*spacing_n_samps)
-        next_idx = current_window_idx + (2*spacing_n_samps)
-
-        # Create allowed random sample positions/indices
-        new_samps = np.arange(prev_idx + spacing_n_samps, next_idx - spacing_n_samps)
-        new_samps = new_samps[np.where((new_samps >= 0) & (new_samps <= max_start))[0]]
-
-        if len(new_samps) <= 1:
-            # All new samples are too close to adjacent window starts
-            continue
+        if current_idx != 0:
+            lower_bound = windows[current_idx - 1] + spacing_n_samps
         else:
-            # Drop current window index
-            new_samps = np.delete(new_samps, np.where(new_samps == current_window_idx)[0][0])
+            lower_bound = 0
+
+        if current_idx != len(windows) - 1:
+            upper_bound = windows[current_idx + 1] - spacing_n_samps
+        else:
+            upper_bound = max_start
+
+        # Create allowed random positions/indices
+        new_wins = np.arange(lower_bound, upper_bound + 1)
+        new_wins = new_wins[np.where((new_wins >= 0) & (new_wins <= max_start))[0]]
+
+        # Drop the current window index so it can't be randomly sampled
+        new_wins = np.delete(new_wins, np.where(new_wins == current_win)[0][0])
+
+        if len(new_wins) == 0:
+            # All new samples are too close to adjacent window starts, try another random position
+            continue
 
         # Randomly select allowed sample position
-        new_samp = np.random.choice(new_samps)
+        new_win= np.random.choice(new_wins)
+
         break
 
-    else:
+    if new_win is None:
         raise RuntimeError('SWM algorithm has difficulty finding a new window. \
                             Try increasing the spacing parameter.')
 
-    return new_samp
+    windows[current_idx] = new_win
+
+    return windows
