@@ -27,9 +27,9 @@ from neurodsp.aperiodic import compute_fluctuations
 # Detrended Fluctuation Analysis
 # ------------------------------
 #
-# Detrended fluctuation analysis is a method for analyzing the self-similarity of a signal.
+# Detrended fluctuation analysis (DFA) is a method for analyzing the self-similarity of a signal.
 #
-# It is in some ways similar to looking at autocorrelation, and can is typically used to look
+# DFA is in some ways similar to autocorrelation measures, and is typically used to look
 # for long-range, powerlaw correlations. It does so by dividing the signals into windows,
 # fitting local trends, and then examining the pattern across window sizes.
 #
@@ -56,17 +56,18 @@ from neurodsp.aperiodic import compute_fluctuations
 # Applying DFA
 # ------------
 #
-# Here, to introduce DFA, we will use colored noise signals, (white noise and pink noise),
-# with have different auto-correlation properties, and so should show different DFA results,
-# which we can compare.
+# Here, to introduce DFA, we will use colored noise signals (white noise and pink noise).
+# These signals have different auto-correlation properties, and so should have different DFA
+# results, which we can then compare between the signals.
 #
-# Note that DFA can be applied to multiple signal types, and in neural field data it is
-# often used to examine amplitude time series of neural oscillations.
+# Note that DFA can be applied to multiple signal types. Though here we using simulated
+# aperiodic time series, in analyses of neural field data, DFA is most often used to examine
+# amplitude time series of neural oscillations.
 #
 
 ###################################################################################################
 
-# Simulation settings settings
+# Simulation settings
 n_seconds = 10
 fs = 500
 
@@ -82,9 +83,9 @@ sig_pl = sim_powerlaw(n_seconds, fs, exponent=-1)
 #
 # The DFA algorithm involves:
 #
-# 1. Removing the mean of a signal (detrend)
+# 1. Removing the mean of a signal (detrending)
 # 2. Computing the cumulative sum of the signal
-# 3. Splitting the signal in equal-sized windows
+# 3. Splitting the signal into equal-sized windows
 # 4. Fitting a polynomial across the windows
 # 5. Calculate the mean squared residual (fluctuation) of the fit
 #
@@ -97,9 +98,9 @@ sig_pl = sim_powerlaw(n_seconds, fs, exponent=-1)
 #
 # The DFA algorithm requires certain settings, including:
 #
-# - `n_scales` : the number of scales to estimate fluctuations over.
-# - `min_scale` : the shortest scale, in seconds, to compute over.
-# - `max_scale` : the longest scale, in seconds, to compute over.
+# - `n_scales` : the number of scales to estimate fluctuations over
+# - `min_scale` : the shortest scale, in seconds, to compute over
+# - `max_scale` : the longest scale, in seconds, to compute over
 #
 
 ###################################################################################################
@@ -119,8 +120,8 @@ ts_pl, flucs_pl, exp_pl = compute_fluctuations(sig_pl, fs, n_scales=10,
 # The :func:`~.compute_fluctuations` function returns the time scales and
 # measured fluctuations from the DFA analysis.
 #
-# To see what these look like, in the plot below, fluctuations are plotted across window
-# sizes for both signals in log-log space.
+# In the plot below, fluctuations are plotted across window sizes for both signals in
+# log-log space.
 #
 
 ###################################################################################################
@@ -148,6 +149,6 @@ print("Power law signal DFA exponent:\t {:1.3f}".format(exp_pl))
 
 ###################################################################################################
 #
-# As we can see the, DFA exponent for the white noise signal is ~=0.5 and the for
-# the powerlaw signal it is ~=1, which match up with the expected values for these signals.
+# As we can see the, DFA exponent for the white noise signal is ~=0.5 while for the
+# powerlaw signal it is ~=1. These match with the expected values for these signals.
 #

@@ -57,7 +57,7 @@ exp = -2
 
 # Define the components for the simulated signal
 components = {'sim_oscillation' : {'freq' : cf},
-			  'sim_powerlaw' : {'exponent' : exp}}
+              'sim_powerlaw' : {'exponent' : exp}}
 
 # Define the frequency range of interest for the analysis
 f_range = (1, 40)
@@ -78,9 +78,8 @@ plot_power_spectra(freqs, psd, title="Original Spectrum")
 
 ###################################################################################################
 #
-# In the above spectrum, we can can see a pattern of power across all frequencies,
-# which reflects the 1/f activity, as well as a specific peak at 10 Hz, which represents
-# the simulated oscillation.
+# In the above spectrum, we can see a pattern of power across all frequencies, which reflects
+# the 1/f activity, as well as a peak at 10 Hz, which represents the simulated oscillation.
 #
 
 ###################################################################################################
@@ -88,7 +87,7 @@ plot_power_spectra(freqs, psd, title="Original Spectrum")
 # -----
 #
 # In the analysis of neural data, we may want to separate aperiodic and periodic components
-# of the data. Here, we can explore using IRASA to do so.
+# of the data. Here, we explore using IRASA to do so.
 #
 # Algorithm Settings
 # ~~~~~~~~~~~~~~~~~~
@@ -101,8 +100,8 @@ plot_power_spectra(freqs, psd, title="Original Spectrum")
 # this calculation, to restrict the periodic component to clear 'peaks' above the aperiodic.
 #
 # Here we will use a threshold value (`thresh`), such that regions of the periodic component
-# that are not above the threshold, calculate in terms of standard deviation of the power spectrum,
-# are left as part of the aperiodic component.
+# that are not above the threshold, calculates in terms of standard deviation of the power
+# spectrum, are left as part of the aperiodic component.
 #
 
 ###################################################################################################
@@ -114,7 +113,7 @@ freqs, psd_aperiodic, psd_periodic = compute_irasa(sig, fs, f_range=f_range, thr
 
 # Plot the isolated periodic and aperiodic components
 plot_power_spectra(freqs, [psd_aperiodic, psd_periodic],
-				   labels=['aperiodic', 'periodic'], title="IRASA Components")
+                   labels=['aperiodic', 'periodic'], title="IRASA Components")
 
 ###################################################################################################
 #
@@ -129,7 +128,7 @@ plot_power_spectra(freqs, [psd_aperiodic, psd_periodic],
 # Note that what IRASA returns is a decomposition of the power spectrum, separating
 # aperiodic and periodic components.
 #
-# To verify that this is what the the algorithm does, we can check that the spectrum
+# To verify that this is what the algorithm does, we can check that the spectrum
 # of the full signal is the same as the combined periodic and aperiodic IRASA components.
 #
 
@@ -143,7 +142,7 @@ assert np.equal(psd_irasa, psd).all()
 # Subsequent Analyses
 # -------------------
 #
-# One of the goals of separating the components may be further analyze each component.
+# One of the goals of separating the components may be to further analyze each component.
 #
 # For example, fitting the extracted aperiodic component can be done to measure the
 # properties of the aperiodic activity. Here, we can fit the IRASA extracted aperiodic

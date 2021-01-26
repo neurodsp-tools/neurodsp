@@ -4,10 +4,8 @@ Autocorrelation Measures
 
 Apply autocorrelation measures to neural signals.
 
-Autocorrelation is the correlation of a signal with delayed copies of itself. Autocorrelation
-measures can be a useful measure to investigate properties of neural signals.
-
-In this example, we explore computing autocorrelation for simulated neural signals.
+Autocorrelation is the correlation of a signal with delayed copies of itself.
+Autocorrelation measures can be useful to investigate properties of neural signals.
 
 This tutorial covers ``neurodsp.aperiodic.autocorr``.
 """
@@ -34,7 +32,6 @@ from neurodsp.aperiodic import compute_autocorr
 # The result is a measure of how correlated a signal is to itself, across time,
 # and the timescale of autocorrelation.
 #
-#
 # Algorithm Settings
 # ~~~~~~~~~~~~~~~~~~
 #
@@ -43,11 +40,11 @@ from neurodsp.aperiodic import compute_autocorr
 # - `max_lag` : the maximum lag to compute autocorrelation for
 # - `lag_step` : the step size to advance across when computing autocorrelation
 #
-# Both parameters are defined in samples, with defaults of a step of 1 sample, up to
-# a max lag of 1000 samples.
+# Both parameters are defined in samples, with defaults of using a step size of 1 sample,
+# stepping up to a maximum lag of 1000 samples.
 #
 # Autocorrelation can be computed with :func:`~.compute_autocorr` function, which
-# returns `timepoints` at which autocorrelation was calculated, and `autocorrs`,
+# returns `timepoints` at which autocorrelation was calculated, and `autocorrs`, which are
 # the resulting correlation coefficients.
 #
 
@@ -71,11 +68,11 @@ from neurodsp.aperiodic import compute_autocorr
 n_seconds = 10
 fs = 1000
 
-# Define the frequency of the sinusoid
+# Define the frequencies for the sinusoids
 freq1 = 10
 freq2 = 20
 
-# Simulate a sinusoid
+# Simulate sinusoids
 sig_osc1 = sim_oscillation(n_seconds, fs, freq1)
 sig_osc2 = sim_oscillation(n_seconds, fs, freq2)
 
@@ -101,9 +98,9 @@ ax.set(xlabel='lag (samples)', ylabel='autocorrelation');
 
 ###################################################################################################
 #
-# As we can see, the autocorrelation of a sinusoid it itself a sinusoid!
+# As we can see, the autocorrelation of a sinusoid is itself a sinusoid!
 #
-# This reflects that a sinusoid related to itself will oscillate between between
+# This reflects that a sinusoid related to itself will oscillate between being
 # positively and negatively correlated with itself.
 #
 # Next, let's compare the autocorrelation of different sinusoids.
@@ -111,6 +108,7 @@ ax.set(xlabel='lag (samples)', ylabel='autocorrelation');
 
 ###################################################################################################
 
+# Plot autocorrelations for two different sinusoids
 _, ax = plt.subplots(figsize=(6, 4))
 ax.plot(timepoints_osc1, autocorrs_osc1, alpha=0.75, label='10 Hz')
 ax.plot(timepoints_osc2, autocorrs_osc2, alpha=0.75, label='20 Hz')
@@ -122,9 +120,9 @@ plt.legend(loc='upper right')
 # In the above, we can see that the autocorrelation of sinusoids with different frequencies
 # leads to autocorrelation results with different timescales.
 #
-# If you compare to the number of samples on the x-axis, keeping in mind a sampling
-# rate (of 1000 Hz, here), you can check that the autocorrelation of a sinusoidal
-# signal is itself a sinusoid of the same frequency.
+# If you compare to the number of samples on the x-axis, keeping in mind the sampling
+# rate (1000 Hz), you can check that the autocorrelation of a sinusoidal signal is
+# a sinusoid of the same frequency.
 #
 
 ###################################################################################################
