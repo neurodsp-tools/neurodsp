@@ -19,9 +19,9 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     fs : float
         Sampling rate, in Hz.
     win_len : float
-        Window length, in seconds.
+        Window length, in seconds. This is L in the original paper.
     win_spacing : float
-        Minimum spacing between start positions of successive windows, in seconds.
+        Minimum spacing between windows, in seconds. This is G in the original paper.
     max_iterations : int, optional, default: 500
         Maximum number of iterations of potential changes in window placement.
     temperature : float, optional, default: 1
@@ -53,6 +53,10 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
     - The `win_spacing` parameter also determines the number of windows that are used.
     - If looking at high frequency activity, you may want to apply a highpass filter,
       so that the algorithm does not converge on a low frequency motif.
+    - This implementation is a minimal version, as compared to the original implementation
+      in [2], which has more available options.
+    - This version may also be much smaller than the original, as this implementation does not
+      currently include the Markov Chain Monte Carlo sampling to calculate distances.
 
     Examples
     --------
@@ -101,7 +105,6 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
         # Calculate the cost & the change in the cost function
         cost_temp = _compute_cost(sig, window_starts_temp, win_n_samps)
-
         delta_cost = cost_temp - costs[iter_num - 1]
 
         # Calculate the acceptance probability
@@ -129,7 +132,22 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
 
 
 def _compute_cost(sig, window_starts, win_n_samps):
-    """Compute the cost, which is proportional to the difference between pairs of windows."""
+    """Compute the cost, which is proportional to the difference between pairs of windows.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series.
+    window_starts : list of int
+        The list of window start definitions.
+    win_n_samps : int
+        The length of each window, in samples.
+
+    Returns
+    -------
+    cost: float
+        The calculated cost of the current set of windows.
+    """
 
     # Get all windows and z-score them
     n_windows = len(window_starts)
@@ -153,7 +171,24 @@ def _compute_cost(sig, window_starts, win_n_samps):
 
 
 def _find_new_window_idx(max_start, spacing_n_samps, current_window_idx, tries_limit=1000):
-    """Find a new sample for the starting window."""
+    """Find a new sample for the starting window.
+
+    Parameters
+    ----------
+    max_start : int
+        The largest possible start index for the window.
+    spacing_n_samps : int
+        The minimum spacing required between windows, in samples.
+    current_window_idx : int
+        The current index of the window.
+    tries_limit : int, optional, default: False
+        The maximum number of iterations to attempt to find a new window.
+
+    Returns
+    -------
+    new_samp : int
+        The index for the new window.
+    """
 
     for _ in range(tries_limit):
 
