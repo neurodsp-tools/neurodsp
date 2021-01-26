@@ -167,9 +167,10 @@ Bibtex:
 Funding
 -------
 
-Supported by NIH award R01 GM134363
-
-`NIGMS <https://www.nigms.nih.gov/>`_
+Supported by NIH award R01 GM134363 from the
+`NIGMS <https://www.nigms.nih.gov/>`_.
 
 .. image:: https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png
   :width: 400
+
+|
