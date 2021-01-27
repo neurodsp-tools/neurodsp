@@ -393,7 +393,6 @@ def save_filt_report(pdf_path, pass_type, filt_type, fs, f_db, db,  pass_bw, tra
         pdf_path = './' + pdf_path
 
     if not os.path.isdir(os.path.dirname(pdf_path)):
-        print(pdf_path)
         raise ValueError("Unable to save properties. Parent directory does not exist.")
 
     # Enforce file extension
