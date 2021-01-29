@@ -25,9 +25,9 @@ from neurodsp.plts import plot_filter_properties, plot_time_series
 # delta function) with the filter. FIR filters convolve an input signal with the impulse response.
 # Each timepoint in the output signal is expressed as:
 #
-# ..math::
+# .. math::
 #
-#   y(n) = \sum_{k=0}^M b_k x(n-k) - \sum_{k=1}^N a_k y(n-k)
+#    y(n) = \sum_{k=0}^M b_k x(n-k)
 #
 # Where each output (:math:`y(n)`) is the sum of the product of the filter coefficients
 # (i.e. values from the impulse response, :math:`b_k`) and past values of the input signal
@@ -36,9 +36,9 @@ from neurodsp.plts import plot_filter_properties, plot_time_series
 #
 # This formula also has a frequency representation:
 #
-# ..math::
+# .. math::
 #
-#   H(z) = \sum_{k=0}^Mb_kz^{-k}
+#    H(z) = \sum_{k=0}^M b_k z^{-k}
 #
 
 ###################################################################################################
@@ -51,7 +51,7 @@ from neurodsp.plts import plot_filter_properties, plot_time_series
 #
 # 1. Considering the frequency and impulse response
 # 2. Using simulation data to understand filter effects
-# 3. Manually inspecting the filtered signal.
+# 3. Manually inspecting the filtered signal
 #
 # The impulse and frequency response (:math:`b_k`) are found below for an alpha bandpass filter.
 #
@@ -111,11 +111,9 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 # - Direction of Computation
 #
 # The design, application, and evaluation of a filter may be performed using the
-# :func:`~.filter_signal` function. The ``verbose`` argument prints the filter parameters to the
-# console. Alternatively, these parameters may be saved by passing a path and filename to the
-# ``save_properties`` argument. Futhermore, the ``plot_properties`` argument plots the impulse and
-# frequency response.
-#
+# :func:`~.filter_signal` function. The ``plot_properties`` argument plots the impulse and
+# frequency response. The filter response and parameters may be saved by passing a path and
+# filename to the ``save_properties`` argument.
 
 sig_filt = filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
-                         plot_properties=True, verbose=True)
+                         plot_properties=True, print_transitions=True)
