@@ -1,5 +1,6 @@
 """Simulating time series, with periodic activity."""
 
+import warnings
 from itertools import repeat
 
 import numpy as np
@@ -49,6 +50,9 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=15,
     ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
+
+    # Check if tiling can produce full oscillations
+    _check_tiling(fs, freq)
 
     # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
@@ -149,6 +153,9 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
         temp = cycle_params.pop(burst_param, 0.2)
         if burst_def == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
+
+    # Check if tiling can produce full oscillations
+    _check_tiling(fs, freq)
 
     # Simulate a normalized cycle to use for bursts
     n_seconds_cycle = 1/freq
@@ -303,3 +310,15 @@ def get_burst_samples(is_oscillating, fs, freq):
     bursts = np.repeat(is_oscillating, n_samples_cycle)
 
     return bursts
+
+
+def _check_tiling(fs, freq):
+    """Check if tiling can produce full oscillations."""
+
+    if not (fs/freq).is_integer():
+
+        warnings.warn('''
+        The requested frequency and sampling rate are not evenly divisible, resulting
+        in an artifactual spectral slope. Consider updating freq and fs to an integer
+        divisor/multiple pair.
+        ''', category=RuntimeWarning)
