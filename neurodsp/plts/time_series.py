@@ -1,6 +1,6 @@
 """Plots for time series."""
 
-from itertools import repeat, cycle
+from itertools import cycle
 
 import numpy as np
 import numpy.ma as ma
@@ -59,12 +59,12 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
     else:
-        labels = repeat(labels, n_repeats)
+        labels = np.repeat(labels, n_repeats)
 
     # If not provided, default colors for up to two signals to be black & red
     if not colors and len(sigs) <= 2:
         colors = ['k', 'r']
-    colors = repeat(colors, n_repeats) if not isinstance(colors, list) else cycle(colors)
+    colors = np.repeat(colors, n_repeats) if not isinstance(colors, list) else cycle(colors)
 
     for time, sig, color, label in zip(times, sigs, colors, labels):
         ax.plot(time, sig, color=color, label=label)
