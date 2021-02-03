@@ -12,11 +12,11 @@ def check_param(param, label, bounds):
 
     Parameters
     ----------
-    param : float
+    param : float, int, or str
         Parameter value to check.
     label : str
         Label of the parameter being checked.
-    bounds : list of [float, float]
+    bounds : list of [float, float] or list of str
        Bounding range of valid values for the given parameter.
 
     Raises
@@ -25,9 +25,13 @@ def check_param(param, label, bounds):
         If a parameter that is being checked is out of range.
     """
 
-    if (param < bounds[0]) or (param > bounds[1]):
+    if isinstance(param, (float, int)) and ((param < bounds[0]) or (param > bounds[1])):
         msg = "The provided value for the {} parameter is out of bounds. ".format(label) + \
         "It should be between {:1.1f} and {:1.1f}.".format(*bounds)
+        raise ValueError(msg)
+    elif isinstance(param, str) and param not in bounds:
+        msg = "The provided value for the {} parameter is invalid. ".format(label) + \
+        "It should be chosen from {{{}}}.".format(str(bounds)[1:-1])
         raise ValueError(msg)
 
 

@@ -27,9 +27,11 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
-    phase : float, optional, default: 0
+    phase : float or str, optional, default: 0
         If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1].
+        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
+        be passed to adjust the phase to start/end cycles on either minima (``min``) or
+        maxima (``max``).
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -55,10 +57,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
 
     # Create a single cycle of an oscillation, for the requested frequency
     n_seconds_cycle = 1/freq
-    cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-
-    # Phase shift the simulated cycle
-    cycle = phase_shift_cycle(cycle, phase)
+    cycle = sim_cycle(n_seconds_cycle, fs, cycle, phase, **cycle_params)
 
     # Tile the cycle, to create the desired oscillation
     sig = np.tile(cycle, n_cycles)
@@ -71,7 +70,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
 
 
 def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={},
-                           cycle='sine', **cycle_params):
+                           cycle='sine', phase=0, **cycle_params):
     """Simulate a bursty oscillation.
 
     Parameters
@@ -108,6 +107,11 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
+    phase : float or str, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
+        be passed to adjust the phase to start/end cycles on either minima (``min``) or
+        maxima (``max``).
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -152,7 +156,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
 
     # Simulate a normalized cycle to use for bursts
     n_seconds_cycle = 1/freq
-    osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
+    osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase=phase, **cycle_params)
 
     # Calculate the number of cycles needed to tile the full signal
     n_cycles = int(np.floor(n_seconds * freq))

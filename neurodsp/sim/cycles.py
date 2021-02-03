@@ -11,7 +11,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 ###################################################################################################
 
-def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
+def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     """Simulate a single cycle of a periodic pattern.
 
     Parameters
@@ -30,6 +30,12 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
         * gaussian: a gaussian cycle
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
+
+    phase : float or str, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
+        be passed to adjust the phase to start/end cycles on either minima (``min``) or
+        maxima (``max``).
 
     **cycle_params
         Keyword arguments for parameters of the cycle, all as float:
@@ -64,13 +70,14 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
 
     cycle_func = get_sim_func('sim_' + cycle_type + '_cycle', modules=['cycles'])
     cycle = cycle_func(n_seconds, fs, **cycle_params)
+    cycle = phase_shift_cycle(cycle, phase)
 
     return cycle
 
 
 @normalize
-def sim_normalized_cycle(n_seconds, fs, cycle_type, **cycle_params):
-    return sim_cycle(n_seconds, fs, cycle_type, **cycle_params)
+def sim_normalized_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
+    return sim_cycle(n_seconds, fs, cycle_type, phase, **cycle_params)
 sim_normalized_cycle.__doc__ = sim_cycle.__doc__
 
 
@@ -255,9 +262,10 @@ def phase_shift_cycle(cycle, shift):
     ----------
     cycle : 1d array
         Cycle values to apply a rotation shift to.
-    shift : float
+    shift : float or str
         The amount to rotationally shift the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1].
+        The shift is defined as a relative proportion of cycle, between [0, 1], or as {'min', 'max'}
+        to shift the cycle start start/end on minima or maxima.
 
     Returns
     -------
@@ -272,9 +280,17 @@ def phase_shift_cycle(cycle, shift):
     >>> shifted_cycle = phase_shift_cycle(cycle, shift=0.5)
     """
 
-    check_param(shift, 'shift', [0., 1.])
+    if isinstance(shift, (float, int)):
+        check_param(shift, 'shift', [0., 1.])
+    else:
+        check_param(shift, 'shift', ['min', 'max'])
 
-    shift = int(np.round(shift * len(cycle)))
+    if shift == 'min':
+        shift = np.argmin(cycle)
+    elif shift == 'max':
+        shift = np.argmax(cycle)
+    else:
+        shift = int(np.round(shift * len(cycle)))
 
     indices = range(shift, shift+len(cycle))
     cycle = cycle.take(indices, mode='wrap')
