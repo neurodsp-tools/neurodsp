@@ -313,12 +313,12 @@ def get_burst_samples(is_oscillating, fs, freq):
 
 
 def _check_tiling(fs, freq):
-    """Check if tiling can produce full oscillations."""
+    """Check if tiling will produce an integer number of cycles for the simulated oscillation."""
 
     if not (fs/freq).is_integer():
 
         warnings.warn('''
-        The requested frequency and sampling rate are not evenly divisible, resulting
-        in an artifactual spectral slope. Consider updating freq and fs to an integer
-        divisor/multiple pair.
+        The settings for the frequency and sampling rate are not evenly divisible. In the frequency
+        domain, this can lead to power in non-simulated frequencies in the power spectrum. Consider
+        updating freq and fs to an integer divisor/multiple pair."
         ''', category=RuntimeWarning)
