@@ -1,6 +1,5 @@
 """Simulating time series, with periodic activity."""
 
-import warnings
 from itertools import repeat
 
 import numpy as np
@@ -39,6 +38,13 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     sig : 1d array
         Simulated oscillation.
 
+    Notes
+    -----
+    When ``freq`` and ``fs`` are not evenly divisible, there will be a non-integer number of samples
+    per cycle. In the frequency domain, this will lead to power in non-simulated frequencies.
+    Consider updating ``freq and ``fs`` to an integer divisor/multiple when investigating spectral
+    properties.
+
     Examples
     --------
     Simulate a continuous sinusoidal oscillation at 5 Hz:
@@ -50,9 +56,6 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     >>> sig = sim_oscillation(n_seconds=1, fs=500, freq=15,
     ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
-
-    # Check if tiling can produce full oscillations
-    _check_tiling(fs, freq)
 
     # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
@@ -153,9 +156,6 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
         temp = cycle_params.pop(burst_param, 0.2)
         if burst_def == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
-
-    # Check if tiling can produce full oscillations
-    _check_tiling(fs, freq)
 
     # Simulate a normalized cycle to use for bursts
     n_seconds_cycle = 1/freq
@@ -310,15 +310,3 @@ def get_burst_samples(is_oscillating, fs, freq):
     bursts = np.repeat(is_oscillating, n_samples_cycle)
 
     return bursts
-
-
-def _check_tiling(fs, freq):
-    """Check if tiling will produce an integer number of cycles for the simulated oscillation."""
-
-    if not (fs/freq).is_integer():
-
-        warnings.warn('''
-        The settings for the frequency and sampling rate are not evenly divisible. In the frequency
-        domain, this can lead to power in non-simulated frequencies in the power spectrum. Consider
-        updating freq and fs to an integer divisor/multiple pair."
-        ''', category=RuntimeWarning)
