@@ -1,6 +1,6 @@
 """Plots for time series."""
 
-from itertools import cycle
+from itertools import repeat, cycle
 
 import numpy as np
 import numpy.ma as ma
@@ -19,9 +19,9 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array, list of 1d array, or 2d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array, list of 1d array, or 2d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     labels : list of str, optional
         Labels for each time series.
@@ -47,24 +47,18 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     ax = check_ax(ax, (15, 3))
 
-    n_repeats = len(sigs) if isinstance(sigs, list) or sigs.ndim == 2 else 1
-
-    # Repeat times if needed
-    if isinstance(times, np.ndarray) and times.ndim != 2:
-        times = np.tile(times, (n_repeats, 1))
-
-    # Make sigs iterable if 1D
-    sigs = np.reshape(sigs, (1, -1)) if not isinstance(sigs, list) and sigs.ndim == 1 else sigs
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
     else:
-        labels = np.repeat(labels, n_repeats)
+        labels = repeat(labels)
 
     # If not provided, default colors for up to two signals to be black & red
     if not colors and len(sigs) <= 2:
         colors = ['k', 'r']
-    colors = np.repeat(colors, n_repeats) if not isinstance(colors, list) else cycle(colors)
+    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
 
     for time, sig, color, label in zip(times, sigs, colors, labels):
         ax.plot(time, sig, color=color, label=label)
@@ -80,9 +74,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array or list of 1d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array or list of 1d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     measure : {'phase', 'amplitude', 'frequency'}
         Which kind of measure is being plotted.
