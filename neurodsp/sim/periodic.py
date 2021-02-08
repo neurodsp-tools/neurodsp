@@ -40,10 +40,10 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
 
     Notes
     -----
-    When ``freq`` and ``fs`` are not evenly divisible, there will be a non-integer number of samples
-    per cycle. In the frequency domain, this will lead to power in non-simulated frequencies.
-    Consider updating ``freq and ``fs`` to an integer divisor/multiple when investigating spectral
-    properties.
+	Depending on the requested frequency (`freq`), sampling rate (`fs`), and signal
+	length (`n_seconds`), the simulated signal may have a non-integer number of cycles.
+	If so, the frequency-domain representation of the signal will have some power in non-simulated
+	frequencies. To avoid this, choose `n_seconds` and `fs` to create an integer number of cycles.
 
     Examples
     --------
