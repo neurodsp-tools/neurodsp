@@ -19,9 +19,9 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array or list of 1d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array or list of 1d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     labels : list of str, optional
         Labels for each time series.
@@ -47,8 +47,8 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     ax = check_ax(ax, (15, 3))
 
-    times = repeat(times) if isinstance(times, np.ndarray) else times
-    sigs = [sigs] if isinstance(sigs, np.ndarray) else sigs
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
@@ -74,9 +74,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array or list of 1d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array or list of 1d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     measure : {'phase', 'amplitude', 'frequency'}
         Which kind of measure is being plotted.

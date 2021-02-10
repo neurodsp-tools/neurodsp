@@ -1,6 +1,7 @@
 """Test time series plots."""
 
 from pytest import raises
+import numpy as np
 
 from neurodsp.tests.settings import TEST_PLOTS_PATH
 from neurodsp.tests.tutils import plot_test
@@ -22,6 +23,11 @@ def test_plot_time_series(tsig):
     plot_time_series(times, [tsig, tsig[::-1]], labels=['signal', 'signal reversed'],
                      colors=['k', 'r'], save_fig=True, file_name='test_plot_time_series.png',
                      file_path=TEST_PLOTS_PATH)
+
+    # Test 2D arrays
+    times_2d = np.vstack((times, times))
+    tsig_2d = np.vstack((tsig, tsig))
+    plot_time_series(times_2d, tsig_2d)
 
 @plot_test
 def test_plot_instantaneous_measure(tsig):
