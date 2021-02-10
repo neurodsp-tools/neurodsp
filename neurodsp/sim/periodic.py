@@ -27,11 +27,10 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
-    phase : float or str, optional, default: 0
+    phase : float or {'min', 'max'}, optional, default: 0
         If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
-        be passed to adjust the phase to start/end cycles on either minima (``min``) or
-        maxima (``max``).
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -107,11 +106,10 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
-    phase : float or str, optional, default: 0
+    phase : float or {'min', 'max'}, optional, default: 0
         If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
-        be passed to adjust the phase to start/end cycles on either minima (``min``) or
-        maxima (``max``).
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 

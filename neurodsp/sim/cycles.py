@@ -31,12 +31,10 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
 
-    phase : float or str, optional, default: 0
-        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1]. A string may also
-        be passed to adjust the phase to start/end cycles on either minima (``min``) or
-        maxima (``max``).
-
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Keyword arguments for parameters of the cycle, all as float:
 
@@ -262,10 +260,10 @@ def phase_shift_cycle(cycle, shift):
     ----------
     cycle : 1d array
         Cycle values to apply a rotation shift to.
-    shift : float or str
-        The amount to rotationally shift the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1], or as {'min', 'max'}
-        to shift the cycle start start/end on minima or maxima.
+    shift : float or {'min', 'max'}
+        If non-zero, applies a phase shift by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
 
     Returns
     -------
