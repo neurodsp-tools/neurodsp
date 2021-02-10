@@ -5,7 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.norm import normalize_sig
-from neurodsp.utils.checks import check_param
+from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
 
@@ -223,8 +223,8 @@ def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
         Definition of whether each cycle is bursting or not.
     """
 
-    check_param(enter_burst, 'enter_burst', [0., 1.])
-    check_param(leave_burst, 'leave_burst', [0., 1.])
+    check_param_range(enter_burst, 'enter_burst', [0., 1.])
+    check_param_range(leave_burst, 'leave_burst', [0., 1.])
 
     # Initialize vector of burst definitions
     is_oscillating = np.zeros(n_cycles, dtype=bool)

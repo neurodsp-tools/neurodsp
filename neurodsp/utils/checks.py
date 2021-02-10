@@ -7,16 +7,16 @@ import numpy as np
 ###################################################################################################
 ###################################################################################################
 
-def check_param(param, label, bounds):
+def check_param_range(param, label, bounds):
     """Check a parameter value.
 
     Parameters
     ----------
-    param : float, int, or str
+    param : float
         Parameter value to check.
     label : str
         Label of the parameter being checked.
-    bounds : list of [float, float] or list of str
+    bounds : list of [float, float]
        Bounding range of valid values for the given parameter.
 
     Raises
@@ -25,13 +25,33 @@ def check_param(param, label, bounds):
         If a parameter that is being checked is out of range.
     """
 
-    if isinstance(param, (float, int)) and ((param < bounds[0]) or (param > bounds[1])):
+    if (param < bounds[0]) or (param > bounds[1]):
         msg = "The provided value for the {} parameter is out of bounds. ".format(label) + \
         "It should be between {:1.1f} and {:1.1f}.".format(*bounds)
         raise ValueError(msg)
-    elif isinstance(param, str) and param not in bounds:
+
+
+def check_param_options(param, label, options):
+    """Check a parameter string.
+
+    Parameters
+    ----------
+    param : str
+        Parameter value to check.
+    label : str
+        Label of the parameter being checked.
+    options : list of str
+        Valid string parameters that ``param`` may be choosen from.
+
+    Raises
+    ------
+    ValueError
+        If a parameter that is being checked is not in ``options``.
+    """
+
+    if param not in options:
         msg = "The provided value for the {} parameter is invalid. ".format(label) + \
-        "It should be chosen from {{{}}}.".format(str(bounds)[1:-1])
+        "It should be chosen from {{{}}}.".format(str(options)[1:-1])
         raise ValueError(msg)
 
 

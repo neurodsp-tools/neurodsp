@@ -4,7 +4,7 @@ import numpy as np
 from scipy.signal import gaussian, sawtooth
 
 from neurodsp.sim.info import get_sim_func
-from neurodsp.utils.checks import check_param
+from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_synaptic_kernel
 
@@ -136,7 +136,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
     """
 
-    check_param(rdsym, 'rdsym', [0., 1.])
+    check_param_range(rdsym, 'rdsym', [0., 1.])
 
     # Determine number of samples in rise and decay periods
     n_samples = int(n_seconds * fs)
@@ -179,7 +179,7 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     >>> cycle = sim_sawtooth_cycle(n_seconds=0.25, fs=500, width=0.5)
     """
 
-    check_param(width, 'width', [0., 1.])
+    check_param_range(width, 'width', [0., 1.])
 
     times = create_cycle_time(n_seconds, fs)
     cycle = sawtooth(times, width)
@@ -279,9 +279,9 @@ def phase_shift_cycle(cycle, shift):
     """
 
     if isinstance(shift, (float, int)):
-        check_param(shift, 'shift', [0., 1.])
+        check_param_range(shift, 'shift', [0., 1.])
     else:
-        check_param(shift, 'shift', ['min', 'max'])
+        check_param_options(shift, 'shift', ['min', 'max'])
 
     if shift == 'min':
         shift = np.argmin(cycle)

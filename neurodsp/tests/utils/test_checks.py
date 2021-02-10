@@ -7,21 +7,29 @@ from neurodsp.utils.checks import *
 ###################################################################################################
 ###################################################################################################
 
-def test_check_param():
+def test_check_param_range():
 
     # Check that valid options run without error
-    check_param(0.5, 'test', [0., 1])
-    check_param(0., 'test', [0., 1])
-    check_param(1., 'test', [0., 1])
-    check_param('a', 'test', ['a', 'b'])
+    check_param_range(0.5, 'test', [0., 1])
+    check_param_range(0., 'test', [0., 1])
+    check_param_range(1., 'test', [0., 1])
+    check_param_range('a', 'test', ['a', 'b'])
 
     # Check that invalid options raise an error
     with raises(ValueError):
-        check_param(-1, 'test', [0., 1])
+        check_param_range(-1, 'test', [0., 1])
     with raises(ValueError):
-        check_param(1.5, 'test', [0., 1])
+        check_param_range(1.5, 'test', [0., 1])
+
+
+def test_check_param_options():
+
+    # Check that valid options run without error
+    check_param_options('a', 'test', ['a', 'b', 'c'])
+
     with raises(ValueError):
-        check_param('a', 'test', ['b', 'c'])
+        check_param_options('a', 'test', ['b', 'c'])
+
 
 def test_check_n_cycles():
 
