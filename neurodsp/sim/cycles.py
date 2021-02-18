@@ -62,7 +62,11 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     is accessible by this function. The `cycle_type` input must match the label.
     """
 
-    cycle_func = get_sim_func('sim_' + cycle_type + '_cycle', modules=['cycles'])
+    if isinstance(cycle_type, str):
+        cycle_func = get_sim_func('sim_' + cycle_type + '_cycle', modules=['cycles'])
+    else:
+        cycle_func = cycle_type
+
     cycle = cycle_func(n_seconds, fs, **cycle_params)
 
     return cycle
