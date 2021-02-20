@@ -21,7 +21,7 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
         This is NOT the period of the cycle, but the length of the returned array of the cycle.
     fs : float
         Sampling frequency of the cycle simulation.
-    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
         What type of cycle to simulate. Options:
 
         * sine: a sine wave cycle
@@ -62,7 +62,11 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
     is accessible by this function. The `cycle_type` input must match the label.
     """
 
-    cycle_func = get_sim_func('sim_' + cycle_type + '_cycle', modules=['cycles'])
+    if isinstance(cycle_type, str):
+        cycle_func = get_sim_func('sim_' + cycle_type + '_cycle', modules=['cycles'])
+    else:
+        cycle_func = cycle_type
+
     cycle = cycle_func(n_seconds, fs, **cycle_params)
 
     return cycle

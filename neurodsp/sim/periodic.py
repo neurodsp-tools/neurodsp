@@ -24,7 +24,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
         Signal sampling rate, in Hz.
     freq : float
         Oscillation frequency.
-    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
     phase : float, optional, default: 0
