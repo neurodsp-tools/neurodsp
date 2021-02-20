@@ -10,8 +10,8 @@
 .. |Version| image:: https://img.shields.io/pypi/v/neurodsp.svg
 .. _Version: https://pypi.python.org/pypi/neurodsp/
 
-.. |BuildStatus| image:: https://travis-ci.com/neurodsp-tools/neurodsp.svg
-.. _BuildStatus: https://travis-ci.com/github/neurodsp-tools/neurodsp
+.. |BuildStatus| image:: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg
+.. _BuildStatus: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml
 
 .. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg
 .. _Coverage: https://codecov.io/gh/neurodsp-tools/neurodsp
