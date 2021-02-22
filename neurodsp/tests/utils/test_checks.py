@@ -21,7 +21,6 @@ def test_check_param_range():
     with raises(ValueError):
         check_param_range(1.5, 'test', [0., 1])
 
-
 def test_check_param_options():
 
     # Check that valid options run without error
@@ -29,7 +28,6 @@ def test_check_param_options():
 
     with raises(ValueError):
         check_param_options('a', 'test', ['b', 'c'])
-
 
 def test_check_n_cycles():
 

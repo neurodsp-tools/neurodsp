@@ -8,7 +8,7 @@ import numpy as np
 ###################################################################################################
 
 def check_param_range(param, label, bounds):
-    """Check a parameter value.
+    """Check a parameter value is within an acceptable range.
 
     Parameters
     ----------
@@ -32,7 +32,7 @@ def check_param_range(param, label, bounds):
 
 
 def check_param_options(param, label, options):
-    """Check a parameter string.
+    """Check a parameter value is one of the acceptable options.
 
     Parameters
     ----------
@@ -41,12 +41,12 @@ def check_param_options(param, label, options):
     label : str
         Label of the parameter being checked.
     options : list of str
-        Valid string parameters that ``param`` may be choosen from.
+        Valid string values that `param` may be.
 
     Raises
     ------
     ValueError
-        If a parameter that is being checked is not in ``options``.
+        If a parameter that is being checked is not in `options`.
     """
 
     if param not in options:
