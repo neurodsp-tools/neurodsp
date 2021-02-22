@@ -1,10 +1,11 @@
-"""Tests for fractal analysis using fluctuation measures."""
+"""Tests neurodsp.aperiodic.dfa."""
 
 from pytest import raises
 
 import numpy as np
 
 from neurodsp.sim import sim_powerlaw
+
 from neurodsp.tests.settings import FS, FS_HIGH
 
 from neurodsp.aperiodic.dfa import (compute_fluctuations, compute_rescaled_range,
@@ -18,7 +19,7 @@ def test_compute_fluctuations(tsig):
     t_scales, flucs, exp = compute_fluctuations(tsig, 500)
     assert len(t_scales) == len(flucs)
 
-    # Check error for if the settings create window lengths that are too short
+    # Check error if the settings create window lengths that are too short
     with raises(ValueError):
         t_scales, flucs, exp = compute_fluctuations(tsig, 100)
 

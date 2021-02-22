@@ -1,9 +1,10 @@
-"""Test spectral plots."""
+"""Tests for neurodsp.plts.spectral."""
 
 import numpy as np
 
 from neurodsp.spectral.variance import compute_spectral_hist
 from neurodsp.spectral.power import compute_spectrum
+
 from neurodsp.tests.settings import TEST_PLOTS_PATH
 from neurodsp.tests.tutils import plot_test
 

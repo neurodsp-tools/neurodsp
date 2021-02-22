@@ -1,4 +1,4 @@
-"""Tests for normalization related utility functions."""
+"""Tests for neurodsp.utils.norm."""
 
 import numpy as np
 
@@ -25,11 +25,11 @@ def test_demean():
     d1 = np.array([1, 2, 3])
     d2 = np.array([0, 1, 2, 3, 0])
 
-    # Check default - demean to 0
+    # Check default, which demeans to 0
     out1 = demean(d1)
     assert np.isclose(out1.mean(), 0.)
 
-    # Check demeaning and adding specific mean
+    # Check demeaning with specified mean
     new_mean = 1.
     out2 = demean(d1, mean=new_mean)
     assert np.isclose(out2.mean(), new_mean)
@@ -39,10 +39,10 @@ def test_normalize_variance():
     d1 = np.array([1, 2, 3])
     d2 = np.array([0, 1, 2, 3, 0])
 
-    # Check default - normalize variance to 1
+    # Check default, which normalizes variance to 1
     out1 = normalize_variance(d1)
     np.isclose(out1.var(), 1.)
 
-    # Check normalizing and add specific variance
+    # Check normalizing with specified variance
     out2 = normalize_variance(d1, 2.)
     np.isclose(out2.var(), 2.)

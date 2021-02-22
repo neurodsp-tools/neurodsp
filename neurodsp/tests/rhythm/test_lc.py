@@ -1,4 +1,4 @@
-"""Test lagged coherence code."""
+"""Tests for neurodsp.rhythm.lc (lagged coherence)."""
 
 from pytest import warns
 
@@ -22,7 +22,7 @@ def test_compute_lagged_coherence(tsig):
     # Check using a list of n_cycles definitions
     lc = compute_lagged_coherence(tsig, FS, FREQS_ARR, n_cycles=[3, 4, 5])
 
-    # Test the warning if can't estimate some values
+    # Test the warning if some values can't be estimated
     with warns(UserWarning):
         compute_lagged_coherence(tsig, 100, np.array([1, 2]), n_cycles=10)
 

@@ -1,4 +1,4 @@
-"""Tests for IIR filters."""
+"""Tests for neurodsp.filt.iir."""
 
 import numpy as np
 
