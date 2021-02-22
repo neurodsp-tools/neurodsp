@@ -5,6 +5,8 @@ from functools import wraps
 import numpy as np
 import matplotlib.pyplot as plt
 
+from neurodsp.utils.data import compute_nsamples
+
 from neurodsp.tests.settings import FS, N_SECONDS
 
 ###################################################################################################
@@ -13,7 +15,7 @@ from neurodsp.tests.settings import FS, N_SECONDS
 def check_sim_output(sig):
     """Helper function to check some basic properties of simulated signals."""
 
-    exp_n_samples = int(FS * N_SECONDS)
+    exp_n_samples = compute_nsamples(N_SECONDS, FS)
 
     assert isinstance(sig, np.ndarray)
     assert len(sig) == exp_n_samples
