@@ -84,11 +84,11 @@ def compute_nsamples(n_seconds, fs):
     Notes
     -----
     The result has to be rounded, in order to ensure that the number of samples is a whole number.
-
-    The `int` function rounds down, by default, which is the convention across the module.
+    By convention, this rounds up, which is needed to ensure that cycles don't end up being shorter
+    than expected, which can lead to shorter than expected signals, after concatenation.
     """
 
-    return int(n_seconds * fs)
+    return int(np.ceil(n_seconds * fs))
 
 
 def split_signal(sig, n_samples):
