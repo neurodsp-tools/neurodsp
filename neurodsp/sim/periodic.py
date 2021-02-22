@@ -195,7 +195,7 @@ def make_bursts(n_seconds, fs, is_oscillating, cycle):
         Simulated bursty oscillation.
     """
 
-    n_samples = int(n_seconds * fs)
+    n_samples = compute_nsamples(n_seconds, fs)
     n_samples_cycle = len(cycle)
 
     burst_sig = np.zeros([n_samples])

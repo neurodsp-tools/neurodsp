@@ -216,7 +216,7 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
     """
 
-    cycle = gaussian(int(n_seconds * fs), std * fs)
+    cycle = gaussian(compute_nsamples(n_seconds, fs), std * fs)
 
     return cycle
 

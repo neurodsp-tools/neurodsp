@@ -58,7 +58,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     lam = n_neurons * firing_rate
 
     # Variance is equal to the mean
-    sig = np.random.normal(loc=lam, scale=lam**0.5, size=int(n_seconds * fs))
+    sig = np.random.normal(loc=lam, scale=lam**0.5, size=compute_nsamples(n_seconds, fs))
 
     # Enforce that sig is non-negative in cases of low firing rate
     sig[np.where(sig < 0.)] = 0.
@@ -156,11 +156,11 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     """
 
     times = create_times(n_seconds, fs)
-    sig_len = fs*n_seconds
+    n_samples = compute_nsamples(n_seconds, fs)
 
     # Create the range of frequencies that appear in the power spectrum since these
     #   will be the frequencies in the cosines we sum below
-    freqs = np.linspace(0, fs/2, num=int(sig_len//2 + 1), endpoint=True)
+    freqs = np.linspace(0, fs/2, num=int(n_samples//2 + 1), endpoint=True)
 
     # Drop the DC component
     freqs = freqs[1:]
