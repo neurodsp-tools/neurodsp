@@ -13,6 +13,17 @@ def test_sim_oscillation():
     sig = sim_oscillation(N_SECONDS, FS, FREQ1)
     check_sim_output(sig)
 
+    # Check some different frequencies, that they get expected length, etc
+    for freq in [3.5, 7.0, 13]:
+        check_sim_output(sim_oscillation(N_SECONDS, FS, freq))
+
+    # Check that nothing goes weird with different time & sampling rate inputs
+    n_seconds = 0.123
+    check_sim_output(sim_oscillation(n_seconds, FS, FREQ1), n_seconds=n_seconds)
+
+    fs = 123
+    check_sim_output(sim_oscillation(N_SECONDS, fs, FREQ1), fs=fs)
+
 def test_sim_bursty_oscillation():
 
     # Check default values work
