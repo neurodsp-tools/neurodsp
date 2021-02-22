@@ -78,3 +78,13 @@ def test_phase_shift_cycle():
     cycle_shifted = phase_shift_cycle(cycle, 0.25)
     check_sim_output(cycle_shifted)
     assert not np.array_equal(cycle, cycle_shifted)
+
+    # Check min-to-min sim
+    cycle_shifted = phase_shift_cycle(cycle, 'min')
+    check_sim_output(cycle_shifted)
+    assert np.argmin(cycle_shifted) == 0
+
+    # Check max-to-mix sim
+    cycle_shifted = phase_shift_cycle(cycle, 'max')
+    check_sim_output(cycle_shifted)
+    assert np.argmax(cycle_shifted) == 0

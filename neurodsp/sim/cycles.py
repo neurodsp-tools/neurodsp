@@ -4,14 +4,14 @@ import numpy as np
 from scipy.signal import gaussian, sawtooth
 
 from neurodsp.sim.info import get_sim_func
-from neurodsp.utils.checks import check_param
+from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
 ###################################################################################################
 
-def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
+def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     """Simulate a single cycle of a periodic pattern.
 
     Parameters
@@ -31,6 +31,10 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
 
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Keyword arguments for parameters of the cycle, all as float:
 
@@ -68,13 +72,14 @@ def sim_cycle(n_seconds, fs, cycle_type, **cycle_params):
         cycle_func = cycle_type
 
     cycle = cycle_func(n_seconds, fs, **cycle_params)
+    cycle = phase_shift_cycle(cycle, phase)
 
     return cycle
 
 
 @normalize
-def sim_normalized_cycle(n_seconds, fs, cycle_type, **cycle_params):
-    return sim_cycle(n_seconds, fs, cycle_type, **cycle_params)
+def sim_normalized_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
+    return sim_cycle(n_seconds, fs, cycle_type, phase, **cycle_params)
 sim_normalized_cycle.__doc__ = sim_cycle.__doc__
 
 
@@ -135,7 +140,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     >>> cycle = sim_asine_cycle(n_seconds=0.5, fs=500, rdsym=0.75)
     """
 
-    check_param(rdsym, 'rdsym', [0., 1.])
+    check_param_range(rdsym, 'rdsym', [0., 1.])
 
     # Determine number of samples in rise and decay periods
     n_samples = int(n_seconds * fs)
@@ -178,7 +183,7 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     >>> cycle = sim_sawtooth_cycle(n_seconds=0.25, fs=500, width=0.5)
     """
 
-    check_param(width, 'width', [0., 1.])
+    check_param_range(width, 'width', [0., 1.])
 
     times = create_cycle_time(n_seconds, fs)
     cycle = sawtooth(times, width)
@@ -259,9 +264,10 @@ def phase_shift_cycle(cycle, shift):
     ----------
     cycle : 1d array
         Cycle values to apply a rotation shift to.
-    shift : float
-        The amount to rotationally shift the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1].
+    shift : float or {'min', 'max'}
+        If non-zero, applies a phase shift by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
 
     Returns
     -------
@@ -276,9 +282,17 @@ def phase_shift_cycle(cycle, shift):
     >>> shifted_cycle = phase_shift_cycle(cycle, shift=0.5)
     """
 
-    check_param(shift, 'shift', [0., 1.])
+    if isinstance(shift, (float, int)):
+        check_param_range(shift, 'shift', [0., 1.])
+    else:
+        check_param_options(shift, 'shift', ['min', 'max'])
 
-    shift = int(np.round(shift * len(cycle)))
+    if shift == 'min':
+        shift = np.argmin(cycle)
+    elif shift == 'max':
+        shift = np.argmax(cycle)
+    else:
+        shift = int(np.round(shift * len(cycle)))
 
     indices = range(shift, shift+len(cycle))
     cycle = cycle.take(indices, mode='wrap')
