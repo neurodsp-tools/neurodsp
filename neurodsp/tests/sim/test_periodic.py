@@ -1,7 +1,7 @@
 """Test periodic simulation functions."""
 
 from neurodsp.tests.tutils import check_sim_output
-from neurodsp.tests.settings import FS, N_SECONDS, FREQ1
+from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, N_SECONDS_ODD, FS_ODD
 
 from neurodsp.sim.periodic import *
 
@@ -18,11 +18,8 @@ def test_sim_oscillation():
         check_sim_output(sim_oscillation(N_SECONDS, FS, freq))
 
     # Check that nothing goes weird with different time & sampling rate inputs
-    n_seconds = 0.123
-    check_sim_output(sim_oscillation(n_seconds, FS, FREQ1), n_seconds=n_seconds)
-
-    fs = 123
-    check_sim_output(sim_oscillation(N_SECONDS, fs, FREQ1), fs=fs)
+    check_sim_output(sim_oscillation(N_SECONDS_ODD, FS, FREQ1), n_seconds=N_SECONDS_ODD)
+    check_sim_output(sim_oscillation(N_SECONDS, FS_ODD, FREQ1), fs=FS_ODD)
 
 def test_sim_bursty_oscillation():
 

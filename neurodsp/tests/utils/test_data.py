@@ -2,6 +2,8 @@
 
 from numpy.testing import assert_equal
 
+from neurodsp.tests.settings import N_SECONDS, FS, N_SECONDS_ODD, FS_ODD
+
 from neurodsp.utils.data import *
 
 ###################################################################################################
@@ -17,28 +19,33 @@ def test_create_freqs():
 
 def test_create_times():
 
-    fs = 10
-
-    n_seconds = 1
-    times = create_times(n_seconds, fs)
-    assert_equal(times, np.arange(0, n_seconds, 1/fs))
+    times = create_times(N_SECONDS, FS)
+    assert len(times) == compute_nsamples(N_SECONDS, FS)
+    assert_equal(times, np.arange(0, N_SECONDS, 1/FS))
 
     n_seconds = 2
     start_val = 1
-    times = create_times(n_seconds, fs, start_val=start_val)
+    times = create_times(n_seconds, FS, start_val=start_val)
     assert times[0] == start_val
-    assert len(times) == n_seconds * fs
+    assert len(times) == compute_nsamples(n_seconds, FS)
+
+    times = create_times(N_SECONDS_ODD, FS_ODD)
+    assert len(times) == compute_nsamples(N_SECONDS_ODD, FS_ODD)
 
 def test_create_samples():
 
     samples = create_samples(10)
     assert_equal(samples, np.arange(0, 10, 1))
 
-def test_calc_nsamples():
+def test_compute_nsamples():
 
-    n_samples = compute_nsamples(1, 100)
+    n_samples = compute_nsamples(N_SECONDS, FS)
     assert isinstance(n_samples, int)
     assert n_samples == 100
+
+    n_samples = compute_nsamples(N_SECONDS_ODD, FS_ODD)
+    assert isinstance(n_samples, int)
+    assert n_samples == int(np.ceil(N_SECONDS_ODD * FS_ODD))
 
 def test_split_signal(tsig):
 
