@@ -55,7 +55,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=500,
       so that the algorithm does not converge on a low frequency motif.
     - This implementation is a minimal version, as compared to the original implementation
       in [2], which has more available options.
-    - This version may also be much smaller than the original, as this implementation does not
+    - This version may also be much slower than the original, as this implementation does not
       currently include the Markov Chain Monte Carlo sampling to calculate distances.
 
     Examples
