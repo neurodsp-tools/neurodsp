@@ -5,6 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.norm import normalize_sig
+from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
@@ -62,7 +63,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     sig = np.tile(cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
-    n_samples = int(n_seconds * fs)
+    n_samples = compute_nsamples(n_seconds, fs)
     sig = sig[:n_samples]
 
     return sig
