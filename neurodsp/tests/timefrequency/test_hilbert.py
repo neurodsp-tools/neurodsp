@@ -1,4 +1,4 @@
-"""Test functions for time-frequency Hilbert analyses."""
+"""Tests for neurodsp.timefrequency.hilbert."""
 
 import numpy as np
 
@@ -47,11 +47,12 @@ def test_phase_by_time(tsig, tsig_sine):
 
     # Create a time axis, scaled to the range of [0, 2pi]
     times = 2 * np.pi * create_times(N_SECONDS, FS)
-    # Generate the expected instantaneous phase of the given signal. Phase is defined in
-    #    [-pi, pi]. Since sin(t) = cos(t - pi/2), the phase should begin at -pi/2 and increase with a slope
-    #    of 1 until phase hits pi, or when t=3pi/2. Phase then wraps around to -pi and again increases
-    #    linearly with a slope of 1.
-    expected_answer = np.array([time-np.pi/2 if time <= 3*np.pi/2 else time-5*np.pi/2 for time in times])
+    # Generate the expected instantaneous phase of the given signal
+    #   Phase is defined in [-pi, pi]. Since sin(t) = cos(t - pi/2), the phase should begin at
+    #   -pi/2 and increase with a slope of 1 until phase hits pi, or when t=3pi/2. Phase then
+    #   wraps around to -pi and again increases linearly with a slope of 1
+    expected_answer = np.array(\
+        [time-np.pi/2 if time <= 3*np.pi/2 else time-5*np.pi/2 for time in times])
 
     assert np.allclose(expected_answer, phase, atol=EPS)
 

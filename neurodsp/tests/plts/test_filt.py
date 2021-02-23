@@ -1,4 +1,4 @@
-"""Test filtering plots."""
+"""Tests for neurodsp.plts.filt."""
 
 from neurodsp.filt.filter import filter_signal
 from neurodsp.filt.fir import design_fir_filter

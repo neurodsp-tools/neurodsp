@@ -1,4 +1,4 @@
-"""Test rhythm plots."""
+"""Tests for neurodsp.plts.rhythm."""
 
 import numpy as np
 

@@ -1,4 +1,4 @@
-"""Test filtering functions."""
+"""Tests for neurodsp.filt.filter."""
 
 from pytest import raises, warns
 

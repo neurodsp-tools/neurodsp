@@ -1,7 +1,8 @@
-"""Tests for burst detection functions."""
+"""Tests for neurodsp.burst.utils."""
+
+import pytest
 
 from neurodsp.burst.utils import *
-import pytest
 
 ###################################################################################################
 ###################################################################################################

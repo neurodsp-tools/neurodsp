@@ -1,4 +1,4 @@
-"""Test the utility function from spectral."""
+"""Tests for neurodsp.spectral.utils."""
 
 import numpy as np
 from numpy.testing import assert_equal
@@ -31,7 +31,7 @@ def test_trim_spectrogram():
     assert_equal(t_ext, np.array([0, 1]))
     assert_equal(p_ext, np.array([[4, 5], [7, 8], [10, 11]]))
 
-    # Check extraction across only specific axes
+    # Check extraction across specified axis
     f_ext, t_ext, p_ext = trim_spectrogram(freqs, times, pows, f_range=None, t_range=[0, 1])
     assert_equal(f_ext, freqs)
     assert_equal(t_ext, np.array([0, 1]))
