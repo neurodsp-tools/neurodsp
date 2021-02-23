@@ -1,4 +1,4 @@
-"""Test cycle simulation functions."""
+"""Tests for neurodsp.sim.cycle."""
 
 from pytest import raises
 

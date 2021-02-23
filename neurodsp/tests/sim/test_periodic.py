@@ -1,4 +1,4 @@
-"""Test periodic simulation functions."""
+"""Tests for neurodsp.sim.periodic."""
 
 from neurodsp.tests.tutils import check_sim_output
 from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, N_SECONDS_ODD, FS_ODD

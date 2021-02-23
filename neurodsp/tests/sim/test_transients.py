@@ -1,4 +1,4 @@
-"""Test transient simulation functions."""
+"""Tests for neurodsp.sim.transients."""
 
 import numpy as np
 

@@ -1,4 +1,4 @@
-"""Tests for data related utility functions."""
+"""Tests for neurodsp.utils.data."""
 
 from numpy.testing import assert_equal
 
@@ -22,12 +22,11 @@ def test_create_times():
     times = create_times(N_SECONDS, FS)
     assert len(times) == compute_nsamples(N_SECONDS, FS)
     assert_equal(times, np.arange(0, N_SECONDS, 1/FS))
-
-    n_seconds = 2
-    start_val = 1
-    times = create_times(n_seconds, FS, start_val=start_val)
+    
+    start_val = 0.5
+    times = create_times(N_SECONDS, FS, start_val=start_val)
     assert times[0] == start_val
-    assert len(times) == compute_nsamples(n_seconds, FS)
+    assert len(times) == compute_nsamples(N_SECONDS, FS)
 
     times = create_times(N_SECONDS_ODD, FS_ODD)
     assert len(times) == compute_nsamples(N_SECONDS_ODD, FS_ODD)
