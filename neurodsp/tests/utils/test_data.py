@@ -22,14 +22,15 @@ def test_create_times():
     times = create_times(N_SECONDS, FS)
     assert len(times) == compute_nsamples(N_SECONDS, FS)
     assert_equal(times, np.arange(0, N_SECONDS, 1/FS))
-    
+
     start_val = 0.5
     times = create_times(N_SECONDS, FS, start_val=start_val)
     assert times[0] == start_val
     assert len(times) == compute_nsamples(N_SECONDS, FS)
 
-    times = create_times(N_SECONDS_ODD, FS_ODD)
-    assert len(times) == compute_nsamples(N_SECONDS_ODD, FS_ODD)
+    assert len(create_times(N_SECONDS_ODD, FS)) == compute_nsamples(N_SECONDS_ODD, FS)
+    assert len(create_times(N_SECONDS, FS_ODD)) == compute_nsamples(N_SECONDS, FS_ODD)
+    assert len(create_times(N_SECONDS_ODD, FS_ODD)) == compute_nsamples(N_SECONDS_ODD, FS_ODD)
 
 def test_create_samples():
 
@@ -44,7 +45,7 @@ def test_compute_nsamples():
 
     n_samples = compute_nsamples(N_SECONDS_ODD, FS_ODD)
     assert isinstance(n_samples, int)
-    assert n_samples == int(N_SECONDS_ODD * FS_ODD)
+    assert n_samples == int(np.ceil(N_SECONDS_ODD * FS_ODD))
 
 def test_split_signal(tsig):
 

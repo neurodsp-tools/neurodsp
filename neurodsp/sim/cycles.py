@@ -255,7 +255,7 @@ def create_cycle_time(n_seconds, fs):
     >>> indices = create_cycle_time(n_seconds=1, fs=500)
     """
 
-    return 2 * np.pi * 1 / n_seconds * (np.arange(compute_nsamples(n_seconds, fs)) / fs)
+    return 2 * np.pi * 1 / n_seconds * (np.arange(n_seconds * fs) / fs)
 
 
 def phase_shift_cycle(cycle, shift):
