@@ -55,8 +55,11 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
 
+    # Compute the number of seconds per cycle for the requested frequency
+    #   The rounding is needed to get a value that works with the sampling rate
+    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+
     # Create a single cycle of an oscillation, for the requested frequency
-    n_seconds_cycle = 1/freq
     cycle = sim_cycle(n_seconds_cycle, fs, cycle, phase, **cycle_params)
 
     # Tile the cycle, to create the desired oscillation
