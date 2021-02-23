@@ -14,12 +14,20 @@ def test_sim_oscillation():
     check_sim_output(sig)
 
     # Check some different frequencies, that they get expected length, etc
-    for freq in [3.5, 7.0, 13]:
+    for freq in [3.5, 7.0, 13.]:
         check_sim_output(sim_oscillation(N_SECONDS, FS, freq))
 
     # Check that nothing goes weird with different time & sampling rate inputs
     check_sim_output(sim_oscillation(N_SECONDS_ODD, FS, FREQ1), n_seconds=N_SECONDS_ODD)
     check_sim_output(sim_oscillation(N_SECONDS, FS_ODD, FREQ1), fs=FS_ODD)
+
+def test_sim_oscillation_concatenation():
+
+    n_seconds, fs, freq = 0.1, 1000, 13
+    sig = sim_oscillation(N_SECONDS, FS, FREQ1)
+
+    # Test the concatenation is smooth - no large value differences
+    assert np.all(np.abs(np.diff(sig)) < 2 * np.median(np.abs(np.diff(sig))))
 
 def test_sim_bursty_oscillation():
 
