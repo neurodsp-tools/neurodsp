@@ -21,13 +21,33 @@ def test_sim_oscillation():
     check_sim_output(sim_oscillation(N_SECONDS_ODD, FS, FREQ1), n_seconds=N_SECONDS_ODD)
     check_sim_output(sim_oscillation(N_SECONDS, FS_ODD, FREQ1), fs=FS_ODD)
 
-def test_sim_oscillation_concatenation():
+def test_sim_oscillation_concatenation1():
 
-    n_seconds, fs, freq = 0.1, 1000, 13
-    sig = sim_oscillation(N_SECONDS, FS, FREQ1)
+    n_seconds, fs = 0.1, 1000
+
+    # Test an odd frequency value, checking for a smooth concatenation
+    freq = 13
+    sig = sim_oscillation(n_seconds, fs, freq)
 
     # Test the concatenation is smooth - no large value differences
     assert np.all(np.abs(np.diff(sig)) < 2 * np.median(np.abs(np.diff(sig))))
+
+    # Zoom in on concatenation point, checking for smooth transition
+    concat_point = int(fs * 1/freq)
+    vals = sig[concat_point-5:concat_point+5]
+    assert np.all(np.diff(vals) > 0.5 * np.median(np.diff(vals)))
+    assert np.all(np.diff(vals) < 1.5 * np.median(np.diff(vals)))
+
+    # Test another, higher, frequency
+    freq = 31
+    sig = sim_oscillation(n_seconds, fs, freq)
+
+    assert np.all(np.abs(np.diff(sig)) < 2 * np.median(np.abs(np.diff(sig))))
+
+    concat_point = int(fs * 1/freq)
+    vals = sig[concat_point-5:concat_point+5]
+    assert np.all(np.diff(vals) > 0.5 * np.median(np.diff(vals)))
+    assert np.all(np.diff(vals) < 1.5 * np.median(np.diff(vals)))
 
 def test_sim_bursty_oscillation():
 
