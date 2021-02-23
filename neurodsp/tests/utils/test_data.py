@@ -45,7 +45,7 @@ def test_compute_nsamples():
 
     n_samples = compute_nsamples(N_SECONDS_ODD, FS_ODD)
     assert isinstance(n_samples, int)
-    assert n_samples == int(np.ceil(N_SECONDS_ODD * FS_ODD))
+    assert n_samples == int(N_SECONDS_ODD * FS_ODD)
 
 def test_split_signal(tsig):
 
