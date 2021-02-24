@@ -1,5 +1,7 @@
 """Tests for neurodsp.sim.periodic."""
 
+from pytest import raises
+
 from neurodsp.tests.tutils import check_sim_output
 from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, N_SECONDS_ODD, FS_ODD
 
@@ -64,6 +66,27 @@ def test_sim_bursty_oscillation():
     sig3 = sim_bursty_oscillation(N_SECONDS, FS, FREQ1, \
         burst_def='durations', burst_params={'n_cycles_burst' : 2, 'n_cycles_off' : 2})
     check_sim_output(sig3)
+
+
+def test_sim_variable_oscillation():
+
+    freqs = np.array([10, 20])
+    rdsyms = [.4, .8]
+
+    sig1 = sim_variable_oscillation(FS, freqs, cycle='asine', rdsym=rdsyms)
+    assert isinstance(sig1, np.ndarray) and len(sig1) == sum(FS/freqs) and ~np.isnan(sig1).any()
+
+    sig2 = sim_variable_oscillation(FS, 20, cycle='asine', rdsym=rdsyms)
+    assert isinstance(sig2, np.ndarray) and len(sig2) == 2 * FS / 20 and ~np.isnan(sig2).any()
+
+    # Too few frequencies
+    with raises(ValueError):
+        sig3 = sim_variable_oscillation(FS, freqs[1:], cycle='asine', rdsym=rdsyms)
+
+    # Too few params
+    with raises(ValueError):
+        sig4 = sim_variable_oscillation(FS, freqs, cycle='asine', rdsym=rdsyms[1:])
+
 
 def test_make_bursts():
 
