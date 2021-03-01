@@ -47,8 +47,9 @@ def test_sim_sine_cycle():
 
 def test_sim_asine_cycle():
 
-    cycle = sim_asine_cycle(N_SECONDS, FS, 0.25)
-    check_sim_output(cycle)
+    for side in ['both', 'peak', 'trough']:
+        cycle = sim_asine_cycle(N_SECONDS, FS, 0.25, side=side)
+        check_sim_output(cycle)
 
 def test_sim_sawtooth_cycle():
 

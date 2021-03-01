@@ -111,7 +111,7 @@ def sim_sine_cycle(n_seconds, fs):
     return cycle
 
 
-def sim_asine_cycle(n_seconds, fs, rdsym):
+def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     """Simulate a cycle of an asymmetric sine wave.
 
     Parameters
@@ -127,6 +127,8 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
         = 0.5 - symmetric (sine wave)
         < 0.5 - shorter rise, longer decay
         > 0.5 - longer rise, shorter decay
+    side : {'both', 'peak', 'trough'}
+        Which side of the cycle to make asymmetric.
 
     Returns
     -------
@@ -145,16 +147,33 @@ def sim_asine_cycle(n_seconds, fs, rdsym):
     # Determine number of samples in rise and decay periods
     n_samples = int(n_seconds * fs)
     n_rise = int(np.round(n_samples * rdsym))
-    n_decay = n_samples - n_rise
 
-    # Make phase array for an asymmetric cycle
-    #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
-    phase = np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
-                       np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
-                       np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]])
+    if side == 'both':
+
+        n_decay = n_samples - n_rise
+
+        # Make phase array for an asymmetric cycle
+        #   Note: the ceil & floor are so the cycle has the right number of samples if n_decay is odd
+        phase = np.hstack([np.linspace(0, np.pi/2, int(np.ceil(n_rise/2)) + 1),
+                           np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
+                           np.linspace(-np.pi/2, 0, int(np.floor(n_rise/2)) + 1)[:-1]])
+
+    if side in ['peak', 'trough']:
+
+        half_sample = int(n_samples/2)
+
+        npts = int(np.ceil(n_rise/2)) + 1
+        offset = (1/half_sample * np.pi)
+
+        phase = np.hstack([np.linspace(0, np.pi/2, npts),
+                           np.linspace(np.pi/2, np.pi, half_sample-npts),
+                           np.linspace(np.pi + offset, 2*np.pi, half_sample + 1)[:-1]])
 
     # Convert phase definition to signal
     cycle = np.sin(phase)
+
+    if side == 'trough':
+        cycle = -1 * phase_shift_cycle(cycle, 0.5)
 
     return cycle
 
