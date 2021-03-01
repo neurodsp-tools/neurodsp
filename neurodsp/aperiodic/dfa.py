@@ -1,7 +1,6 @@
 """Fluctuation analyses to measure fractal properties of time series."""
 
 import numpy as np
-import scipy as sp
 
 from neurodsp.utils.data import split_signal
 
@@ -108,7 +107,7 @@ def compute_rescaled_range(sig, win_len):
     sig = sig - np.mean(sig)
 
     # Calculate cumulative sum of the signal & split the signal into segments
-    segments = split_signal(sp.cumsum(sig), win_len).T
+    segments = split_signal(np.cumsum(sig), win_len).T
 
     # Calculate rescaled range as range divided by standard deviation (of non-cumulative signal)
     rs_win = np.ptp(segments, axis=0) / np.std(split_signal(sig, win_len).T, axis=0)
@@ -138,7 +137,7 @@ def compute_detrended_fluctuation(sig, win_len, deg=1):
     """
 
     # Calculate cumulative sum of the signal & split the signal into segments
-    segments = split_signal(sp.cumsum(sig - np.mean(sig)), win_len).T
+    segments = split_signal(np.cumsum(sig - np.mean(sig)), win_len).T
 
     # Calculate local trend, as the line of best fit within the time window
     _, fluc, _, _, _ = np.polyfit(np.arange(win_len), segments, deg=deg, full=True)
