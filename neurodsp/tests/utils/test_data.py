@@ -1,6 +1,6 @@
 """Tests for neurodsp.utils.data."""
 
-from numpy.testing import assert_equal
+from numpy.testing import assert_equal, assert_almost_equal
 
 from neurodsp.tests.settings import N_SECONDS, FS, N_SECONDS_ODD, FS_ODD
 
@@ -25,7 +25,8 @@ def test_create_times():
 
     start_val = 0.5
     times = create_times(N_SECONDS, FS, start_val=start_val)
-    assert times[0] == start_val
+    assert_equal(times[0], start_val)
+    assert_almost_equal(times[-1], N_SECONDS + start_val, decimal=2)
     assert len(times) == compute_nsamples(N_SECONDS, FS)
 
     assert len(create_times(N_SECONDS_ODD, FS)) == compute_nsamples(N_SECONDS_ODD, FS)

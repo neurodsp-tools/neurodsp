@@ -44,7 +44,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Time indices.
     """
 
-    return np.linspace(start_val, n_seconds, compute_nsamples(n_seconds, fs)+1)[:-1]
+    return np.linspace(start_val, n_seconds+start_val, compute_nsamples(n_seconds, fs)+1)[:-1]
 
 
 def create_samples(n_samples, start_val=0):
