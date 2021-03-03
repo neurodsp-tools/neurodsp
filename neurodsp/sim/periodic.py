@@ -179,7 +179,8 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     return sig
 
 
-def sim_variable_oscillation(fs, freqs, cycle='sine', phase=0, **cycle_params):
+@normalize
+def sim_variable_oscillation(fs, freqs, n_seconds='auto', cycle='sine', phase=0, **cycle_params):
     """Simulate an oscillation that varies in frequency and cycle parameters.
 
     Parameters
@@ -188,9 +189,17 @@ def sim_variable_oscillation(fs, freqs, cycle='sine', phase=0, **cycle_params):
         Signal sampling rate, in Hz.
     freqs : float or list
         Oscillation frequencies.
+    n_seconds : 'auto' or float, optional, default: 'auto'
+        Simulation time, in seconds. If 'auto', the simulation time is based on `freqs` and the
+        length of `cycle_params`. If a float, the signal may be truncated or contain trailing zeros
+        if not exact.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
         Type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Parameter floats or variable lists for each cycle.
 
@@ -244,9 +253,16 @@ def sim_variable_oscillation(fs, freqs, cycle='sine', phase=0, **cycle_params):
     starts = [0, *ends[:-1]]
 
     # Simulate
-    sig = np.zeros(np.sum(np.ceil(fs / freqs), dtype=int))
+    n_samples = np.sum(np.ceil(fs / freqs), dtype=int) if n_seconds == 'auto' else \
+        int(n_seconds * fs)
+
+    sig = np.zeros(n_samples)
 
     for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
+
+        if start > n_samples or end > n_samples:
+            break
+
         sig[start:end] = sim_cycle(1/freq, fs, cycle, phase, **params)
 
     return sig
