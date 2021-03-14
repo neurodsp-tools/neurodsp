@@ -147,7 +147,5 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
     >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
     """
 
-    ax = check_ax(ax, (15, 3))
-
     bursts = ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)
