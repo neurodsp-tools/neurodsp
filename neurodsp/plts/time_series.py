@@ -106,7 +106,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
         plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **kwargs)
         ax = ax if ax else plt.gca()
         ax.set_yticks([-np.pi, 0, np.pi])
-        ax.set_yticklabels(['-$\pi$', 0, '$\pi$'])
+        ax.set_yticklabels([r'-$\pi$', 0, r'$\pi$'])
     elif measure == 'amplitude':
         plot_time_series(times, sigs, ax=ax, ylabel='Amplitude', **kwargs)
     elif measure == 'frequency':
