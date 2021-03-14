@@ -17,28 +17,36 @@ def test_plot_time_series(tsig):
     times = np.arange(0, len(tsig), 1)
 
     # Check single time series plot
-    plot_time_series(times, tsig)
+    plot_time_series(times, tsig,
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-1.png')
 
     # Check multi time series plot, with colors & labels
-    plot_time_series(times, [tsig, tsig[::-1]], labels=['signal', 'signal reversed'],
-                     colors=['k', 'r'], save_fig=True, file_name='test_plot_time_series.png',
-                     file_path=TEST_PLOTS_PATH)
+    plot_time_series(times, [tsig, tsig[::-1]],
+                     labels=['signal', 'signal reversed'], colors=['k', 'r'],
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-2.png')
 
     # Test 2D arrays
     times_2d = np.vstack((times, times))
     tsig_2d = np.vstack((tsig, tsig))
-    plot_time_series(times_2d, tsig_2d)
+    plot_time_series(times_2d, tsig_2d,
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-2arr.png')
 
 @plot_test
 def test_plot_instantaneous_measure(tsig):
 
     times = np.arange(0, len(tsig), 1)
 
-    plot_instantaneous_measure(times, tsig, 'phase', save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_instantaneous_measure(times, tsig, 'phase',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
                                file_name='test_plot_instantaneous_measure_phase.png')
-    plot_instantaneous_measure(times, tsig, 'amplitude', save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_instantaneous_measure(times, tsig, 'amplitude',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
                                file_name='test_plot_instantaneous_measure_amplitude.png')
-    plot_instantaneous_measure(times, tsig, 'frequency', save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_instantaneous_measure(times, tsig, 'frequency',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
                                file_name='test_plot_instantaneous_measure_frequency.png')
 
     # Check the error for bad measure
@@ -51,5 +59,6 @@ def test_plot_bursts(tsig):
     times = np.arange(0, len(tsig), 1)
     bursts = np.array([True] * len(tsig))
 
-    plot_bursts(times, tsig, bursts, save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_bursts(times, tsig, bursts,
+                save_fig=True, file_path=TEST_PLOTS_PATH,
                 file_name='test_plot_bursts.png')
