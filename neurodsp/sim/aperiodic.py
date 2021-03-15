@@ -112,7 +112,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
     sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate,
                           mean=None, variance=None)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
-    sig = np.convolve(sig, ker, 'valid')[:-1]
+    sig = np.convolve(sig, ker, 'valid')[:compute_nsamples(n_seconds, fs)]
 
     return sig
 
