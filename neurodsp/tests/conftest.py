@@ -8,8 +8,7 @@ import numpy as np
 
 from neurodsp.sim import sim_oscillation, sim_powerlaw, sim_combined
 from neurodsp.utils.sim import set_random_seed
-from neurodsp.tests.settings import (N_SECONDS, N_SECONDS_LONG,
-                                     FS, FS_HIGH, FREQ_SINE, FREQ1, EXP1,
+from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
 
 ###################################################################################################
@@ -32,29 +31,22 @@ def tsig2d():
 @pytest.fixture(scope='session')
 def tsig_sine():
 
-	yield sim_oscillation(N_SECONDS, FS, freq=FREQ_SINE, variance=None, mean=None)
-
-@pytest.fixture(scope='session')
-def tsig_sine_long():
-
-	yield sim_oscillation(N_SECONDS_LONG, FS, freq=FREQ_SINE, variance=None, mean=None)
+    yield sim_oscillation(N_SECONDS, FS, freq=FREQ_SINE, variance=None, mean=None)
 
 @pytest.fixture(scope='session')
 def tsig_comb():
 
     components = {'sim_powerlaw': {'exponent' : EXP1},
                   'sim_oscillation': {'freq' : FREQ1}}
-    yield sim_combined(n_seconds=N_SECONDS_LONG, fs=FS, components=components)
+    yield sim_combined(n_seconds=N_SECONDS, fs=FS, components=components)
 
 @pytest.fixture(scope='session')
-def tsig_white():
+def tsig_burst():
 
-    yield sim_powerlaw(N_SECONDS_LONG, FS_HIGH, exponent=0)
-
-@pytest.fixture(scope='session')
-def tsig_brown():
-
-    yield sim_powerlaw(N_SECONDS_LONG, FS_HIGH, exponent=-2)
+    components = {'sim_powerlaw': {'exponent' : EXP1},
+                  'sim_bursty_oscillation': {'freq' : FREQ1}}
+    yield sim_combined(n_seconds=N_SECONDS, fs=FS,
+                       components=components, component_variances=[0.5, 1])
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():
