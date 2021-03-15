@@ -12,6 +12,11 @@ import numpy as np
 FS = 100
 N_SECONDS = 10.0
 
+FS_ODD = 123
+N_SECONDS_ODD = 1/7
+
+N_SECONDS_CYCLE = 1.0
+
 # Define parameter options for test simulations
 FREQ1 = 10
 FREQ2 = 25

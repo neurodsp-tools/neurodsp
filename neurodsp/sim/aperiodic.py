@@ -7,7 +7,7 @@ from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.filt.fir import compute_filter_length
 from neurodsp.filt.checks import check_filter_definition
 from neurodsp.utils import remove_nans
-from neurodsp.utils.data import create_times
+from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
 from neurodsp.spectral import rotate_powerlaw
 from neurodsp.sim.transients import sim_synaptic_kernel
@@ -58,7 +58,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     lam = n_neurons * firing_rate
 
     # Variance is equal to the mean
-    sig = np.random.normal(loc=lam, scale=lam**0.5, size=int(n_seconds * fs))
+    sig = np.random.normal(loc=lam, scale=lam**0.5, size=compute_nsamples(n_seconds, fs))
 
     # Enforce that sig is non-negative in cases of low firing rate
     sig[np.where(sig < 0.)] = 0.
@@ -156,11 +156,11 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     """
 
     times = create_times(n_seconds, fs)
-    sig_len = fs*n_seconds
+    n_samples = compute_nsamples(n_seconds, fs)
 
     # Create the range of frequencies that appear in the power spectrum since these
     #   will be the frequencies in the cosines we sum below
-    freqs = np.linspace(0, fs/2, num=int(sig_len//2 + 1), endpoint=True)
+    freqs = np.linspace(0, fs/2, num=int(n_samples//2 + 1), endpoint=True)
 
     # Drop the DC component
     freqs = freqs[1:]
@@ -276,6 +276,9 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     >>> sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-1.5, f_range=(2, None))
     """
 
+    # Compute the number of samples for the simulated time series
+    n_samples = compute_nsamples(n_seconds, fs)
+
     # Get the number of samples to simulate for the signal
     #   If signal is to be filtered, with FIR, add extra to compensate for edges
     if f_range and filter_kwargs.get('filter_type', None) != 'iir':
@@ -286,11 +289,9 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
                                          n_seconds=filter_kwargs.get('n_seconds', None),
                                          n_cycles=filter_kwargs.get('n_cycles', 3))
 
-        n_samples = int(n_seconds * fs) + filt_len + 1
+        n_samples += filt_len + 1
 
-    else:
-        n_samples = int(n_seconds * fs)
-
+    # Simulate the powerlaw data
     sig = _create_powerlaw(n_samples, fs, exponent)
 
     if f_range is not None:

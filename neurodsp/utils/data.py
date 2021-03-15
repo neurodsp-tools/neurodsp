@@ -44,7 +44,7 @@ def create_times(n_seconds, fs, start_val=0.):
         Time indices.
     """
 
-    return np.linspace(start_val, n_seconds, int(fs * n_seconds)+1)[:-1]
+    return np.linspace(start_val, n_seconds+start_val, compute_nsamples(n_seconds, fs)+1)[:-1]
 
 
 def create_samples(n_samples, start_val=0):
@@ -84,11 +84,11 @@ def compute_nsamples(n_seconds, fs):
     Notes
     -----
     The result has to be rounded, in order to ensure that the number of samples is a whole number.
-
-    The `int` function rounds down, by default, which is the convention across the module.
+    By convention, this rounds up, which is needed to ensure that cycles don't end up being shorter
+    than expected, which can lead to shorter than expected signals, after concatenation.
     """
 
-    return int(n_seconds * fs)
+    return int(np.ceil(n_seconds * fs))
 
 
 def split_signal(sig, n_samples):
