@@ -11,8 +11,11 @@ import numpy as np
 # Define general settings for test simulations
 FS = 100
 FS_HIGH = 1000
+FS_ODD = 123
 N_SECONDS = 1.0
 N_SECONDS_LONG = 10.0
+N_SECONDS_CYCLE = 1.0
+N_SECONDS_ODD = 1/7
 
 # Define parameter options for test simulations
 FREQ1 = 10

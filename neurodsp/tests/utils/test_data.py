@@ -1,8 +1,8 @@
 """Tests for neurodsp.utils.data."""
 
-from numpy.testing import assert_equal
+from numpy.testing import assert_equal, assert_almost_equal
 
-from neurodsp.tests.settings import FS, N_SECONDS
+from neurodsp.tests.settings import N_SECONDS, FS, N_SECONDS_ODD, FS_ODD
 
 from neurodsp.utils.data import *
 
@@ -20,23 +20,33 @@ def test_create_freqs():
 def test_create_times():
 
     times = create_times(N_SECONDS, FS)
+    assert len(times) == compute_nsamples(N_SECONDS, FS)
     assert_equal(times, np.arange(0, N_SECONDS, 1/FS))
 
     start_val = 0.5
     times = create_times(N_SECONDS, FS, start_val=start_val)
-    assert times[0] == start_val
-    assert len(times) == N_SECONDS * FS
+    assert_equal(times[0], start_val)
+    assert_almost_equal(times[-1], N_SECONDS + start_val, decimal=2)
+    assert len(times) == compute_nsamples(N_SECONDS, FS)
+
+    assert len(create_times(N_SECONDS_ODD, FS)) == compute_nsamples(N_SECONDS_ODD, FS)
+    assert len(create_times(N_SECONDS, FS_ODD)) == compute_nsamples(N_SECONDS, FS_ODD)
+    assert len(create_times(N_SECONDS_ODD, FS_ODD)) == compute_nsamples(N_SECONDS_ODD, FS_ODD)
 
 def test_create_samples():
 
     samples = create_samples(10)
     assert_equal(samples, np.arange(0, 10, 1))
 
-def test_calc_nsamples():
+def test_compute_nsamples():
 
-    n_samples = compute_nsamples(1, 100)
+    n_samples = compute_nsamples(N_SECONDS, FS)
     assert isinstance(n_samples, int)
     assert n_samples == 100
+
+    n_samples = compute_nsamples(N_SECONDS_ODD, FS_ODD)
+    assert isinstance(n_samples, int)
+    assert n_samples == int(np.ceil(N_SECONDS_ODD * FS_ODD))
 
 def test_split_signal(tsig):
 
