@@ -42,7 +42,7 @@ def test_compute_nsamples():
 
     n_samples = compute_nsamples(N_SECONDS, FS)
     assert isinstance(n_samples, int)
-    assert n_samples == 100
+    assert n_samples == 1000
 
     n_samples = compute_nsamples(N_SECONDS_ODD, FS_ODD)
     assert isinstance(n_samples, int)
