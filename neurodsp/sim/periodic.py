@@ -8,8 +8,8 @@ from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
-
+from neurodsp.sim.cycles import (sim_cycle, sim_normalized_cycle,
+                                 phase_shift_cycle, create_cycle_time)
 ###################################################################################################
 ###################################################################################################
 
@@ -247,14 +247,15 @@ def sim_variable_oscillation(fs, freqs, n_seconds='auto', cycle='sine', phase=0,
 
     # Collect params for each cycle separately
     cycle_params = [dict(zip(param_keys, params)) for params in param_values]
+    cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
 
     # Determine start/end indices
-    ends = np.cumsum(fs / freqs, dtype=int)
+    cyc_lens = [len(create_cycle_time((1 / freq), fs)) for freq in freqs]
+    ends = np.cumsum(cyc_lens, dtype=int)
     starts = [0, *ends[:-1]]
 
     # Simulate
-    n_samples = np.sum(np.ceil(fs / freqs), dtype=int) if n_seconds == 'auto' else \
-        int(n_seconds * fs)
+    n_samples = np.sum(cyc_lens) if n_seconds == 'auto' else int(n_seconds * fs)
 
     sig = np.zeros(n_samples)
 
@@ -263,7 +264,8 @@ def sim_variable_oscillation(fs, freqs, n_seconds='auto', cycle='sine', phase=0,
         if start > n_samples or end > n_samples:
             break
 
-        sig[start:end] = sim_cycle(1/freq, fs, cycle, phase, **params)
+        n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+        sig[start:end] = sim_cycle(n_seconds_cycle, fs, cycle, phase, **params)
 
     return sig
 
