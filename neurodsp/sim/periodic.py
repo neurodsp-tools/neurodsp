@@ -180,19 +180,19 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
 
 
 @normalize
-def sim_variable_oscillation(fs, freqs, n_seconds='auto', cycle='sine', phase=0, **cycle_params):
+def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycle_params):
     """Simulate an oscillation that varies in frequency and cycle parameters.
 
     Parameters
     ----------
+    n_seconds : float or None
+        Simulation time, in seconds. If None, the simulation time is based on `freqs` and the
+        length of `cycle_params`. If a float, the signal may be truncated or contain trailing zeros
+        if not exact.
     fs : float
         Signal sampling rate, in Hz.
     freqs : float or list
         Oscillation frequencies.
-    n_seconds : 'auto' or float, optional, default: 'auto'
-        Simulation time, in seconds. If 'auto', the simulation time is based on `freqs` and the
-        length of `cycle_params`. If a float, the signal may be truncated or contain trailing zeros
-        if not exact.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
         Type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
@@ -250,12 +250,12 @@ def sim_variable_oscillation(fs, freqs, n_seconds='auto', cycle='sine', phase=0,
     cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
 
     # Determine start/end indices
-    cyc_lens = [len(create_cycle_time((1 / freq), fs)) for freq in freqs]
+    cyc_lens = [int(np.ceil(1 / freq * fs)) for freq in freqs]
     ends = np.cumsum(cyc_lens, dtype=int)
     starts = [0, *ends[:-1]]
 
     # Simulate
-    n_samples = np.sum(cyc_lens) if n_seconds == 'auto' else int(n_seconds * fs)
+    n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
 
     sig = np.zeros(n_samples)
 
