@@ -73,19 +73,19 @@ def test_sim_variable_oscillation():
     freqs = np.array([10, 20])
     rdsyms = [.4, .8]
 
-    sig1 = sim_variable_oscillation(FS, freqs, cycle='asine', rdsym=rdsyms)
+    sig1 = sim_variable_oscillation(None, FS, freqs, cycle='asine', rdsym=rdsyms)
     assert isinstance(sig1, np.ndarray) and len(sig1) == sum(FS/freqs) and ~np.isnan(sig1).any()
 
-    sig2 = sim_variable_oscillation(FS, 20, cycle='asine', rdsym=rdsyms)
+    sig2 = sim_variable_oscillation(None, FS, 20, cycle='asine', rdsym=rdsyms)
     assert isinstance(sig2, np.ndarray) and len(sig2) == 2 * FS / 20 and ~np.isnan(sig2).any()
 
     # Too few frequencies
     with raises(ValueError):
-        sig3 = sim_variable_oscillation(FS, freqs[1:], cycle='asine', rdsym=rdsyms)
+        sig3 = sim_variable_oscillation(None, FS, freqs[1:], cycle='asine', rdsym=rdsyms)
 
     # Too few params
     with raises(ValueError):
-        sig4 = sim_variable_oscillation(FS, freqs, cycle='asine', rdsym=rdsyms[1:])
+        sig4 = sim_variable_oscillation(None, FS, freqs, cycle='asine', rdsym=rdsyms[1:])
 
 
 def test_make_bursts():
