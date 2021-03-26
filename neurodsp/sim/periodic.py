@@ -179,7 +179,6 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     return sig
 
 
-@normalize
 def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycle_params):
     """Simulate an oscillation that varies in frequency and cycle parameters.
 
@@ -265,7 +264,7 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
             break
 
         n_seconds_cycle = int(np.ceil(fs / freq)) / fs
-        sig[start:end] = sim_cycle(n_seconds_cycle, fs, cycle, phase, **params)
+        sig[start:end] = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase, **params)
 
     return sig
 
