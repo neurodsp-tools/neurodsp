@@ -150,37 +150,39 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     half_sample = int(n_samples/2)
 
     # Calculate number of samples rising
-    n_rise_tot = int(np.round(n_samples * rdsym))
-    n_rise_start = int(np.ceil(n_rise_tot/2))
-    n_rise_end = int(np.floor(n_rise_tot/2))
+    n_rise = int(np.round(n_samples * rdsym))
+    n_rise1 = int(np.ceil(n_rise/2))
+    n_rise2 = int(np.floor(n_rise/2))
 
     # Calculate number of samples decaying
-    n_decay_full = n_samples - n_rise_tot
-    n_decay_half = half_sample - n_rise_start
-
-    # Calculate step size of one sample, to offset ranges, as needed
-    offset = (1/n_samples * 2*np.pi)
+    n_decay = n_samples - n_rise
+    n_decay1 = half_sample - n_rise1
 
     # Create phase defintion for cycle with both extrema being asymmetric
     if side == 'both':
 
-        phase = np.hstack([np.linspace(0, np.pi/2, n_rise_start),
-                           np.linspace(np.pi/2 + offset, -np.pi/2, n_decay_full),
-                           np.linspace(-np.pi/2 + offset, 0-offset, n_rise_end)])
+        phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
+                           np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
+                           np.linspace(-np.pi/2, 0, n_rise2 + 1)[:-1]])
 
     # Create phase defintion for cycle with only one extrema being asymmetric
-    if side in ['peak', 'trough']:
+    elif side == 'peak':
 
-        phase = np.hstack([np.linspace(0, np.pi/2, n_rise_start),
-                           np.linspace(np.pi/2, np.pi, n_decay_half),
-                           np.linspace(np.pi + offset, 2*np.pi-offset, half_sample)])
+        phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
+                           np.linspace(np.pi/2, np.pi, n_decay1 + 1)[1:-1],
+                           np.linspace(-np.pi, 0, half_sample + 1)[:-1]])
+
+    elif side == 'trough':
+
+        phase = np.hstack([np.linspace(0, np.pi, half_sample + 1)[:-1],
+                           np.linspace(-np.pi, -np.pi/2, n_decay1 + 1),
+                           np.linspace(-np.pi/2, 0, n_rise1 + 1)[:-1]])
+
+    else:
+        raise ValueError("Input for 'side' not understood.")
 
     # Convert phase definition to signal
     cycle = np.sin(phase)
-
-    # For asymmetric trough, rotate and flip the generated cycle
-    if side == 'trough':
-        cycle = -1 * phase_shift_cycle(cycle, 0.5)
 
     return cycle
 
