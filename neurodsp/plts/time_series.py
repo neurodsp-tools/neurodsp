@@ -104,7 +104,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     if measure == 'phase':
         plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **kwargs)
-        plt.yticks([-np.pi, 0, np.pi], ['-$\pi$', 0, '$\pi$'])
+        ax = ax if ax else plt.gca()
+        ax.set_yticks([-np.pi, 0, np.pi])
+        ax.set_yticklabels([r'-$\pi$', 0, r'$\pi$'])
     elif measure == 'amplitude':
         plot_time_series(times, sigs, ax=ax, ylabel='Amplitude', **kwargs)
     elif measure == 'frequency':
@@ -144,8 +146,6 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
     >>> times = create_times(n_seconds=10, fs=500)
     >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
     """
-
-    ax = check_ax(ax, (15, 3))
 
     bursts = ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)

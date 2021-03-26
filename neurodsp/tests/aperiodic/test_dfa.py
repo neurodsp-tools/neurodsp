@@ -6,10 +6,9 @@ import numpy as np
 
 from neurodsp.sim import sim_powerlaw
 
-from neurodsp.tests.settings import FS, FS_HIGH
+from neurodsp.tests.settings import N_SECONDS
 
-from neurodsp.aperiodic.dfa import (compute_fluctuations, compute_rescaled_range,
-                                    compute_detrended_fluctuation)
+from neurodsp.aperiodic.dfa import *
 
 ###################################################################################################
 ###################################################################################################
@@ -27,22 +26,31 @@ def test_compute_fluctuations(tsig):
     with raises(ValueError):
         t_scales, flucs, exp = compute_fluctuations(tsig, 500, method='nope.')
 
-def test_compute_fluctuations_dfa(tsig_white, tsig_brown):
-    """Tests fluctuation analysis for the DFA method."""
+def test_compute_fluctuations_dfa():
+
+    # Tests for DFA method
+    #   Note: these tests need a high sampling rate, so we use local simulations
 
     # Test white noise: expected DFA of 0.5
-    t_scales, flucs, exp = compute_fluctuations(tsig_white, FS_HIGH, method='dfa')
+    fs = 1000
+    white = sim_powerlaw(N_SECONDS, fs, exponent=0)
+    t_scales, flucs, exp = compute_fluctuations(white, fs, method='dfa')
     assert np.isclose(exp, 0.5, atol=0.1)
 
     # Test brown noise: expected DFA of 1.5
-    t_scales, flucs, exp = compute_fluctuations(tsig_brown, FS_HIGH, method='dfa')
+    brown = sim_powerlaw(N_SECONDS, fs, exponent=-2)
+    t_scales, flucs, exp = compute_fluctuations(brown, fs, method='dfa')
     assert np.isclose(exp, 1.5, atol=0.1)
 
-def test_compute_fluctuations_rs(tsig_white):
-    """Tests fluctuation analysis for the RS method."""
+def test_compute_fluctuations_rs():
+
+    # Tests for RS method
+    #   Note: these tests need a high sampling rate, so we use local simulations
 
     # Test white noise: expected RS of 0.5
-    t_scales, flucs, exp = compute_fluctuations(tsig_white, FS_HIGH, method='rs')
+    fs = 1000
+    white = sim_powerlaw(N_SECONDS, fs, exponent=0)
+    t_scales, flucs, exp = compute_fluctuations(white, fs, method='rs')
     assert np.isclose(exp, 0.5, atol=0.1)
 
 def test_compute_rescaled_range(tsig):

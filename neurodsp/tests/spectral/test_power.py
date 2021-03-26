@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, FREQS_LST, FREQS_ARR, EPS, FREQ_SINE
+from neurodsp.tests.settings import FS, FREQ_SINE, FREQS_LST, FREQS_ARR, EPS
 
 from neurodsp.spectral.power import *
 
@@ -34,7 +34,7 @@ def test_compute_spectrum_2d(tsig2d):
     assert freqs.shape[-1] == spectrum.shape[-1]
     assert spectrum.ndim == 2
 
-def test_compute_spectrum_welch(tsig, tsig_sine_long):
+def test_compute_spectrum_welch(tsig, tsig_sine):
 
     freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')
     assert freqs.shape == spectrum.shape
@@ -45,7 +45,7 @@ def test_compute_spectrum_welch(tsig, tsig_sine_long):
     # Use a rectangular window with a width of one period/cycle and no overlap
     #   The spectrum should just be a dirac spike at the first frequency
     window = np.ones(FS)
-    _, psd_welch = compute_spectrum(tsig_sine_long, FS, method='welch',
+    _, psd_welch = compute_spectrum(tsig_sine, FS, method='welch',
                                     nperseg=FS, noverlap=0, window=window)
 
     # Spike at frequency 1
@@ -67,19 +67,19 @@ def test_compute_spectrum_wavelet(tsig):
     freqs, spectrum = compute_spectrum_wavelet(tsig, FS, freqs=FREQS_LST, avg_type='median')
     assert freqs.shape == spectrum.shape
 
-def test_compute_spectrum_medfilt(tsig, tsig_sine_long):
+def test_compute_spectrum_medfilt(tsig, tsig_sine):
 
     freqs, spectrum = compute_spectrum_medfilt(tsig, FS)
     assert freqs.shape == spectrum.shape
 
     # Compute raw estimate of psd using fourier transform
     #   Only look at the spectrum up to the Nyquist frequency
-    sig_len = len(tsig_sine_long)
+    sig_len = len(tsig_sine)
     nyq_freq = sig_len//2
-    sig_ft = np.fft.fft(tsig_sine_long)[:nyq_freq]
+    sig_ft = np.fft.fft(tsig_sine)[:nyq_freq]
     psd = np.abs(sig_ft)**2/(FS * sig_len)
 
     # The medfilt here should be taking the median of a window with one sample
     #   Therefore, it should match the estimate of psd from above
-    _, psd_medfilt = compute_spectrum(tsig_sine_long, FS, method='medfilt', filt_len=0.1)
+    _, psd_medfilt = compute_spectrum(tsig_sine, FS, method='medfilt', filt_len=0.1)
     assert np.allclose(psd, psd_medfilt, atol=EPS)

@@ -5,6 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.norm import normalize_sig
+from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
@@ -54,21 +55,24 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
 
+    # Compute the number of seconds per cycle for the requested frequency
+    #   The rounding is needed to get a value that works with the sampling rate
+    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+
     # Create a single cycle of an oscillation, for the requested frequency
-    n_seconds_cycle = 1/freq
     cycle = sim_cycle(n_seconds_cycle, fs, cycle, phase, **cycle_params)
 
     # Tile the cycle, to create the desired oscillation
     sig = np.tile(cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
-    n_samples = int(n_seconds * fs)
+    n_samples = compute_nsamples(n_seconds, fs)
     sig = sig[:n_samples]
 
     return sig
 
 
-def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={},
+def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=None,
                            cycle='sine', phase=0, **cycle_params):
     """Simulate a bursty oscillation.
 
@@ -147,6 +151,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params={
 
     # Consistency fix: catch old parameters, and remap into burst_params
     #   This preserves the prior default values, and makes the old API work the same
+    burst_params = {} if not burst_params else burst_params
     for burst_param in ['enter_burst', 'leave_burst']:
         temp = cycle_params.pop(burst_param, 0.2)
         if burst_def == 'prob' and burst_param not in burst_params:
@@ -194,7 +199,7 @@ def make_bursts(n_seconds, fs, is_oscillating, cycle):
         Simulated bursty oscillation.
     """
 
-    n_samples = int(n_seconds * fs)
+    n_samples = compute_nsamples(n_seconds, fs)
     n_samples_cycle = len(cycle)
 
     burst_sig = np.zeros([n_samples])
