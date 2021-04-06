@@ -8,8 +8,8 @@ from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle, phase_shift_cycle
-
+from neurodsp.sim.cycles import (sim_cycle, sim_normalized_cycle,
+                                 phase_shift_cycle, create_cycle_time)
 ###################################################################################################
 ###################################################################################################
 
@@ -175,6 +175,96 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
         raise ValueError('Requested burst_def not understood.')
 
     sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
+
+    return sig
+
+
+def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycle_params):
+    """Simulate an oscillation that varies in frequency and cycle parameters.
+
+    Parameters
+    ----------
+    n_seconds : float or None
+        Simulation time, in seconds. If None, the simulation time is based on `freqs` and the
+        length of `cycle_params`. If a float, the signal may be truncated or contain trailing zeros
+        if not exact.
+    fs : float
+        Signal sampling rate, in Hz.
+    freqs : float or list
+        Oscillation frequencies.
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
+        Type of oscillation cycle to simulate.
+        See `sim_cycle` for details on cycle types and parameters.
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
+    **cycle_params
+        Parameter floats or variable lists for each cycle.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated bursty oscillation.
+
+    Examples
+    --------
+    >>> freqs = [ 5, 10, 15, 20]
+    >>> rdsyms= [.2, .4, .6, .8]
+    >>> sig = sim_variable_oscillation(1000, freqs, cycle='asine', rdsym=rdsyms)
+    """
+
+    # Ensure param lists are the same length
+    param_keys = cycle_params.keys()
+    param_values = list(cycle_params.values())
+
+    param_lengths = np.array([len(params) for params in param_values
+                              if isinstance(params, (list, np.ndarray))])
+
+    # Determine the number of cycles
+    if isinstance(freqs, (np.ndarray, list)):
+        n_cycles = len(freqs)
+    elif len(param_lengths) > 0:
+        n_cycles = param_lengths[0]
+    else:
+        n_cycles = 1
+
+    # Ensure freqs is iterable and an array
+    freqs = np.array([freqs] * n_cycles) if isinstance(freqs, (int, float)) else freqs
+    freqs = np.array(freqs) if not isinstance(freqs, np.ndarray) else freqs
+
+    # Ensure lengths of variable params are equal
+    if ~(param_lengths == len(freqs)).all():
+        raise ValueError('Length of cycle_params lists and freqs must be equal.')
+
+    # Ensure all kwargs params are iterable
+    for idx, param in enumerate(param_values):
+        if not isinstance(param, (list, np.ndarray)):
+            param_values[idx] = [param] * n_cycles
+
+    param_values = np.array(param_values).transpose()
+
+    # Collect params for each cycle separately
+    cycle_params = [dict(zip(param_keys, params)) for params in param_values]
+    cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
+
+    # Determine start/end indices
+    cyc_lens = [int(np.ceil(1 / freq * fs)) for freq in freqs]
+    ends = np.cumsum(cyc_lens, dtype=int)
+    starts = [0, *ends[:-1]]
+
+    # Simulate
+    n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
+
+    sig = np.zeros(n_samples)
+
+    for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
+
+        if start > n_samples or end > n_samples:
+            break
+
+        n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+        sig[start:end] = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase, **params)
 
     return sig
 
