@@ -4,12 +4,11 @@ from itertools import repeat
 
 import numpy as np
 
-from neurodsp.utils.norm import normalize_sig
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.cycles import (sim_cycle, sim_normalized_cycle,
-                                 phase_shift_cycle, create_cycle_time)
+from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
+
 ###################################################################################################
 ###################################################################################################
 
