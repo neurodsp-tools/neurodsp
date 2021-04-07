@@ -214,6 +214,7 @@ Periodic Signals
 
     sim_oscillation
     sim_bursty_oscillation
+    sim_variable_oscillation
 
 Aperiodic Signals
 ~~~~~~~~~~~~~~~~~
