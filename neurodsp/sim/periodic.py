@@ -209,9 +209,16 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
 
     Examples
     --------
+    Simulate one second of an oscillation with a varying center frequency:
+
+    >>> freqs = np.tile([10, 11, 10, 9], 5)
+    >>> sig = sim_variable_oscillation(1, 1000, freqs)
+
+    Simulate an oscillation with varying frequency and parameters for a given number of cycles:
+
     >>> freqs = [ 5, 10, 15, 20]
-    >>> rdsyms= [.2, .4, .6, .8]
-    >>> sig = sim_variable_oscillation(1000, freqs, cycle='asine', rdsym=rdsyms)
+    >>> rdsyms = [.2, .4, .6, .8]
+    >>> sig = sim_variable_oscillation(None, 1000, freqs, cycle='asine', rdsym=rdsyms)
     """
 
     # Ensure param lists are the same length
