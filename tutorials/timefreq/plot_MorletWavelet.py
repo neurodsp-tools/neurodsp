@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 # Import simulation and plot code to create & visualize data
 from neurodsp.sim import sim_combined
 from neurodsp.plts import plot_time_series
-from neurodsp.utils import set_random_seed, create_times
+from neurodsp.utils import create_times
 
 # Import function for Morlet Wavelets
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
@@ -28,7 +28,7 @@ from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 # Simulate Data
 # -------------
 #
-# First, we'll simulate a time series using the :func:`~.sim_bursty_oscillation` function
+# First, we'll simulate a time series using the :func:`~.sim_combined` function
 # to create a time-varying oscillation.
 #
 # For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 Hz,
@@ -63,7 +63,7 @@ plot_time_series(times, sig, xlim=[0, 2])
 # Compute Wavelet Transform
 # -------------------------
 #
-# Now, lets use the compute Morlet wavelet transform algorithm to compute a
+# Now, let's use the compute Morlet wavelet transform algorithm to compute a
 # time-frequency representation of our simulated data, using Morlet wavelets.
 #
 # To apply the continuous Morlet wavelet transform, we need to specify frequencies of
@@ -146,7 +146,7 @@ ax.set(xlabel='Time (s)', ylabel='Frequency (Hz)',
 # "wave" like signal. By sweeping this wave across our data, we can see how much of this 'wave'
 # is in our signal, which is useful to quantify variations of signal amplitude across time.
 #
-# A Morlet wavelet is a particular type of wavelet in which a the wavelet has been multiplied
+# A Morlet wavelet is a particular type of wavelet in which the wavelet has been multiplied
 # by a Gaussian envelope.
 #
 # Some parameters are needed to define a Morlet wavelet. These parameters are the
