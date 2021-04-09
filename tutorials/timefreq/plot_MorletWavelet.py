@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 # Import simulation and plot code to create & visualize data
 from neurodsp.sim import sim_combined
-from neurodsp.plts import plot_time_series
+from neurodsp.plts import plot_time_series, plot_timefrequency
 from neurodsp.utils import create_times
 
 # Import function for Morlet Wavelets
@@ -85,13 +85,7 @@ mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=7, freqs=freqs)
 ###################################################################################################
 
 # Plot morlet wavelet transform
-_, ax = plt.subplots()
-ax.imshow(abs(mwt), aspect='auto')
-ax.invert_yaxis()
-ax.set(xlabel='Time (s)', ylabel='Frequency (Hz)',
-       xticks=np.linspace(0, times.size, 5), yticks=np.linspace(0, freqs.size, 5),
-       xticklabels=np.round(np.linspace(times[0], times[-1], 5), 2),
-       yticklabels=np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+plot_timefrequency(times, freqs, mwt)
 
 ###################################################################################################
 #
@@ -124,13 +118,8 @@ mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=7, freqs=freqs)
 ###################################################################################################
 
 # Plot morlet wavelet transform
-_, ax = plt.subplots()
-ax.imshow(abs(mwt), aspect='auto')
-ax.invert_yaxis()
-ax.set(xlabel='Time (s)', ylabel='Frequency (Hz)',
-       xticks=np.linspace(0, times.size, 5), yticks=np.linspace(0, freqs.size, 5),
-       xticklabels=np.round(np.linspace(times[0], times[-1], 5), 2),
-       yticklabels=np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+plot_timefrequency(times, freqs, mwt)
+
 
 ###################################################################################################
 #
@@ -279,13 +268,7 @@ freqs = np.arange(15, 50, 5)
 mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=15, freqs=freqs)
 
 # Plot the wavelet transform
-_, ax = plt.subplots()
-ax.imshow(abs(mwt), aspect='auto')
-ax.invert_yaxis()
-ax.set(xlabel='Time (s)', ylabel='Frequency (Hz)',
-       xticks=np.linspace(0, times.size, 5), yticks=np.linspace(0, freqs.size, 5),
-       xticklabels=np.round(np.linspace(times[0], times[-1], 5), 2),
-       yticklabels=np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+plot_timefrequency(times, freqs, mwt)
 
 ###################################################################################################
 #
@@ -308,13 +291,7 @@ freqs = np.arange(10, 60, 10)
 mwt = compute_wavelet_transform(sig, fs=fs, n_cycles=15, freqs=freqs)
 
 # Plot the wavelet transform
-fig, ax = plt.subplots()
-ax.imshow(abs(mwt), aspect='auto')
-ax.invert_yaxis()
-ax.set(xlabel='Time (s)', ylabel='Frequency (Hz)',
-       xticks=np.linspace(0, times.size, 5), yticks=np.linspace(0, freqs.size, 5),
-       xticklabels=np.round(np.linspace(times[0], times[-1], 5), 2),
-       yticklabels=np.round(np.linspace(freqs[0], freqs[-1], 5), 2))
+plot_timefrequency(times, freqs, mwt)
 
 ###################################################################################################
 #
