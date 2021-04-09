@@ -30,6 +30,20 @@ def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5, ax=None, **kw
         Figure axes upon which to plot.
     **kwargs
         Keyword arguments for customizing the plot.
+
+    Examples
+    --------
+    Plot a Morlet transformation:
+
+    >>> import numpy as np
+    >>> from neurodsp.sim import sim_bursty_oscillation
+    >>> from neurodsp.timefrequency.wavelets import compute_wavelet_transform
+    >>> fs=1000
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=fs, freq=10)
+    >>> times = np.arange(0, len(sig)/fs, 1/fs)
+    >>> freqs = np.arange(1, 50, 1)
+    >>> mwt = compute_wavelet_transform(sig, fs, freqs)
+    >>> plot_timefrequency(times, freqs, mwt)
     """
 
     ax = check_ax(ax, None)
