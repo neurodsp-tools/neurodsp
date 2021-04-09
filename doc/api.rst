@@ -325,3 +325,12 @@ Rhythm
 
     plot_swm_pattern
     plot_lagged_coherence
+
+Time Frequency
+~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.plts
+.. autosummary::
+    :toctree: generated/
+
+    plot_timefrequency
