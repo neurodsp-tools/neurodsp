@@ -16,6 +16,11 @@ This tutorial primarily covers the ``neurodsp.filt`` module.
 # In this tutorial, we will examine filtering signals with different passbands.
 # The passband of a filter is the range of frequencies that can 'pass' through a filter.
 #
+# The following articles also have additional information on filtering electrophysiological data:
+#
+# - `Widman et al., 2015 <https://pubmed.ncbi.nlm.nih.gov/25128257/>`_
+# - `de Cheveigne & Nelken, 2019 <https://pubmed.ncbi.nlm.nih.gov/30998899/>`_
+#
 
 ###################################################################################################
 
