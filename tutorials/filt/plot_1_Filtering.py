@@ -2,7 +2,7 @@
 Filtering
 =========
 
-Apply digital filters to neural signals, including highpass, lowpass, bandpass & bandstop filters.
+Apply filters to neural signals, including highpass, lowpass, bandpass & bandstop filters.
 
 This tutorial primarily covers the ``neurodsp.filt`` module.
 """
@@ -13,21 +13,13 @@ This tutorial primarily covers the ``neurodsp.filt`` module.
 #
 # The :func:`~.filter_signal` function is the main function for filtering using NeuroDSP.
 #
-# Sections
-# ~~~~~~~~
-#
-# This tutorial contains the following sections:
-#
-# 1. Bandpass filter: extract a single oscillation from a signal
-# 2. Highpass, lowpass, and bandstop filters: remove power in unwanted frequency ranges
-# 3. Time-frequency resolution trade off: changing the filter length
-# 4. Infinite-impulse-response (IIR) filter option
-# 5. Beta bandpass filter on a neural signal
+# In this tutorial, we will examine filtering signals with different passbands.
+# The passband of a filter is the range of frequencies that can 'pass' through a filter.
 #
 
 ###################################################################################################
 
-# sphinx_gallery_thumbnail_number = 12
+# sphinx_gallery_thumbnail_number = 5
 
 # Import filter function
 from neurodsp.filt import filter_signal
@@ -47,7 +39,7 @@ set_random_seed(0)
 
 ###################################################################################################
 
-# General setting for simulations
+# General settings for simulations
 fs = 1000
 n_seconds = 5
 
@@ -58,10 +50,13 @@ exp = -1
 times = create_times(n_seconds, fs)
 
 ###################################################################################################
-# 1. Bandpass filter
-# ------------------
+# Bandpass filters
+# ~~~~~~~~~~~~~~~~
 #
-# Extract signal within a specific frequency range (e.g. theta, 4-8 Hz).
+# A bandpass filter allows through frequencies within a given frequency range.
+#
+# These filters can be useful to filter a signal to a specific band range, for example
+# filtering to the theta range, defined as 4-8 Hz.
 #
 
 ###################################################################################################
@@ -101,13 +96,12 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 #
 
 ###################################################################################################
-# 2. Highpass, lowpass, and bandstop filters
-# ------------------------------------------
+# Highpass filter
+# ~~~~~~~~~~~~~~~
 #
-# 2a. Highpass filter
-# ~~~~~~~~~~~~~~~~~~~
+# Highpass filters are filters that pass through all frequencies above a specified cutoff point.
 #
-# Remove low frequency drift from the data.
+# These filters can be used to remove low frequency drift from the data.
 #
 
 ###################################################################################################
@@ -136,10 +130,12 @@ sig_filt = filter_signal(sig, fs, 'highpass', f_range)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
-# 2b. Lowpass filter
-# ~~~~~~~~~~~~~~~~~~
+# Lowpass filter
+# ~~~~~~~~~~~~~~
 #
-# Remove high frequency activity from the data.
+# Lowpass filters are filters that pass through all frequencies below a specified cutoff point.
+#
+# These filters can be used to remove high frequency activity from the data.
 #
 
 ###################################################################################################
@@ -154,8 +150,10 @@ sig_filt = filter_signal(sig, fs, 'lowpass', f_range)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
-# 2c. Bandstop filter
-# ~~~~~~~~~~~~~~~~~~~
+# Bandstop filter
+# ~~~~~~~~~~~~~~~
+#
+# Bandstop filters are filters that remove a specified band range from the data.
 #
 # Next let's try a bandstop filter, to remove 60 Hz noise from the data.
 #
@@ -183,134 +181,12 @@ sig_filt = filter_signal(sig, fs, 'bandstop', f_range, n_seconds=0.5)
 plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 ###################################################################################################
+# Real Data Example
+# -----------------
 #
-# You might sometimes see a user warning that warns about the level of attenuation.
+# Finally, let's apply a filter to a segment of real data.
 #
-# You will see this warning whenever the filter you construct has a frequency response that
-# does not hit a certain level of attenuation in the stopband. By default, the warning appears
-# if the level of attenuation does not go below 20dB.
-#
-# You can check filter properties by plotting the frequency response when you apply a filter.
-#
-
-###################################################################################################
-
-# Apply a short filter
-#   In this case, we won't achieve our desired attenuation
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
-                         n_seconds=0.25, plot_properties=True)
-
-###################################################################################################v
-
-# This user warning disappears if we elongate the filter
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
-                         n_seconds=1, plot_properties=True)
-
-###################################################################################################
-# 3. Time-frequency resolution trade off
-# --------------------------------------
-#
-# With longer filter kernels, we get improved frequency resolution, but worse time resolution.
-#
-# Two bandpass filters (one long and one short)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# Notice that the short filter preserves the start of the oscillation better than the
-# long filter (i.e. better time resolution).
-#
-# Notice that the long filter correctly removed the 1Hz oscillation, but the short filter
-# did not (i.e. better frequency resolution).
-#
-
-###################################################################################################
-
-# Reset simulation settings for this example
-fs = 100
-n_seconds = 3
-times = create_times(n_seconds, fs)
-
-# Generate a signal with aperiodic activity, an oscillation, and low frequency drift
-components = {'sim_powerlaw' : {'exponent' : 0},
-              'sim_oscillation' : [{'freq' : 6}, {'freq' : 1}]}
-variances = [0.1, 1, 1]
-sig = sim_combined(n_seconds, fs, components, variances)
-
-# Set the first second to 0
-sig[:fs] = 0
-
-###################################################################################################
-
-# Define the frequency band of interest
-f_range = (4, 8)
-
-# Filter the data
-sig_filt_short = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1)
-sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1)
-
-###################################################################################################
-
-# Plot filtered signal
-plot_time_series(times, [sig, sig_filt_short, sig_filt_long],
-                 ['Raw', 'Short Filter', 'Long Filter'])
-
-###################################################################################################
-
-# Visualize the kernels and frequency responses
-print('Short filter')
-sig_filt_short = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=.1,
-                               plot_properties=True)
-print('\n\nLong filter')
-sig_filt_long = filter_signal(sig, fs, 'bandpass', f_range, n_seconds=1,
-                              plot_properties=True)
-
-###################################################################################################
-# 4. Infinite impulse response (IIR) filter option
-# ------------------------------------------------
-#
-# So far, the filters that we've been using are finite impulse response (FIR) filters.
-#
-# These filters are nice because we have good control over their properties,
-# by manipulating the time-frequency resolution trade off through the filter length.
-#
-# However, sometimes we may not be as concerned with the precise filter properties,
-# and so there is a faster option: IIR filters.
-#
-# We often use these filters for removing 60 Hz line noise.
-#
-# Here we apply a 3rd order Butterworth filter to remove 60Hz noise.
-#
-# Notice that some edge artifacts remain.
-#
-
-###################################################################################################
-
-# Reset simulation settings
-n_seconds = 1
-fs = 1000
-times = create_times(n_seconds, fs)
-
-# Generate a signal, with a low frequency oscillation and 60 Hz line noise
-components = {'sim_oscillation' : [{'freq' : 6}, {'freq' : 60}]}
-variances = [1, 0.2]
-sig = sim_combined(n_seconds, fs, components, variances)
-
-###################################################################################################
-
-# Filter the data
-f_range = (58, 62)
-sig_filt = filter_signal(sig, fs, 'bandstop', f_range,
-                         filter_type='iir', butterworth_order=3)
-
-###################################################################################################
-
-# Plot filtered signal
-plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
-
-###################################################################################################
-# 5. Beta bandpass filter on neural signal
-# ----------------------------------------
-#
-# Next, we'll load an example time series of real data, and filter that.
+# In this example, we will apply a bandpass filter in the beta range to a segment of neural data.
 #
 
 ###################################################################################################
@@ -322,12 +198,13 @@ sig = load_ndsp_data('sample_data_1.npy', folder='data')
 fs = 1000
 times = create_times(len(sig)/fs, fs)
 
+# Define the range to filter to data to
+f_range = (13, 30)
+
 ###################################################################################################
 
 # Filter the data
-f_range = (13, 30)
-sig_filt, kernel = filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3,
-                                 plot_properties=True, return_filter=True)
+sig_filt = filter_signal(sig, fs, 'bandpass', f_range, n_cycles=3)
 
 ###################################################################################################
 
@@ -336,10 +213,24 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'], xlim=[2, 5])
 
 ###################################################################################################
 #
-# Notice that in the filtered time series, the resulting oscillation appears to be
+# In the above, we can see the original and filtered versions of some real neural data.
+#
+# You might notice that in the filtered time series, the resulting oscillation appears to be
 # more sinusoidal than the original signal really is.
 #
 # If you are interested in this problem, and how to deal with it, you should check out
 # `bycycle <https://bycycle-tools.github.io/bycycle/>`_,
 # which is a tool for time-domain analyses of waveform shape.
+#
+
+###################################################################################################
+# Conclusion
+# ~~~~~~~~~~
+#
+# This tutorial has been a brief introduction to applying the filters that are available
+# in NeuroDSP. Note that in practice you will likely do more checking of filters that you
+# use (checking the filter response, for example), and may need to update settings.
+#
+# For more information on different kinds of filters and their settings and
+# properties, and how to evaluate filters see the subsequent tutorials.
 #
