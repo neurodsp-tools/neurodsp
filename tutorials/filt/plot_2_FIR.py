@@ -122,11 +122,11 @@ plot_filter_properties(f_db, db, fs, filter_coefs)
 
 ###################################################################################################
 #
-# On the right is the filter kernel, or the filter kernel. This is a visualization of our
+# On the right is the impulse response, or the filter kernel. This is a visualization of our
 # filter coefficients, which also demonstrates the activity of our filter for a single point
 # (the impulse response).
 #
-# On the left, we can see our frequency response of our filter, which shows us how different
+# On the left, we can see the frequency response of our filter, which shows us how different
 # frequencies are affected by our filter. Ideally, we want zero attenuation in our passband,
 # and a lot of attenuation in the stopband(s).
 #
@@ -189,8 +189,8 @@ plot_time_series(times, [sig, sig_filt], ['Raw', 'Filtered'])
 
 # Filter our signal, using the main filter function, with extra options
 sig_filt2, filter_kernel = filter_signal(sig, fs, pass_type, f_range,
-                                        filter_type='fir', print_transitions=True,
-                                        plot_properties=True, return_filter=True)
+                                         filter_type='fir', print_transitions=True,
+                                         plot_properties=True, return_filter=True)
 
 ###################################################################################################
 
@@ -201,12 +201,10 @@ plot_time_series(times, [sig, sig_filt2], ['Raw', 'Filtered'])
 #
 # You might notice in the above plot, the edges of the filtered version have been removed.
 # This is done to remove edge artifacts. Data points at the edge of the signal don't get fully
-# processed by the filter, and so can contain some filtering artifacts.
+# processed by the filter, and may contain some filtering artifacts.
 #
-# With FIR filters we exclude edge artifacts by excluding edge points that do not get fully
-# processed by the filter, based on knowing the the size of the filter.
+# With FIR filters we exclude edge artifacts by removing edge points that do not get fully
+# processed by the filter, based on the size of the filter.
 #
 # If you wish, you can turn off the edge removal by setting `remove_edges` to False.
-# from the edge of the signal, reflecting data points that we know did now get fully processed
-# by the filter.
 #

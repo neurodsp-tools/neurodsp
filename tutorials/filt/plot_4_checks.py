@@ -14,7 +14,6 @@ and applying filters, including utilities available across ``neurodsp.filt``.
 
 from neurodsp.sim import sim_combined
 from neurodsp.filt import filter_signal
-from neurodsp.filt.utils import compute_pass_band
 from neurodsp.utils import create_times
 from neurodsp.plts import plot_time_series
 
@@ -32,15 +31,15 @@ from neurodsp.plts import plot_time_series
 # - `Widman et al., 2015 <https://pubmed.ncbi.nlm.nih.gov/25128257/>`_
 # - `de Cheveigne & Nelken, 2019 <https://pubmed.ncbi.nlm.nih.gov/30998899/>`_
 #
-# Some general recommendations based on these articles include to:
+# General recommendations based on these articles include to:
 #
 # 1. Consider and examine the frequency and impulse responses of the filter
 # 2. Use simulated data to evaluate the practical effects of the filter
 # 3. Manually inspect the filtered signal, and comparing to the original signal
 #
-# When you design and apply filters with NeuroDSP, some checks are automatically applied to
-# check that the filter definition and filter properties are appropriate, including with
-# the :func:`~.check_filter_definition` and :func:`~.check_filter_properties` functions.
+# When you design and apply filters with NeuroDSP, filter definition and properties checks are
+# automatically applied with the :func:`~.check_filter_definition` and
+# :func:`~.check_filter_properties` functions.
 #
 # If you see warnings or errors when applying filters, it likely stems from these checks.
 # Note that passing these checks does not automatically mean the filter is ideal, but at
@@ -63,7 +62,7 @@ times = create_times(n_seconds, fs)
 # You might sometimes see a user warning that warns about the level of attenuation. This
 # warning is given whenever the constructed filter has a frequency response that does not
 # hit a specified level of attenuation in the stopband. By default, the warning appears
-# if the level of attenuation does not go below 20dB.
+# if the level of attenuation does not go below -20dB.
 #
 # You can check filter properties by plotting the frequency response when you apply a filter.
 #

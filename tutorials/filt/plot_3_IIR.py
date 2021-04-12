@@ -31,7 +31,7 @@ from neurodsp.plts import plot_frequency_response, plot_time_series
 # Infinite impulse response filters are filters for which the response to a single impulse
 # is infinite. These filters are sometimes useful due to their efficiency.
 #
-# IIR filters have an impulse response that is dependent on past and values of the impulse
+# IIR filters have an impulse response that is dependent on past values of the impulse
 # and impulse response (i.e. recursion or feedback), producing a response that is never zero.
 # Because to this, the IIR filters are not typically applied using convolution.
 #
@@ -82,7 +82,7 @@ sig = sim_combined(n_seconds, fs, components, variances)
 # To create a Butterworth IIR filter, we need to specify the passband and the frequency range.
 #
 # We also need to set the filter order, which controls how smooth (low orders) or steep
-# (high order) the roll-off of the transition band is.
+# (high orders) the roll-off of the transition band is.
 #
 
 ###################################################################################################
@@ -124,7 +124,7 @@ plot_frequency_response(f_db, db)
 
 ###################################################################################################
 
-#
+# Compute the transition band of the filter
 t_band = compute_transition_band(f_db, db)
 
 # Print the transition band
