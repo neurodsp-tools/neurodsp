@@ -95,6 +95,37 @@ def test_sim_gaussian_cycle():
     cycle = sim_gaussian_cycle(N_SECONDS_CYCLE, FS_ODD, 2)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
+def test_sim_skewed_gaussian_cycle():
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_CYCLE, FS, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_ODD, FS, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_ODD)
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_CYCLE, FS_ODD, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
+
+def test_sim_ap_cycle():
+
+    centers=(.25, .5)
+    stds=(.25, .2)
+    alphas=(8, .2)
+    heights=(15, 2.5)
+
+    cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS, centers, stds, alphas, heights)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+
+    cycle = sim_ap_cycle(N_SECONDS_ODD, FS, centers, stds, alphas, heights)
+    check_sim_output(cycle, n_seconds=N_SECONDS_ODD)
+
+    cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS_ODD, centers, stds, alphas, heights)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
+
+    cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS, centers, stds, alphas, heights, 'trough')
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+
+
 def test_create_cycle_time():
 
     times = create_cycle_time(N_SECONDS_CYCLE, FS)

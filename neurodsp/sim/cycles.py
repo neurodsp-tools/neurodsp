@@ -283,12 +283,14 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
         Output values for skewed gaussian function.
     """
 
+    n_samples = compute_nsamples(n_seconds, fs)
+
     # Gaussian distribution
     cycle = sim_gaussian_cycle(n_seconds, fs, std/2, center, height)
 
     # Skewed cumulative distribution function.
     #   Assumes time are centered around 0. Adjust to center around 0.5.
-    times = np.linspace(-1, 1, fs)
+    times = np.linspace(-1, 1, n_samples)
     cdf = norm.cdf(alpha * ((times - ((center * 2) -1 )) / std))
 
     # Skew the gaussian
