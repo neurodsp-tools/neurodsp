@@ -286,7 +286,7 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     n_samples = compute_nsamples(n_seconds, fs)
 
     # Gaussian distribution
-    cycle = sim_gaussian_cycle(n_seconds, fs, std/2, center, height)
+    cycle = sim_gaussian_cycle(n_seconds, fs, std, center, height)
 
     # Skewed cumulative distribution function.
     #   Assumes time are centered around 0. Adjust to center around 0.5.
