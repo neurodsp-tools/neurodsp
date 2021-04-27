@@ -3,8 +3,9 @@
 from warnings import warn
 
 import numpy as np
+from scipy.stats import norm
 
-from neurodsp.utils.data import create_times
+from neurodsp.utils.data import create_times, compute_nsamples
 
 ###################################################################################################
 ###################################################################################################
@@ -121,7 +122,7 @@ def sim_skewed_gaussian(n_seconds, fs, center, std, alpha, height=1):
     return cycle
 
 
-def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak'):
+def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
     """Simulate an action potential as the sum of two inverse, skewed gaussians.
 
     Parameters
@@ -130,16 +131,14 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extr
         Length of cycle window in seconds.
     fs : float
         Sampling frequency of the cycle simulation.
-    centers : tuple of (float, float)
+    centers : array-like or float
         Times where the peak occurs in the pre-skewed gaussian.
-    stds : tuple of (float, float)
+    stds : array-like or float
         Standard deviations of the gaussian kernels, in seconds.
-    alpha : float
+    alphas : array-like or float
         Magnitiude and direction of the skew.
-    heights : tuple of (float, float)
+    heights : array-like or float
         Maximum value of the cycles.
-    max_extrema : {'peak', 'trough'}
-        Defines the larger spike deflection as either peak or trough.
 
     Returns
     -------
@@ -147,15 +146,43 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extr
         Simulated spike cycle.
     """
 
-    polar = sim_skewed_gaussian(n_seconds, fs, centers[0], stds[0],
-                                alphas[0], height=heights[0])
+    # Determine number of parameters
+    n_params = []
 
-    repolar = sim_skewed_gaussian(n_seconds, fs, centers[1], stds[1],
-                                  alphas[1], height=heights[1])
+    if isinstance(centers, (tuple, list, np.ndarray)):
+        n_params.append(len(centers))
+    else:
+        centers = repeat(centers)
 
-    cycle = polar - repolar
+    if isinstance(stds, (tuple, list, np.ndarray)):
+        n_params.append(len(stds))
+    else:
+        stds = repeat(stds)
 
-    if max_extrema == 'trough':
-        cycle = -cycle
+    if isinstance(heights, (tuple, list, np.ndarray)):
+        n_params.append(len(heights))
+    else:
+        heights = repeat(heights)
+
+    # Parameter checking
+    if len(n_params) == 0:
+        raise ValueError('Array-like expected for one of {centers, stds, heights}.')
+
+    for param_len in n_params[1:]:
+        if param_len != n_params[0]:
+            raise ValueError('Unequal lengths between two or more of {centers, stds, heights}')
+
+    # Initialize cycle array
+    n_samples = compute_nsamples(n_seconds, fs)
+
+    n_params = n_params[0]
+
+    cycle = np.zeros((n_params, n_samples))
+
+    # Simulate
+    for idx, (center, std, alpha, height) in enumerate(zip(centers, stds, alphas, heights)):
+        cycle[idx] = sim_skewed_gaussian(n_seconds, fs, center, std, alpha, height)
+
+    cycle = np.sum(cycle, axis=0)
 
     return cycle

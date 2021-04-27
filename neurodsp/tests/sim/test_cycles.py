@@ -122,7 +122,7 @@ def test_sim_ap_cycle():
     cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS_ODD, centers, stds, alphas, heights)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
-    cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS, centers, stds, alphas, heights, 'trough')
+    cycle = sim_ap_cycle(N_SECONDS_CYCLE, FS, centers, stds, alphas, heights)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
 
 

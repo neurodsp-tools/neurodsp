@@ -2,7 +2,6 @@
 
 import numpy as np
 from scipy.signal import sawtooth
-from scipy.stats import norm
 
 from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.data import compute_nsamples
@@ -264,8 +263,8 @@ sim_skewed_gaussian_cycle.__doc__ = sim_skewed_gaussian.__doc__
 
 
 # Alias action potential from `sim_action_potential`
-def sim_ap_cycle(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak'):
-    return sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak')
+def sim_ap_cycle(n_seconds, fs, centers, stds, alphas, heights):
+    return sim_action_potential(n_seconds, fs, centers, stds, alphas, heights)
 sim_ap_cycle.__doc__ = sim_action_potential.__doc__
 
 
