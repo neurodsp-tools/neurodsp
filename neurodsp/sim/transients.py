@@ -71,3 +71,91 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     kernel = kernel / np.sum(kernel)
 
     return kernel
+
+
+def sim_skewed_gaussian(n_seconds, fs, center, std, alpha, height=1):
+    """Simulate a skewed gaussian.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    center : float
+        The center of the skewed gaussian.
+    std : float
+        Standard deviation of the gaussian kernel, in seconds.
+    alpha : float
+        Magnitiude and direction of the skew.
+    center : float, optional, default: 0.5
+        Time where the peak occurs in the pre-skewed gaussian.
+    height : float, optional, default: 1.
+        Maximum value of the cycle.
+
+    Returns
+    -------
+    ys : 1d array
+        Output values for skewed gaussian function.
+    """
+
+    # Prevent circular import
+    from neurodsp.sim.cycles import sim_gaussian_cycle
+
+    n_samples = compute_nsamples(n_seconds, fs)
+
+    # Gaussian distribution
+    cycle = sim_gaussian_cycle(n_seconds, fs, std, center)
+
+    # Skewed cumulative distribution function.
+    #   Assumes time are centered around 0. Adjust to center around 0.5.
+    times = np.linspace(-1, 1, n_samples)
+    cdf = norm.cdf(alpha * ((times - ((center * 2) -1 )) / std))
+
+    # Skew the gaussian
+    cycle = cycle * cdf
+
+    # Rescale height
+    cycle = (cycle / np.max(cycle)) * height
+
+    return cycle
+
+
+def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak'):
+    """Simulate an action potential as the sum of two inverse, skewed gaussians.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    centers : tuple of (float, float)
+        Times where the peak occurs in the pre-skewed gaussian.
+    stds : tuple of (float, float)
+        Standard deviations of the gaussian kernels, in seconds.
+    alpha : float
+        Magnitiude and direction of the skew.
+    heights : tuple of (float, float)
+        Maximum value of the cycles.
+    max_extrema : {'peak', 'trough'}
+        Defines the larger spike deflection as either peak or trough.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated spike cycle.
+    """
+
+    polar = sim_skewed_gaussian(n_seconds, fs, centers[0], stds[0],
+                                alphas[0], height=heights[0])
+
+    repolar = sim_skewed_gaussian(n_seconds, fs, centers[1], stds[1],
+                                  alphas[1], height=heights[1])
+
+    cycle = polar - repolar
+
+    if max_extrema == 'trough':
+        cycle = -cycle
+
+    return cycle

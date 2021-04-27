@@ -8,7 +8,7 @@ from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_synaptic_kernel
+from neurodsp.sim.transients import sim_synaptic_kernel, sim_skewed_gaussian, sim_action_potential
 
 ###################################################################################################
 ###################################################################################################
@@ -225,7 +225,7 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     return cycle
 
 
-def sim_gaussian_cycle(n_seconds, fs, std, center=.5, height=1.):
+def sim_gaussian_cycle(n_seconds, fs, std, center=.5):
     """Simulate a cycle of a gaussian.
 
     Parameters
@@ -238,8 +238,6 @@ def sim_gaussian_cycle(n_seconds, fs, std, center=.5, height=1.):
         Standard deviation of the gaussian kernel, in seconds.
     center : float, optional, default: 0.5
         The center of the gaussian.
-    height : float, optional, default: 1.
-        Maximum value of the cycle.
 
     Returns
     -------
@@ -254,90 +252,21 @@ def sim_gaussian_cycle(n_seconds, fs, std, center=.5, height=1.):
     """
 
     xs = np.linspace(0, 1, compute_nsamples(n_seconds, fs))
-    cycle = height * np.exp(-(xs-center)**2 / (2*std**2))
+    cycle = np.exp(-(xs-center)**2 / (2*std**2))
 
     return cycle
 
 
+# Alias skewed gaussian cycle from `sim_skewed_gaussian`
 def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
-    """Simulate a cycle of a skewed gaussian.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Length of cycle window in seconds.
-    fs : float
-        Sampling frequency of the cycle simulation.
-    center : float
-        The center of the skewed gaussian.
-    std : float
-        Standard deviation of the gaussian kernel, in seconds.
-    center : float, optional, default: 0.5
-        The time where the peak occurs.
-    height : float, optional, default: 1.
-        Maximum value of the cycle.
-
-    Returns
-    -------
-    ys : 1d array
-        Output values for skewed gaussian function.
-    """
-
-    n_samples = compute_nsamples(n_seconds, fs)
-
-    # Gaussian distribution
-    cycle = sim_gaussian_cycle(n_seconds, fs, std, center, height)
-
-    # Skewed cumulative distribution function.
-    #   Assumes time are centered around 0. Adjust to center around 0.5.
-    times = np.linspace(-1, 1, n_samples)
-    cdf = norm.cdf(alpha * ((times - ((center * 2) -1 )) / std))
-
-    # Skew the gaussian
-    cycle = cycle * cdf
-
-    # Rescale height
-    cycle = (cycle / np.max(cycle)) * height
-
-    return cycle
+    return sim_skewed_gaussian(n_seconds, fs, center, std, alpha, height)
+sim_skewed_gaussian_cycle.__doc__ = sim_skewed_gaussian.__doc__
 
 
+# Alias action potential from `sim_action_potential`
 def sim_ap_cycle(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak'):
-    """Simulate an action potential as the sum of two inverse, skewed gaussians.
-
-    Parameters
-    ----------
-    n_seconds : float
-        Length of cycle window in seconds.
-    fs : float
-        Sampling frequency of the cycle simulation.
-    centers : tuple of (float, float)
-        The centers of the skewed gaussians.
-    stds : tuple of (float, float)
-        Standard deviations of the gaussian kernels, in seconds.
-    heights : tuple of (float, float)
-        Maximum value of the cycles.
-    max_extrema : {'peak', 'trough'}
-        Defines the larger spike deflection as either peak or trough.
-
-    Returns
-    -------
-    cycle : 1d array
-        Simulated spike cycle.
-    """
-
-    polar = sim_skewed_gaussian_cycle(n_seconds, fs, centers[0], stds[0],
-                                      alphas[0], height=heights[0])
-
-    repolar = sim_skewed_gaussian_cycle(n_seconds, fs, centers[1], stds[1],
-                                        alphas[1], height=heights[1])
-
-    cycle = polar - repolar
-
-    if max_extrema == 'trough':
-        cycle = -cycle
-
-    return cycle
+    return sim_action_potential(n_seconds, fs, centers, stds, alphas, heights, max_extrema='peak')
+sim_ap_cycle.__doc__ = sim_action_potential.__doc__
 
 
 # Alias single exponential cycle from `sim_synaptic_kernel`
