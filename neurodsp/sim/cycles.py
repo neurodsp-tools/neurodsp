@@ -2,12 +2,13 @@
 
 import numpy as np
 from scipy.signal import sawtooth
+from scipy.stats import norm
 
 from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_synaptic_kernel, sim_skewed_gaussian, sim_action_potential
+from neurodsp.sim.transients import sim_synaptic_kernel, sim_action_potential
 
 ###################################################################################################
 ###################################################################################################
@@ -256,10 +257,47 @@ def sim_gaussian_cycle(n_seconds, fs, std, center=.5):
     return cycle
 
 
-# Alias skewed gaussian cycle from `sim_skewed_gaussian`
 def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
-    return sim_skewed_gaussian(n_seconds, fs, center, std, alpha, height)
-sim_skewed_gaussian_cycle.__doc__ = sim_skewed_gaussian.__doc__
+    """Simulate a cycle of a skewed gaussian.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    center : float
+        The center of the skewed gaussian.
+    std : float
+        Standard deviation of the gaussian kernel, in seconds.
+    alpha : float
+        Magnitiude and direction of the skew.
+    height : float, optional, default: 1.
+        Maximum value of the cycle.
+
+    Returns
+    -------
+    cycle  : 1d array
+        Output values for skewed gaussian function.
+    """
+
+    n_samples = compute_nsamples(n_seconds, fs)
+
+    # Gaussian distribution
+    cycle = sim_gaussian_cycle(n_seconds, fs, std, center)
+
+    # Skewed cumulative distribution function.
+    #   Assumes time are centered around 0. Adjust to center around non-zero.
+    times = np.linspace(-1, 1, n_samples)
+    cdf = norm.cdf(alpha * ((times - ((center * 2) -1 )) / std))
+
+    # Skew the gaussian
+    cycle = cycle * cdf
+
+    # Rescale height
+    cycle = (cycle / np.max(cycle)) * height
+
+    return cycle
 
 
 # Alias action potential from `sim_action_potential`
