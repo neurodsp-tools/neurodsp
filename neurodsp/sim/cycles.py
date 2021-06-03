@@ -247,7 +247,7 @@ def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
     --------
     Simulate a cycle of an asymmetrical gaussian wave:
 
-    >>> cycle = sim_gaussian_asym_cycle(n_seconds=1, fs=500, beta=3)
+    >>> cycle = sim_asym_beta_cycle(1, 500, beta=2)
     """
 
     check_param(beta, 'beta', [0., np.inf])
@@ -294,7 +294,7 @@ def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
     --------
     Simulate an asymmetrical cycle as the sum of harmonics:
 
-    >>> cycle = sim_gaussian_asym_cycle(n_seconds=1, fs=500, beta=3)
+    >>> cycle = sim_asym_harmonic_cycle(1, 500, phi=1, n_harmonics=1)
     """
 
     times = create_cycle_time(n_seconds, fs)
