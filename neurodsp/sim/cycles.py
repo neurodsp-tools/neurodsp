@@ -233,7 +233,9 @@ def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
 
     Notes
     -----
-    If shift or scale keyword arguments are given, default signal normalization will be bypassed.
+    ..math::
+
+      cycle = ((cos(2\pi ft) + 1) / 2)^{b}
 
     References
     ----------
