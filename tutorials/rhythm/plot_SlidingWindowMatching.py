@@ -32,6 +32,8 @@ This tutorial primarily covers the :func:`~.sliding_window_matching` function.
 
 # sphinx_gallery_thumbnail_number = 2
 
+import numpy as np
+
 # Import the sliding window matching function
 from neurodsp.rhythm import sliding_window_matching
 
@@ -125,7 +127,7 @@ win_spacing = .2
 ###################################################################################################
 
 # Apply the sliding window matching algorithm to the time series
-avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win_spacing)
+windows, window_starts = sliding_window_matching(sig, fs, win_len, win_spacing)
 
 ###################################################################################################
 # Examine the Results
@@ -140,6 +142,9 @@ avg_window, window_starts, costs = sliding_window_matching(sig, fs, win_len, win
 #
 
 ###################################################################################################
+
+# Compute the average window
+avg_window = np.mean(windows, 0)
 
 # Plot the discovered pattern
 plot_swm_pattern(avg_window)
