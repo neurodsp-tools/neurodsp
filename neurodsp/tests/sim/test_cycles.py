@@ -57,12 +57,12 @@ def test_sim_gaussian_cycle():
 
 def test_sim_gaussian_asym_cycle():
 
-    cycle = sim_gaussian_asym_cycle(N_SECONDS, FS, 0.5)
+    cycle = sim_asym_beta_cycle(N_SECONDS, FS, 0.5)
     check_sim_output(cycle)
 
 def test_sim_harmonic_asym_cycle():
 
-    cycle = sim_harmonic_asym_cycle(N_SECONDS, FS, phi=3*np.pi/2, n_harmonics=2)
+    cycle = sim_asym_harmonic_cycle(N_SECONDS, FS, phi=3*np.pi/2, n_harmonics=2)
     check_sim_output(cycle)
 
 def test_create_cycle_time():
