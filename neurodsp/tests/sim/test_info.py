@@ -1,4 +1,4 @@
-"""Tests for simulation info functions."""
+"""Tests for neurodsp.sim.info."""
 
 from pytest import raises
 

@@ -19,9 +19,9 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array or list of 1d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array or list of 1d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     labels : list of str, optional
         Labels for each time series.
@@ -47,8 +47,8 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     ax = check_ax(ax, (15, 3))
 
-    times = repeat(times) if isinstance(times, np.ndarray) else times
-    sigs = [sigs] if isinstance(sigs, np.ndarray) else sigs
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
@@ -74,9 +74,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array or list of 1d array
+    times : 1d or 2d array, or list of 1d array
         Time definition(s) for the time series to be plotted.
-    sigs : 1d array or list of 1d array
+    sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     measure : {'phase', 'amplitude', 'frequency'}
         Which kind of measure is being plotted.
@@ -104,7 +104,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     if measure == 'phase':
         plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **kwargs)
-        plt.yticks([-np.pi, 0, np.pi], ['-$\pi$', 0, '$\pi$'])
+        ax = ax if ax else plt.gca()
+        ax.set_yticks([-np.pi, 0, np.pi])
+        ax.set_yticklabels([r'-$\pi$', 0, r'$\pi$'])
     elif measure == 'amplitude':
         plot_time_series(times, sigs, ax=ax, ylabel='Amplitude', **kwargs)
     elif measure == 'frequency':
@@ -144,8 +146,6 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
     >>> times = create_times(n_seconds=10, fs=500)
     >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
     """
-
-    ax = check_ax(ax, (15, 3))
 
     bursts = ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)

@@ -1,8 +1,13 @@
-"""Test time series plots."""
+"""Tests for neurodsp.plts.time_series."""
 
 from pytest import raises
+import numpy as np
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH
+from neurodsp.utils import create_times
+from neurodsp.burst import detect_bursts_dual_threshold
+from neurodsp.timefrequency import amp_by_time, phase_by_time, freq_by_time
+
+from neurodsp.tests.settings import TEST_PLOTS_PATH, N_SECONDS, FS, F_RANGE
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.time_series import *
@@ -11,39 +16,53 @@ from neurodsp.plts.time_series import *
 ###################################################################################################
 
 @plot_test
-def test_plot_time_series(tsig):
+def test_plot_time_series(tsig_comb, tsig_burst):
 
-    times = np.arange(0, len(tsig), 1)
+    times = create_times(N_SECONDS, FS)
 
-    # Run single time series plot
-    plot_time_series(times, tsig)
+    # Check single time series plot
+    plot_time_series(times, tsig_comb,
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-1.png')
 
-    # Run multi time series plot, with colors & labels
-    plot_time_series(times, [tsig, tsig[::-1]], labels=['signal', 'signal reversed'],
-                     colors=['k', 'r'], save_fig=True, file_name='test_plot_time_series.png',
-                     file_path=TEST_PLOTS_PATH)
+    # Check multi time series plot, labels
+    plot_time_series(times, [tsig_comb, tsig_comb[::-1]],
+                     labels=['signal', 'signal reversed'],
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-2.png')
+
+    # Test 2D arrays
+    plot_time_series(times, np.array([tsig_comb, tsig_burst]),
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series-2arr.png')
 
 @plot_test
-def test_plot_instantaneous_measure(tsig):
+def test_plot_instantaneous_measure(tsig_comb):
 
-    times = np.arange(0, len(tsig), 1)
+    times = create_times(N_SECONDS, FS)
 
-    plot_instantaneous_measure(times, tsig, 'phase', save_fig=True, file_path=TEST_PLOTS_PATH,
-                               file_name='test_plot_instantaneous_measure_phase.png')
-    plot_instantaneous_measure(times, tsig, 'amplitude', save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_instantaneous_measure(times, amp_by_time(tsig_comb, FS, F_RANGE), 'amplitude',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
                                file_name='test_plot_instantaneous_measure_amplitude.png')
-    plot_instantaneous_measure(times, tsig, 'frequency', save_fig=True, file_path=TEST_PLOTS_PATH,
+
+    plot_instantaneous_measure(times, phase_by_time(tsig_comb, FS, F_RANGE), 'phase',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
+                               file_name='test_plot_instantaneous_measure_phase.png')
+
+    plot_instantaneous_measure(times, freq_by_time(tsig_comb, FS, F_RANGE), 'frequency',
+                               save_fig=True, file_path=TEST_PLOTS_PATH,
                                file_name='test_plot_instantaneous_measure_frequency.png')
 
     # Check the error for bad measure
     with raises(ValueError):
-        plot_instantaneous_measure(times, tsig, 'BAD')
+        plot_instantaneous_measure(times, tsig_comb, 'BAD')
 
 @plot_test
-def test_plot_bursts(tsig):
+def test_plot_bursts(tsig_burst):
 
-    times = np.arange(0, len(tsig), 1)
-    bursts = np.array([True] * len(tsig))
+    times = create_times(N_SECONDS, FS)
+    bursts = detect_bursts_dual_threshold(tsig_burst, FS, (0.75, 1.5), F_RANGE)
 
-    plot_bursts(times, tsig, bursts, save_fig=True, file_path=TEST_PLOTS_PATH,
+    plot_bursts(times, tsig_burst, bursts,
+                save_fig=True, file_path=TEST_PLOTS_PATH,
                 file_name='test_plot_bursts.png')

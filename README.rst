@@ -10,10 +10,10 @@
 .. |Version| image:: https://img.shields.io/pypi/v/neurodsp.svg
 .. _Version: https://pypi.python.org/pypi/neurodsp/
 
-.. |BuildStatus| image:: https://travis-ci.com/neurodsp-tools/neurodsp.svg
-.. _BuildStatus: https://travis-ci.com/github/neurodsp-tools/neurodsp
+.. |BuildStatus| image:: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg
+.. _BuildStatus: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml
 
-.. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg
+.. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg
 .. _Coverage: https://codecov.io/gh/neurodsp-tools/neurodsp
 
 .. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
@@ -26,6 +26,21 @@
 .. _Publication: https://doi.org/10.21105/joss.01272
 
 Tools to analyze and simulate neural time series, using digital signal processing.
+
+Overview
+--------
+
+`neurodsp` is a collection of approaches for applying digital signal processing to neural time series, including algorithms that have been proposed for the analysis of neural time series. It also includes simulation tools for generating plausible simulations of neural time series.
+
+Available modules in ``NeuroDSP`` include:
+
+- ``filt`` : Filter data with bandpass, highpass, lowpass, or notch filters
+- ``burst`` : Detect bursting oscillations in neural signals
+- ``rhythm`` : Find and analyze rhythmic and recurrent patterns in time series
+- ``spectral`` : Compute spectral domain features such as power spectra
+- ``timefrequency`` : Estimate instantaneous measures of oscillatory activity
+- ``sim`` : Simulate time series, including periodic and aperiodic signal components
+- ``plts`` : Plotting functions
 
 Documentation
 -------------
@@ -45,7 +60,7 @@ open an `issue <https://github.com/neurodsp-tools/neurodsp/issues>`_ and ask!
 Dependencies
 ------------
 
-``NeuroDSP`` is written in Python, and requires Python >= 3.5 to run.
+``NeuroDSP`` is written in Python, and requires Python >= 3.6 to run.
 
 It has the following dependencies:
 
@@ -102,36 +117,23 @@ To install an editable version, download the development version as above, and r
 
     $ pip install -e .
 
-Please use the
-`Github issue tracker <https://github.com/neurodsp-tools/neurodsp/issues>`_
-to file bug reports and/or ask questions about this project.
-
-Modules
--------
-
-Available modules in ``NeuroDSP`` include:
-
-- ``filt`` : Filter data with bandpass, highpass, lowpass, or notch filters
-- ``burst`` : Detect bursting oscillations in neural signals
-- ``rhythm`` : Find and analyze rhythmic and recurrent patterns in time series
-- ``spectral`` : Compute spectral domain features such as power spectra
-- ``timefrequency`` : Estimate instantaneous measures of oscillatory activity
-- ``sim`` : Simulate time series, including periodic and aperiodic signal components
-- ``plts`` : Plotting functions
-
 Contribute
 ----------
 
-``NeuroDSP`` welcomes and encourages contributions from the community!
+This project welcomes and encourages contributions from the community!
 
-If you have an idea of something to add to NeuroDSP, please start by opening an
-`issue <https://github.com/neurodsp-tools/neurodsp/issues>`_.
+To file bug reports and/or ask questions about this project, please use the
+`Github issue tracker <https://github.com/neurodsp-tools/neurodsp/issues>`_.
 
-When writing code to add to NeuroDSP, please follow the
-`Contribution Guidelines <https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md>`_.
+To see and get involved in discussions about the module, check out:
 
-We also require that all contributors follow our
-`Code of Conduct <https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md>`_.
+- the `issues board <https://github.com/neurodsp-tools/neurodsp/issues>`_ for topics relating to code updates, bugs, and fixes
+- the `development page <https://github.com/neurodsp-tools/Development>`_ for discussion of potential major updates to the module
+
+When interacting with this project, please use the
+`contribution guidelines <https://github.com/neurodsp-tools/fooof/blob/main/CONTRIBUTING.md>`_
+and follow the
+`code of conduct <https://github.com/neurodsp-tools/neurodsp/blob/main/CODE_OF_CONDUCT.md>`_.
 
 Reference
 ---------
@@ -165,9 +167,10 @@ Bibtex:
 Funding
 -------
 
-Supported by NIH award R01 GM134363
-
-`NIGMS <https://www.nigms.nih.gov/>`_
+Supported by NIH award R01 GM134363 from the
+`NIGMS <https://www.nigms.nih.gov/>`_.
 
 .. image:: https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png
   :width: 400
+
+|

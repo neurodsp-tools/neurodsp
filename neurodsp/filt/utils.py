@@ -119,7 +119,7 @@ def compute_pass_band(fs, pass_type, f_range):
     Returns
     -------
     pass_bw : float
-        The pass bandwidth of the filter.
+        The pass bandwidth of the filter, in Hz.
 
     Examples
     --------

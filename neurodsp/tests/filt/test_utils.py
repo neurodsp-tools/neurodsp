@@ -1,15 +1,17 @@
-"""Tests for filter utilities."""
+"""Tests for neurodsp.filt.utils."""
 
 import tempfile
 from pytest import raises, mark, param
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, FS_HIGH
+from neurodsp.tests.settings import FS
 from neurodsp.filt.utils import *
 from neurodsp.filt.fir import design_fir_filter, compute_filter_length
 from neurodsp.filt.iir import design_iir_filter
 from neurodsp.filt.checks import check_filter_definition, check_filter_properties
+
+from neurodsp.filt.utils import *
 
 ###################################################################################################
 ###################################################################################################
@@ -47,7 +49,7 @@ def test_compute_nyquist():
 
 def test_remove_filter_edges():
 
-    # Get the length for a possible filter & calculate # of values should be dropped for it
+    # Get the length for a possible filter & calculate # of values that should be dropped for it
     sig_len = 1000
     sig = np.ones(sig_len)
     filt_len = compute_filter_length(FS, 'bandpass', f_lo=4, f_hi=8, n_cycles=3, n_seconds=None)
@@ -103,11 +105,11 @@ def test_save_filt_report(dir_exists, filt_type):
     temp_path = tempfile.NamedTemporaryFile()
 
     if not dir_exists:
-        save_filt_report('/bad/path/', pass_type, filt_type, FS_HIGH, f_db, db,  pass_bw,
+        save_filt_report('/bad/path/', pass_type, filt_type, FS, f_db, db,  pass_bw,
                          transition_bw, f_range, f_range_trans, order, filter_coefs=filter_coefs)
     else:
         print(temp_path.name)
-        save_filt_report(temp_path.name, pass_type, filt_type, FS_HIGH, f_db, db,  pass_bw,
+        save_filt_report(temp_path.name, pass_type, filt_type, FS, f_db, db,  pass_bw,
                          transition_bw, f_range, f_range_trans, order, filter_coefs=filter_coefs)
 
     temp_path.close()

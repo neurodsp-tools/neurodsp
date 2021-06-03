@@ -56,7 +56,7 @@ times = create_times(n_seconds, fs)
 # Set the exponent for brown noise, which is -2
 exponent = -2
 
-# Simulate brown noise powerlaw activity
+# Simulate powerlaw activity
 br_noise = sim_powerlaw(n_seconds, fs, exponent)
 
 ###################################################################################################
@@ -82,12 +82,12 @@ plot_power_spectra(freqs, psd)
 # be applied to the simulated data before being returned.
 #
 # Here we will apply a high-pass filter. We can see that the resulting signal has much less
-# low-frequency activity than the first one.
+# low-frequency drift than the first one.
 #
 
 ###################################################################################################
 
-# Simulate filtered brown noise with a 1 Hz highpass filter
+# Simulate highpass-filtered brown noise with a 1Hz highpass filter
 f_hipass_brown = 1
 brown_filt = sim_powerlaw(n_seconds, fs, exponent, f_range=(f_hipass_brown, None))
 

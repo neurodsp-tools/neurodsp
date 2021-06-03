@@ -24,6 +24,7 @@ def plot_swm_pattern(pattern, ax=None, **kwargs):
     --------
     Plot the average pattern from a sliding window matching analysis:
 
+    >>> import numpy as np
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.rhythm import sliding_window_matching
     >>> sig = sim_combined(n_seconds=10, fs=500,
@@ -31,7 +32,8 @@ def plot_swm_pattern(pattern, ax=None, **kwargs):
     ...                                'sim_bursty_oscillation': {'freq': 20,
     ...                                                           'enter_burst': .25,
     ...                                                           'leave_burst': .25}})
-    >>> avg_window, _, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)
+    >>> windows, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)
+    >>> avg_window = np.mean(windows)
     >>> plot_swm_pattern(avg_window)
     """
 

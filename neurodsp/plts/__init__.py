@@ -5,3 +5,4 @@ from .filt import plot_filter_properties, plot_frequency_response, plot_impulse_
 from .rhythm import plot_swm_pattern, plot_lagged_coherence
 from .spectral import (plot_power_spectra, plot_spectral_hist,
                        plot_scv, plot_scv_rs_lines, plot_scv_rs_matrix)
+from .timefrequency import plot_timefrequency
