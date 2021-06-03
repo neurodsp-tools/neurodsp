@@ -195,6 +195,7 @@ Fluctuation Analyses
 .. autosummary::
     :toctree: generated/
 
+    compute_autocorr
     compute_fluctuations
     compute_irasa
     fit_irasa
@@ -213,6 +214,7 @@ Periodic Signals
 
     sim_oscillation
     sim_bursty_oscillation
+    sim_variable_oscillation
 
 Aperiodic Signals
 ~~~~~~~~~~~~~~~~~
@@ -323,3 +325,12 @@ Rhythm
 
     plot_swm_pattern
     plot_lagged_coherence
+
+Time Frequency
+~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.plts
+.. autosummary::
+    :toctree: generated/
+
+    plot_timefrequency

@@ -115,7 +115,7 @@ def compute_pass_band(fs, pass_type, f_range):
     Returns
     -------
     pass_bw : float
-        The pass bandwidth of the filter.
+        The pass bandwidth of the filter, in Hz.
 
     Examples
     --------
@@ -153,7 +153,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     Returns
     -------
     transition_band : float
-        The transition bandwidth of the filter.
+        The transition bandwidth of the filter, in Hz.
 
     Examples
     --------

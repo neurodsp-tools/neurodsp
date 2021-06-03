@@ -55,11 +55,10 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
     else:
         labels = repeat(labels)
 
-    if colors is not None:
-        colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
+    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
 
-    for freq, power, label in zip(freqs, powers, labels):
-        ax.loglog(freq, power, label=label)
+    for freq, power, color, label in zip(freqs, powers, colors, labels):
+        ax.loglog(freq, power, color=color, label=label)
 
     ax.set_xlabel('Frequency (Hz)')
     ax.set_ylabel('Power (V^2/Hz)')

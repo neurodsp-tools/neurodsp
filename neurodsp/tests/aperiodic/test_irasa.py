@@ -1,11 +1,11 @@
-"""Tests for IRASA functions."""
+"""Tests for neurodsp.aperiodic.irasa."""
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, N_SECONDS_LONG, EXP1
-
 from neurodsp.sim import sim_combined
 from neurodsp.spectral import compute_spectrum, trim_spectrum
+
+from neurodsp.tests.settings import FS, EXP1
 
 from neurodsp.aperiodic.irasa import *
 
@@ -17,7 +17,6 @@ def test_compute_irasa(tsig_comb):
     # Estimate periodic and aperiodic components with IRASA
     f_range = [1, 30]
     freqs, psd_ap, psd_pe = compute_irasa(tsig_comb, FS, f_range, noverlap=int(2*FS))
-
     assert len(freqs) == len(psd_ap) == len(psd_pe)
 
     # Compute r-squared for the full model, comparing to a standard power spectrum
@@ -28,11 +27,11 @@ def test_compute_irasa(tsig_comb):
 def test_fit_irasa(tsig_comb):
 
     # Estimate periodic and aperiodic components with IRASA & fit aperiodic
-    freqs, psd_ap, _ = compute_irasa(tsig_comb, FS, noverlap=int(2*FS))
+    freqs, psd_ap, _ = compute_irasa(tsig_comb, FS, f_range=[1, 30], noverlap=int(2*FS))
     b0, b1 = fit_irasa(freqs, psd_ap)
 
     assert round(b1) == EXP1
-    assert np.abs(b0 - np.log((psd_ap)[0])) < 1
+    assert np.abs(b0 - np.log10((psd_ap)[0])) < 1
 
 def test_fit_func():
 

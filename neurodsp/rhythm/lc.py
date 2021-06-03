@@ -23,13 +23,14 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     fs : float
         Sampling rate, in Hz.
     freqs : 1d array or list of float
-        If array, frequency values to estimate with morlet wavelets.
+        The frequency values at which to estimate lagged coherence.
+        If array, defines the frequency values to use.
         If list, define the frequency range, as [freq_start, freq_stop, freq_step].
         The `freq_step` is optional, and defaults to 1. Range is inclusive of `freq_stop` value.
     n_cycles : float or list of float, default: 3
-        Number of cycles of each frequency to use to compute lagged coherence.
-        If a single value, the same number of cycles is used for each frequency value.
-        If a list or list_like, then should be a n_cycles corresponding to each frequency.
+        The number of cycles to use to compute lagged coherence, for each frequency.
+        If a single value, the same number of cycles is used for each frequency.
+        If a list or list_like, there should be a value corresponding to each frequency.
     return_spectrum : bool, optional, default: False
         If True, return the lagged coherence for all frequency values.
         Otherwise, only the mean lagged coherence value across the frequency range is returned.
@@ -87,7 +88,7 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
 
 def lagged_coherence_1freq(sig, fs, freq, n_cycles):
-    """Compute the lagged coherence of a frequency using the hanning-taper FFT method.
+    """Compute the lagged coherence at a particular frequency.
 
     Parameters
     ----------
@@ -98,12 +99,17 @@ def lagged_coherence_1freq(sig, fs, freq, n_cycles):
     freq : float
         The frequency at which to estimate lagged coherence.
     n_cycles : float
-        Number of cycles at the examined frequency to use to compute lagged coherence.
+        The number of cycles of the given frequency to use to compute lagged coherence.
 
     Returns
     -------
-    float
+    lc : float
         The computed lagged coherence value.
+
+    Notes
+    -----
+    - Lagged coherence is computed using hanning-tapered FFTs.
+    - The returned lagged coherence value is bound between 0 and 1.
     """
 
     # Determine number of samples to be used in each window to compute lagged coherence
@@ -113,20 +119,26 @@ def lagged_coherence_1freq(sig, fs, freq, n_cycles):
     chunks = split_signal(sig, n_samps)
     n_chunks = len(chunks)
 
-    # For each chunk, calculate the Fourier coefficients at the frequency of interest
+    # Create the window to apply to each chunk
     hann_window = hann(n_samps)
+
+    # Create the frequency vector, finding the frequency value of interest
     fft_freqs = np.fft.fftfreq(n_samps, 1 / float(fs))
     fft_freqs_idx = np.argmin(np.abs(fft_freqs - freq))
 
+    # Calculate the Fourier coefficients across chunks for the frequency of interest
     fft_coefs = np.zeros(n_chunks, dtype=complex)
     for ind, chunk in enumerate(chunks):
         fourier_coef = np.fft.fft(chunk * hann_window)
         fft_coefs[ind] = fourier_coef[fft_freqs_idx]
 
-    # Compute the lagged coherence value
+    # Compute lagged coherence across data segments
     lcs_num = 0
     for ind in range(n_chunks - 1):
         lcs_num += fft_coefs[ind] * np.conj(fft_coefs[ind + 1])
     lcs_denom = np.sqrt(np.sum(np.abs(fft_coefs[:-1])**2) * np.sum(np.abs(fft_coefs[1:])**2))
 
-    return np.abs(lcs_num / lcs_denom)
+    # Normalize the lagged coherence value
+    lc_val = np.abs(lcs_num / lcs_denom)
+
+    return lc_val

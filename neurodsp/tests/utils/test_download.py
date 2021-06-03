@@ -1,4 +1,4 @@
-"""Test functions for neurodsp.utils.download."""
+"""Tests for for neurodsp.utils.download."""
 
 import os
 import shutil

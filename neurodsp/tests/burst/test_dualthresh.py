@@ -1,4 +1,4 @@
-"""Tests for burst detection functions."""
+"""Tests for neurodsp.burst.dualthresh."""
 
 from neurodsp.tests.settings import FS
 

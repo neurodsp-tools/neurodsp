@@ -1,4 +1,4 @@
-"""Test spectral checker functions."""
+"""Tests neurodsp.spectral.checks."""
 
 import numpy as np
 
