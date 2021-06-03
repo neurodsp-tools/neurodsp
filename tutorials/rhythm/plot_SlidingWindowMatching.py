@@ -84,6 +84,7 @@ plot_time_series(times, sig)
 #
 # Sliding window matching can be applied with the
 # :func:`~.sliding_window_matching` function.
+#
 
 ###################################################################################################
 # Data Preprocessing

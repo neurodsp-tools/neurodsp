@@ -9,7 +9,7 @@ from neurodsp.utils.decorators import multidim
 
 @multidim()
 def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
-                             window_starts_custom=None, var_thresh=None):
+                            window_starts_custom=None, var_thresh=None):
     """Find recurring patterns in a time series using the sliding window matching algorithm.
 
     Parameters
@@ -69,11 +69,11 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
     Search for reoccuring patterns using sliding window matching in a simulated beta signal:
 
     >>> from neurodsp.sim import sim_combined
-    >>> components={'sim_bursty_oscillation': {'freq': 20, 'phase':'min'},
-    ...             'sim_powerlaw': {'f_range': (2, None)}}
+    >>> components = {'sim_bursty_oscillation' : {'freq' : 20, 'phase' : 'min'},
+    ...               'sim_powerlaw' : {'f_range' : (2, None)}}
     >>> sig = sim_combined(10, fs=500, components=components, component_variances=(1, .05))
-    >>> windows, starts = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.05,
-    ...                                           max_iterations=100, var_thresh=.5)
+    >>> windows, starts = sliding_window_matching(sig, fs=500, win_len=0.05,
+    ...                                           win_spacing=0.05, var_thresh=.5)
     """
 
     # Compute window length and spacing in samples
@@ -86,15 +86,15 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
     else:
         window_starts = window_starts_custom
 
-    windows = np.array([sig[start:start+win_len] for start in window_starts])
+    windows = np.array([sig[start:start + win_len] for start in window_starts])
 
-    # New window bounds
+    # Compute new window bounds
     lower_bounds, upper_bounds = _compute_bounds(window_starts, win_spacing, 0, len(sig) - win_len)
 
     # Remove low variance windows to speed up runtime
-    if var_thresh != None:
+    if var_thresh is not None:
 
-        thresh = np.array([np.var(sig[loc:loc+win_len]) > var_thresh for loc in window_starts])
+        thresh = np.array([np.var(sig[loc:loc + win_len]) > var_thresh for loc in window_starts])
 
         windows = windows[thresh]
         window_starts = window_starts[thresh]
@@ -117,7 +117,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
             # Find a new, random window start
             _window_starts = window_starts.copy()
             _window_starts[win_idx] = np.random.choice(np.arange(lower_bounds[win_idx],
-                                                                 upper_bounds[win_idx]+1))
+                                                                 upper_bounds[win_idx] + 1))
 
             # Accept new window if correlation increases and variance decreases
             _corrs, _variance = _compute_cost(sig, _window_starts, win_len)
@@ -127,7 +127,8 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
                 corrs = _corrs.copy()
                 variance = _variance
                 window_starts = _window_starts.copy()
-                lower_bounds, upper_bounds = _compute_bounds(window_starts, win_spacing, 0, len(sig) - win_len)
+                lower_bounds, upper_bounds = _compute_bounds(\
+                    window_starts, win_spacing, 0, len(sig) - win_len)
 
         # Phase optimization
         _window_starts = window_starts.copy()
@@ -140,7 +141,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
             if (_starts[0] < 0) or (_starts[-1] > len(sig) - win_len):
                 continue
 
-            _windows = np.array([sig[start:start+win_len] for start in _starts])
+            _windows = np.array([sig[start:start + win_len] for start in _starts])
 
             _mae = np.mean(np.abs(_windows - _windows.mean(axis=0)))
 
@@ -149,12 +150,13 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
                 windows = _windows.copy()
                 mae = _mae
 
-        lower_bounds, upper_bounds = _compute_bounds(window_starts, win_spacing, 0, len(sig) - win_len)
+        lower_bounds, upper_bounds = _compute_bounds(\
+            window_starts, win_spacing, 0, len(sig) - win_len)
 
     return windows, window_starts
 
 
-def _compute_cost(sig, window_starts, win_n_samps, start=None, end=None):
+def _compute_cost(sig, window_starts, win_n_samps):
     """Compute the cost, as corrleation coefficients and variance across windows.
 
     Parameters
@@ -174,7 +176,7 @@ def _compute_cost(sig, window_starts, win_n_samps, start=None, end=None):
         Sum of the variance across windows.
     """
 
-    windows = np.array([sig[start:start+win_n_samps] for start in window_starts])
+    windows = np.array([sig[start:start + win_n_samps] for start in window_starts])
 
     corrs = np.corrcoef(windows)
 
@@ -183,12 +185,28 @@ def _compute_cost(sig, window_starts, win_n_samps, start=None, end=None):
     return corrs, variance
 
 
-def _compute_bounds(window_starts, win_spacing, start=None, end=None):
+def _compute_bounds(window_starts, win_spacing, start, end):
+    """Compute bounds on a new window.
+
+    Parameters
+    ----------
+    window_starts : list of int
+        The list of window start definitions.
+    win_spacing : float
+        Minimum spacing between windows, in seconds.
+    start, end : int
+        Start and end edges for the possible window.
+
+    Returns
+    -------
+    lower_bounds, upper_bounds : 1d array
+        Computed upper and lower bounds for the window position.
+    """
 
     lower_bounds = window_starts[:-1] + win_spacing
     lower_bounds = np.insert(lower_bounds, 0, start)
 
-    upper_bounds =  window_starts[1:] - win_spacing
+    upper_bounds = window_starts[1:] - win_spacing
     upper_bounds = np.insert(upper_bounds, len(upper_bounds), end)
 
     return lower_bounds, upper_bounds
