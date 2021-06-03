@@ -1,10 +1,12 @@
-"""Tests for filter utilities."""
+"""Tests for neurodsp.filt.utils."""
 
 from pytest import raises
+
 from neurodsp.tests.settings import FS
 
-from neurodsp.filt.utils import *
 from neurodsp.filt.fir import design_fir_filter, compute_filter_length
+
+from neurodsp.filt.utils import *
 
 ###################################################################################################
 ###################################################################################################
@@ -42,7 +44,7 @@ def test_compute_nyquist():
 
 def test_remove_filter_edges():
 
-    # Get the length for a possible filter & calculate # of values should be dropped for it
+    # Get the length for a possible filter & calculate # of values that should be dropped for it
     sig_len = 1000
     sig = np.ones(sig_len)
     filt_len = compute_filter_length(FS, 'bandpass', f_lo=4, f_hi=8, n_cycles=3, n_seconds=None)

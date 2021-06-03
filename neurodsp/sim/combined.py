@@ -73,12 +73,13 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
 
         # If list, params should be a list of separate parameters for each function call
         if isinstance(params, list):
-            sig_components.extend([func(n_seconds, fs, **cur_params, variance=next(variances)) \
-                for cur_params in params])
+            sig_components.extend([func(n_seconds=n_seconds, fs=fs, **cur_params,
+                                        variance=next(variances)) for cur_params in params])
 
         # Otherwise, params should be a dictionary of parameters for single call
         else:
-            sig_components.append(func(n_seconds, fs, **params, variance=next(variances)))
+            sig_components.append(func(n_seconds=n_seconds, fs=fs, **params,
+                                       variance=next(variances)))
 
     # Combine total signal across all simulated components
     sig = np.sum(sig_components, axis=0)

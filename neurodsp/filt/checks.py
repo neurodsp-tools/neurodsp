@@ -150,7 +150,7 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
     # Check that frequency response goes below transition level (has significant attenuation)
     if np.min(db) >= transitions[0]:
         passes = False
-        warn('The filter attenuation never goes below {} dB.'\
+        warn('The filter attenuation never goes below {} dB. '\
              'Increase filter length.'.format(transitions[0]))
         # If there is no attenuation, cannot calculate bands, so return here
         return passes
@@ -159,7 +159,7 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
     if pass_type == 'bandpass':
         if db[0] >= transitions[0] or db[-1] >= transitions[0]:
             passes = False
-            warn('The low or high frequency stopband never gets attenuated by'\
+            warn('The low or high frequency stopband never gets attenuated by '\
                  'more than {} dB. Increase filter length.'.format(abs(transitions[0])))
 
     # Compute pass & transition bandwidth
@@ -169,8 +169,8 @@ def check_filter_properties(filter_coefs, a_vals, fs, pass_type, f_range,
     # Raise warning if transition bandwidth is too high
     if transition_bw > pass_bw:
         passes = False
-        warn('Transition bandwidth is  {:.1f}  Hz. This is greater than the desired'\
-             'pass/stop bandwidth of  {:.1f} Hz'.format(transition_bw, pass_bw))
+        warn('Transition bandwidth is {:.1f} Hz. This is greater than the desired '\
+             'pass/stop bandwidth of {:.1f} Hz'.format(transition_bw, pass_bw))
 
     # Print out transition bandwidth and pass bandwidth to the user
     if verbose:

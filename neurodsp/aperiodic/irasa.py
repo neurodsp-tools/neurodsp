@@ -1,4 +1,4 @@
-"""The IRASA method for separating periodic and aperiodic activity."""
+"""The IRASA algorithm for separating periodic and aperiodic activity."""
 
 import fractions
 
@@ -12,8 +12,8 @@ from neurodsp.spectral import compute_spectrum, trim_spectrum
 ###################################################################################################
 ###################################################################################################
 
-def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
-    """Separate the aperiodic and periodic components using the IRASA method.
+def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwargs):
+    """Separate aperiodic and periodic components using IRASA.
 
     Parameters
     ----------
@@ -21,11 +21,14 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
         Time series.
     fs : float
         The sampling frequency of sig.
-    f_range : tuple or None
-        Frequency range.
-    hset : 1d array
+    f_range : tuple, optional
+        Frequency range to restrict the analysis to.
+    hset : 1d array, optional
         Resampling factors used in IRASA calculation.
         If not provided, defaults to values from 1.1 to 1.9 with an increment of 0.05.
+    thresh : float, optional
+        A relative threshold to apply when separating out periodic components.
+        The threshold is defined in terms of standard deviations of the original spectrum.
     spectrum_kwargs : dict
         Optional keywords arguments that are passed to `compute_spectrum`.
 
@@ -40,9 +43,9 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
 
     Notes
     -----
-    Irregular-Resampling Auto-Spectral Analysis (IRASA) is described in Wen & Liu (2016).
-    Briefly, it aims to separate 1/f and periodic components by resampling time series, and
-    computing power spectra, effectively averaging away any activity that is frequency specific.
+    Irregular-Resampling Auto-Spectral Analysis (IRASA) is an algorithm that aims to
+    separate 1/f and periodic components by resampling time series and computing power spectra,
+    averaging away any activity that is frequency specific to isolate the aperiodic component.
 
     References
     ----------
@@ -73,18 +76,24 @@ def compute_irasa(sig, fs=None, f_range=(1, 30), hset=None, **spectrum_kwargs):
         sig_up = signal.resample_poly(sig, up, dn, axis=-1)
         sig_dn = signal.resample_poly(sig, dn, up, axis=-1)
 
-        # Calculate the power spectrum using the same params as original
+        # Calculate the power spectrum, using the same params as original
         freqs_up, psd_up = compute_spectrum(sig_up, h_val * fs, **spectrum_kwargs)
         freqs_dn, psd_dn = compute_spectrum(sig_dn, fs / h_val, **spectrum_kwargs)
 
-        # Geometric mean of h and 1/h
+        # Calculate the geometric mean of h and 1/h
         psds[ind, :] = np.sqrt(psd_up * psd_dn)
 
-    # Now we take the median resampled spectra, as an estimate of the aperiodic component
+    # Take the median resampled spectra, as an estimate of the aperiodic component
     psd_aperiodic = np.median(psds, axis=0)
 
     # Subtract aperiodic from original, to get the periodic component
     psd_periodic = psd - psd_aperiodic
+
+    # Apply a relative threshold for tuning which activity is labelled as periodic
+    if thresh is not None:
+        sub_thresh = np.where(psd_periodic - psd_aperiodic < thresh * np.std(psd))[0]
+        psd_periodic[sub_thresh] = 0
+        psd_aperiodic[sub_thresh] = psd[sub_thresh]
 
     # Restrict spectrum to requested range
     if f_range:

@@ -1,10 +1,13 @@
 """Simulating time series, with periodic activity."""
 
+from itertools import repeat
+
 import numpy as np
 
-from neurodsp.utils.norm import normalize_sig
+from neurodsp.utils.data import compute_nsamples
+from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.cycles import sim_cycle, phase_shift_cycle
+from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
 
 ###################################################################################################
 ###################################################################################################
@@ -22,11 +25,13 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     freq : float
         Oscillation frequency.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'asym_beta', 'asym_harmonic'}
+            or callable
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
-    phase : float, optional, default: 0
+    phase : float or {'min', 'max'}, optional, default: 0
         If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-        The shift is defined as a relative proportion of cycle, between [0, 1].
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -47,28 +52,28 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     ...                       cycle='asine', phase=0.5, rdsym=0.75)
     """
 
-    # Figure out how many cycles are needed for the signal, & length of each cycle
+    # Figure out how many cycles are needed for the signal
     n_cycles = int(np.ceil(n_seconds * freq))
+
+    # Compute the number of seconds per cycle for the requested frequency
+    #   The rounding is needed to get a value that works with the sampling rate
     n_seconds_cycle = int(np.ceil(fs / freq)) / fs
 
-    # Create a single cycle of an oscillation
-    cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-
-    # Phase shift the simulated cycle
-    cycle = phase_shift_cycle(cycle, phase)
+    # Create a single cycle of an oscillation, for the requested frequency
+    cycle = sim_cycle(n_seconds_cycle, fs, cycle, phase, **cycle_params)
 
     # Tile the cycle, to create the desired oscillation
     sig = np.tile(cycle, n_cycles)
 
     # Truncate the length of the signal to be the number of expected samples
-    n_samps = int(n_seconds * fs)
-    sig = sig[:n_samps]
+    n_samples = compute_nsamples(n_seconds, fs)
+    sig = sig[:n_samples]
 
     return sig
 
 
-def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
-                           cycle='sine', **cycle_params):
+def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=None,
+                           cycle='sine', phase=0, **cycle_params):
     """Simulate a bursty oscillation.
 
     Parameters
@@ -79,13 +84,36 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
         Sampling rate of simulated signal, in Hz.
     freq : float
         Oscillation frequency, in Hz.
-    enter_burst : float, optional, default: 0.2
-        Probability of a cycle being oscillating given the last cycle is not oscillating.
-    leave_burst : float, optional, default: 0.2
-        Probability of a cycle not being oscillating given the last cycle is oscillating.
+    burst_def : {'prob', 'durations'} or 1d array
+        Which approach to take to define the bursts:
+
+        - 'prob' : simulate bursts based on probabilities of entering and leaving bursts states.
+        - 'durations' : simulate bursts based on lengths of bursts and inter-burst periods.
+        - 1d array: use the given array as a definition of the bursts
+
+    burst_params : dict
+        Parameters for the burst definition approach.
+
+        For the `prob` approach:
+
+            enter_burst : float, optional, default: 0.2
+                Probability of a cycle being oscillating given the last cycle is not oscillating.
+            leave_burst : float, optional, default: 0.2
+                Probability of a cycle not being oscillating given the last cycle is oscillating.
+
+        For the `durations` approach:
+
+            n_cycles_burst : int
+                The number of cycles within each burst.
+            n_cycles_off
+                The number of non-bursting cycles, between bursts.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
     **cycle_params
         Parameters for the simulated oscillation cycle.
 
@@ -104,62 +132,278 @@ def sim_bursty_oscillation(n_seconds, fs, freq, enter_burst=.2, leave_burst=.2,
 
     Examples
     --------
-    Simulate a bursty oscillation, with a low probability of bursting:
+    Simulate a probabilistic bursty oscillation, with a low probability of bursting:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.2, leave_burst=0.8)
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5,
+    ...                              burst_params={'enter_burst' : 0.2, 'leave_burst' : 0.8})
 
-    Simulate a bursty oscillation, with a high probability of bursting:
+    Simulate a probabilistic bursty sawtooth oscillation, with a high probability of bursting:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, enter_burst=0.8, leave_burst=0.4)
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=5, burst_def='prob',
+    ...                              burst_params = {'enter_burst' : 0.8, 'leave_burst' : 0.4},
+    ...                              cycle='sawtooth', width=0.3)
 
-    Simulate a bursty oscillation, of sawtooth waves:
+    Simulate a bursty oscillation, with specified durations:
 
-    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, cycle='sawtooth', width=0.3)
+    >>> sig = sim_bursty_oscillation(n_seconds=10, fs=500, freq=10, burst_def='durations',
+    ...                              burst_params={'n_cycles_burst' : 3, 'n_cycles_off' : 3})
     """
 
-    # Determine number of samples & cycles
-    n_samples = int(n_seconds * fs)
-    n_seconds_cycle = (1/freq * fs)/fs
+    # Consistency fix: catch old parameters, and remap into burst_params
+    #   This preserves the prior default values, and makes the old API work the same
+    burst_params = {} if not burst_params else burst_params
+    for burst_param in ['enter_burst', 'leave_burst']:
+        temp = cycle_params.pop(burst_param, 0.2)
+        if burst_def == 'prob' and burst_param not in burst_params:
+            burst_params[burst_param] = temp
 
-    # Grab normalization parameters, if any were provided
-    mean = cycle_params.pop('mean', 0.)
-    variance = cycle_params.pop('variance', 1.)
+    # Simulate a normalized cycle to use for bursts
+    n_seconds_cycle = 1/freq
+    osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase=phase, **cycle_params)
 
-    # Make a single cycle of an oscillation, and normalize this cycle
-    osc_cycle = sim_cycle(n_seconds_cycle, fs, cycle, **cycle_params)
-    osc_cycle = normalize_sig(osc_cycle, mean, variance)
-
-    # Calculate how many cycles are needed to tile the full signal
-    n_samples_cycle = len(osc_cycle)
-    n_cycles = int(np.floor(n_samples / n_samples_cycle))
+    # Calculate the number of cycles needed to tile the full signal
+    n_cycles = int(np.floor(n_seconds * freq))
 
     # Determine which periods will be oscillating
-    is_oscillating = _make_is_osc(n_cycles, enter_burst, leave_burst)
+    if isinstance(burst_def, np.ndarray):
+        is_oscillating = burst_def
+    elif burst_def == 'prob':
+        is_oscillating = make_is_osc_prob(n_cycles, **burst_params)
+    elif burst_def == 'durations':
+        is_oscillating = make_is_osc_durations(n_cycles, **burst_params)
+    else:
+        raise ValueError('Requested burst_def not understood.')
 
-    # Fill in the signal with cycle oscillations, for all bursting cycles
-    sig = np.zeros([n_samples])
-    for is_osc, cycle_ind in zip(is_oscillating, range(0, n_samples, n_samples_cycle)):
-        if is_osc:
-            sig[cycle_ind:cycle_ind+n_samples_cycle] = osc_cycle
+    sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
 
     return sig
 
-###################################################################################################
-###################################################################################################
 
-def _make_is_osc(n_cycles, enter_burst, leave_burst):
-    """Create a vector describing if each cycle is oscillating, for bursting oscillations."""
+def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycle_params):
+    """Simulate an oscillation that varies in frequency and cycle parameters.
 
-    is_oscillating = [None] * (n_cycles)
-    is_oscillating[0] = False
+    Parameters
+    ----------
+    n_seconds : float or None
+        Simulation time, in seconds. If None, the simulation time is based on `freqs` and the
+        length of `cycle_params`. If a float, the signal may be truncated or contain trailing zeros
+        if not exact.
+    fs : float
+        Signal sampling rate, in Hz.
+    freqs : float or list
+        Oscillation frequencies.
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
+        Type of oscillation cycle to simulate.
+        See `sim_cycle` for details on cycle types and parameters.
+    phase : float or {'min', 'max'}, optional, default: 0
+        If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+        If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+        If 'min' or 'max', the cycle is shifted to start at it's minima or maxima.
+    **cycle_params
+        Parameter floats or variable lists for each cycle.
 
-    for ii in range(1, n_cycles):
+    Returns
+    -------
+    sig : 1d array
+        Simulated bursty oscillation.
+
+    Examples
+    --------
+    Simulate one second of an oscillation with a varying center frequency:
+
+    >>> freqs = np.tile([10, 11, 10, 9], 5)
+    >>> sig = sim_variable_oscillation(1, 1000, freqs)
+
+    Simulate an oscillation with varying frequency and parameters for a given number of cycles:
+
+    >>> freqs = [ 5, 10, 15, 20]
+    >>> rdsyms = [.2, .4, .6, .8]
+    >>> sig = sim_variable_oscillation(None, 1000, freqs, cycle='asine', rdsym=rdsyms)
+    """
+
+    # Ensure param lists are the same length
+    param_keys = cycle_params.keys()
+    param_values = list(cycle_params.values())
+
+    param_lengths = np.array([len(params) for params in param_values
+                              if isinstance(params, (list, np.ndarray))])
+
+    # Determine the number of cycles
+    if isinstance(freqs, (np.ndarray, list)):
+        n_cycles = len(freqs)
+    elif len(param_lengths) > 0:
+        n_cycles = param_lengths[0]
+    else:
+        n_cycles = 1
+
+    # Ensure freqs is iterable and an array
+    freqs = np.array([freqs] * n_cycles) if isinstance(freqs, (int, float)) else freqs
+    freqs = np.array(freqs) if not isinstance(freqs, np.ndarray) else freqs
+
+    # Ensure lengths of variable params are equal
+    if ~(param_lengths == len(freqs)).all():
+        raise ValueError('Length of cycle_params lists and freqs must be equal.')
+
+    # Ensure all kwargs params are iterable
+    for idx, param in enumerate(param_values):
+        if not isinstance(param, (list, np.ndarray)):
+            param_values[idx] = [param] * n_cycles
+
+    param_values = np.array(param_values).transpose()
+
+    # Collect params for each cycle separately
+    cycle_params = [dict(zip(param_keys, params)) for params in param_values]
+    cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
+
+    # Determine start/end indices
+    cyc_lens = [int(np.ceil(1 / freq * fs)) for freq in freqs]
+    ends = np.cumsum(cyc_lens, dtype=int)
+    starts = [0, *ends[:-1]]
+
+    # Simulate
+    n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
+
+    sig = np.zeros(n_samples)
+
+    for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
+
+        if start > n_samples or end > n_samples:
+            break
+
+        n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+        sig[start:end] = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase, **params)
+
+    return sig
+
+
+def make_bursts(n_seconds, fs, is_oscillating, cycle):
+    """Create a bursting time series by tiling when oscillations occur.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    is_oscillating : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    cycle : 1d array
+        The cycle to use for bursts.
+
+    Returns
+    -------
+    burst_sig : 1d array
+        Simulated bursty oscillation.
+    """
+
+    n_samples = compute_nsamples(n_seconds, fs)
+    n_samples_cycle = len(cycle)
+
+    burst_sig = np.zeros([n_samples])
+    for sig_ind, is_osc in zip(range(0, n_samples, n_samples_cycle), is_oscillating):
+        if is_osc:
+            burst_sig[sig_ind:sig_ind+n_samples_cycle] = cycle
+
+    return burst_sig
+
+
+def make_is_osc_prob(n_cycles, enter_burst, leave_burst):
+    """Create bursting definition, based on probabilistic burst starts and stops.
+
+    Parameters
+    ----------
+    n_cycles : int
+        The number of cycles to simulate the burst definition for.
+    enter_burst : float, optional, default: 0.2
+        Probability of a cycle entering a burst, given the last cycle is not oscillating.
+    leave_burst : float, optional, default: 0.2
+        Probability of a cycle leaving a burst, given the last cycle is oscillating.
+
+    Returns
+    -------
+    is_oscillations : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    """
+
+    check_param_range(enter_burst, 'enter_burst', [0., 1.])
+    check_param_range(leave_burst, 'leave_burst', [0., 1.])
+
+    # Initialize vector of burst definitions
+    is_oscillating = np.zeros(n_cycles, dtype=bool)
+
+    for ind in range(1, n_cycles):
 
         rand_num = np.random.rand()
 
-        if is_oscillating[ii-1]:
-            is_oscillating[ii] = rand_num > leave_burst
+        # If prior cycle bursting, leave burst with given probability
+        if is_oscillating[ind-1]:
+            is_oscillating[ind] = rand_num > leave_burst
+        # Otherwise, with prior cycle not bursting, enter burst with given probability
         else:
-            is_oscillating[ii] = rand_num < enter_burst
+            is_oscillating[ind] = rand_num < enter_burst
 
     return is_oscillating
+
+
+def make_is_osc_durations(n_cycles, n_cycles_burst, n_cycles_off):
+    """Create bursting definition, based on cycle lengths and intervals.
+
+    Parameters
+    ----------
+    n_cycles : int
+        The number of cycles to simulate the burst definition for.
+    n_cycles_burst : int
+        Number of cycles within a burst.
+    n_cycles_off : int
+        Number of cycles between bursts.
+
+    Returns
+    -------
+    is_oscillations : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    """
+
+    # Make the burst parameters iterators
+    n_cycles_burst = repeat(n_cycles_burst) if isinstance(n_cycles_burst, int) else n_cycles_burst
+    n_cycles_off = repeat(n_cycles_off) if isinstance(n_cycles_off, int) else n_cycles_off
+
+    # Initialize is oscillating
+    is_oscillating = np.zeros(n_cycles, dtype=bool)
+
+    # Fill in bursts
+    ind = 0
+    while ind < len(is_oscillating):
+
+        # Within a burst, set specified cycles as bursting
+        b_len = next(n_cycles_burst)
+        is_oscillating[ind: ind+b_len] = True
+
+        # Update index for the next burst
+        off_len = next(n_cycles_off)
+        ind = ind + b_len + off_len
+
+    return is_oscillating
+
+
+def get_burst_samples(is_oscillating, fs, freq):
+    """Convert a burst definition from cycles to samples.
+
+    Parameters
+    ----------
+    is_oscillating : 1d array of bool
+        Definition of whether each cycle is bursting or not.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    freq : float
+        Oscillation frequency, in Hz.
+
+    Returns
+    -------
+    1d array of bool
+        Definition of whether each sample is part of a burst or not.
+    """
+
+    n_samples_cycle = int(1/freq * fs)
+    bursts = np.repeat(is_oscillating, n_samples_cycle)
+
+    return bursts

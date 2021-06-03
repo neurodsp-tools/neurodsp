@@ -1,4 +1,4 @@
-"""Test spectral variance functions."""
+"""Tests for neurodsp.spectral.variance."""
 
 from neurodsp.tests.settings import FS
 

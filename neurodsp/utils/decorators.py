@@ -48,6 +48,10 @@ def multidim(select=[]):
     ----------
     select : list of int, optional
         List of indices of outputs to sub-select a single instance from.
+
+    Notes
+    -----
+    This decorator assumes the wrapped function has the data input 'sig' as the first argument.
     """
 
     def decorator(func, *args, **kwargs):
@@ -61,17 +65,17 @@ def multidim(select=[]):
             elif sig.ndim == 2:
 
                 # Apply func across rows of the input data
-                outs = [func(dat, *args, **kwargs) for dat in sig]
+                outs = [func(data, *args, **kwargs) for data in sig]
 
                 if isinstance(outs[0], tuple):
 
                     # Collect together associated outputs from each,
                     #   in case there are multiple outputs
-                    out = [np.stack([dat[n_out] for dat in outs]) \
+                    out = [np.stack([data[n_out] for data in outs]) \
                         for n_out in range(len(outs[0]))]
 
                     # Sub-select single instance of collection for requested outputs
-                    out = [dat[0] if ind in select else dat for ind, dat in enumerate(out)]
+                    out = [data[0] if ind in select else data for ind, data in enumerate(out)]
 
                 else:
                     out = np.stack(outs)

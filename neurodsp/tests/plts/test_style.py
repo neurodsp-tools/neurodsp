@@ -1,4 +1,4 @@
-"""Test plot style related functionality."""
+"""Tests for neurodsp.plts.style."""
 
 import matplotlib.pyplot as plt
 
@@ -40,7 +40,7 @@ def test_apply_line_style():
 
     assert ax.get_lines()[0].get_lw() == lw
 
-    # Check applying style across multiple lines
+    # Check applying style to multiple lines
     _, ax = plt.subplots()
     ax.plot([1, 2], [[3, 4], [5, 6]])
 
@@ -71,7 +71,7 @@ def test_plot_style():
     def my_custom_styler(ax, **kwargs):
         ax.set_title('DATA!')
 
-    # Apply plot style using all defaults
+    # Apply plot style using defaults
     plot_style(ax)
 
     # Apply plot style passing in a styler

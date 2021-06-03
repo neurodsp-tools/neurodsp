@@ -1,6 +1,7 @@
-"""Tests for FIR filters."""
+"""Tests for neurodsp.filt.fir."""
 
 from pytest import raises
+
 import numpy as np
 
 from neurodsp.tests.settings import FS, EPS_FILT
@@ -15,20 +16,19 @@ def test_filter_signal_fir(tsig, tsig_sine):
     out = filter_signal_fir(tsig, FS, 'bandpass', (8, 12))
     assert out.shape == tsig.shape
 
-    # Apply lowpass to low-frequency sine. There should be little attenuation.
+    # Apply lowpass to low-frequency sine, which should should give little attenuation
     sig_filt_lp = filter_signal_fir(tsig_sine, FS, pass_type='lowpass', f_range=(None, 10))
 
-    # Compare the two signals only at those times where the filtered signal is not nan.
+    # Compare the two signals at timepoints where the filtered signal is not nan
     not_nan = ~np.isnan(sig_filt_lp)
     assert np.allclose(tsig_sine[not_nan], sig_filt_lp[not_nan], atol=EPS_FILT)
 
-    # Now apply a high pass filter. The signal should be significantly attenuated.
+    # Apply a highpass filter, which should significantly attenuate the signal
     sig_filt_hp = filter_signal_fir(tsig_sine, FS, pass_type='highpass', f_range=(30, None))
 
-    # Get rid of nans.
+    # Compare the two signals at timepoints where the filtered signal is not nan
     not_nan = ~np.isnan(sig_filt_hp)
     sig_filt_hp = sig_filt_hp[not_nan]
-
     expected_answer = np.zeros_like(sig_filt_hp)
     assert np.allclose(sig_filt_hp, expected_answer, atol=EPS_FILT)
 
@@ -58,23 +58,25 @@ def test_compute_filter_length():
     f_lo, f_hi = 4, 8
 
     # Check filt_len, if defined using n_seconds
-    n_seconds = 1.75 # Number chosen to create odd expected filt_len (not needing rounding up)
+    #   n_seconds here is chosen to create expected odd filt_len, without needing rounding up
+    n_seconds = 1.75
     expected_filt_len = n_seconds * fs
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=None, n_seconds=n_seconds)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
+                                     n_cycles=None, n_seconds=n_seconds)
     assert filt_len == expected_filt_len
 
     # Check filt_len, if defined using n_cycles
     n_cycles = 5
     expected_filt_len = int(np.ceil(fs * n_cycles / f_lo))
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=n_cycles, n_seconds=None)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
+                                     n_cycles=n_cycles, n_seconds=None)
     assert filt_len == expected_filt_len
 
     # Check filt_len, if expected to be rounded up to be odd
     n_cycles = 4
     expected_filt_len = int(np.ceil(fs * n_cycles / f_lo)) + 1
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=n_cycles, n_seconds=None)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
+                                     n_cycles=n_cycles, n_seconds=None)
     assert filt_len == expected_filt_len
-
     with raises(ValueError):
         filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi)
-

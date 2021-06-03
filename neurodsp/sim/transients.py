@@ -2,9 +2,11 @@
 
 from warnings import warn
 
+from itertools import repeat
+
 import numpy as np
 
-from neurodsp.utils.data import create_times
+from neurodsp.utils.data import create_times, compute_nsamples
 
 ###################################################################################################
 ###################################################################################################
@@ -71,3 +73,64 @@ def sim_synaptic_kernel(n_seconds, fs, tau_r, tau_d):
     kernel = kernel / np.sum(kernel)
 
     return kernel
+
+
+def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
+    """Simulate an action potential as the sum of skewed gaussians.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    centers : array-like or float
+        Times where the peak occurs in the pre-skewed gaussian.
+    stds : array-like or float
+        Standard deviations of the gaussian kernels, in seconds.
+    alphas : array-like or float
+        Magnitiude and direction of the skew.
+    heights : array-like or float
+        Maximum value of the cycles.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated spike cycle.
+    """
+
+    # Prevent circular import
+    from neurodsp.sim.cycles import sim_skewed_gaussian_cycle
+
+    # Determine number of parameters and repeat if necessary
+    params = []
+    n_params = []
+
+    for param in [centers, stds, alphas, heights]:
+
+        if isinstance(param, (tuple, list, np.ndarray)):
+            n_params.append(len(param))
+        else:
+            param = repeat(param)
+
+        params.append(param)
+
+    # Parameter checking
+    if len(n_params) != 0 and len(set(n_params)) != 1:
+        raise ValueError('Unequal lengths between two or more of {centers, stds, alphas, heights}.')
+
+    # Simulate
+    elif len(n_params) == 0:
+        # Single gaussian
+        cycle = sim_skewed_gaussian_cycle(n_seconds, fs, centers, stds, alphas, heights)
+
+    else:
+        # Multiple gaussians
+        cycle = np.zeros((n_params[0], compute_nsamples(n_seconds, fs)))
+
+        for idx, (center, std, alpha, height) in enumerate(zip(*params)):
+            cycle[idx] = sim_skewed_gaussian_cycle(n_seconds, fs,  center, std, alpha,height)
+
+        cycle = np.sum(cycle, axis=0)
+
+    return cycle
