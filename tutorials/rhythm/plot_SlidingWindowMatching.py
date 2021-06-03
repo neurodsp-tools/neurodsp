@@ -42,6 +42,7 @@ from neurodsp.utils.download import load_ndsp_data
 from neurodsp.plts.rhythm import plot_swm_pattern
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.utils import set_random_seed, create_times
+from neurodsp.utils.norm import normalize_sig
 
 ###################################################################################################
 
@@ -59,6 +60,7 @@ set_random_seed(0)
 
 # Download, if needed, and load example data files
 sig = load_ndsp_data('sample_data_1.npy', folder='data')
+sig = normalize_sig(sig, mean=0, variance=1)
 
 # Set sampling rate, and create a times vector for plotting
 fs = 1000
@@ -123,12 +125,12 @@ plot_time_series(times, sig)
 
 # Define window length & minimum window spacing, both in seconds
 win_len = .055
-win_spacing = .2
+win_spacing = .055
 
 ###################################################################################################
 
 # Apply the sliding window matching algorithm to the time series
-windows, window_starts = sliding_window_matching(sig, fs, win_len, win_spacing)
+windows, window_starts = sliding_window_matching(sig, fs, win_len, win_spacing, var_thresh=.5)
 
 ###################################################################################################
 # Examine the Results
