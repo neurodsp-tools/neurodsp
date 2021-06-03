@@ -321,7 +321,7 @@ def gen_filt_str(pass_type, filt_type, fs, f_db, db, pass_bw,
     if filt_type == 'FIR':
 
         filt_str.append('Phase: linear-phase')
-        filt_str.append('Group Delay: {:1.4f} s'.format((len(f_db)-1) / (2 * fs)))
+        filt_str.append('Group Delay: 0s')
         filt_str.append('Direction: one-pass')
 
     elif filt_type == 'IIR':
