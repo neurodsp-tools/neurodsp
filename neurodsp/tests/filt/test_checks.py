@@ -58,6 +58,9 @@ def test_check_filter_properties():
     assert passes is False
 
 
+    check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12),
+                            verbose=True, return_properties=True)
+
 def test_check_filter_length():
 
     check_filter_length(1000, 500)

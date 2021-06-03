@@ -1,10 +1,15 @@
 """Tests for neurodsp.filt.utils."""
 
-from pytest import raises
+import tempfile
+from pytest import raises, mark, param
+
+import numpy as np
 
 from neurodsp.tests.settings import FS
-
+from neurodsp.filt.utils import *
 from neurodsp.filt.fir import design_fir_filter, compute_filter_length
+from neurodsp.filt.iir import design_iir_filter
+from neurodsp.filt.checks import check_filter_definition, check_filter_properties
 
 from neurodsp.filt.utils import *
 
@@ -55,3 +60,56 @@ def test_remove_filter_edges():
     assert np.all(np.isnan(dropped_sig[:n_rmv]))
     assert np.all(np.isnan(dropped_sig[-n_rmv:]))
     assert np.all(~np.isnan(dropped_sig[n_rmv:-n_rmv]))
+
+
+@mark.parametrize("pass_type", ['bandpass', 'bandstop', 'lowpass', 'highpass'])
+@mark.parametrize("filt_type", ['IIR', 'FIR'])
+def test_gen_filt_str(pass_type, filt_type):
+
+    f_db = np.arange(0, 50)
+    db = np.random.rand(50)
+    pass_bw = 10
+    transition_bw = 4
+    f_range = (10, 40)
+    f_range_trans = (40, 44)
+    order = 1
+
+    report_str = gen_filt_str(pass_type, filt_type, FS, f_db, db, pass_bw,
+                              transition_bw, f_range, f_range_trans, order)
+
+    assert pass_type in report_str
+    assert filt_type in report_str
+
+
+@mark.parametrize("dir_exists", [True, param(False, marks=mark.xfail)])
+@mark.parametrize("filt_type", ['IIR', 'FIR'])
+def test_save_filt_report(dir_exists, filt_type):
+
+    pass_type = 'bandpass'
+    f_range = (10, 40)
+
+    f_db = np.arange(1, 100)
+    db = np.random.rand(99)
+
+    pass_bw = 10
+    transition_bw = 4
+    f_range_trans = (40, 44)
+
+    order = 1
+
+    if pass_type == 'FIR':
+        filter_coefs = np.random.rand(10)
+    else:
+        filter_coefs = None
+
+    temp_path = tempfile.NamedTemporaryFile()
+
+    if not dir_exists:
+        save_filt_report('/bad/path/', pass_type, filt_type, FS, f_db, db,  pass_bw,
+                         transition_bw, f_range, f_range_trans, order, filter_coefs=filter_coefs)
+    else:
+        print(temp_path.name)
+        save_filt_report(temp_path.name, pass_type, filt_type, FS, f_db, db,  pass_bw,
+                         transition_bw, f_range, f_range_trans, order, filter_coefs=filter_coefs)
+
+    temp_path.close()

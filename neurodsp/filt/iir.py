@@ -3,15 +3,15 @@
 from scipy.signal import butter, sosfiltfilt
 
 from neurodsp.utils import remove_nans, restore_nans
-from neurodsp.filt.utils import compute_nyquist, compute_frequency_response
+from neurodsp.filt.utils import compute_nyquist, compute_frequency_response, save_filt_report
 from neurodsp.filt.checks import check_filter_definition, check_filter_properties
 from neurodsp.plts.filt import plot_frequency_response
 
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
-                      print_transitions=False, plot_properties=False, return_filter=False):
+def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order, print_transitions=False,
+                      plot_properties=False, return_filter=False, save_report=None):
     """Apply an IIR filter to a signal.
 
     Parameters
@@ -41,6 +41,8 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
         If True, plot the properties of the filter, including frequency response and/or kernel.
     return_filter : bool, optional, default: False
         If True, return the second order series coefficients of the IIR filter.
+    save_report : str, optional, default: None
+        Path, including file name, to save a filter report to as a pdf.
 
     Returns
     -------
@@ -65,7 +67,8 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     sos = design_iir_filter(fs, pass_type, f_range, butterworth_order)
 
     # Check filter properties: compute transition bandwidth & run checks
-    check_filter_properties(sos, None, fs, pass_type, f_range, verbose=print_transitions)
+    _, properties = check_filter_properties(sos, None, fs, pass_type, f_range,
+                                            return_properties=True, verbose=print_transitions)
 
     # Remove any NaN on the edges of 'sig'
     sig, sig_nans = remove_nans(sig)
@@ -76,10 +79,25 @@ def filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
     # Add NaN back on the edges of 'sig', if there were any at the beginning
     sig_filt = restore_nans(sig_filt, sig_nans)
 
+    # Unpack filter properties
+    if plot_properties or save_report is not None:
+        f_db = properties['f_db']
+        db = properties['db']
+
+    if save_report is not None:
+        pass_bw = properties['pass_bw']
+        transition_bw = properties['transition_bw']
+        f_range_trans = properties['f_range_trans']
+
     # Plot frequency response, if desired
     if plot_properties:
-        f_db, db = compute_frequency_response(sos, None, fs)
         plot_frequency_response(f_db, db)
+
+    # Save a pdf filter report containing plots and parameters
+    if save_report is not None:
+
+        save_filt_report(save_report, pass_type, 'IIR', fs, f_db, db, pass_bw,
+                         transition_bw, f_range, f_range_trans, butterworth_order)
 
     if return_filter:
         return sig_filt, sos

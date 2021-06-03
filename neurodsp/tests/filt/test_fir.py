@@ -1,5 +1,6 @@
 """Tests for neurodsp.filt.fir."""
 
+import tempfile
 from pytest import raises
 
 import numpy as np
@@ -13,7 +14,12 @@ from neurodsp.filt.fir import *
 
 def test_filter_signal_fir(tsig, tsig_sine):
 
-    out = filter_signal_fir(tsig, FS, 'bandpass', (8, 12))
+    temp_path = tempfile.NamedTemporaryFile()
+
+    out = filter_signal_fir(tsig, FS, 'bandpass', (8, 12), save_report=temp_path.name)
+
+    temp_path.close()
+
     assert out.shape == tsig.shape
 
     # Apply lowpass to low-frequency sine, which should should give little attenuation
