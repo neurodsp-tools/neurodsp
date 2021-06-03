@@ -204,8 +204,8 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     return cycle
 
 
-def sim_gaussian_asym_cycle(n_seconds, fs, beta, scale=2, shift=1):
-    """Simulate an asymmetrical guassian cycle.
+def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
+    """Simulate an asymmetrical guassian-like cycle.
 
     Parameters
     ----------
@@ -257,7 +257,7 @@ def sim_gaussian_asym_cycle(n_seconds, fs, beta, scale=2, shift=1):
     return cycle
 
 
-def sim_harmonic_asym_cycle(n_seconds, fs, phi, n_harmonics):
+def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
     """Simulate an asymmetrical cycle as a sum of harmonics.
 
     Parameters
@@ -294,6 +294,7 @@ def sim_harmonic_asym_cycle(n_seconds, fs, phi, n_harmonics):
 
     >>> cycle = sim_gaussian_asym_cycle(n_seconds=1, fs=500, beta=3)
     """
+
     times = create_cycle_time(n_seconds, fs)
     cycs = np.zeros((n_harmonics+1, len(times)))
 
