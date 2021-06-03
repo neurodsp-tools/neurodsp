@@ -1,13 +1,14 @@
 """Simulating individual cycles, of different types."""
 
 import numpy as np
-from scipy.signal import gaussian, sawtooth
+from scipy.signal import sawtooth
+from scipy.stats import norm
 
 from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.data import compute_nsamples
 from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
-from neurodsp.sim.transients import sim_synaptic_kernel
+from neurodsp.sim.transients import sim_synaptic_kernel, sim_action_potential
 
 ###################################################################################################
 ###################################################################################################
@@ -22,15 +23,18 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
         This is NOT the period of the cycle, but the length of the returned array of the cycle.
     fs : float
         Sampling frequency of the cycle simulation.
-    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
+    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'ap'} or callable
         What type of cycle to simulate. Options:
 
         * sine: a sine wave cycle
         * asine: an asymmetric sine wave
         * sawtooth: a sawtooth wave
         * gaussian: a gaussian cycle
+        * skewed_gaussian: a skewed gaussian cycle
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
+        * ap: an action potential
+
 
     phase : float or {'min', 'max'}, optional, default: 0
         If non-zero, applies a phase shift by rotating the cycle.
@@ -43,8 +47,10 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
         * asine: `rdsym`, rise-decay symmetry, from 0-1
         * sawtooth: `width`, width of the rising ramp as a proportion of the total cycle
         * gaussian: `std`, standard deviation of the gaussian kernel, in seconds
+        * skewed_gaussian: `center`, `std`, `alpha`, `height`
         * exp: `tau_d`, decay time, in seconds
         * 2exp: `tau_r` & `tau_d` rise time, and decay time, in seconds
+        * ap: `centers`, `stds`, `alphas`, `heights`
 
     Returns
     -------
@@ -219,7 +225,7 @@ def sim_sawtooth_cycle(n_seconds, fs, width):
     return cycle
 
 
-def sim_gaussian_cycle(n_seconds, fs, std):
+def sim_gaussian_cycle(n_seconds, fs, std, center=.5):
     """Simulate a cycle of a gaussian.
 
     Parameters
@@ -230,6 +236,8 @@ def sim_gaussian_cycle(n_seconds, fs, std):
         Sampling frequency of the cycle simulation.
     std : float
         Standard deviation of the gaussian kernel, in seconds.
+    center : float, optional, default: 0.5
+        The center of the gaussian.
 
     Returns
     -------
@@ -243,9 +251,59 @@ def sim_gaussian_cycle(n_seconds, fs, std):
     >>> cycle = sim_gaussian_cycle(n_seconds=0.2, fs=500, std=0.025)
     """
 
-    cycle = gaussian(compute_nsamples(n_seconds, fs), std * fs)
+    xs = np.linspace(0, 1, compute_nsamples(n_seconds, fs))
+    cycle = np.exp(-(xs-center)**2 / (2*std**2))
 
     return cycle
+
+
+def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
+    """Simulate a cycle of a skewed gaussian.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    center : float
+        The center of the skewed gaussian.
+    std : float
+        Standard deviation of the gaussian kernel, in seconds.
+    alpha : float
+        Magnitiude and direction of the skew.
+    height : float, optional, default: 1.
+        Maximum value of the cycle.
+
+    Returns
+    -------
+    cycle  : 1d array
+        Output values for skewed gaussian function.
+    """
+
+    n_samples = compute_nsamples(n_seconds, fs)
+
+    # Gaussian distribution
+    cycle = sim_gaussian_cycle(n_seconds, fs, std, center)
+
+    # Skewed cumulative distribution function.
+    #   Assumes time are centered around 0. Adjust to center around non-zero.
+    times = np.linspace(-1, 1, n_samples)
+    cdf = norm.cdf(alpha * ((times - ((center * 2) -1 )) / std))
+
+    # Skew the gaussian
+    cycle = cycle * cdf
+
+    # Rescale height
+    cycle = (cycle / np.max(cycle)) * height
+
+    return cycle
+
+
+# Alias action potential from `sim_action_potential`
+def sim_ap_cycle(n_seconds, fs, centers, stds, alphas, heights):
+    return sim_action_potential(n_seconds, fs, centers, stds, alphas, heights)
+sim_ap_cycle.__doc__ = sim_action_potential.__doc__
 
 
 # Alias single exponential cycle from `sim_synaptic_kernel`

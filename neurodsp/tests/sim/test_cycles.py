@@ -95,6 +95,17 @@ def test_sim_gaussian_cycle():
     cycle = sim_gaussian_cycle(N_SECONDS_CYCLE, FS_ODD, 2)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
+def test_sim_skewed_gaussian_cycle():
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_CYCLE, FS, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_ODD, FS, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_ODD)
+
+    cycle = sim_skewed_gaussian_cycle(N_SECONDS_CYCLE, FS_ODD, 0.5, 0.25, 2)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
+
 def test_create_cycle_time():
 
     times = create_cycle_time(N_SECONDS_CYCLE, FS)
