@@ -300,7 +300,7 @@ def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
     times = create_cycle_time(n_seconds, fs)
     cycs = np.zeros((n_harmonics+1, len(times)))
 
-    harmonics = np.array([harmonic for harmonic in range(1, n_harmonics + 2)])
+    harmonics = np.array(range(1, n_harmonics + 2))
 
     for idx, jth in enumerate(harmonics):
         cycs[idx] = (1 / jth**2) * np.cos(jth*times+(jth-1)*phi)
