@@ -86,7 +86,7 @@ def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progr
     for idx, pair in iterable:
 
         # Absolute angular distance
-        abs_dist = np.abs(pha0[pair[0]] - pha1[pair[1]]) % np.pi
+        abs_dist = abs(abs(pha0[pair[0]]) - abs(pha1[pair[1]])) % (2 * np.pi)
 
         # Pairwise circular distance index (PCDI)
         distance = (np.pi - 2 * abs_dist) / np.pi
