@@ -15,9 +15,9 @@ def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progr
     Parameters
     ----------
     pha0 : 1d array
-        First phases from a wavelet analysis, in radians (i.e. lfp).
+        First phases from a wavelet analysis, in radians, from -pi to pi.
     pha1 : 1d array
-        Second phases from a wavelet analysis, in radians (i.e. spikes).
+        Second phases from a wavelet analysis, in radians, from -pi to pi.
     return_pairs : True
         Returns distance pairs as a 1d array if True.
     memory_gb : float, optional, default: 2
@@ -85,8 +85,18 @@ def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progr
     # Compute distance indices
     for idx, pair in iterable:
 
+        phi0= pha0[pair[0]]
+        phi1 = pha1[pair[1]]
+
+        # Convert range from (-pi, pi) to (0, 2pi)
+        phi0 = phi0 + (2*np.pi) if phi0 < 0 else phi0
+        phi1 = phi1 + (2*np.pi) if phi1 < 0 else phi1
+
         # Absolute angular distance
-        abs_dist = abs(abs(pha0[pair[0]]) - abs(pha1[pair[1]])) % (2 * np.pi)
+        abs_dist = np.abs(phi0 - phi1)
+
+        # Take smaller angle (range 0 to pi)
+        abs_dist = (2*np.pi) - abs_dist if abs_dist > np.pi else abs_dist
 
         # Pairwise circular distance index (PCDI)
         distance = (np.pi - 2 * abs_dist) / np.pi
