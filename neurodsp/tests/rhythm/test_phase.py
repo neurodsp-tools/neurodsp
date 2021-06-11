@@ -12,11 +12,8 @@ from neurodsp.rhythm.phase import *
 ###################################################################################################
 
 @mark.parametrize('return_pairs', [True, False])
-@mark.parametrize('low_mem', [True, False])
 @mark.parametrize('phase_shift', [0, .25, .5])
-def test_pairwise_phase_consistency(tsig_sine, return_pairs, low_mem, phase_shift):
-
-    memory_gb = -np.inf if low_mem else 2
+def test_pairwise_phase_consistency(tsig_sine, return_pairs, phase_shift):
 
     peaks = np.where(tsig_sine == 1.0)[0]
 
@@ -26,28 +23,17 @@ def test_pairwise_phase_consistency(tsig_sine, return_pairs, low_mem, phase_shif
     sig_shift = np.roll(tsig_sine, int((FS / FREQ_SINE) * phase_shift))
     pha1 = phase_by_time(sig_shift, FS)
 
-    # Case where arrays are different sizes
-    try:
-        pairwise_phase_consistency(pha0[peaks], pha1[peaks][:2],
-                                   return_pairs, memory_gb, 'tqdm')
-    except ValueError:
-        pass
-
     # Compute consistency
-    dist_avg = pairwise_phase_consistency(pha0[peaks], pha1[peaks],
-                                          return_pairs, memory_gb, 'tqdm')
+    dist_avg = pairwise_phase_consistency(pha0[peaks], pha1[peaks], return_pairs, 'tqdm')
 
     # Unpack results if needed
     if return_pairs:
 
         dist_avg, dists = dist_avg[0], dist_avg[1]
 
-        if low_mem:
-            assert dists is None
-        else:
-            assert isinstance(dists, np.ndarray)
-            assert len(dists) == (len(peaks) * (len(peaks) - 1)) / 2
-            assert np.mean(dists) == dist_avg
+        assert isinstance(dists, np.ndarray)
+        assert len(dists) == (len(peaks) * (len(peaks) + 1)) / 2
+        assert np.mean(dists) == dist_avg
 
     # Expected consistency
     if phase_shift == 0:
@@ -59,3 +45,22 @@ def test_pairwise_phase_consistency(tsig_sine, return_pairs, low_mem, phase_shif
 
     assert isinstance(dist_avg, float)
     assert round(dist_avg) == expected
+
+    # Test self-consistency
+    dist_avg, dists = pairwise_phase_consistency(pha0[peaks], return_pairs=True)
+
+    assert dist_avg == 1
+    assert len(dists) == (len(peaks) * (len(peaks) - 1)) / 2
+
+    # Cases where arrays are invalid sizes
+    try:
+        pairwise_phase_consistency(pha0[peaks], pha1[peaks][:2], return_pairs, 'tqdm')
+        assert False
+    except ValueError:
+        pass
+
+    try:
+        pairwise_phase_consistency(np.zeros((2, 2)), return_pairs, 'tqdm')
+        assert False
+    except ValueError:
+        pass

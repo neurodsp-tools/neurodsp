@@ -2,28 +2,24 @@
 
 import warnings
 from importlib import import_module
-from itertools import combinations
+from itertools import combinations, combinations_with_replacement
 
 import numpy as np
 
 ###################################################################################################
 ###################################################################################################
 
-def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progress=None):
+def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None):
     """Compute pairwise phase consistency.
 
     Parameters
     ----------
     pha0 : 1d array
         First phases from a wavelet analysis, in radians, from -pi to pi.
-    pha1 : 1d array
+    pha1 : 1d array, optional, default: None
         Second phases from a wavelet analysis, in radians, from -pi to pi.
     return_pairs : True
         Returns distance pairs as a 1d array if True.
-    memory_gb : float, optional, default: 2
-        Maximum size of the ``distances`` array, in gb. If the pairwise array is larger than this
-        parameter, distances will not be stored in memory to prevent OOM error. Ignored if
-        ``return_pairs`` is False.
     progress : {None, 'tqdm', 'tqdm.notebook}
         Displays tqdm progress bar.
 
@@ -50,28 +46,35 @@ def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progr
     NeuroImage, 51(1), 112–122. https://doi.org/10.1016/j.neuroimage.2010.01.073
     """
 
-    if pha0.shape != pha1.shape or pha0.ndim != 1:
-        raise ValueError("Phase arrays must be the same 1d length.")
+    if pha0.ndim != 1:
+        raise ValueError("Phase array must be 1-dimensional.")
 
-    n_combs = int((len(pha0) * (len(pha0) - 1)) / 2)
+    if pha1 is not None and pha0.shape != pha1.shape:
+        raise ValueError("Phase arrays must be the same length.")
 
-    # Pairwise distance array memory limit
-    gb_per_float = 8e-9
-    limit_mem = n_combs * gb_per_float > memory_gb
+    # Pairwise indices generator
+    if pha1 is None:
 
-    if limit_mem and return_pairs:
-        warnings.warn("Memory limit is smaller than required distance array size. "
-                      "Pairwise distances will be returned as None.")
+        # Number of pairwise combinations
+        n_combs = int((len(pha0) * (len(pha0) - 1)) / 2)
+
+        # Exclude self-combinations (i.e. ignore (0, 0), (1, 1)...)
+        iterable = enumerate(combinations(np.arange(len(pha0)), 2))
+
+    else:
+
+        n_combs = int((len(pha0) * (len(pha0) + 1)) / 2)
+
+        # Include self-combinations
+        iterable = enumerate(combinations_with_replacement(np.arange(len(pha0)), 2))
 
     # Initialize variables
-    if return_pairs and not limit_mem:
+    if return_pairs:
         cumulative = None
         distances = np.zeros(n_combs)
     else:
         cumulative = 0
         distances = None
-
-    iterable = enumerate(combinations(np.arange(len(pha0)), 2))
 
     # Optional progress bar
     if progress is not None:
@@ -86,7 +89,11 @@ def pairwise_phase_consistency(pha0, pha1, return_pairs=True, memory_gb=2, progr
     for idx, pair in iterable:
 
         phi0= pha0[pair[0]]
-        phi1 = pha1[pair[1]]
+
+        if pha1 is None:
+            phi1 = pha0[pair[1]]
+        else:
+            phi1 = pha1[pair[1]]
 
         # Convert range from (-pi, pi) to (0, 2pi)
         phi0 = phi0 + (2*np.pi) if phi0 < 0 else phi0
