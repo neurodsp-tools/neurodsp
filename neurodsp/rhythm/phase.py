@@ -28,8 +28,7 @@ def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None
     distance_avg : float
         Average pairwise circular distance index.
     distances : 2d array, optional
-        Pairwise circular distance indices. Only returned if ``return_pairs` is True. If
-        ``memory_gb`` is less than required array size, None will be returned.
+        Pairwise circular distance indices. Only returned if ``return_pairs` is True.
 
     Notes
     -----
@@ -63,15 +62,15 @@ def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None
 
     else:
 
-        n_combs = int((len(pha0) * (len(pha0) + 1)) / 2)
+        # Include all combinations
+        n_combs = int(len(pha0) ** 2)
 
-        # Include self-combinations
-        iterable = enumerate(combinations_with_replacement(np.arange(len(pha0)), 2))
+        iterable = enumerate((row, col) for row in range(len(pha0)) for col in range(len(pha1)))
 
     # Initialize variables
     if return_pairs:
         cumulative = None
-        distances = np.zeros(n_combs)
+        distances = np.ones((len(pha0), len(pha0)))
     else:
         cumulative = 0
         distances = None
@@ -88,7 +87,7 @@ def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None
     # Compute distance indices
     for idx, pair in iterable:
 
-        phi0= pha0[pair[0]]
+        phi0 = pha0[pair[0]]
 
         if pha1 is None:
             phi1 = pha0[pair[1]]
@@ -108,8 +107,11 @@ def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None
         # Pairwise circular distance index (PCDI)
         distance = (np.pi - 2 * abs_dist) / np.pi
 
-        if isinstance(distances, np.ndarray):
-            distances[idx] = distance
+        if isinstance(distances, np.ndarray) and pha1 is None:
+            distances[pair[0], pair[1]] = distance
+            distances[pair[1], pair[0]] = distance
+        elif isinstance(distances, np.ndarray) and pha1 is not None:
+            distances[pair[0], pair[1]] = distance
         else:
             cumulative += distance
 

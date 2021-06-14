@@ -32,7 +32,7 @@ def test_pairwise_phase_consistency(tsig_sine, return_pairs, phase_shift):
         dist_avg, dists = dist_avg[0], dist_avg[1]
 
         assert isinstance(dists, np.ndarray)
-        assert len(dists) == (len(peaks) * (len(peaks) + 1)) / 2
+        assert len(dists[0]) * len(dists[1]) == len(peaks) ** 2
         assert np.mean(dists) == dist_avg
 
     # Expected consistency
@@ -50,7 +50,7 @@ def test_pairwise_phase_consistency(tsig_sine, return_pairs, phase_shift):
     dist_avg, dists = pairwise_phase_consistency(pha0[peaks], return_pairs=True)
 
     assert dist_avg == 1
-    assert len(dists) == (len(peaks) * (len(peaks) - 1)) / 2
+    assert len(dists[0]) == len(dists[1]) == len(peaks)
 
     # Cases where arrays are invalid sizes
     try:
