@@ -69,7 +69,7 @@ def multidim(select=[]):
                     out = [data[0] if ind in select else data for ind, data in enumerate(out)]
 
                 else:
-                    out = np.stack(outs)
+                    out = np.array(outs)
 
             return out
 
