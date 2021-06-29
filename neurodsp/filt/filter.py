@@ -2,14 +2,12 @@
 
 from warnings import warn
 
-from neurodsp.utils.decorators import multidim
 from neurodsp.filt.fir import filter_signal_fir
 from neurodsp.filt.iir import filter_signal_iir
 
 ###################################################################################################
 ###################################################################################################
 
-@multidim()
 def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
                   n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
                   print_transitions=False, plot_properties=False, return_filter=False):
@@ -17,7 +15,7 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series to be filtered.
     fs : float
         Sampling rate, in Hz.
