@@ -115,7 +115,7 @@ def pairwise_phase_consistency(pha0, pha1=None, return_pairs=True, progress=None
         else:
             cumulative += distance
 
-    distance_avg = cumulative.sum() / n_combs if distances is None else np.mean(distances)
+    distance_avg = cumulative / n_combs if distances is None else np.mean(distances)
 
     if return_pairs:
         return distance_avg, distances
