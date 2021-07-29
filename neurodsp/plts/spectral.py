@@ -18,9 +18,9 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
 
     Parameters
     ----------
-    freqs : 1d array or list of 1d array
+    freqs : 1d or 2d array
         Frequency vector.
-    powers : 1d array or list of 1d array
+    powers : 1d or 2d array
         Power values.
     labels : str or list of str, optional
         Labels for each time series.
@@ -47,8 +47,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
 
     ax = check_ax(ax, (6, 6))
 
-    freqs = repeat(freqs) if isinstance(freqs, np.ndarray) else freqs
-    powers = [powers] if isinstance(powers, np.ndarray) else powers
+    freqs = repeat(freqs) if isinstance(freqs, np.ndarray) and freqs.ndim == 1 else freqs
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
