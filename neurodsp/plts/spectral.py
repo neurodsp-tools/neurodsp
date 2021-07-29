@@ -48,6 +48,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
     ax = check_ax(ax, (6, 6))
 
     freqs = repeat(freqs) if isinstance(freqs, np.ndarray) and freqs.ndim == 1 else freqs
+    powers = [powers] if isinstance(powers, np.ndarray) and powers.ndim == 1 else powers
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
