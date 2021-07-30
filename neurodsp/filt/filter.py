@@ -15,7 +15,7 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series to be filtered.
     fs : float
         Sampling rate, in Hz.
