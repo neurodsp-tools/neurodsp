@@ -18,9 +18,9 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
 
     Parameters
     ----------
-    freqs : 1d or 2d array
+    freqs : 1d or 2d array or list of 1d array
         Frequency vector.
-    powers : 1d or 2d array
+    powers : 1d or 2d array or list of 1d array
         Power values.
     labels : str or list of str, optional
         Labels for each time series.
