@@ -301,7 +301,7 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
 
 
 def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
-    """Simulate an asymmetrical guassian-like cycle.
+    """Simulate an exponential cosine cycle.
 
     Parameters
     ----------
@@ -325,7 +325,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
     Returns
     -------
     cycle : 1d array
-        Simulated asymmetrical gaussian cycle.
+        Simulated exponential cosine cycle.
 
     Notes
     -----
@@ -341,7 +341,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
 
     Examples
     --------
-    Simulate a cycle of an asymmetrical gaussian wave:
+    Simulate a cycle of an exponential cosine wave:
 
     >>> cycle = sim_exp_cos_cycle(1, 500, exp=2)
     """
