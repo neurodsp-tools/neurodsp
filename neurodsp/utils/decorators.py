@@ -10,7 +10,12 @@ from neurodsp.utils.norm import normalize_sig
 ###################################################################################################
 
 def normalize(func, **kwargs):
-    """Decorator function to normalize the first output of the wrapped function."""
+    """Decorator function to normalize the first output of the wrapped function.
+
+    Notes
+    -----
+    If shift or scale keyword arguments are passed, signal normalization will be bypassed.
+    """
 
     @wraps(func)
     def decorated(*args, **kwargs):
@@ -22,6 +27,10 @@ def normalize(func, **kwargs):
         # Call sim function, and unpack to get sig variable, if there are multiple returns
         out = func(*args, **kwargs)
         sig = out[0] if isinstance(out, tuple) else out
+
+        # Skip normalization if scale or shift is passed
+        if 'scale' in kwargs.keys() or 'shift' in kwargs.keys():
+            return sig
 
         # Normalize signal, applying mean and variance transformations
         sig = normalize_sig(sig, mean, variance)

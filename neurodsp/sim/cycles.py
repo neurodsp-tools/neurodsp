@@ -300,6 +300,112 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     return cycle
 
 
+def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
+    """Simulate an exponential cosine cycle.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    exp : float
+        Exponent controlling the amplitude asymmetry of peaks relative to the troughs.
+
+        - `exp=0` : zeros
+        - `exp=.5`: wide peaks, narrow troughs
+        - `exp=1.`: symetrical peaks and troughs (sine wave)
+        - `exp=5.`: wide troughs, narrow peaks
+
+    scale : float, optional, default: 2
+        Rescales the amplitude of the signal.
+    shift : float, optional, default: 1
+        Translate the signal along the y-axis.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated exponential cosine cycle.
+
+    Notes
+    -----
+    ..math::
+
+      cycle = ((cos(2\pi ft) + 1) / 2)^{exp}
+
+    References
+    ----------
+    Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal Oscillations with
+    Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude Coupling and Directionality.
+    Frontiers in Computational Neuroscience, 10. doi:10.3389/fncom.2016.00087
+
+    Examples
+    --------
+    Simulate a cycle of an exponential cosine wave:
+
+    >>> cycle = sim_exp_cos_cycle(1, 500, exp=2)
+    """
+
+    check_param_range(exp, 'exp', [0., np.inf])
+
+    times = create_cycle_time(n_seconds, fs)
+
+    cycle = ((-np.cos(times) + shift) / scale)**exp
+
+    return cycle
+
+
+def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
+    """Simulate an asymmetrical cycle as a sum of harmonics.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of cycle window in seconds.
+    fs : float
+        Sampling frequency of the cycle simulation.
+    phi : float
+        Phase at each harmonic.
+    n_harmonics : int
+        Number of harmonics to sum across.
+
+    Returns
+    -------
+    cycle : 1d array
+        Simulated asymmetrical harmonic cycle.
+
+    Notes
+    -----
+    .. math::
+
+      cycle = \sum_{j=1}^{j} \dfrac{1}{j^2} \cdot cos(j2\pi ft)+(j-1)*\phi
+
+    References
+    ----------
+    Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal Oscillations with
+    Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude Coupling and Directionality.
+    Frontiers in Computational Neuroscience, 10. doi:10.3389/fncom.2016.00087
+
+    Examples
+    --------
+    Simulate an asymmetrical cycle as the sum of harmonics:
+
+    >>> cycle = sim_asym_harmonic_cycle(1, 500, phi=1, n_harmonics=1)
+    """
+
+    times = create_cycle_time(n_seconds, fs)
+    cycs = np.zeros((n_harmonics+1, len(times)))
+
+    harmonics = np.array(range(1, n_harmonics + 2))
+
+    for idx, jth in enumerate(harmonics):
+        cycs[idx] = (1 / jth**2) * np.cos(jth*times+(jth-1)*phi)
+
+    cycle = np.sum(cycs, axis=0)
+
+    return cycle
+
+
 # Alias action potential from `sim_action_potential`
 def sim_ap_cycle(n_seconds, fs, centers, stds, alphas, heights):
     return sim_action_potential(n_seconds, fs, centers, stds, alphas, heights)
