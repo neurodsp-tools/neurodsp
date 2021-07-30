@@ -300,7 +300,7 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     return cycle
 
 
-def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
+def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
     """Simulate an asymmetrical guassian-like cycle.
 
     Parameters
@@ -309,13 +309,13 @@ def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
         Length of cycle window in seconds.
     fs : float
         Sampling frequency of the cycle simulation.
-    beta : float
+    exp : float
         Exponent controlling the amplitude asymmetry of peaks relative to the troughs.
 
-        - `beta=0` : zeros
-        - `beta=.5`: wide peaks, narrow troughs
-        - `beta=1.`: symetrical peaks and troughs (sine wave)
-        - `beta=5.`: wide troughs, narrow peaks
+        - `exp=0` : zeros
+        - `exp=.5`: wide peaks, narrow troughs
+        - `exp=1.`: symetrical peaks and troughs (sine wave)
+        - `exp=5.`: wide troughs, narrow peaks
 
     scale : float, optional, default: 2
         Rescales the amplitude of the signal.
@@ -331,7 +331,7 @@ def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
     -----
     ..math::
 
-      cycle = ((cos(2\pi ft) + 1) / 2)^{b}
+      cycle = ((cos(2\pi ft) + 1) / 2)^{exp}
 
     References
     ----------
@@ -343,14 +343,14 @@ def sim_asym_beta_cycle(n_seconds, fs, beta, scale=2, shift=1):
     --------
     Simulate a cycle of an asymmetrical gaussian wave:
 
-    >>> cycle = sim_asym_beta_cycle(1, 500, beta=2)
+    >>> cycle = sim_exp_cos_cycle(1, 500, exp=2)
     """
 
-    check_param_range(beta, 'beta', [0., np.inf])
+    check_param_range(exp, 'exp', [0., np.inf])
 
     times = create_cycle_time(n_seconds, fs)
 
-    cycle = ((-np.cos(times) + shift) / scale)**beta
+    cycle = ((-np.cos(times) + shift) / scale)**exp
 
     return cycle
 
