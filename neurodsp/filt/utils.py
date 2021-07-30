@@ -177,8 +177,12 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
 
     # This gets the indices of transitions to the values in searched for range
     inds = np.where(np.diff(np.logical_and(db > low, db < high)))[0]
-    # This steps through the indices, in pairs, selecting from the vector to select from
-    transition_band = np.max([(b - a) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])])
+
+    if len(inds) == 0:
+        raise ValueError("Invalid transition band. Redefine f_range.")
+    else:
+        # This steps through the indices, in pairs, selecting from the vector to select from
+        transition_band = np.max([(b - a) for a, b in zip(f_db[inds[0::2]], f_db[inds[1::2]])])
 
     return transition_band
 
