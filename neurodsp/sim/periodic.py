@@ -276,6 +276,53 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     return sig
 
 
+def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
+    """Simulate a damped relaxation oscillation.
+
+    Parameters
+    ----------
+    n_seconds : float or None
+        Simulation time, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    freq : float
+        Oscillation frequency, in Hz.
+    gamma : float
+        Parametric dampening coefficient.
+    growth : optional, default: None
+        Logistic growth rate to smooth the heaviside step function. If None,
+        a non-smoothed heaviside is used.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated damped relaxation oscillation.
+
+    References
+    ----------
+    .. [1] Evertz, R., Hicks, D. G., & Liley, D. T. J. (2021). Alpha blocking and 1/fβ spectral
+           scaling in resting EEG can be accounted for by a sum of damped alpha band oscillatory
+           processes. bioRxiv 2021.08.20.457060; DOI: https://doi.org/10.1101/2021.08.20.457060
+
+    Examples
+    --------
+    >>> sig = sim_dampened_oscillation(1, 1000, 10, .1)
+    """
+
+    times = np.arange(0, n_seconds, 1/fs)
+
+    exp = np.exp(-1 * gamma * times)
+    cos = np.cos(2 * np.pi * freq * times)
+
+    if growth is None:
+        logit = 1
+    else:
+        # Smooth heaviside as a logit
+        logit = 1 / (1 + np.exp(-2 * growth * times))
+
+    return exp * cos * logit
+
+
 def make_bursts(n_seconds, fs, is_oscillating, cycle):
     """Create a bursting time series by tiling when oscillations occur.
 
