@@ -88,6 +88,15 @@ def test_sim_variable_oscillation():
         sig4 = sim_variable_oscillation(None, FS, freqs, cycle='asine', rdsym=rdsyms[1:])
 
 
+def test_sim_damped_oscillation():
+
+    sig1 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, .1)
+    sig2 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, 50)
+
+    assert sig1.sum() < sig2.sum()
+    assert len(sig1) == len(sig2) == int(N_SECONDS * FS)
+
+
 def test_make_bursts():
 
     is_osc = np.array([False, False, True, True, False, True, False, True, True, False])
