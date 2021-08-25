@@ -4,7 +4,7 @@ from itertools import repeat
 
 import numpy as np
 
-from neurodsp.utils.data import compute_nsamples
+from neurodsp.utils.data import compute_nsamples, create_times
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
@@ -281,7 +281,7 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
 
     Parameters
     ----------
-    n_seconds : float or None
+    n_seconds : float
         Simulation time, in seconds.
     fs : float
         Signal sampling rate, in Hz.
@@ -289,7 +289,7 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
         Oscillation frequency, in Hz.
     gamma : float
         Parametric dampening coefficient.
-    growth : optional, default: None
+    growth : float, optional, default: None
         Logistic growth rate to smooth the heaviside step function. If None,
         a non-smoothed heaviside is used.
 
@@ -309,7 +309,7 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
     >>> sig = sim_dampened_oscillation(1, 1000, 10, .1)
     """
 
-    times = np.arange(0, n_seconds, 1/fs)
+    times = create_times(n_seconds, fs)
 
     exp = np.exp(-1 * gamma * times)
     cos = np.cos(2 * np.pi * freq * times)
