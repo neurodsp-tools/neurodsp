@@ -4,7 +4,7 @@ from itertools import repeat
 
 import numpy as np
 
-from neurodsp.utils.data import compute_nsamples
+from neurodsp.utils.data import compute_nsamples, create_times
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
@@ -274,6 +274,53 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
         sig[start:end] = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase, **params)
 
     return sig
+
+
+def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
+    """Simulate a damped relaxation oscillation.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    freq : float
+        Oscillation frequency, in Hz.
+    gamma : float
+        Parametric dampening coefficient.
+    growth : float, optional, default: None
+        Logistic growth rate to smooth the heaviside step function. If None,
+        a non-smoothed heaviside is used.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated damped relaxation oscillation.
+
+    References
+    ----------
+    .. [1] Evertz, R., Hicks, D. G., & Liley, D. T. J. (2021). Alpha blocking and 1/fβ spectral
+           scaling in resting EEG can be accounted for by a sum of damped alpha band oscillatory
+           processes. bioRxiv 2021.08.20.457060; DOI: https://doi.org/10.1101/2021.08.20.457060
+
+    Examples
+    --------
+    >>> sig = sim_dampened_oscillation(1, 1000, 10, .1)
+    """
+
+    times = create_times(n_seconds, fs)
+
+    exp = np.exp(-1 * gamma * times)
+    cos = np.cos(2 * np.pi * freq * times)
+
+    if growth is None:
+        logit = 1
+    else:
+        # Smooth heaviside as a logit
+        logit = 1 / (1 + np.exp(-2 * growth * times))
+
+    return exp * cos * logit
 
 
 def make_bursts(n_seconds, fs, is_oscillating, cycle):
