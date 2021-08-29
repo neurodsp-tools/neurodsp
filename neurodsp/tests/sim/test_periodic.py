@@ -106,6 +106,14 @@ def test_make_bursts():
     sig = make_bursts(N_SECONDS, FS, is_osc, cycle)
     check_sim_output(sig)
 
+    # Test make bursts with uneven division of signal and cycle divisions
+    #   In this test, there aren't enough samples in the signal to add last cycle
+    is_osc = np.array([False, True, True])
+    cycle = np.ones([7])
+
+    sig = make_bursts(2, 10, is_osc, cycle)
+    assert sum(sig) > 0
+
 def test_make_is_osc_prob():
 
     is_osc = make_is_osc_prob(15, 0.5, 0.5)
