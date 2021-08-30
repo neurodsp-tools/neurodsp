@@ -306,7 +306,7 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
 
     Examples
     --------
-    >>> sig = sim_dampened_oscillation(1, 1000, 10, .1)
+    >>> sig = sim_damped_oscillation(1, 1000, 10, .1)
     """
 
     times = create_times(n_seconds, fs)
