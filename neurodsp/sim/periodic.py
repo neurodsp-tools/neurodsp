@@ -348,7 +348,11 @@ def make_bursts(n_seconds, fs, is_oscillating, cycle):
 
     burst_sig = np.zeros([n_samples])
     for sig_ind, is_osc in zip(range(0, n_samples, n_samples_cycle), is_oscillating):
-        if is_osc:
+
+        # If set as an oscillating cycle, add cycle to signal
+        #   The sample check is to check there are enough samples left to add a full cycle
+        #   If there are not, this skipps the add, leaving zeros instead of adding part of a cycle
+        if is_osc and sig_ind + n_samples_cycle < n_samples:
             burst_sig[sig_ind:sig_ind+n_samples_cycle] = cycle
 
     return burst_sig
