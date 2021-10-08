@@ -16,7 +16,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 
 @normalize
-def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
+def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, mean=1, variance=1):
     """Simulate a Poisson population.
 
     Parameters
@@ -29,6 +29,10 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
         Number of neurons in the simulated population.
     firing_rate : float, optional, default: 2
         Firing rate of individual neurons in the population.
+    mean : float, optional, default: 1
+        Mean of the Poisson.
+    variance: flaot, optional, default: 1
+        Variance of the Poisson.
 
     Returns
     -------
