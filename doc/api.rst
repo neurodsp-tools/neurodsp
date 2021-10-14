@@ -27,7 +27,6 @@ General Filter Function
 
     filter_signal
 
-
 FIR Filters
 ~~~~~~~~~~~
 
@@ -188,15 +187,33 @@ Aperiodic Analyses
 
 Functions and utilities in the ``aperiodic`` module, for analyzing aperiodic activity in time series.
 
-Fluctuation Analyses
-~~~~~~~~~~~~~~~~~~~~
+Auto-correlation Analyses
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.aperiodic
+.. currentmodule:: neurodsp.aperiodic.autocorr
 .. autosummary::
     :toctree: generated/
 
     compute_autocorr
+
+Fluctuation Analyses
+~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.aperiodic.dfa
+.. autosummary::
+    :toctree: generated/
+
     compute_fluctuations
+    compute_rescaled_range
+    compute_detrended_fluctuation
+
+Signal Decomposition
+~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.aperiodic.irasa
+.. autosummary::
+    :toctree: generated/
+
     compute_irasa
     fit_irasa
 
@@ -227,26 +244,31 @@ Aperiodic Signals
     sim_powerlaw
     sim_poisson_pop
     sim_synaptic_current
+    sim_knee
     sim_random_walk
 
 Transients & Cycles
 ~~~~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim
+.. currentmodule:: neurodsp.sim.transients
 .. autosummary::
     :toctree: generated/
 
     sim_synaptic_kernel
-    sim_cycle
+    sim_action_potential
 
 .. currentmodule:: neurodsp.sim.cycles
 .. autosummary::
     :toctree: generated/
 
+    sim_cycle
     sim_sine_cycle
     sim_asine_cycle
     sim_sawtooth_cycle
     sim_gaussian_cycle
+    sim_skewed_gaussian_cycle
+    sim_exp_cos_cycle
+    sim_asym_harmonic_cycle
 
 Combined Signals
 ~~~~~~~~~~~~~~~~
@@ -256,14 +278,16 @@ Combined Signals
     :toctree: generated/
 
     sim_combined
+    sim_peak_oscillation
 
 Utilities
 ~~~~~~~~~
 
-.. currentmodule:: neurodsp.utils
+.. currentmodule:: neurodsp.utils.data
 .. autosummary::
     :toctree: generated/
 
+    create_freqs
     create_times
     create_samples
 
@@ -335,3 +359,36 @@ Time Frequency
     :toctree: generated/
 
     plot_timefrequency
+
+Utilities
+---------
+
+Functions in the ``utils`` module, providing general utilities.
+
+Normalization
+~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.utils.norm
+.. autosummary::
+    :toctree: generated/
+
+    normalize_sig
+    demean
+    normalize_variance
+
+Data Management
+~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.utils.data
+.. autosummary::
+    :toctree: generated/
+
+    split_signal
+
+.. currentmodule:: neurodsp.utils.outliers
+.. autosummary::
+    :toctree: generated/
+
+    remove_nans
+    restore_nans
+    discard_outliers
