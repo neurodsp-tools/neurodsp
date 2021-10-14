@@ -47,6 +47,18 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
         Boolean indication of where bursts are present in the input signal.
         True indicates that a burst was detected at that sample, otherwise False.
 
+    Notes
+    -----
+    The dual-threshold burst detection algorithm was originally proposed in [1]_.
+
+    References
+    ----------
+    .. [1] Feingold, J., Gibson, D. J., DePasquale, B., & Graybiel, A. M. (2015).
+           Bursts of beta oscillation differentiate postperformance activity in
+           the striatum and motor cortex of monkeys performing movement tasks.
+           Proceedings of the National Academy of Sciences, 112(44), 13687–13692.
+           DOI: https://doi.org/10.1073/pnas.1517629112
+
     Examples
     --------
     Detect bursts using the dual threshold algorithm:

@@ -101,6 +101,14 @@ def compute_rescaled_range(sig, win_len):
     -------
     rs : float
         Average rescaled range over windows.
+
+    Notes
+    -----
+    - Rescaled range was introduced as a measure of time series variability, by Harold Hurst [1]_.
+
+    References
+    ----------
+    .. [1] https://en.wikipedia.org/wiki/Rescaled_range
     """
 
     # Demean signal
@@ -134,6 +142,19 @@ def compute_detrended_fluctuation(sig, win_len, deg=1):
     -------
     det_fluc : float
         Measured detrended fluctuation, as the average error fits of the window.
+
+    Notes
+    -----
+    - DFA was originally proposed in [1]_.
+    - There is a relationship between DFA measures and 1/f exponent, as detailed in [2]_.
+
+    References
+    ----------
+    .. [1] Peng, C.-K., Buldyrev, S. V., Havlin, S., Simons, M., Stanley, H. E., &
+           Goldberger, A. L. (1994). Mosaic organization of DNA nucleotides.
+           Physical Review E, 49(2), 1685–1689.
+           DOI: https://doi.org/10.1103/PhysRevE.49.1685
+    .. [2] https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis
     """
 
     # Calculate cumulative sum of the signal & split the signal into segments
