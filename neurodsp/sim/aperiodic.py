@@ -304,6 +304,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
     return sig
 
+
 @normalize
 def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
     """Simulate a fractional gaussian noise time series with a specified
@@ -342,10 +343,13 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
 
     Examples
     --------
-    Simulate fractional gaussian noise with a power law decay of 0, or
-    equivalently with a Hurst parameter of 0.5 (white noise):
+    Simulate fractional gaussian noise with a power law decay of 0 (white noise):
 
-    >>> sig = sim_fgn(n_seconds=1, fs=500)
+    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, chi=0)
+
+    Simulate fractional gaussian noise with a Hurst parameter of 0.5 (also white noise):
+
+    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, hurst=0.5)
     """
 
     if hurst is not None:
@@ -374,6 +378,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
 
     white_noise = np.random.randn(n_samples)
     return cholesky_factor @ white_noise
+
 
 @normalize
 def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
@@ -413,10 +418,13 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
 
     Examples
     --------
-    Simulate fractional brownian motion with a power law exponent of -2, or
-    equivalently with a Hurst parameter of 0.5 (brown noise):
+    Simulate fractional brownian motion with a power law exponent of -2 (brown noise):
 
-    >>> sig = sim_fbm(n_seconds=1, fs=500)
+    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, chi=-2)
+
+    Simulate fractional brownian motion with a Hurst parameter of 0.5 (also brown noise):
+
+    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, hurst=0.5)
     """
 
     if hurst is not None:
@@ -434,6 +442,7 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     # Fractional brownian motion is the cumulative sum of fractional gaussian noise
     fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst=hurst)
     return np.cumsum(fgn)
+
 
 def _create_powerlaw(n_samples, fs, exponent):
     """Create a power law time series.
