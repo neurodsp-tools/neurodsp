@@ -87,6 +87,16 @@ def test_sim_variable_oscillation():
     with raises(ValueError):
         sig4 = sim_variable_oscillation(None, FS, freqs, cycle='asine', rdsym=rdsyms[1:])
 
+def test_sim_damped_oscillation():
+
+    sig1 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, .1)
+    sig2 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, 50)
+
+    # Large gammas range between (0, 1), whereas small gammas range between (-1, 1)
+    assert sig1.sum() < sig2.sum()
+    check_sim_output(sig1)
+    check_sim_output(sig2)
+    assert len(sig1) == len(sig2)
 
 def test_make_bursts():
 
@@ -95,6 +105,14 @@ def test_make_bursts():
 
     sig = make_bursts(N_SECONDS, FS, is_osc, cycle)
     check_sim_output(sig)
+
+    # Test make bursts with uneven division of signal and cycle divisions
+    #   In this test, there aren't enough samples in the signal to add last cycle
+    is_osc = np.array([False, True, True])
+    cycle = np.ones([7])
+
+    sig = make_bursts(2, 10, is_osc, cycle)
+    assert sum(sig) > 0
 
 def test_make_is_osc_prob():
 

@@ -4,7 +4,7 @@ from itertools import repeat
 
 import numpy as np
 
-from neurodsp.utils.data import compute_nsamples
+from neurodsp.utils.data import compute_nsamples, create_times
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
@@ -24,7 +24,8 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
         Signal sampling rate, in Hz.
     freq : float
         Oscillation frequency.
-    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'} or callable
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'exp_cos', 'asym_harmonic'}
+            or callable
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
     phase : float or {'min', 'max'}, optional, default: 0
@@ -106,7 +107,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
                 The number of cycles within each burst.
             n_cycles_off
                 The number of non-bursting cycles, between bursts.
-    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp'}
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'exp_cos', 'asym_harmonic'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
     phase : float or {'min', 'max'}, optional, default: 0
@@ -275,6 +276,53 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     return sig
 
 
+def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
+    """Simulate a damped relaxation oscillation.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    freq : float
+        Oscillation frequency, in Hz.
+    gamma : float
+        Parametric dampening coefficient.
+    growth : float, optional, default: None
+        Logistic growth rate to smooth the heaviside step function. If None,
+        a non-smoothed heaviside is used.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated damped relaxation oscillation.
+
+    References
+    ----------
+    .. [1] Evertz, R., Hicks, D. G., & Liley, D. T. J. (2021). Alpha blocking and 1/fβ spectral
+           scaling in resting EEG can be accounted for by a sum of damped alpha band oscillatory
+           processes. bioRxiv 2021.08.20.457060; DOI: https://doi.org/10.1101/2021.08.20.457060
+
+    Examples
+    --------
+    >>> sig = sim_damped_oscillation(1, 1000, 10, .1)
+    """
+
+    times = create_times(n_seconds, fs)
+
+    exp = np.exp(-1 * gamma * times)
+    cos = np.cos(2 * np.pi * freq * times)
+
+    if growth is None:
+        logit = 1
+    else:
+        # Smooth heaviside as a logit
+        logit = 1 / (1 + np.exp(-2 * growth * times))
+
+    return exp * cos * logit
+
+
 def make_bursts(n_seconds, fs, is_oscillating, cycle):
     """Create a bursting time series by tiling when oscillations occur.
 
@@ -300,7 +348,11 @@ def make_bursts(n_seconds, fs, is_oscillating, cycle):
 
     burst_sig = np.zeros([n_samples])
     for sig_ind, is_osc in zip(range(0, n_samples, n_samples_cycle), is_oscillating):
-        if is_osc:
+
+        # If set as an oscillating cycle, add cycle to signal
+        #   The sample check is to check there are enough samples left to add a full cycle
+        #   If there are not, this skipps the add, leaving zeros instead of adding part of a cycle
+        if is_osc and sig_ind + n_samples_cycle < n_samples:
             burst_sig[sig_ind:sig_ind+n_samples_cycle] = cycle
 
     return burst_sig

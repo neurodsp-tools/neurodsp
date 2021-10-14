@@ -79,7 +79,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
 
     # Remove bursts detected that are too short
     # Use a number of cycles defined on the frequency range, if available
-    if f_range and min_n_cycles:
+    if f_range is not None and min_n_cycles is not None:
         min_burst_samples = int(np.ceil(min_n_cycles * fs / f_range[0]))
     # Otherwise, make sure minimum duration is set, and use that
     else:
