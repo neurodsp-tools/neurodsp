@@ -216,11 +216,11 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     - theta : memory scale
     - dWt : increments of Wiener process, i.e. white noise
 
+    See the wikipedia page [1]_ for the integral solution.
+
     References
     ----------
-    See the wikipedia page for the integral solution:
-
-    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution
+    .. [1] https://en.wikipedia.org/wiki/Ornstein-Uhlenbeck_process#Formal_solution
 
     Examples
     --------

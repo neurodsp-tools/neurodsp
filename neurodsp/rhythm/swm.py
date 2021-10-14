@@ -37,23 +37,15 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
     window_starts : 1d array
         Indices at which each window begins for the final set of windows.
 
-    References
-    ----------
-    .. [1] Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &
-           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological
-           recordings. Journal of Neuroscience Methods, 275, 66-79.
-           DOI: 10.1016/j.jneumeth.2016.11.001
-    .. [2] Matlab Code implementation: https://github.com/bartgips/SWM
-
     Notes
     -----
+    - This algorithm is originall described in [1]_. This re-implementation is a minimal,
+      modified version of original ([2]_), which has more available options.
     - The `win_len` parameter should be chosen to be about the size of the motif of interest.
       The larger this window size, the more likely the pattern to reflect slower patterns.
     - The `win_spacing` parameter also determines the number of windows that are used.
     - If looking at high frequency activity, you may want to apply a highpass filter,
       so that the algorithm does not converge on a low frequency motif.
-    - This implementation is a minimal, modified version, as compared to the original
-      implementation in [2], which has more available options.
     - This version has the following changes to speed up convergence:
 
       1. Each iteration is similar to an epoch, randomly moving all windows in
@@ -63,6 +55,13 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
          and reduced ivariance across windows.
       3. Phase optimization / realignment to escape local minima.
 
+    References
+    ----------
+    .. [1] Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &
+           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological
+           recordings. Journal of Neuroscience Methods, 275, 66-79.
+           DOI: https://doi.org/10.1016/j.jneumeth.2016.11.001
+    .. [2] Matlab Code implementation: https://github.com/bartgips/SWM
 
     Examples
     --------

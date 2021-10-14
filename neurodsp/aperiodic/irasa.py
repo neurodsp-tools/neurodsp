@@ -43,14 +43,15 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
 
     Notes
     -----
-    Irregular-Resampling Auto-Spectral Analysis (IRASA) is an algorithm that aims to
+    Irregular-Resampling Auto-Spectral Analysis (IRASA) is an algorithm ([1]_) that aims to
     separate 1/f and periodic components by resampling time series and computing power spectra,
     averaging away any activity that is frequency specific to isolate the aperiodic component.
 
     References
     ----------
-    Wen, H., & Liu, Z. (2016). Separating Fractal and Oscillatory Components in the Power Spectrum
-    of Neurophysiological Signal. Brain Topography, 29(1), 13–26. DOI: 10.1007/s10548-015-0448-0
+    .. [1] Wen, H., & Liu, Z. (2016). Separating Fractal and Oscillatory Components in
+           the Power Spectrum of Neurophysiological Signal. Brain Topography, 29(1), 13–26.
+           DOI: https://doi.org/10.1007/s10548-015-0448-0
     """
 
     # Check & get the resampling factors, with rounding to avoid floating point precision errors
