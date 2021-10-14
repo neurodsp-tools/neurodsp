@@ -123,15 +123,15 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
 
     Parameters
     ----------
-    n_seconds: float
+    n_seconds : float
         Simulation time, in seconds.
-    fs: float
+    fs : float
         Sampling rate of simulated signal, in Hz.
-    chi1: float
+    chi1 : float
         Power law exponent before the knee.
-    chi2: float
+    chi2 : float
         Power law exponent added to chi1 after the knee.
-    knee: float
+    knee : float
         Location of the knee in Hz.
 
     Returns
