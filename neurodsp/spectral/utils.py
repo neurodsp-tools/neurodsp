@@ -14,7 +14,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
         Frequency values for the power spectrum.
     power_spectra : 1d or 2d array
         Power spectral density values. If 2d, should be as [n_spectra, n_freqs].
-    f_range: list of [float, float]
+    f_range : list of [float, float]
         Frequency range to restrict to, as [f_low, f_high].
 
     Returns
@@ -59,21 +59,21 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     ----------
     freqs : 1d array
         Frequency values for the spectrogram.
-    times: 1d array
+    times : 1d array
         Time values for the spectrogram.
     spg : 2d array
         Spectrogram, or time frequency representation of a signal.
         Formatted as [n_freqs, n_time_windows].
-    f_range: list of [float, float]
+    f_range : list of [float, float]
         Frequency range to restrict to, as [f_low, f_high].
-    t_range: list of [float, float]
+    t_range : list of [float, float]
         Time range to restrict to, as [t_low, t_high].
 
     Returns
     -------
     freqs_ext : 1d array
         Extracted frequency values for the power spectrum.
-    times_ext: 1d array
+    times_ext : 1d array
         Extracted segment time values
     spg_ext : 2d array
         Extracted spectrogram values.

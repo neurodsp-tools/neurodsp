@@ -26,7 +26,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
         Maximum number of iterations of potential changes in window placement.
     window_starts_custom : 1d array, optional, default: None
         Custom pre-set locations of initial windows.
-    var_thresh: float, opational, default: None
+    var_thresh : float, opational, default: None
         Removes initial windows with variance below a set threshold. This speeds up
         runtime proportional to the number of low variance windows in the data.
 
@@ -170,9 +170,9 @@ def _compute_cost(sig, window_starts, win_n_samps):
 
     Returns
     -------
-    corrs: 2d array
+    corrs : 2d array
         Window correlation matrix.
-    variance: float
+    variance : float
         Sum of the variance across windows.
     """
 
