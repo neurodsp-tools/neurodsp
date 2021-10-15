@@ -24,7 +24,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     """Compute the power spectral density of a time series.
 
     Parameters
-    -----------
+    ----------
     sig : 1d or 2d array
         Time series.
     fs : float
@@ -123,7 +123,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     """Compute the power spectral density using Welch's method.
 
     Parameters
-    -----------
+    ----------
     sig : 1d or 2d array
         Time series.
     fs : float

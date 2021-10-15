@@ -121,15 +121,17 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
 
     # Simulate
     elif len(n_params) == 0:
+
         # Single gaussian
         cycle = sim_skewed_gaussian_cycle(n_seconds, fs, centers, stds, alphas, heights)
 
     else:
+
         # Multiple gaussians
         cycle = np.zeros((n_params[0], compute_nsamples(n_seconds, fs)))
 
         for idx, (center, std, alpha, height) in enumerate(zip(*params)):
-            cycle[idx] = sim_skewed_gaussian_cycle(n_seconds, fs,  center, std, alpha,height)
+            cycle[idx] = sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height)
 
         cycle = np.sum(cycle, axis=0)
 

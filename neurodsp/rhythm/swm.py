@@ -169,9 +169,9 @@ def _compute_cost(sig, window_starts, win_n_samps):
 
     Returns
     -------
-    corrs: 2d array
+    corrs : 2d array
         Window correlation matrix.
-    variance: float
+    variance : float
         Sum of the variance across windows.
     """
 
