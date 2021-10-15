@@ -89,7 +89,7 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
     # Subtract aperiodic from original, to get the periodic component
     psd_periodic = psd - psd_aperiodic
 
-    # Apply a relative threshold for tuning which activity is labelled as periodic
+    # Apply a relative threshold for tuning which activity is labeled as periodic
     if thresh is not None:
         sub_thresh = np.where(psd_periodic - psd_aperiodic < thresh * np.std(psd))[0]
         psd_periodic[sub_thresh] = 0

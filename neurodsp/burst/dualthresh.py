@@ -3,6 +3,7 @@
 import numpy as np
 
 from neurodsp.utils.core import get_avg_func
+from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.decorators import multidim
 from neurodsp.timefrequency.hilbert import amp_by_time
 
@@ -66,8 +67,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
     sig_magnitude = amp_by_time(sig, fs, f_range, remove_edges=False, **filter_kwargs)
 
     # Set magnitude as power or amplitude: square if power, leave as is if amplitude
-    if magnitude_type not in ['amplitude', 'power']:
-        raise ValueError("Invalid input for 'magnitude_type'")
+    check_param_options(magnitude_type, 'magnitude_type', ['amplitude', 'power'])
     if magnitude_type == 'power':
         sig_magnitude = sig_magnitude**2
 

@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
+from neurodsp.utils.checks import check_param_options
 
 ###################################################################################################
 ###################################################################################################
@@ -99,8 +100,7 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
     >>> plot_instantaneous_measure(times, pha, measure='phase')
     """
 
-    if measure not in ['phase', 'amplitude', 'frequency']:
-        raise ValueError('Measure not understood.')
+    check_param_options(measure, 'measure', ['phase', 'amplitude', 'frequency'])
 
     if measure == 'phase':
         plot_time_series(times, sigs, ax=ax, ylabel='Phase (rad)', **kwargs)
