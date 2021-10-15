@@ -1,5 +1,7 @@
 """Tests for neurodsp.filt.checks."""
 
+import warnings
+
 from pytest import raises
 
 from neurodsp.tests.settings import FS
@@ -57,6 +59,12 @@ def test_check_filter_properties():
     passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
 
+    # Check that warning is raised with insufficient attenuation
+    with warnings.catch_warnings(record=True) as w:
+        filter_coefs = design_fir_filter(FS, 'bandstop', (9, 10))
+        check_filter_properties(filter_coefs, 1, FS, 'bandstop', (9, 10))
+    assert len(w) == 1
+    assert "filter attenuation" in str(w[-1].message)
 
 def test_check_filter_length():
 
