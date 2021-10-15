@@ -228,6 +228,8 @@ Aperiodic Signals
     sim_poisson_pop
     sim_synaptic_current
     sim_random_walk
+    sim_frac_gaussian_noise
+    sim_frac_brownian_motion
 
 Transients & Cycles
 ~~~~~~~~~~~~~~~~~~~
