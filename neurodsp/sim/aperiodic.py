@@ -28,7 +28,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, lam=None):
         Number of neurons in the simulated population.
     firing_rate : float, optional, default: 2
         Firing rate of individual neurons in the population.
-    lam : int, optional, default: None
+    lam : float, optional, default: None
         Mean and variance of the Poisson distribution. None defaults to n_neurons * firing_rate.
 
     Returns
