@@ -48,23 +48,32 @@ def test_check_filter_properties():
 
     filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
 
+    # Check valid / passing filter
     passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is True
 
-    filter_coefs = design_fir_filter(FS, 'bandstop', (8, 12))
-    passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
+    # Check failing filter - insufficient attenuation
+    with warnings.catch_warnings(record=True) as warn:
+        filter_coefs = design_fir_filter(FS, 'bandstop', (8, 12))
+        passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
+    assert len(warn) == 1
+    assert "filter attenuation" in str(warn[-1].message)
 
-    filter_coefs = design_fir_filter(FS, 'bandpass', (20, 21))
-    passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
+    # Check failing filter - transition bandwidth
+    with warnings.catch_warnings(record=True) as warn:
+        filter_coefs = design_fir_filter(FS, 'bandpass', (20, 21))
+        passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
+    assert len(warn) == 1
+    assert "Transition bandwidth" in str(warn[-1].message)
 
-    # Check that warning is raised with insufficient attenuation
+    # Check failing filter - insufficient attenuation on part of stopband
     with warnings.catch_warnings(record=True) as w:
-        filter_coefs = design_fir_filter(FS, 'bandstop', (9, 10))
-        check_filter_properties(filter_coefs, 1, FS, 'bandstop', (9, 10))
+        filter_coefs = design_fir_filter(FS, 'bandpass', (5, 40), n_cycles=1)
+        check_filter_properties(filter_coefs, 1, FS, 'bandpass', (5, 40))
     assert len(w) == 1
-    assert "filter attenuation" in str(w[-1].message)
+    assert "stopband" in str(w[-1].message)
 
 def test_check_filter_length():
 
