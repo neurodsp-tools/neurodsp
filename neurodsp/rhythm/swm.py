@@ -26,7 +26,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
         Maximum number of iterations of potential changes in window placement.
     window_starts_custom : 1d array, optional, default: None
         Custom pre-set locations of initial windows.
-    var_thresh: float, opational, default: None
+    var_thresh: float, optional, default: None
         Removes initial windows with variance below a set threshold. This speeds up
         runtime proportional to the number of low variance windows in the data.
 
@@ -39,7 +39,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
     Notes
     -----
-    - This algorithm is originall described in [1]_. This re-implementation is a minimal,
+    - This algorithm is originally described in [1]_. This re-implementation is a minimal,
       modified version of original ([2]_), which has more available options.
     - The `win_len` parameter should be chosen to be about the size of the motif of interest.
       The larger this window size, the more likely the pattern to reflect slower patterns.
@@ -52,7 +52,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
          random order. The original implementation randomly selects windows and
          does not guarantee even resampling.
       2. New window acceptance is determined via increased correlation coefficients
-         and reduced ivariance across windows.
+         and reduced variance across windows.
       3. Phase optimization / realignment to escape local minima.
 
     References
@@ -65,7 +65,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
     Examples
     --------
-    Search for reoccuring patterns using sliding window matching in a simulated beta signal:
+    Search for reoccurring patterns using sliding window matching in a simulated beta signal:
 
     >>> from neurodsp.sim import sim_combined
     >>> components = {'sim_bursty_oscillation' : {'freq' : 20, 'phase' : 'min'},
@@ -156,7 +156,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
 
 def _compute_cost(sig, window_starts, win_n_samps):
-    """Compute the cost, as corrleation coefficients and variance across windows.
+    """Compute the cost, as correlation coefficients and variance across windows.
 
     Parameters
     ----------
