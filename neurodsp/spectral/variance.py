@@ -5,6 +5,7 @@ from scipy.signal import spectrogram
 
 from neurodsp.utils import discard_outliers
 from neurodsp.utils.decorators import multidim
+from neurodsp.utils.checks import check_param_options
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_spg_settings
 
@@ -132,8 +133,10 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='bootstrap')
     """
 
-    # Compute spectrogram of data
+    check_param_options(method, 'method', ['bootstrap', 'rolling'])
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+
+    # Compute spectrogram of data
     freqs, ts, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
     if method == 'bootstrap':
@@ -171,9 +174,6 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
         # Grab the time indices from the spectrogram
         t_inds = ts[0::nsteps]
-
-    else:
-        raise ValueError('Unknown resampling method: %s' % method)
 
     return freqs, t_inds, scv_rs
 
