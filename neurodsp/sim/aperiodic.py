@@ -326,7 +326,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
     Returns
     -------
     sig: 1d array
-        Simuated fractional gaussian noise time series.
+        Simulated fractional gaussian noise time series.
 
     Notes
     -----
