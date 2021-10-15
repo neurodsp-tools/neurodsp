@@ -1,5 +1,7 @@
 """Tests for neurodsp.sim.aperiodic."""
 
+import pytest
+
 import numpy as np
 from scipy.stats import skew, kurtosis
 from scipy.optimize import curve_fit
@@ -71,47 +73,31 @@ def test_sim_powerlaw():
     sig = sim_powerlaw(N_SECONDS, FS, f_range=(2, None))
     check_sim_output(sig)
 
-def test_sim_frac_gaussian_noise():
+@pytest.mark.parametrize('chi', [-.5, 0, .5])
+def test_sim_frac_gaussian_noise(chi):
 
-    chis = np.array([-.5, 0, .5])
+    # Simulate & check time series
+    sig = sim_frac_gaussian_noise(N_SECONDS, FS, chi=chi)
+    check_sim_output(sig)
+
+    # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
-    error = np.zeros_like(chis)
+    powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
+    [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    assert abs(chi_hat - chi) < 0.2
 
-    for idx, chi in enumerate(chis):
+@pytest.mark.parametrize('chi', [-1.5, -2, -2.5])
+def test_sim_frac_brownian_motion(chi):
 
-        # Simulate
-        sig = sim_frac_gaussian_noise(N_SECONDS, FS, chi=chi)
-        powers = np.abs(np.fft.fft(sig)[1:FS//2+1])**2
+    # Simulate & check time series
+    sig = sim_frac_brownian_motion(N_SECONDS, FS, chi=chi)
+    check_sim_output(sig)
 
-        # Linear fit in log-log
-        [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
-
-        # Compute error
-        error[idx] = abs(chi_hat - chi)
-
-    # Ensure mean error is less than 0.2 exponent
-    assert np.mean(error) < 0.2
-
-def test_sim_frac_brownian_motion():
-
-    chis = np.array([-1.5, -2, -2.5])
+    # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
-    error = np.zeros_like(chis)
-
-    for idx, chi in enumerate(chis):
-
-        # Simulate
-        sig = sim_frac_brownian_motion(N_SECONDS, FS, chi=chi)
-        powers = np.abs(np.fft.fft(sig)[1:FS//2+1])**2
-
-        # Linear fit in log-log
-        [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
-
-        # Compute error
-        error[idx] = abs(chi_hat - chi)
-
-    # Ensure mean error less than 0.4 exponent
-    assert np.mean(error) < 0.4
+    powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
+    [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    assert abs(chi_hat - chi) < 0.4
 
 def test_create_powerlaw():
 
