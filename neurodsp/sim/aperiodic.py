@@ -110,8 +110,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
         t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will trim & turn off normalization
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate,
-                          mean=None, variance=None)
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:compute_nsamples(n_seconds, fs)]
 
