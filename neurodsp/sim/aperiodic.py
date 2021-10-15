@@ -416,6 +416,10 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     The time series can be specified with either a desired power law exponent,
     or alternatively with a specified Hurst parameter.
 
+    Note that when specifying there can be some bias leading to a steeper than expected
+    spectrum of the simulated signal. This bias is higher for chi values near to 1,
+    and may be more severe in shorter signals.
+
     The Hurst parameter is not the Hurst exponent in general. The Hurst parameter
     is defined for self-similar processes such that Y(at) = a^H Y(t) for all a > 0,
     where this equality holds in distribution.
@@ -423,13 +427,14 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     The relationship between the power law exponent chi and the Hurst parameter
     for fractional brownian motion is chi = 2 * hurst + 1
 
-    For more information, consult [1]_.
+    For more information, consult [1]_ and/or [2]_.
 
     References
     ----------
     .. [1] Eke, A., Herman, P., Kocsis, L., & Kozak, L. R. (2002). Fractal characterization of
            complexity in temporal physiological signals. Physiological Measurement, 23(1), R1–R38.
            DOI: https://doi.org/10.1088/0967-3334/23/1/201
+    .. [2] Dieker, T. (2004). Simulation of fractional Brownian motion. 77.
 
     Examples
     --------
