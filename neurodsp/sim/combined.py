@@ -92,7 +92,7 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     """Simulate a signal with an aperiodic component and a specific oscillation peak.
 
     Parameters
-    -----------
+    ----------
     sig_ap : 1d array
         The timeseries of the aperiodic component.
     fs : float
