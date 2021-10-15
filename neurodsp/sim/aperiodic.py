@@ -95,7 +95,14 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
     Notes
     -----
-    The resulting signal is most similar to unsigned intracellular current or conductance change.
+    - This simulation is based on the one used in [1]_.
+    - The resulting signal is most similar to unsigned intracellular current or conductance change.
+
+    References
+    ----------
+    .. [1] Gao, R., Peterson, E. J., & Voytek, B. (2017). Inferring synaptic
+           excitation/inhibition balance from field potentials. NeuroImage, 158, 70–78.
+           DOI: https://doi.org/10.1016/j.neuroimage.2017.06.078
 
     Examples
     --------
@@ -213,11 +220,11 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     - theta : memory scale
     - dWt : increments of Wiener process, i.e. white noise
 
+    See the wikipedia page [1]_ for the integral solution.
+
     References
     ----------
-    See the wikipedia page for the integral solution:
-
-    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution
+    .. [1] https://en.wikipedia.org/wiki/Ornstein-Uhlenbeck_process#Formal_solution
 
     Examples
     --------
@@ -261,6 +268,15 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     -------
     sig : 1d array
         Time-series with the desired power law exponent.
+
+    Notes
+    -----
+    - Powerlaw data with exponents is created by spectrally rotating white noise [1]_.
+
+    References
+    ----------
+    .. [1] Timmer, J., & Konig, M. (1995). On Generating Power Law Noise.
+           Astronomy and Astrophysics, 300, 707–710.
 
     Examples
     --------

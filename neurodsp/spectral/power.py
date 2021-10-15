@@ -155,6 +155,17 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     spectrum : 1d or 2d array
         Power spectral density.
 
+    Notes
+    -----
+    - Welch's method ([1]_) computes a power spectra by averaging over windowed FFTs.
+
+    References
+    ----------
+    .. [1] Welch, P. (1967). The use of fast Fourier transform for the estimation of power
+           spectra: A method based on time averaging over short, modified periodograms.
+           IEEE Transactions on Audio and Electroacoustics, 15(2), 70–73.
+           DOI: https://doi.org/10.1109/TAU.1967.1161901
+
     Examples
     --------
     Compute the power spectrum of a simulated time series using Welch's method:

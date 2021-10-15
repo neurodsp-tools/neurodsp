@@ -328,15 +328,18 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
 
     Notes
     -----
+    - This exponential cosine cycle is implemented as Equation 9 of [1]_.
+
     ..math::
 
       cycle = ((cos(2\pi ft) + 1) / 2)^{exp}
 
     References
     ----------
-    Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal Oscillations with
-    Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude Coupling and Directionality.
-    Frontiers in Computational Neuroscience, 10. doi:10.3389/fncom.2016.00087
+    .. [1] Lozano-Soldevilla, D., Huurne, N. T., & Oostenveld, R. (2016). Neuronal
+           Oscillations with Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude
+           Coupling and Directionality. Frontiers in Computational Neuroscience, 10.
+           DOI: https://doi.org/10.3389/fncom.2016.00087
 
     Examples
     --------
@@ -375,15 +378,18 @@ def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
 
     Notes
     -----
+    - This asymmetric cycle is implemented as Equation 10 of [1]_.
+
     .. math::
 
       cycle = \sum_{j=1}^{j} \dfrac{1}{j^2} \cdot cos(j2\pi ft)+(j-1)*\phi
 
     References
     ----------
-    Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal Oscillations with
-    Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude Coupling and Directionality.
-    Frontiers in Computational Neuroscience, 10. doi:10.3389/fncom.2016.00087
+    .. [1] Lozano-Soldevilla, D., Huurne, N. T., & Oostenveld, R. (2016). Neuronal
+       Oscillations with Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude
+       Coupling and Directionality. Frontiers in Computational Neuroscience, 10.
+       DOI: https://doi.org/10.3389/fncom.2016.00087
 
     Examples
     --------
