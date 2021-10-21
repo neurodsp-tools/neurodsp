@@ -9,6 +9,7 @@ from neurodsp.filt.checks import check_filter_definition
 from neurodsp.utils import remove_nans
 from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
+from neurodsp.utils.norm import normalize_sig
 from neurodsp.spectral import rotate_powerlaw
 from neurodsp.sim.transients import sim_synaptic_kernel
 
@@ -181,8 +182,7 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     return sig
 
 
-@normalize
-def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
+def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     """Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
@@ -197,6 +197,8 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
         Mean of the random walk.
     sigma : float, optional, default: 5.0
         Standard deviation of the random walk.
+    norm : bool, optional, default: True
+        Ensure signal is normalize to mean, mu, and standard deviation, sigma.
 
     Returns
     -------
@@ -239,6 +241,9 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
     sig = x0 * ex + mu * (1. - ex) + sigma * ex * \
         np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
+
+    if norm:
+        sig = normalize_sig(sig, mean=mu, variance=sigma**2)
 
     return sig
 
