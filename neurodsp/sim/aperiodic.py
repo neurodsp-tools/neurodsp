@@ -196,9 +196,9 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     mu : float, optional, default: 0.0
         Mean of the random walk.
     sigma : float, optional, default: 5.0
-        Standard deviation of the random walk.
+        Scaling of the Wiener process (dWt).
     norm : bool, optional, default: True
-        Ensure signal is normalize to mean, mu, and standard deviation, sigma.
+        Ensure signal is normalize to mean (mu) and variance ((sigma**2 / (2 * theta))).
 
     Returns
     -------
@@ -214,9 +214,12 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     Where:
 
     - mu : mean
-    - sigma : standard deviation
+    - sigma : Wiener scaling
     - theta : memory scale
     - dWt : increments of Wiener process, i.e. white noise
+
+    The Wiener scaling (sigma) differs from the standard deviation of the signal.
+    The standard deviation of the signal will instead equal: sigma / np.sqrt(2 * theta).
 
     References
     ----------
@@ -243,7 +246,8 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
         np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
 
     if norm:
-        sig = normalize_sig(sig, mean=mu, variance=sigma**2)
+        variance = sigma**2 / (2 * theta)
+        sig = normalize_sig(sig, mean=mu, variance=variance)
 
     return sig
 
