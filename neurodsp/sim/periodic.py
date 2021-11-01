@@ -298,11 +298,16 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
     sig : 1d array
         Simulated damped relaxation oscillation.
 
+    Notes
+    -----
+    - This implementation of a damped oscillation is implemented as Equation 3 of [1]_.
+
     References
     ----------
     .. [1] Evertz, R., Hicks, D. G., & Liley, D. T. J. (2021). Alpha blocking and 1/fβ spectral
            scaling in resting EEG can be accounted for by a sum of damped alpha band oscillatory
-           processes. bioRxiv 2021.08.20.457060; DOI: https://doi.org/10.1101/2021.08.20.457060
+           processes. bioRxiv.
+           DOI: https://doi.org/10.1101/2021.08.20.457060
 
     Examples
     --------

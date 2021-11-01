@@ -24,7 +24,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     """Compute the power spectral density of a time series.
 
     Parameters
-    -----------
+    ----------
     sig : 1d or 2d array
         Time series.
     fs : float
@@ -123,7 +123,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     """Compute the power spectral density using Welch's method.
 
     Parameters
-    -----------
+    ----------
     sig : 1d or 2d array
         Time series.
     fs : float
@@ -154,6 +154,17 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
         Frequencies at which the measure was calculated.
     spectrum : 1d or 2d array
         Power spectral density.
+
+    Notes
+    -----
+    - Welch's method ([1]_) computes a power spectra by averaging over windowed FFTs.
+
+    References
+    ----------
+    .. [1] Welch, P. (1967). The use of fast Fourier transform for the estimation of power
+           spectra: A method based on time averaging over short, modified periodograms.
+           IEEE Transactions on Audio and Electroacoustics, 15(2), 70–73.
+           DOI: https://doi.org/10.1109/TAU.1967.1161901
 
     Examples
     --------

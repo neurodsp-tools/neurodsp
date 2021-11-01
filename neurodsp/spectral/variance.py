@@ -16,7 +16,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     """Compute the spectral coefficient of variation (SCV) at each frequency.
 
     Parameters
-    -----------
+    ----------
     sig : 1d array
         Time series of measurement values.
     fs : float
@@ -73,7 +73,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     """Compute a resampled version of the spectral coefficient of variation (SCV).
 
     Parameters
-    -----------
+    ----------
     sig : 1d array
         Time series of measurement values.
     fs : float
@@ -184,7 +184,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     """Compute the distribution of log10 power at each frequency from the signal spectrogram.
 
     Parameters
-    -----------
+    ----------
     sig : 1d array
         Time series of measurement values.
     fs : float
