@@ -174,7 +174,7 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
 
     # Map the frequencies under the (square root) Lorentzian
     #   This will give us the amplitude coefficients for the sinusoids
-    cosine_coeffs = np.array([np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee))) \
+    cosine_coeffs = np.array([np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + (knee ** 2))))\
         for freq in freqs])
 
     # Add sinusoids with a random phase shift
