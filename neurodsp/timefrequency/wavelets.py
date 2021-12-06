@@ -4,7 +4,7 @@ import numpy as np
 from scipy.signal import morlet
 
 from neurodsp.utils.data import create_freqs
-from neurodsp.utils.checks import check_n_cycles
+from neurodsp.utils.checks import check_n_cycles, check_param_options
 from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
@@ -111,6 +111,8 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
     >>> cts = convolve_wavelet(sig, fs=500, freq=10)
     """
 
+    check_param_options(norm, 'norm', ['sss', 'amp'])
+
     if wavelet_len is None:
         wavelet_len = int(n_cycles * fs / freq)
 
@@ -123,8 +125,6 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
         morlet_f = morlet_f / np.sqrt(np.sum(np.abs(morlet_f)**2))
     elif norm == 'amp':
         morlet_f = morlet_f / np.sum(np.abs(morlet_f))
-    else:
-        raise ValueError('Not a valid wavelet normalization method.')
 
     mwt_real = np.convolve(sig, np.real(morlet_f), mode='same')
     mwt_imag = np.convolve(sig, np.imag(morlet_f), mode='same')

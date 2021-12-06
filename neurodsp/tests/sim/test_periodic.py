@@ -91,11 +91,14 @@ def test_sim_damped_oscillation():
 
     sig1 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, .1)
     sig2 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, 50)
+    sig3 = sim_damped_oscillation(N_SECONDS, FS, FREQ1, 25, 0.1)
+
+    check_sim_output(sig1)
+    check_sim_output(sig2)
+    check_sim_output(sig3)
 
     # Large gammas range between (0, 1), whereas small gammas range between (-1, 1)
     assert sig1.sum() < sig2.sum()
-    check_sim_output(sig1)
-    check_sim_output(sig2)
     assert len(sig1) == len(sig2)
 
 def test_make_bursts():

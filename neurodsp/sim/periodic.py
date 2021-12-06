@@ -5,7 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.data import compute_nsamples, create_times
-from neurodsp.utils.checks import check_param_range
+from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
 
@@ -149,6 +149,9 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     ...                              burst_params={'n_cycles_burst' : 3, 'n_cycles_off' : 3})
     """
 
+    if isinstance(burst_def, str):
+        check_param_options(burst_def, 'burst_def', ['prob', 'durations'])
+
     # Consistency fix: catch old parameters, and remap into burst_params
     #   This preserves the prior default values, and makes the old API work the same
     burst_params = {} if not burst_params else burst_params
@@ -171,8 +174,6 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
         is_oscillating = make_is_osc_prob(n_cycles, **burst_params)
     elif burst_def == 'durations':
         is_oscillating = make_is_osc_durations(n_cycles, **burst_params)
-    else:
-        raise ValueError('Requested burst_def not understood.')
 
     sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
 

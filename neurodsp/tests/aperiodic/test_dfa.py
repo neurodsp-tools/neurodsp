@@ -28,8 +28,7 @@ def test_compute_fluctuations(tsig):
 
 def test_compute_fluctuations_dfa():
 
-    # Tests for DFA method
-    #   Note: these tests need a high sampling rate, so we use local simulations
+    # Note: these tests need a high sampling rate, so we use local simulations
 
     # Test white noise: expected DFA of 0.5
     fs = 1000
@@ -44,8 +43,7 @@ def test_compute_fluctuations_dfa():
 
 def test_compute_fluctuations_rs():
 
-    # Tests for RS method
-    #   Note: these tests need a high sampling rate, so we use local simulations
+    # Note: these tests need a high sampling rate, so we use local simulations
 
     # Test white noise: expected RS of 0.5
     fs = 1000
