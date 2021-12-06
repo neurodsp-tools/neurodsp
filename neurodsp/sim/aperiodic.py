@@ -2,11 +2,13 @@
 
 import numpy as np
 from scipy.stats import zscore
+from scipy.linalg import toeplitz, cholesky
 
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.filt.fir import compute_filter_length
 from neurodsp.filt.checks import check_filter_definition
 from neurodsp.utils import remove_nans
+from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
 from neurodsp.spectral import rotate_powerlaw
@@ -313,6 +315,163 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
         # Drop the edges, that were compensated for, if not using FIR filter
         if not filter_kwargs.get('filter_type', None) == 'iir':
             sig, _ = remove_nans(sig)
+
+    return sig
+
+
+@normalize
+def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
+    """Simulate a timeseries as fractional gaussian noise.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    chi: float, optional, default: 0
+        Desired power law exponent of the spectrum of the signal.
+        Must be in the range (-1, 1).
+    hurst : float, optional, default: None
+        Desired Hurst parameter, which must be in the range (0, 1).
+        If provided, this value overwrites the `chi` parameter.
+
+    Returns
+    -------
+    sig: 1d array
+        Simulated fractional gaussian noise time series.
+
+    Notes
+    -----
+    The time series can be specified with either a desired power law exponent,
+    or alternatively with a specified Hurst parameter.
+
+    The Hurst parameter is not the Hurst exponent as defined in rescaled range analysis.
+    The Hurst parameter is defined for self-similar processes such that Y(at) = a^H Y(t)
+    for all a > 0, where this equality holds in distribution.
+
+    The relationship between the power law exponent chi and the Hurst parameter
+    for fractional gaussian noise is chi = 2 * hurst - 1.
+
+    For more information, consult [1]_.
+
+    References
+    ----------
+    .. [1] Eke, A., Herman, P., Kocsis, L., & Kozak, L. R. (2002). Fractal characterization of
+           complexity in temporal physiological signals. Physiological Measurement, 23(1), R1–R38.
+           DOI: https://doi.org/10.1088/0967-3334/23/1/201
+
+    Examples
+    --------
+    Simulate fractional gaussian noise with a power law decay of 0 (white noise):
+
+    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, chi=0)
+
+    Simulate fractional gaussian noise with a Hurst parameter of 0.5 (also white noise):
+
+    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, hurst=0.5)
+    """
+
+    if hurst is not None:
+        check_param_range(hurst, 'hurst', (0, 1))
+
+    else:
+        check_param_range(chi, 'chi', (-1, 1))
+
+        # Infer the hurst parameter from chi
+        hurst = (-chi + 1.) / 2
+
+    # Compute the number of samples for the simulated time series
+    n_samples = compute_nsamples(n_seconds, fs)
+
+    # Define helper function for computing the auto-covariance
+    def autocov(hurst):
+        return lambda k: 0.5 * (np.abs(k - 1) ** (2 * hurst) - 2 * \
+                                k ** (2 * hurst) + (k + 1) ** (2 * hurst))
+
+    # Build the autocovariance matrix
+    gamma = np.arange(0, n_samples)
+    gamma = np.apply_along_axis(autocov(hurst), 0, gamma)
+    autocov_matrix = toeplitz(gamma)
+
+    # Use the Cholesky factor to transform white noise to get the desired time series
+    white_noise = np.random.randn(n_samples)
+    cholesky_factor = cholesky(autocov_matrix, lower=True)
+    sig = cholesky_factor @ white_noise
+
+    return sig
+
+
+@normalize
+def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
+    """Simulate a timeseries as fractional brownian motion.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    chi : float, optional, default: -2
+        Desired power law exponent of the spectrum of the signal.
+        Must be in the range (-3, -1).
+    hurst : float, optional, default: None
+        Desired Hurst parameter, which must be in the range (0, 1).
+        If provided, this value overwrites the `chi` parameter.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated fractional brownian motion time series.
+
+    Notes
+    -----
+    The time series can be specified with either a desired power law exponent,
+    or alternatively with a specified Hurst parameter.
+
+    Note that when specifying there can be some bias leading to a steeper than expected
+    spectrum of the simulated signal. This bias is higher for chi values near to 1,
+    and may be more severe in shorter signals.
+
+    The Hurst parameter is not the Hurst exponent in general. The Hurst parameter
+    is defined for self-similar processes such that Y(at) = a^H Y(t) for all a > 0,
+    where this equality holds in distribution.
+
+    The relationship between the power law exponent chi and the Hurst parameter
+    for fractional brownian motion is chi = 2 * hurst + 1
+
+    For more information, consult [1]_ and/or [2]_.
+
+    References
+    ----------
+    .. [1] Eke, A., Herman, P., Kocsis, L., & Kozak, L. R. (2002). Fractal characterization of
+           complexity in temporal physiological signals. Physiological Measurement, 23(1), R1–R38.
+           DOI: https://doi.org/10.1088/0967-3334/23/1/201
+    .. [2] Dieker, T. (2004). Simulation of fractional Brownian motion. 77.
+
+    Examples
+    --------
+    Simulate fractional brownian motion with a power law exponent of -2 (brown noise):
+
+    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, chi=-2)
+
+    Simulate fractional brownian motion with a Hurst parameter of 0.5 (also brown noise):
+
+    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, hurst=0.5)
+    """
+
+    if hurst is not None:
+        check_param_range(hurst, 'hurst', (0, 1))
+
+    else:
+        check_param_range(chi, 'chi', (-3, -1))
+
+        # Infer the hurst parameter from chi
+        hurst = (-chi - 1.) / 2
+
+    # Fractional brownian motion is the cumulative sum of fractional gaussian noise
+    fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst=hurst)
+    sig = np.cumsum(fgn)
 
     return sig
 

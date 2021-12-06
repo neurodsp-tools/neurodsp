@@ -246,6 +246,8 @@ Aperiodic Signals
     sim_synaptic_current
     sim_knee
     sim_random_walk
+    sim_frac_gaussian_noise
+    sim_frac_brownian_motion
 
 Transients & Cycles
 ~~~~~~~~~~~~~~~~~~~
