@@ -57,7 +57,7 @@ def test_phase_by_time(tsig, tsig_sine):
     expected_answer = np.array(\
         [time-np.pi/2 if time <= 3*np.pi/2 else time-5*np.pi/2 for time in times])
 
-    assert np.allclose(expected_answer, phase, atol=EPS)
+    assert np.allclose(expected_answer, np.round(phase, 8), atol=EPS)
 
 def test_amp_by_time(tsig, tsig_sine):
 
