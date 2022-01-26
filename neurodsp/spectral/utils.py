@@ -145,6 +145,20 @@ def rotate_timeseries(sig, fs, delta_exp, f_rotation=1):
     -------
     sig_rotated : 1d array
         The rotated version of the signal.
+
+    Notes
+    -----
+    This function works by taking the FFT and spectrally rotating the input signal.
+    To return a timeseries, the rotated FFT is then turned back into a time series, with an iFFT.
+
+    Examples
+    --------
+    Rotate a timeseries of simulated data:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> rotated_sig = rotate_timeseries(sig, fs=500, delta_exp=0.5)
     """
 
     # Compute the FFT
@@ -181,6 +195,10 @@ def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
     -------
     rotated_spectrum : 1d array
         Rotated spectrum.
+
+    Notes
+    -----
+    The input power spectrum is multiplied with a mask that applies the specified exponent change.
 
     Examples
     --------
