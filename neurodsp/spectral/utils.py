@@ -52,6 +52,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
 
     return freqs_ext, power_spectra_ext
 
+
 def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     """Extract a frequency or time range of interest from a spectrogram.
 
@@ -123,6 +124,41 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
         times_ext = times
 
     return freqs_ext, times_ext, spg_ext
+
+
+def rotate_timeseries(sig, fs, delta_exp, f_rotation):
+    """Rotate a timeseries of data, changing it's 1/f exponent.
+
+    Parameters
+    ----------
+    sig : 1d array
+        A time series to rotate.
+    fs : float
+        Sampling rate of the signal, in Hz.
+    delta_exp : float
+        Change in power law exponent to be applied.
+        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).
+    f_rotation : float
+        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.
+
+    Returns
+    -------
+    sig_rotated : 1d array
+        The rotated version of the signal.
+    """
+
+    # Compute the FFT
+    fft_vals = np.fft.fft(sig)
+    freqs = np.fft.fftfreq(len(sig), 1./fs)
+
+    # Rotate the spectrum to create the exponent change
+    #   Delta exponent is divided by two, as the FFT output is in units of amplitude not power
+    fft_rotated = rotate_powerlaw(freqs, fft_vals, delta_exp/2, f_rotation)
+
+    # Invert back to time series, with a z-score to normalize
+    sig_rotated = np.real(np.fft.ifft(fft_rotated))
+
+    return sig_rotated
 
 
 def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
