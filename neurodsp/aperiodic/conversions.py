@@ -8,7 +8,7 @@ def convert_exponent_alpha(exponent):
 
     Parameters
     ----------
-    exp : float
+    exponent : float
         Exponent value for a 1/f distribution.
 
     Returns
