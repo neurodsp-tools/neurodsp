@@ -11,7 +11,7 @@ from neurodsp.utils import remove_nans
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
-from neurodsp.spectral import rotate_powerlaw
+from neurodsp.spectral.utils import rotate_timeseries
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
@@ -486,7 +486,7 @@ def _create_powerlaw(n_samples, fs, exponent):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float
-        Desired power-law exponent, of the form P(f)=f^exponent.
+        Desired powerlaw exponent, of the form P(f)=f^exponent.
 
     Returns
     -------
@@ -501,13 +501,10 @@ def _create_powerlaw(n_samples, fs, exponent):
     # Start with white noise signal, that we will rotate, in frequency space
     sig = np.random.randn(n_samples)
 
-    # Compute the FFT
-    fft_output = np.fft.fft(sig)
-    freqs = np.fft.fftfreq(len(sig), 1. / fs)
+    # Create the desired exponent by spectrally rotating the time series
+    sig = rotate_timeseries(sig, fs, -exponent)
 
-    # Rotate spectrum and invert back to time series, with a z-score to normalize
-    #   Delta exponent is divided by two, as the FFT output is in units of amplitude not power
-    fft_output_rot = rotate_powerlaw(freqs, fft_output, -exponent/2)
-    sig = zscore(np.real(np.fft.ifft(fft_output_rot)))
+    # z-score to normalize
+    sig = zscore(sig)
 
     return sig
