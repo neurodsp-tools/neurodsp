@@ -3,6 +3,8 @@
 import numpy as np
 from numpy.testing import assert_equal
 
+from neurodsp.tests.settings import FS
+
 from neurodsp.spectral.utils import *
 
 ###################################################################################################
@@ -38,6 +40,12 @@ def test_trim_spectrogram():
     f_ext, t_ext, p_ext = trim_spectrogram(freqs, times, pows, f_range=[6, 8], t_range=None)
     assert_equal(f_ext, np.array([6, 7, 8]))
     assert_equal(t_ext, times)
+
+def test_rotate_timeseries(tsig):
+
+    out = rotate_timeseries(tsig, FS, 0.25)
+    assert out.shape == tsig.shape
+    assert not np.array_equal(out, tsig)
 
 def test_rotate_powerlaw():
 

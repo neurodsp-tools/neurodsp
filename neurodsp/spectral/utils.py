@@ -126,7 +126,7 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     return freqs_ext, times_ext, spg_ext
 
 
-def rotate_timeseries(sig, fs, delta_exp, f_rotation):
+def rotate_timeseries(sig, fs, delta_exp, f_rotation=1):
     """Rotate a timeseries of data, changing it's 1/f exponent.
 
     Parameters
@@ -138,7 +138,7 @@ def rotate_timeseries(sig, fs, delta_exp, f_rotation):
     delta_exp : float
         Change in power law exponent to be applied.
         Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).
-    f_rotation : float
+    f_rotation : float, optional, default: 1
         Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.
 
     Returns
