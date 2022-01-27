@@ -129,12 +129,11 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     sig_len = len(sig_ap)
     times = create_times(sig_len / fs, fs)
 
-    # Construct the aperiodic component and compute its Fourier transform
-    # Only use the first half of the frequencies from the FFT since the signal is real
+    # Compute the Fourier transform of the aperiodic signal
+    #   We extract the first half of the frequencies from the FFT, since the signal is real
     sig_ap_hat = np.fft.fft(sig_ap)[0:(sig_len // 2 + 1)]
 
-    # Create the range of frequencies that appear in the power spectrum since these
-    # will be the frequencies in the cosines we sum below
+    # Create the corresponding frequency vector, which is used to create the cosines to sum
     freqs = np.linspace(0, fs / 2, num=sig_len // 2 + 1, endpoint=True)
 
     # Define sub-function for computing the relative height above the aperiodic power spectrum
@@ -152,15 +151,15 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
 
     # Define & vectorize sub-function to create the set of cosines for the periodic component
     #   Cosines are created with their respective coefficients & a random phase shift
-    def _pers(f_val, fft):
+    def _create_cosines(f_val, fft):
         return _coef(f_val, fft) * np.cos(2 * np.pi * f_val * times + 2 * np.pi * np.random.rand())
-    vect_pers = np.vectorize(_pers, signature='(),()->(n)')
+    vect_create_cosines = np.vectorize(_create_cosines, signature='(),()->(n)')
 
     # Create the set of cosines, defined from the frequency and FFT values
-    sines = vect_pers(freqs, sig_ap_hat)
+    cosines = vect_create_cosines(freqs, sig_ap_hat)
 
-    # Create the periodic component by summing across the simulated cosines
-    sig_periodic = np.sum(sines, axis=0)
+    # Create the periodic component by summing the cosines
+    sig_periodic = np.sum(cosines, axis=0)
 
     # Create the combined signal by summing periodic & aperiodic
     sig = sig_ap + sig_periodic
