@@ -1,5 +1,7 @@
 """Convert between aperiodic and related measures."""
 
+from neurodsp.utils.checks import check_param_options
+
 ###################################################################################################
 ###################################################################################################
 
@@ -49,6 +51,75 @@ def convert_alpha_exponent(alpha):
     """
 
     return -2 * alpha + 1
+
+
+def convert_exponent_hurst(exponent, fractional_class):
+    """Convert a powerlaw exponent to the expected Hurst exponent value.
+
+    Parameters
+    ----------
+    exponent : float
+        Exponent value for a 1/f distribution.
+    fractional_class : {'gaussian', 'brownian'}
+        The class of input data that the given exponent value relates to.
+        This can be either 'fractional Gaussian noise' or 'fractional Brownian motion.'
+        Note that this is required as the conversion differs between the two classes.
+
+    Returns
+    -------
+    hurst : float
+        Predicted Hurst exponent for the given exponent value.
+
+    References
+    ----------
+    .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
+           of spectral exponent estimation techniques for 1/fβ processes with applications to
+           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           https://doi.org/10.1016/j.jneumeth.2013.10.017
+    """
+
+    check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
+
+    if fractional_class == 'gaussian':
+        hurst = (exponent + 1) / 2
+    elif fractional_class == 'gaussian':
+        hurst = (exponent - 1) / 2
+
+    return hurst
+
+def convert_hurst_exponent(hurst, fractional_class):
+    """Convert a Hurst exponent value to the expected powerlaw exponent.
+
+    Parameters
+    ----------
+    hurst : float
+        Hurst exponent value.
+    fractional_class : {'gaussian', 'brownian'}
+        The class of input data that the given exponent value relates to.
+        This can be either 'fractional Gaussian noise' or 'fractional Brownian motion.'
+        Note that this is required as the conversion differs between the two classes.
+
+    Returns
+    -------
+    exponent : float
+        Predicted exponent value for the given Hurst exponent value.
+
+    References
+    ----------
+    .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
+           of spectral exponent estimation techniques for 1/fβ processes with applications to
+           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           https://doi.org/10.1016/j.jneumeth.2013.10.017
+    """
+
+    check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
+
+    if fractional_class == 'gaussian':
+        exponent = 2 * hurst - 1
+    elif fractional_class == 'gaussian':
+        exponent = 2 * hurst + 1
+
+    return exponent
 
 
 def convert_exponent_hfd(exponent):
