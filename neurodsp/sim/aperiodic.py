@@ -168,21 +168,24 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     times = create_times(n_seconds, fs)
     n_samples = compute_nsamples(n_seconds, fs)
 
-    # Create frequencies for the power spectrum, which will be freqs of the summed cosines
-    freqs = np.linspace(0, fs/2, num=int(n_samples//2 + 1), endpoint=True)
-
-    # Drop the DC component
+    # Create frequencies for the power spectrum, and drop the DC component
+    #   These frequencies are used to create the cosines to sum
+    freqs = np.linspace(0, fs / 2, num=int(n_samples // 2 + 1), endpoint=True)
     freqs = freqs[1:]
 
-    # Map the frequencies under the (square root) Lorentzian
-    #   This will give us the amplitude coefficients for the sinusoids
-    cosine_coeffs = np.array([np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee))) \
-        for freq in freqs])
+    # Lambda for computing the amplitude coefficients for the sinusoids (square root Lorentzian)
+    coscoef = lambda freq : np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee)))
 
-    # Add sinusoids with a random phase shift
-    sig = np.sum(np.array([cosine_coeffs[ell] * \
-                          np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand()) \
-                 for ell, freq in enumerate(freqs)]), axis=0)
+    # Define & vectorize function for computing the set of sinusoids, adding a random phase shift
+    def _create_sines(freq):
+        return coscoef(freq) * np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand())
+    vect_create_sines = np.vectorize(_create_sines, signature='() -> (n)')
+
+    # Create the set of sinusoids across the set of frequencies
+    sines = vect_create_sines(freqs)
+
+    # Create the final signal by summing across all sinusoids
+    sig = np.sum(sines, axis=0)
 
     return sig
 
