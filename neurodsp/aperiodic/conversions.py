@@ -15,6 +15,13 @@ def convert_exponent_alpha(exponent):
     -------
     alpha : float
         Predicted alpha value for the given exponent value.
+
+    References
+    ----------
+    .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
+           of spectral exponent estimation techniques for 1/fβ processes with applications to
+           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           https://doi.org/10.1016/j.jneumeth.2013.10.017
     """
 
     return (-exponent + 1) / 2
@@ -32,6 +39,13 @@ def convert_alpha_exponent(alpha):
     -------
     exponent : float
         Predicted exponent value for the given alpha value.
+
+    References
+    ----------
+    .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
+           of spectral exponent estimation techniques for 1/fβ processes with applications to
+           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           https://doi.org/10.1016/j.jneumeth.2013.10.017
     """
 
     return -2 * alpha + 1
@@ -57,7 +71,10 @@ def convert_exponent_hfd(exponent):
 
     References
     ----------
-    From F Cervantes-De la Torre et al, 2013
+    .. [1] Cervantes-De la Torre, F., González-Trejo, J. I., Real-Ramírez, C. A., &
+           Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application
+           to time series associated with natural phenomena. Journal of Physics: Conference
+           Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002
     """
 
     if exponent == 0:
