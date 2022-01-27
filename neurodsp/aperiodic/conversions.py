@@ -82,7 +82,7 @@ def convert_exponent_hurst(exponent, fractional_class):
 
     if fractional_class == 'gaussian':
         hurst = (exponent + 1) / 2
-    elif fractional_class == 'gaussian':
+    elif fractional_class == 'brownian':
         hurst = (exponent - 1) / 2
 
     return hurst
@@ -116,7 +116,7 @@ def convert_hurst_exponent(hurst, fractional_class):
 
     if fractional_class == 'gaussian':
         exponent = 2 * hurst - 1
-    elif fractional_class == 'gaussian':
+    elif fractional_class == 'brownian':
         exponent = 2 * hurst + 1
 
     return exponent
