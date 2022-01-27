@@ -173,12 +173,14 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     freqs = np.linspace(0, fs / 2, num=int(n_samples // 2 + 1), endpoint=True)
     freqs = freqs[1:]
 
-    # Lambda for computing the amplitude coefficients for the sinusoids (square root Lorentzian)
-    coscoef = lambda freq : np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee)))
+    # Define sub-function for computing the amplitude coefficients for the sinusoids
+    #   This computes the square root of the Lorentzian
+    def _coscoef(freq):
+        return np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee)))
 
-    # Define & vectorize function for computing the set of sinusoids, adding a random phase shift
+    # Define & vectorize sub-function for computing the set of sinusoids, adding a random phase shift
     def _create_sines(freq):
-        return coscoef(freq) * np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand())
+        return _coscoef(freq) * np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand())
     vect_create_sines = np.vectorize(_create_sines, signature='()->(n)')
 
     # Create the set of sinusoids across the set of frequencies
