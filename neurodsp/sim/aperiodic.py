@@ -179,7 +179,7 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     # Define & vectorize function for computing the set of sinusoids, adding a random phase shift
     def _create_sines(freq):
         return coscoef(freq) * np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand())
-    vect_create_sines = np.vectorize(_create_sines, signature='() -> (n)')
+    vect_create_sines = np.vectorize(_create_sines, signature='()->(n)')
 
     # Create the set of sinusoids across the set of frequencies
     sines = vect_create_sines(freqs)
