@@ -226,6 +226,10 @@ Conversions
 
     convert_exponent_alpha
     convert_alpha_exponent
+    convert_exponent_hurst
+    convert_hurst_exponent
+    convert_exponent_hfd
+    convert_hfd_exponent
 
 Simulations
 -----------
