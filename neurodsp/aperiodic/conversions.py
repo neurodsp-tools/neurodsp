@@ -1,6 +1,6 @@
 """Convert between aperiodic and related measures."""
 
-from neurodsp.utils.checks import check_param_options
+from neurodsp.utils.checks import check_param_range, check_param_options
 
 ###################################################################################################
 ###################################################################################################
@@ -137,8 +137,8 @@ def convert_exponent_hfd(exponent):
 
     Notes
     -----
-    This works for exponents between {1, 3} (inclusive).
-    As a special case, if exp is 0, D is 2.
+    This works for exponents between [1, 3] (inclusive).
+    As a special case, if exp is 0, FD is 2.
 
     References
     ----------
@@ -150,10 +150,43 @@ def convert_exponent_hfd(exponent):
 
     if exponent == 0:
         hfd = 2
-    elif exponent >= 1 and exponent <= 3:
-        hfd = (5 - exponent) / 2
     else:
-        msg = 'Conversion not supported for given exponent value.'
-        raise ValueError(msg)
+        check_param_range(exponent, 'exponent', [1, 3])
+        hfd = (5 - exponent) / 2
 
     return hfd
+
+
+def convert_hfd_exponent(hfd):
+    """Convert Higuchi fractal dimension value to expected 1/f exponent value.
+
+    Parameters
+    ----------
+    hfd : float
+        Higuchi fractal dimension value.
+
+    Returns
+    -------
+    exponent : float
+        Predicted 1/f exponent value.
+
+    Notes
+    -----
+    This works for Fractal Dimensions between [1, 2] (inclusive).
+    As a special case, if Fractal Dimension is 2, exponent is 0.
+
+    References
+    ----------
+    .. [1] Cervantes-De la Torre, F., González-Trejo, J. I., Real-Ramírez, C. A., &
+           Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application
+           to time series associated with natural phenomena. Journal of Physics: Conference
+           Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002
+    """
+
+    if hfd == 2:
+        exponent = 0
+    else:
+        check_param_range(hurst, 'hurst', [1, 2])
+        exponent = -2 * hfd + 5
+
+    return exponent
