@@ -88,7 +88,7 @@ def rotate_spectrum(freqs, spectrum, delta_exponent, f_rotation=1):
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
     >>> freqs, spectrum = compute_spectrum(sig, fs=500)
-    >>> rotated_spectrum = rotate_powerlaw(freqs, spectrum, -1)
+    >>> rotated_spectrum = rotate_spectrum(freqs, spectrum, -1)
     """
 
     if freqs[0] == 0:
