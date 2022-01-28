@@ -11,7 +11,7 @@ from neurodsp.utils import remove_nans
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
-from neurodsp.spectral.utils import rotate_timeseries
+from neurodsp.sim.utils import rotate_timeseries
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
