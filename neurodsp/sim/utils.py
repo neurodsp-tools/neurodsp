@@ -46,7 +46,7 @@ def rotate_timeseries(sig, fs, delta_exp, f_rotation=1):
 
     # Rotate the spectrum to create the exponent change
     #   Delta exponent is divided by two, as the FFT output is in units of amplitude not power
-    fft_rotated = rotate_powerlaw(freqs, fft_vals, delta_exp/2, f_rotation)
+    fft_rotated = rotate_spectrum(freqs, fft_vals, delta_exp/2, f_rotation)
 
     # Invert back to time series, with a z-score to normalize
     sig_rotated = np.real(np.fft.ifft(fft_rotated))
@@ -54,7 +54,7 @@ def rotate_timeseries(sig, fs, delta_exp, f_rotation=1):
     return sig_rotated
 
 
-def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
+def rotate_spectrum(freqs, spectrum, delta_exponent, f_rotation=1):
     """Rotate the power law exponent of a power spectrum.
 
     Parameters

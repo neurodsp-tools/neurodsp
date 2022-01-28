@@ -15,11 +15,11 @@ def test_rotate_timeseries(tsig):
     assert out.shape == tsig.shape
     assert not np.array_equal(out, tsig)
 
-def test_rotate_powerlaw():
+def test_rotate_spectrum():
 
     freqs = np.array([5, 6, 7, 8, 9])
     pows = np.array([1, 2, 3, 4, 5])
     d_exp = 1
 
-    pows_new = rotate_powerlaw(freqs, pows, d_exp)
+    pows_new = rotate_spectrum(freqs, pows, d_exp)
     assert pows.shape == pows_new.shape

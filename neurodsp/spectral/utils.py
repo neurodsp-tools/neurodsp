@@ -2,6 +2,9 @@
 
 import numpy as np
 
+# Alias a function that has moved, for backwards compatibility
+from neurodsp.sim.utils import rotate_spectrum as rotate_powerlaw
+
 ###################################################################################################
 ###################################################################################################
 
