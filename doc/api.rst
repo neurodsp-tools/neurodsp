@@ -134,7 +134,6 @@ Spectral Utilities
 
     trim_spectrum
     trim_spectrogram
-    rotate_powerlaw
 
 Burst Detection
 ---------------
@@ -285,13 +284,12 @@ Combined Signals
 Utilities
 ~~~~~~~~~
 
-.. currentmodule:: neurodsp.utils.data
+.. currentmodule:: neurodsp.sim.utils
 .. autosummary::
     :toctree: generated/
 
-    create_freqs
-    create_times
-    create_samples
+    rotate_spectrum
+    rotate_timeseries
 
 Random Seed
 ~~~~~~~~~~~
@@ -378,14 +376,20 @@ Normalization
     demean
     normalize_variance
 
-Data Management
-~~~~~~~~~~~~~~~
+Data
+~~~~
 
 .. currentmodule:: neurodsp.utils.data
 .. autosummary::
     :toctree: generated/
 
+    create_freqs
+    create_times
+    create_samples
     split_signal
+
+Outliers
+~~~~~~~~
 
 .. currentmodule:: neurodsp.utils.outliers
 .. autosummary::
