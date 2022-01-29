@@ -2,6 +2,9 @@
 
 import numpy as np
 
+from neurodsp.sim.info import get_sim_func
+from neurodsp.utils.data import compute_nseconds
+
 ###################################################################################################
 ###################################################################################################
 
@@ -106,3 +109,56 @@ def rotate_spectrum(freqs, spectrum, delta_exponent, f_rotation=1):
         rotated_spectrum = np.insert(rotated_spectrum, 0, p_0)
 
     return rotated_spectrum
+
+
+def modulate_signal(sig, modulation, fs=None, mod_params=None):
+    """Apply amplitude modulation to a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        A signal to modulate.
+    modulation : 1d array or callable
+        Modulation to apply to the signal.
+        If array, the modulating signal to apply directly to the signal.
+        If callable, a function to simulate the modulating signal that will be applied.
+    fs : float, optional
+        Signal sampling rate, in Hz.
+        Only needed if `modulation` is a callable.
+    mod_params : dictionary, optional
+        Parameters for the modulation function.
+        Only needed if `modulation` is a callable.
+
+    Returns
+    -------
+    msig : 1d array
+        Amplitude modulated signal.
+
+    Examples
+    --------
+    Amplitude modulate a sinusoidal signal with a lower frequency, passing in a function label:
+
+    >>> from neurodsp.sim import sim_oscillation
+    >>> fs = 500
+    >>> sig = sim_oscillation(n_seconds=10, fs=fs, freq=10)
+    >>> msig = modulate_signal(sig, 'sim_oscillation', fs, {'freq' : 1})
+
+    Amplitude modulate a sinusoidal signal with precomputed 1/f signal:
+
+    >>> from neurodsp.sim import sim_oscillation
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> sig = sim_oscillation(n_seconds, fs, freq=10)
+    >>> mod = sim_oscillation(n_seconds, fs, exponent=-1)
+    >>> msig = modulate_signal(sig, mod)
+    """
+
+    if isinstance(modulation, str):
+        mod_func = get_sim_func(modulation)
+        modulation = mod_func(compute_nseconds(sig, fs), fs, **mod_params)
+
+    assert len(sig) == len(modulation), 'Lengths of the signal and modulator must match to apply modulation'
+
+    msig = sig * modulation
+
+    return msig

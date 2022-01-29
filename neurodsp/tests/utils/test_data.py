@@ -50,7 +50,7 @@ def test_compute_nsamples():
 
 def test_compute_nseconds(tsig):
 
-    n_seconds = compute_nseconds(sig, FS)
+    n_seconds = compute_nseconds(tsig, FS)
     assert isinstance(n_seconds, float)
     assert n_seconds == N_SECONDS
 
