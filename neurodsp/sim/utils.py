@@ -118,10 +118,10 @@ def modulate_signal(sig, modulation, fs=None, mod_params=None):
     ----------
     sig : 1d array
         A signal to modulate.
-    modulation : 1d array or callable
+    modulation : 1d array or str
         Modulation to apply to the signal.
         If array, the modulating signal to apply directly to the signal.
-        If callable, a function to simulate the modulating signal that will be applied.
+        If str, a function name to use to simulate the modulating signal that will be applied.
     fs : float, optional
         Signal sampling rate, in Hz.
         Only needed if `modulation` is a callable.
@@ -145,11 +145,11 @@ def modulate_signal(sig, modulation, fs=None, mod_params=None):
 
     Amplitude modulate a sinusoidal signal with precomputed 1/f signal:
 
-    >>> from neurodsp.sim import sim_oscillation
+    >>> from neurodsp.sim import sim_oscillation, sim_powerlaw
     >>> n_seconds = 10
     >>> fs = 500
     >>> sig = sim_oscillation(n_seconds, fs, freq=10)
-    >>> mod = sim_oscillation(n_seconds, fs, exponent=-1)
+    >>> mod = sim_powerlaw(n_seconds, fs, exponent=-1)
     >>> msig = modulate_signal(sig, mod)
     """
 
@@ -157,7 +157,8 @@ def modulate_signal(sig, modulation, fs=None, mod_params=None):
         mod_func = get_sim_func(modulation)
         modulation = mod_func(compute_nseconds(sig, fs), fs, **mod_params)
 
-    assert len(sig) == len(modulation), 'Lengths of the signal and modulator must match to apply modulation'
+    assert len(sig) == len(modulation), \
+        'Lengths of the signal and modulator must match to apply modulation'
 
     msig = sig * modulation
 

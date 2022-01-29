@@ -6,6 +6,7 @@ import numpy as np
 from scipy.linalg import norm
 
 from neurodsp.sim.info import get_sim_func
+from neurodsp.sim.utils import modulate_signal
 from neurodsp.utils.decorators import normalize
 from neurodsp.utils.data import create_times
 
@@ -160,3 +161,56 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     sig = sig_ap + sig_periodic
 
     return sig
+
+
+def sim_modulated_signal(n_seconds, fs, sig_func, sig_params, mod_func, mod_params):
+    """Simulate an amplitude modulated signal.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    sig_func : str
+        Name of the function to use to simulate the signal.
+    sig_param : dictionary
+        Parameters for the signal generation function.
+    mod_func : callable
+        Name of the function to use to simulate the modulating signal.
+    mod_params : dictionary
+        Parameters for the modulation function.
+
+    Returns
+    -------
+    msig : 1d array
+        Amplitude modulated signal.
+
+    Notes
+    -----
+    String labels for `sig_func` & `mod_func` can be any sim function available in the module.
+
+    Examples
+    --------
+    Simulate an oscillatory signal that is amplitude modulated for a slower oscillation:
+
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> msig_osc = sim_modulated_signal(n_seconds, fs,
+    ...                                 'sim_oscillation', {'freq' : 10},
+    ...                                 'sim_oscillation', {'freq' : 1})
+
+    Simulate an oscillatory signal that is amplitude modulated by a 1/f drift:
+
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> msig_ap = sim_modulated_signal(n_seconds, fs,
+    ...                                'sim_oscillation', {'freq' : 10},
+    ...                                'sim_powerlaw', {'exponent' : -1})
+    """
+
+    sig = get_sim_func(sig_func)(n_seconds, fs, **sig_params)
+    mod = get_sim_func(mod_func)(n_seconds, fs, **mod_params)
+    msig = modulate_signal(sig, mod)
+
+    return msig
