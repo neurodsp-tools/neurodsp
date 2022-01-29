@@ -48,6 +48,12 @@ def test_compute_nsamples():
     assert isinstance(n_samples, int)
     assert n_samples == int(np.ceil(N_SECONDS_ODD * FS_ODD))
 
+def test_compute_nseconds(tsig):
+
+    n_seconds = compute_nseconds(sig, FS)
+    assert isinstance(n_seconds, float)
+    assert n_seconds == N_SECONDS
+
 def test_split_signal(tsig):
 
     chunks = split_signal(tsig, 100)

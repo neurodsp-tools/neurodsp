@@ -386,6 +386,8 @@ Data
     create_freqs
     create_times
     create_samples
+    compute_nsamples
+    compute_nseconds
     split_signal
 
 Outliers
