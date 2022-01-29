@@ -10,7 +10,7 @@ from neurodsp.plts.utils import check_ax, savefig
 ###################################################################################################
 
 @savefig
-def plot_filter_properties(f_db, db, fs, impulse_response):
+def plot_filter_properties(f_db, db, fs, impulse_response, figsize=None):
     """Plot filter properties, including frequency response and filter kernel.
 
     Parameters
@@ -23,6 +23,8 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
         Sampling rate, in Hz.
     impulse_response : 1d array
         The impulse response of a filter. For an FIR filter, these are the filter coefficients.
+    figsize : tuple, optional
+        Size to create the figure.
 
     Examples
     --------
@@ -36,7 +38,7 @@ def plot_filter_properties(f_db, db, fs, impulse_response):
     >>> plot_filter_properties(f_db, db, fs, filter_coefs)
     """
 
-    _, ax = plt.subplots(1, 2, figsize=(10, 5))
+    _, ax = plt.subplots(1, 2, figsize=(10, 5) if not figsize else figsize)
 
     plot_frequency_response(f_db, db, ax=ax[0])
     plot_impulse_response(fs, impulse_response, ax=ax[1])
@@ -69,7 +71,7 @@ def plot_frequency_response(f_db, db, ax=None, **kwargs):
     >>> plot_frequency_response(f_db, db)
     """
 
-    ax = check_ax(ax, (5, 5))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (5, 5)))
 
     ax.plot(f_db, db, 'k')
 
@@ -105,7 +107,7 @@ def plot_impulse_response(fs, impulse_response, ax=None, **kwargs):
     >>> plot_impulse_response(fs, filter_coefs)
     """
 
-    ax = check_ax(ax, (5, 5))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (5, 5)))
 
     # Create a samples vector, center to zero, and convert to time
     samples = np.arange(len(impulse_response))
