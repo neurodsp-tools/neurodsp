@@ -274,12 +274,13 @@ Transients & Cycles
 Combined Signals
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim
+.. currentmodule:: neurodsp.sim.combined
 .. autosummary::
     :toctree: generated/
 
     sim_combined
     sim_peak_oscillation
+    sim_modulated_signal
 
 Utilities
 ~~~~~~~~~
@@ -290,6 +291,7 @@ Utilities
 
     rotate_spectrum
     rotate_timeseries
+    modulate_signal
 
 Random Seed
 ~~~~~~~~~~~
