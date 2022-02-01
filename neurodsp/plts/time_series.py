@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
+from neurodsp.utils.data import create_samples
 from neurodsp.utils.checks import check_param_options
 
 ###################################################################################################
@@ -20,8 +21,9 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d or 2d array, or list of 1d array
+    times : 1d or 2d array, or list of 1d array, or None
         Time definition(s) for the time series to be plotted.
+        If None, time series will be plotted in terms of samples instead of time.
     sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     labels : list of str, optional
@@ -48,8 +50,14 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
-    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
     sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
+
+    xlabel = 'Time (s)'
+    if times is None:
+        times = create_samples(len(sigs[0]))
+        xlabel = 'Samples'
+
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
@@ -64,7 +72,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     for time, sig, color, label in zip(times, sigs, colors, labels):
         ax.plot(time, sig, color=color, label=label)
 
-    ax.set_xlabel('Time (s)')
+    ax.set_xlabel(xlabel)
     ax.set_ylabel('Voltage (uV)')
 
 

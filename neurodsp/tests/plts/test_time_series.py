@@ -36,6 +36,11 @@ def test_plot_time_series(tsig_comb, tsig_burst):
                      save_fig=True, file_path=TEST_PLOTS_PATH,
                      file_name='test_plot_time_series-2arr.png')
 
+    # Test none input for times
+    plot_time_series(None, np.array([tsig_comb, tsig_burst]),
+                     save_fig=True, file_path=TEST_PLOTS_PATH,
+                     file_name='test_plot_time_series_notimes.png')
+
 @plot_test
 def test_plot_instantaneous_measure(tsig_comb):
 
