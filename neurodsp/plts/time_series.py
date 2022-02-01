@@ -46,7 +46,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     >>> plot_time_series(times, sig)
     """
 
-    ax = check_ax(ax, (15, 3))
+    ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
     times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
     sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs

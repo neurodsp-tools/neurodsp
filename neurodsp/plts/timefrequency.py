@@ -46,7 +46,7 @@ def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5, ax=None, **kw
     >>> plot_timefrequency(times, freqs, mwt)
     """
 
-    ax = check_ax(ax, None)
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', None))
 
     if np.iscomplexobj(powers):
         powers = abs(powers)
