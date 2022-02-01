@@ -136,30 +136,23 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     # Create the corresponding frequency vector, which is used to create the cosines to sum
     freqs = np.linspace(0, fs / 2, num=sig_len // 2 + 1, endpoint=True)
 
-    # Define sub-function for computing the relative height above the aperiodic power spectrum
-    def _hght(f_val):
-        return height * np.exp(-(f_val - freq) ** 2 / (2 * bw ** 2))
+    # Compute the periodic signal
+    sig_periodic = np.zeros(sig_len)
 
-    # Define sub-function for computing the sum of squares of the cosines
-    def _cosn(f_val):
-        return norm(np.cos(2 * np.pi * f_val * times), 2) ** 2
+    for f_val, fft in zip(freqs, sig_ap_hat):
 
-    # Define sub-function for computing the amplitude coefficients
-    def _coef(f_val, fft):
-        return (-np.real(fft) + np.sqrt(np.real(fft) ** 2 + (10 ** _hght(f_val) - 1) * \
-            np.abs(fft) ** 2)) / _cosn(f_val)
+        # Compute the sum of squares of the cosines
+        cos_times = 2 * np.pi * f_val * times
+        cos_norm = norm(np.cos(cos_times), 2) ** 2
 
-    # Define & vectorize sub-function to create the set of cosines for the periodic component
-    #   Cosines are created with their respective coefficients & a random phase shift
-    def _create_cosines(f_val, fft):
-        return _coef(f_val, fft) * np.cos(2 * np.pi * f_val * times + 2 * np.pi * np.random.rand())
-    vect_create_cosines = np.vectorize(_create_cosines, signature='(),()->(n)')
+        # Compute random phase shift
+        pha = np.cos(cos_times + 2 * np.pi * np.random.rand())
 
-    # Create the set of cosines, defined from the frequency and FFT values
-    cosines = vect_create_cosines(freqs, sig_ap_hat)
+        # Define relative height above the aperiodic power spectrum
+        hgt = height * np.exp(-(f_val - freq) ** 2 / (2 * bw ** 2))
 
-    # Create the periodic component by summing the cosines
-    sig_periodic = np.sum(cosines, axis=0)
+        sig_periodic += (-np.real(fft) + np.sqrt(np.real(fft) ** 2 + \
+            (10 ** hgt - 1) * np.abs(fft) ** 2)) / cos_norm * pha
 
     # Create the combined signal by summing periodic & aperiodic
     sig = sig_ap + sig_periodic
