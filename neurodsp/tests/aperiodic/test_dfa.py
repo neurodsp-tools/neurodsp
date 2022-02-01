@@ -15,16 +15,16 @@ from neurodsp.aperiodic.dfa import *
 
 def test_compute_fluctuations(tsig):
 
-    t_scales, flucs, exp = compute_fluctuations(tsig, 500)
+    t_scales, flucs, result = compute_fluctuations(tsig, 500)
     assert len(t_scales) == len(flucs)
 
     # Check error if the settings create window lengths that are too short
     with raises(ValueError):
-        t_scales, flucs, exp = compute_fluctuations(tsig, 100)
+        t_scales, flucs, result = compute_fluctuations(tsig, 100)
 
     # Check error for nonsense method input
     with raises(ValueError):
-        t_scales, flucs, exp = compute_fluctuations(tsig, 500, method='nope.')
+        t_scales, flucs, result = compute_fluctuations(tsig, 500, method='nope.')
 
 def test_compute_fluctuations_dfa():
 
@@ -33,13 +33,13 @@ def test_compute_fluctuations_dfa():
     # Test white noise: expected DFA of 0.5
     fs = 1000
     white = sim_powerlaw(N_SECONDS, fs, exponent=0)
-    t_scales, flucs, exp = compute_fluctuations(white, fs, method='dfa')
-    assert np.isclose(exp, 0.5, atol=0.1)
+    t_scales, flucs, alpha = compute_fluctuations(white, fs, method='dfa')
+    assert np.isclose(alpha, 0.5, atol=0.1)
 
     # Test brown noise: expected DFA of 1.5
     brown = sim_powerlaw(N_SECONDS, fs, exponent=-2)
-    t_scales, flucs, exp = compute_fluctuations(brown, fs, method='dfa')
-    assert np.isclose(exp, 1.5, atol=0.1)
+    t_scales, flucs, alpha = compute_fluctuations(brown, fs, method='dfa')
+    assert np.isclose(alpha, 1.5, atol=0.1)
 
 def test_compute_fluctuations_rs():
 
@@ -48,8 +48,8 @@ def test_compute_fluctuations_rs():
     # Test white noise: expected RS of 0.5
     fs = 1000
     white = sim_powerlaw(N_SECONDS, fs, exponent=0)
-    t_scales, flucs, exp = compute_fluctuations(white, fs, method='rs')
-    assert np.isclose(exp, 0.5, atol=0.1)
+    t_scales, flucs, hurst = compute_fluctuations(white, fs, method='rs')
+    assert np.isclose(hurst, 0.5, atol=0.1)
 
 def test_compute_rescaled_range(tsig):
 
