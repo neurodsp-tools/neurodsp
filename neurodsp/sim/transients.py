@@ -136,3 +136,53 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
         cycle = np.sum(cycle, axis=0)
 
     return cycle
+
+
+def sim_erp(n_seconds, fs, amp, freq, decay=0.05):
+    """Simulate an ERP complex.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Length of simulated kernel in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    amp : float
+        Amplitude of the ERP.
+    freq : float
+        Frequency of the ERP complex, in Hz.
+    decay : float
+        The exponential decay time of the ERP envelope.
+
+    Returns
+    -------
+    erp : 1d array
+        Simulated ERP.
+
+    Notes
+    -----
+    This approach simulates simplified ERP complex as an exponentially decaying sine wave.
+
+    Examples
+    --------
+    Simulate an ERP complex with a frequency of 7 Hz and a 50 ms decay time:
+
+    >>> erp = sim_erp(n_seconds=0.5, fs=500, amp=1, freq=7, decay=0.05)
+
+    Simulate an ERP complex with a frequency of 10 Hz and a 25 ms decay time:
+
+    >>> erp = sim_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)
+
+    Reference
+    ---------
+    .. [1] van Diepen, R. M., & Mazaheri, A. (2018). The Caveats of observing
+           Inter-Trial Phase-Coherence in Cognitive Neuroscience. Scientific Reports, 8(1).
+           DOI: https://doi.org/10.1038/s41598-018-20423-z
+    """
+
+    times = create_times(n_seconds, fs)
+
+    erp = amp * ((times) / decay) * np.exp(1 - (times) / decay) * \
+        np.sin(2 * np.pi * freq * (times))
+
+    return erp
