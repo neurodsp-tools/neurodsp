@@ -83,8 +83,9 @@ def plot_instantaneous_measure(times, sigs, measure='phase', ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d or 2d array, or list of 1d array
+    times : 1d or 2d array, or list of 1d array, or None
         Time definition(s) for the time series to be plotted.
+        If None, time series will be plotted in terms of samples instead of time.
     sigs : 1d or 2d array, or list of 1d array
         Time series to plot.
     measure : {'phase', 'amplitude', 'frequency'}
@@ -128,8 +129,9 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
 
     Parameters
     ----------
-    times : 1d array
+    times : 1d array or None
         Time definition for the time series to be plotted.
+        If None, time series will be plotted in terms of samples instead of time.
     sig : 1d array
         Time series to plot.
     bursting : 1d array
