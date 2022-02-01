@@ -45,5 +45,5 @@ def plot_test(func):
 
     return wrapper
 
-def check_exponent(xs, offset, chi):
-    return xs*chi + offset
+def check_exponent(xs, offset, exp):
+    return xs*exp + offset

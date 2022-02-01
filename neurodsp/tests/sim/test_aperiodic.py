@@ -47,7 +47,7 @@ def test_sim_knee():
     np.allclose(true_psd, numerical_psd, atol=EPS)
 
     # Accuracy test for a single exponent
-    sig = sim_knee(n_seconds=N_SECONDS, fs=FS, chi1=0, chi2=EXP2, knee=KNEE)
+    sig = sim_knee(N_SECONDS, FS, 0, EXP2, KNEE)
 
     freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
 
@@ -73,31 +73,31 @@ def test_sim_powerlaw():
     sig = sim_powerlaw(N_SECONDS, FS, f_range=(2, None))
     check_sim_output(sig)
 
-@pytest.mark.parametrize('chi', [-.5, 0, .5])
-def test_sim_frac_gaussian_noise(chi):
+@pytest.mark.parametrize('exponent', [-.5, 0, .5])
+def test_sim_frac_gaussian_noise(exponent):
 
     # Simulate & check time series
-    sig = sim_frac_gaussian_noise(N_SECONDS, FS, chi=chi)
+    sig = sim_frac_gaussian_noise(N_SECONDS, FS, exponent=exponent)
     check_sim_output(sig)
 
     # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
     powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
-    [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
-    assert abs(chi_hat - chi) < 0.2
+    [_, exponent_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    assert abs(exponent_hat - exponent) < 0.2
 
-@pytest.mark.parametrize('chi', [-1.5, -2, -2.5])
-def test_sim_frac_brownian_motion(chi):
+@pytest.mark.parametrize('exponent', [-1.5, -2, -2.5])
+def test_sim_frac_brownian_motion(exponent):
 
     # Simulate & check time series
-    sig = sim_frac_brownian_motion(N_SECONDS, FS, chi=chi)
+    sig = sim_frac_brownian_motion(N_SECONDS, FS, exponent=exponent)
     check_sim_output(sig)
 
     # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
     powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
-    [_, chi_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
-    assert abs(chi_hat - chi) < 0.4
+    [_, exponent_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    assert abs(exponent_hat - exponent) < 0.4
 
 def test_create_powerlaw():
 
