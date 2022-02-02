@@ -142,6 +142,7 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
         Power law exponent after the knee.
     knee : float
         Location of the knee in Hz.
+
     Returns
     -------
     sig : 1d array

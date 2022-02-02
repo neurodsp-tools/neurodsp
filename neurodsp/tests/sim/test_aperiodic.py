@@ -30,7 +30,7 @@ def test_sim_knee():
 
     # Build the signal and run a smoke test
     sig = sim_knee(N_SECONDS, FS, EXP1, EXP2, KNEE)
-    check_sim_output(sig)
+    check_sim_output(sig, N_SECONDS, FS)
 
     # Check against the power spectrum when you take the Fourier transform
     sig_len = int(FS*N_SECONDS)
@@ -38,13 +38,15 @@ def test_sim_knee():
 
     # Ignore the DC component to avoid division by zero in the Lorentzian
     freqs = freqs[1:]
-    true_psd = np.array([1/(freq**-EXP1*(freq**(-EXP2-EXP1) + KNEE)) for freq in freqs])
+    true_psd = 1 / ((freqs ** -EXP1 * (freqs ** (-EXP2 - EXP1)+ KNEE**(-2*EXP1 - EXP2))))
 
     # Only look at the frequencies (ignoring DC component) up to the nyquist rate
     sig_hat = np.fft.fft(sig)[1:sig_len//2]
     numerical_psd = np.abs(sig_hat)**2
 
-    np.allclose(true_psd, numerical_psd, atol=EPS)
+    scale = numerical_psd / true_psd
+
+    np.allclose(true_psd*scale, numerical_psd, atol=EPS)
 
     # Accuracy test for a single exponent
     sig = sim_knee(N_SECONDS, FS, 0, EXP2, KNEE)
@@ -52,12 +54,13 @@ def test_sim_knee():
     freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
 
     def _estimate_single_knee(xs, offset, knee, exponent):
-        return np.zeros_like(xs) + offset - np.log10(xs**exponent + knee)
+        return np.zeros_like(xs) + offset - np.log10(xs**exponent + knee**exponent)
 
     ap_params, _ = curve_fit(_estimate_single_knee, freqs, np.log10(powers))
-    _, _, EXP2_hat = ap_params[:]
+    _, KNEE_hat, EXP2_hat = ap_params[:]
 
-    assert -round(EXP2_hat) == EXP2
+    np.testing.assert_approx_equal(-EXP2_hat, EXP2, significant=1)
+    np.testing.assert_approx_equal(KNEE_hat, KNEE, significant=1)
 
 def test_sim_random_walk():
 
