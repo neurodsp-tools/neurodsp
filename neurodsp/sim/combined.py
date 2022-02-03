@@ -163,6 +163,7 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     return sig
 
 
+@normalize
 def sim_modulated_signal(n_seconds, fs, sig_func, sig_params, mod_func, mod_params):
     """Simulate an amplitude modulated signal.
 
