@@ -238,7 +238,7 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
         n_cycles = 1
 
     # Ensure freqs is iterable and an array
-    freqs = np.array([freqs] * n_cycles) if isinstance(freqs, (int, float)) else freqs
+    freqs = np.array([freqs] * n_cycles) if isinstance(freqs, (int, float, np.number)) else freqs
     freqs = np.array(freqs) if not isinstance(freqs, np.ndarray) else freqs
 
     # Ensure lengths of variable params are equal
