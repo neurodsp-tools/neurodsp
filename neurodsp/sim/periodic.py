@@ -227,7 +227,7 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     param_values = list(cycle_params.values())
 
     param_lengths = np.array([len(params) for params in param_values
-                              if isinstance(params, (list, np.ndarray))])
+                              if isinstance(params, (tuple, list, np.ndarray))])
 
     # Determine the number of cycles
     if isinstance(freqs, (np.ndarray, list)):
@@ -247,7 +247,7 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
 
     # Ensure all kwargs params are iterable
     for idx, param in enumerate(param_values):
-        if not isinstance(param, (list, np.ndarray)):
+        if not isinstance(param, (tuple, list, np.ndarray)):
             param_values[idx] = [param] * n_cycles
 
     param_values = np.array(param_values).transpose()

@@ -80,7 +80,7 @@ def check_n_cycles(n_cycles, len_cycles=None):
 
         n_cycles = repeat(n_cycles)
 
-    elif isinstance(n_cycles, (list, np.ndarray)):
+    elif isinstance(n_cycles, (tuple, list, np.ndarray)):
 
         for cycle in n_cycles:
             if cycle <= 0:
