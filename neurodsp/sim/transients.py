@@ -138,7 +138,7 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
     return cycle
 
 
-def sim_erp(n_seconds, fs, amp, freq, decay=0.05):
+def sim_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
     """Simulate an ERP complex.
 
     Parameters
@@ -151,8 +151,10 @@ def sim_erp(n_seconds, fs, amp, freq, decay=0.05):
         Amplitude of the ERP.
     freq : float
         Frequency of the ERP complex, in Hz.
-    decay : float
+    decay : float, optional, default: 0.05
         The exponential decay time of the ERP envelope.
+    time_start : float, optional, default: 0.
+        Start time, in seconds. Samples prior to start time are zero.
 
     Returns
     -------
@@ -182,7 +184,12 @@ def sim_erp(n_seconds, fs, amp, freq, decay=0.05):
 
     times = create_times(n_seconds, fs)
 
-    erp = amp * ((times) / decay) * np.exp(1 - (times) / decay) * \
+    _erp = amp * ((times) / decay) * np.exp(1 - (times) / decay) * \
         np.sin(2 * np.pi * freq * (times))
+
+    sample_start = int(time_start * fs)
+
+    erp = np.zeros_like(times)
+    erp[sample_start:] = _erp[:len(times)-sample_start]
 
     return erp
