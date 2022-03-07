@@ -138,8 +138,8 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
     return cycle
 
 
-def sim_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
-    """Simulate an ERP complex.
+def sim_damped_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
+    """Simulate an ERP complex as a decaying (damped) sine wave.
 
     Parameters
     ----------
@@ -169,11 +169,11 @@ def sim_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
     --------
     Simulate an ERP complex with a frequency of 7 Hz and a 50 ms decay time:
 
-    >>> erp = sim_erp(n_seconds=0.5, fs=500, amp=1, freq=7, decay=0.05)
+    >>> erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=7, decay=0.05)
 
     Simulate an ERP complex with a frequency of 10 Hz and a 25 ms decay time:
 
-    >>> erp = sim_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)
+    >>> erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)
 
     Reference
     ---------

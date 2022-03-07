@@ -38,10 +38,10 @@ def test_sim_action_potential():
     check_sim_output(cycle, n_seconds=N_SECONDS)
 
 
-def test_sim_erp():
+def test_sim_damped_erp():
 
-    erp = sim_erp(N_SECONDS, FS, amp=1, freq=5, decay=0.05)
+    erp = sim_damped_erp(N_SECONDS, FS, amp=1, freq=5, decay=0.05)
     check_sim_output(erp, n_seconds=N_SECONDS)
 
-    erp = sim_erp(N_SECONDS, FS, amp=1, freq=5, decay=0.05, time_start=1)
+    erp = sim_damped_erp(N_SECONDS, FS, amp=1, freq=5, decay=0.05, time_start=1)
     assert not np.any(erp[:int(1 * FS)])
