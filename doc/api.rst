@@ -248,8 +248,8 @@ Aperiodic Signals
     sim_frac_gaussian_noise
     sim_frac_brownian_motion
 
-Transients & Cycles
-~~~~~~~~~~~~~~~~~~~
+Transients
+~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim.transients
 .. autosummary::
@@ -257,6 +257,10 @@ Transients & Cycles
 
     sim_synaptic_kernel
     sim_action_potential
+    sim_damped_erp
+
+Cycles
+~~~~~~
 
 .. currentmodule:: neurodsp.sim.cycles
 .. autosummary::
