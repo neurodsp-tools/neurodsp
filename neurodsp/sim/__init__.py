@@ -8,4 +8,4 @@ from .aperiodic import (sim_powerlaw, sim_random_walk, sim_synaptic_current, sim
                         sim_knee, sim_frac_gaussian_noise, sim_frac_brownian_motion)
 from .cycles import sim_cycle
 from .transients import sim_synaptic_kernel, sim_action_potential
-from .combined import sim_combined, sim_peak_oscillation
+from .combined import sim_combined, sim_peak_oscillation, sim_modulated_signal
