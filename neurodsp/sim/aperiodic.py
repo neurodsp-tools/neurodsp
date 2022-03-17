@@ -141,7 +141,7 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     exponent2 : float
         Power law exponent after the knee.
     knee : float
-        Location of the knee in Hz.
+        Knee parameter.
 
     Returns
     -------
@@ -179,9 +179,7 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
 
     for f in freqs:
 
-        knee_term = knee**(-2*exponent1 - exponent2)
-
-        sig += np.sqrt(1 / (f ** -exponent1 * (f ** (-exponent2 - exponent1) + knee_term))) * \
+        sig += np.sqrt(1 / (f ** -exponent1 * (f ** (-exponent2 - exponent1) + knee))) * \
             np.cos(2 * np.pi * f * times + 2 * np.pi * np.random.rand())
 
     return sig

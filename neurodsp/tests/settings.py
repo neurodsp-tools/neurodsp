@@ -25,7 +25,7 @@ FREQS_LST = [8, 12, 1]
 FREQS_ARR = np.array([5, 10, 15])
 EXP1 = -1
 EXP2 = -2
-KNEE = 10
+KNEE = 100
 
 # Define settings for testing analyses
 F_RANGE = (FREQ1-2, FREQ1+2)

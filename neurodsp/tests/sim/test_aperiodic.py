@@ -38,14 +38,13 @@ def test_sim_knee():
 
     # Ignore the DC component to avoid division by zero in the Lorentzian
     freqs = freqs[1:]
-    true_psd = 1 / ((freqs ** -EXP1 * (freqs ** (-EXP2 - EXP1)+ KNEE**(-2*EXP1 - EXP2))))
+    true_psd = 1 / ((freqs ** -EXP1 * (freqs ** (-EXP2 - EXP1)+ KNEE)))
 
     # Only look at the frequencies (ignoring DC component) up to the nyquist rate
     sig_hat = np.fft.fft(sig)[1:sig_len//2]
     numerical_psd = np.abs(sig_hat)**2
 
     scale = numerical_psd / true_psd
-
     np.allclose(true_psd*scale, numerical_psd, atol=EPS)
 
     # Accuracy test for a single exponent
@@ -54,7 +53,7 @@ def test_sim_knee():
     freqs, powers = compute_spectrum(sig, FS, f_range=(1, 200))
 
     def _estimate_single_knee(xs, offset, knee, exponent):
-        return np.zeros_like(xs) + offset - np.log10(xs**exponent + knee**exponent)
+        return np.zeros_like(xs) + offset - np.log10(xs**exponent + knee)
 
     ap_params, _ = curve_fit(_estimate_single_knee, freqs, np.log10(powers))
     _, KNEE_hat, EXP2_hat = ap_params[:]
