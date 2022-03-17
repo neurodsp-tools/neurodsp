@@ -152,11 +152,12 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     -----
     This simulated time series has a power spectrum that follows the Lorentzian equation:
 
-    `P(f) = 1 / (f**exponent1 * (f**exponent2 + knee))`
+    `P(f) = 1 / (f**(exponent1) * f**(exponent2 + exponent1) + knee)`
 
     - This simulation creates this power spectrum shape using a sum of sinusoids.
-    - The slope of the log power spectrum before the knee is exponent1 whereas after the knee
-    it is exponent2, but only when the sign of exponent1 and exponent2 are the same.
+    - The slope of the log power spectrum before the knee is exponent1
+    - The slope after the knee is exponent2, but only when the sign of
+      exponent1 and exponent2 are the same.
 
     Examples
     --------
