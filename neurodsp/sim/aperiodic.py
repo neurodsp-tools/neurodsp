@@ -127,7 +127,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
 
 @normalize
-def sim_knee(n_seconds, fs, chi1, chi2, knee):
+def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     """Simulate a signal whose power spectrum has a 1/f structure with a knee.
 
     Parameters
@@ -136,12 +136,12 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    chi1 : float
+    exponent1 : float
         Power law exponent before the knee.
-    chi2 : float
-        Power law exponent added to chi1 after the knee.
+    exponent2 : float
+        Power law exponent after the knee.
     knee : float
-        Location of the knee in Hz.
+        Knee parameter.
 
     Returns
     -------
@@ -152,37 +152,35 @@ def sim_knee(n_seconds, fs, chi1, chi2, knee):
     -----
     This simulated time series has a power spectrum that follows the Lorentzian equation:
 
-    `P(f) = 1 / (f**chi1 * (f**chi2 + knee))`
+    `P(f) = 1 / (f**(exponent1) * f**(exponent2 + exponent1) + knee)`
 
     - This simulation creates this power spectrum shape using a sum of sinusoids.
-    - The slope of the log power spectrum before the knee is chi1 whereas after the knee it is chi2,
-    but only when the sign of chi1 and chi2 are the same.
+    - The slope of the log power spectrum before the knee is exponent1
+    - The slope after the knee is exponent2, but only when the sign of
+      exponent1 and exponent2 are the same.
 
     Examples
     --------
-    Simulate a time series with chi1 of -1, chi2 of -2, and knee of 100:
+    Simulate a time series with exponent1 of -1, exponent2 of -2, and knee of 100:
 
-    >> sim_knee(n_seconds=10, fs=1000, chi1=-1, chi2=-2, knee=100)
+    >> sim_knee(n_seconds=10, fs=1000, exponent1=-1, exponent2=-2, knee=100)
     """
 
     times = create_times(n_seconds, fs)
     n_samples = compute_nsamples(n_seconds, fs)
 
-    # Create frequencies for the power spectrum, which will be freqs of the summed cosines
-    freqs = np.linspace(0, fs/2, num=int(n_samples//2 + 1), endpoint=True)
-
-    # Drop the DC component
+    # Create frequencies for the power spectrum and drop the DC component
+    #   These frequencies are used to create the cosines to sum
+    freqs = np.linspace(0, fs / 2, num=int(n_samples // 2 + 1), endpoint=True)
     freqs = freqs[1:]
 
-    # Map the frequencies under the (square root) Lorentzian
-    #   This will give us the amplitude coefficients for the sinusoids
-    cosine_coeffs = np.array([np.sqrt(1 / (freq ** -chi1 * (freq ** (-chi2 - chi1) + knee))) \
-        for freq in freqs])
+    # Compute cosine amplitude coefficients and add a random phase shift
+    sig = np.zeros(n_samples)
 
-    # Add sinusoids with a random phase shift
-    sig = np.sum(np.array([cosine_coeffs[ell] * \
-                          np.cos(2 * np.pi * freq * times + 2 * np.pi * np.random.rand()) \
-                 for ell, freq in enumerate(freqs)]), axis=0)
+    for f in freqs:
+
+        sig += np.sqrt(1 / (f ** -exponent1 * (f ** (-exponent2 - exponent1) + knee))) * \
+            np.cos(2 * np.pi * f * times + 2 * np.pi * np.random.rand())
 
     return sig
 
@@ -320,7 +318,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
 
 @normalize
-def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
+def sim_frac_gaussian_noise(n_seconds, fs, exponent=0, hurst=None):
     """Simulate a timeseries as fractional gaussian noise.
 
     Parameters
@@ -329,12 +327,12 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    chi: float, optional, default: 0
+    exponent : float, optional, default: 0
         Desired power law exponent of the spectrum of the signal.
         Must be in the range (-1, 1).
     hurst : float, optional, default: None
         Desired Hurst parameter, which must be in the range (0, 1).
-        If provided, this value overwrites the `chi` parameter.
+        If provided, this value overwrites the `exponent` parameter.
 
     Returns
     -------
@@ -350,8 +348,8 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
     The Hurst parameter is defined for self-similar processes such that Y(at) = a^H Y(t)
     for all a > 0, where this equality holds in distribution.
 
-    The relationship between the power law exponent chi and the Hurst parameter
-    for fractional gaussian noise is chi = 2 * hurst - 1.
+    The relationship between the power law exponent and the Hurst parameter
+    for fractional gaussian noise is exponent = 2 * hurst - 1.
 
     For more information, consult [1]_.
 
@@ -365,7 +363,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
     --------
     Simulate fractional gaussian noise with a power law decay of 0 (white noise):
 
-    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, chi=0)
+    >>> sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, exponent=0)
 
     Simulate fractional gaussian noise with a Hurst parameter of 0.5 (also white noise):
 
@@ -376,10 +374,10 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
         check_param_range(hurst, 'hurst', (0, 1))
 
     else:
-        check_param_range(chi, 'chi', (-1, 1))
+        check_param_range(exponent, 'exponent', (-1, 1))
 
-        # Infer the hurst parameter from chi
-        hurst = (-chi + 1.) / 2
+        # Infer the hurst parameter from exponent
+        hurst = (-exponent + 1.) / 2
 
     # Compute the number of samples for the simulated time series
     n_samples = compute_nsamples(n_seconds, fs)
@@ -403,7 +401,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, chi=0, hurst=None):
 
 
 @normalize
-def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
+def sim_frac_brownian_motion(n_seconds, fs, exponent=-2, hurst=None):
     """Simulate a timeseries as fractional brownian motion.
 
     Parameters
@@ -412,12 +410,12 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    chi : float, optional, default: -2
+    exponent : float, optional, default: -2
         Desired power law exponent of the spectrum of the signal.
         Must be in the range (-3, -1).
     hurst : float, optional, default: None
         Desired Hurst parameter, which must be in the range (0, 1).
-        If provided, this value overwrites the `chi` parameter.
+        If provided, this value overwrites the `exponent` parameter.
 
     Returns
     -------
@@ -430,15 +428,15 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     or alternatively with a specified Hurst parameter.
 
     Note that when specifying there can be some bias leading to a steeper than expected
-    spectrum of the simulated signal. This bias is higher for chi values near to 1,
+    spectrum of the simulated signal. This bias is higher for exponent values near to 1,
     and may be more severe in shorter signals.
 
     The Hurst parameter is not the Hurst exponent in general. The Hurst parameter
     is defined for self-similar processes such that Y(at) = a^H Y(t) for all a > 0,
     where this equality holds in distribution.
 
-    The relationship between the power law exponent chi and the Hurst parameter
-    for fractional brownian motion is chi = 2 * hurst + 1
+    The relationship between the power law exponent and the Hurst parameter
+    for fractional brownian motion is exponent = 2 * hurst + 1
 
     For more information, consult [1]_ and/or [2]_.
 
@@ -453,7 +451,7 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
     --------
     Simulate fractional brownian motion with a power law exponent of -2 (brown noise):
 
-    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, chi=-2)
+    >>> sig = sim_frac_brownian_motion(n_seconds=1, fs=500, exponent=-2)
 
     Simulate fractional brownian motion with a Hurst parameter of 0.5 (also brown noise):
 
@@ -464,10 +462,10 @@ def sim_frac_brownian_motion(n_seconds, fs, chi=-2, hurst=None):
         check_param_range(hurst, 'hurst', (0, 1))
 
     else:
-        check_param_range(chi, 'chi', (-3, -1))
+        check_param_range(exponent, 'exponent', (-3, -1))
 
-        # Infer the hurst parameter from chi
-        hurst = (-chi - 1.) / 2
+        # Infer the hurst parameter from exponent
+        hurst = (-exponent - 1.) / 2
 
     # Fractional brownian motion is the cumulative sum of fractional gaussian noise
     fgn = sim_frac_gaussian_noise(n_seconds, fs, hurst=hurst)

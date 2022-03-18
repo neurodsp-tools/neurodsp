@@ -123,41 +123,39 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
 
     >>> from neurodsp.sim import sim_powerlaw
     >>> fs = 500
-    >>> sig_ap = sim_powerlaw(n_seconds=10, fs=fs)
+    >>> sig_ap = sim_powerlaw(n_seconds=10, fs=fs, exponent=-2.0)
     >>> sig = sim_peak_oscillation(sig_ap, fs=fs, freq=20, bw=5, height=7)
     """
 
     sig_len = len(sig_ap)
     times = create_times(sig_len / fs, fs)
 
-    # Construct the aperiodic component and compute its Fourier transform
-    # Only use the first half of the frequencies from the FFT since the signal is real
+    # Compute the Fourier transform of the aperiodic signal
+    #   We extract the first half of the frequencies from the FFT, since the signal is real
     sig_ap_hat = np.fft.fft(sig_ap)[0:(sig_len // 2 + 1)]
 
-    # Create the range of frequencies that appear in the power spectrum since these
-    # will be the frequencies in the cosines we sum below
+    # Create the corresponding frequency vector, which is used to create the cosines to sum
     freqs = np.linspace(0, fs / 2, num=sig_len // 2 + 1, endpoint=True)
 
-    # Construct the array of relative heights above the aperiodic power spectrum
-    rel_heights = np.array([height * np.exp(-(lin_freq - freq) ** 2 / (2 * bw ** 2)) \
-        for lin_freq in freqs])
+    # Compute the periodic signal
+    sig_periodic = np.zeros(sig_len)
 
-    # Build an array of the sum of squares of the cosines to use in the amplitude calculation
-    cosine_norms = np.array([norm(np.cos(2 * np.pi * lin_freq * times), 2) ** 2 \
-        for lin_freq in freqs])
+    for f_val, fft in zip(freqs, sig_ap_hat):
 
-    # Build an array of the amplitude coefficients
-    cosine_coeffs = np.array([\
-        (-np.real(sig_ap_hat[ell]) + np.sqrt(np.real(sig_ap_hat[ell]) ** 2 + \
-        (10 ** rel_heights[ell] - 1) * np.abs(sig_ap_hat[ell]) ** 2)) / cosine_norms[ell] \
-        for ell in range(cosine_norms.shape[0])])
+        # Compute the sum of squares of the cosines
+        cos_times = 2 * np.pi * f_val * times
+        cos_norm = norm(np.cos(cos_times), 2) ** 2
 
-    # Add cosines with the respective coefficients and with a random phase shift for each one
-    sig_periodic = np.sum(np.array([cosine_coeffs[ell] * \
-                                   np.cos(2 * np.pi * freqs[ell] * times + \
-                                          2 * np.pi * np.random.rand()) \
-                          for ell in range(cosine_norms.shape[0])]), axis=0)
+        # Compute random phase shift
+        pha = np.cos(cos_times + 2 * np.pi * np.random.rand())
 
+        # Define relative height above the aperiodic power spectrum
+        hgt = height * np.exp(-(f_val - freq) ** 2 / (2 * bw ** 2))
+
+        sig_periodic += (-np.real(fft) + np.sqrt(np.real(fft) ** 2 + \
+            (10 ** hgt - 1) * np.abs(fft) ** 2)) / cos_norm * pha
+
+    # Create the combined signal by summing periodic & aperiodic
     sig = sig_ap + sig_periodic
 
     return sig

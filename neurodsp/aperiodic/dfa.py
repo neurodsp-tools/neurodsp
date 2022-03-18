@@ -40,7 +40,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
         Time-scales over which fluctuation measures were computed.
     fluctuations : 1d array
         Average fluctuation at each scale.
-    exp : float
+    result : float
         Slope of line in log-log when plotting time scales against fluctuations.
         This is the alpha value for DFA, or the Hurst exponent for rescaled range.
 
@@ -83,9 +83,9 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
             fluctuations[idx] = compute_rescaled_range(sig, win_len=win_len)
 
     # Calculate the relationship between between fluctuations & time scales
-    exp = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
+    result = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
 
-    return t_scales, fluctuations, exp
+    return t_scales, fluctuations, result
 
 
 def compute_rescaled_range(sig, win_len):
