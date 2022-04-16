@@ -102,8 +102,8 @@ Spectral Analyses
 
 Functions and utilities in the ``spectral`` module, for spectral analyses.
 
-Spectral Power Measures
-~~~~~~~~~~~~~~~~~~~~~~~
+Spectral Power
+~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
 .. autosummary::
@@ -114,8 +114,19 @@ Spectral Power Measures
     compute_spectrum_wavelet
     compute_spectrum_medfilt
 
-Spectral Variance Measures
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Spectral Measures
+~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.spectral
+.. autosummary::
+    :toctree: generated/
+
+    compute_absolute_power
+    compute_relative_power
+    compute_band_ratio
+
+Spectral Variance
+~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
 .. autosummary::
