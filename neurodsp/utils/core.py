@@ -12,7 +12,7 @@ def get_avg_func(avg_type):
 
     Parameters
     ----------
-    avg_type : {'mean', 'median'}
+    avg_type : {'mean', 'median', 'sum'}
         The type of averaging function to use.
 
     Returns
