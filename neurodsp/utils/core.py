@@ -12,20 +12,22 @@ def get_avg_func(avg_type):
 
     Parameters
     ----------
-    avg_type : {'mean', 'median'}
+    avg_type : {'mean', 'median', 'sum'}
         The type of averaging function to use.
 
     Returns
     -------
-    avg_func : callable
-        Requested averaging function.
+    func : callable
+        Requested function.
     """
 
-    check_param_options(avg_type, 'avg_type', ['mean', 'median'])
+    check_param_options(avg_type, 'avg_type', ['mean', 'median', 'sum'])
 
     if avg_type == 'mean':
-        avg_func = np.mean
+        func = np.mean
     elif avg_type == 'median':
-        avg_func = np.median
+        func = np.median
+    elif avg_type == 'sum':
+        func = np.sum
 
-    return avg_func
+    return func

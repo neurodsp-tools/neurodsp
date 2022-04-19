@@ -7,6 +7,7 @@ import pytest
 import numpy as np
 
 from neurodsp.sim import sim_oscillation, sim_powerlaw, sim_combined
+from neurodsp.spectral import compute_spectrum
 from neurodsp.utils.sim import set_random_seed
 from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
@@ -47,6 +48,12 @@ def tsig_burst():
                   'sim_bursty_oscillation': {'freq' : FREQ1}}
     yield sim_combined(n_seconds=N_SECONDS, fs=FS,
                        components=components, component_variances=[0.5, 1])
+
+@pytest.fixture(scope='session')
+def tspectrum(tsig_comb):
+
+    freqs, powers = compute_spectrum(tsig_comb, FS)
+    yield {'freqs' : freqs, 'powers' : powers}
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():
