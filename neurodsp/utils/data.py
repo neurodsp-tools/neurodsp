@@ -110,6 +110,35 @@ def compute_nseconds(sig, fs):
     return len(sig) / fs
 
 
+def compute_cycle_nseconds(freq, fs=None):
+    """Compute the length, in seconds, for a single cycle at a particular frequency.
+
+    Parameters
+    ----------
+    fs :  float
+        Sampling rate, in Hz.
+    freq : float, optional
+        Oscillation frequency, in Hz.
+        If provided, this is used to get a cycle length optimized for the sampling rate.
+
+    Returns
+    -------
+    n_seconds : float
+        The number of seconds of a single cycle at the specified frequency.
+
+    Notes
+    -----
+    The rounding is used to get a value that works with the sampling rate.
+    """
+
+    if fs:
+        n_seconds = int(np.ceil(fs / freq)) / fs
+    else:
+        n_seconds = 1 / freq
+
+    return n_seconds
+
+
 def split_signal(sig, n_samples):
     """Split a signal into non-overlapping segments.
 

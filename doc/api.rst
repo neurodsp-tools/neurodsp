@@ -405,6 +405,7 @@ Data
     create_samples
     compute_nsamples
     compute_nseconds
+    compute_cycle_nseconds
     split_signal
 
 Outliers
