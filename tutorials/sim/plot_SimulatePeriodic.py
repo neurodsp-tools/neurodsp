@@ -11,8 +11,11 @@ This tutorial covers the ``neurodsp.sim.periodic`` module.
 
 # sphinx_gallery_thumbnail_number = 1
 
+import numpy as np
+
 # Import sim functions
-from neurodsp.sim import sim_oscillation, sim_bursty_oscillation
+from neurodsp.sim import (sim_oscillation, sim_bursty_oscillation,
+                          sim_variable_oscillation, sim_damped_oscillation)
 from neurodsp.utils import set_random_seed
 
 # Import function to compute power spectra
@@ -44,13 +47,15 @@ fs = 1000
 
 # Simulation settings
 n_seconds = 1
+times = create_times(n_seconds, fs)
+
+# Define oscillation frequency
 osc_freq = 6.6
 
 # Simulate a sinusoidal oscillation
 osc_sine = sim_oscillation(n_seconds, fs, osc_freq, cycle='sine')
 
-# Create a times vector for our simulation
-times = create_times(n_seconds, fs)
+###################################################################################################
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, osc_sine)
@@ -71,8 +76,11 @@ plot_time_series(times, osc_sine)
 # - ``asine``: an asymmetric sine wave
 # - ``sawtooth``: a sawtooth wave
 # - ``gaussian``: a gaussian cycle
+# - ``skewed_gaussian`` : a skewed gaussian cycle
 # - ``exp``: a cycle with exponential decay
 # - ``2exp``: a cycle with exponential rise and decay
+# - ``exp_cos``: an exponential cosine cycle
+# - ``asym_harmonic``: an asymmetric cycle made as a sum of sinusoids
 #
 # Note that these cycle kernels are all created with the
 # :func:`~.sim_cycle` function.
@@ -92,8 +100,10 @@ plot_time_series(times, osc_sine)
 
 ###################################################################################################
 
-# Simulate a shape-y oscillations
+# Define settings
 rdsym = 0.2
+
+# Simulate a non-sinusoidal oscillation
 osc_shape = sim_oscillation(n_seconds, fs, osc_freq,
                             cycle='asine', rdsym=rdsym)
 
@@ -126,65 +136,171 @@ plot_power_spectra([freqs_sine, freqs_shape], [psd_sine, psd_shape])
 # Sometimes we want to study oscillations that come and go, so it can be useful to simulate
 # oscillations with this property.
 #
-# You can simulate bursty oscillations with :func:`~.sim_bursty_oscillation`.
+# Bursty oscillations can be simulated with :func:`~.sim_bursty_oscillation`.
 #
-# To control the bursty-ness of the simulated signal, you can control the probability
-# that a burst will start or stop with each new cycle.
+# Burst Probability
+# ~~~~~~~~~~~~~~~~~
+#
+# One way to control the bursty-ness of the simulated signal, is to control
+# the probability that a burst will start or stop with each new cycle.
 #
 
 ###################################################################################################
 
-# Settings for simulation
-osc_freq = 30
+# Simulation settings
 n_seconds = 3
-enter_burst = .1
-leave_burst = .1
+times = create_times(n_seconds, fs)
+
+# Define oscillation frequency
+osc_freq = 30
+
+# Burst settings
+enter_burst = 0.1
+leave_burst = 0.1
+
+###################################################################################################
 
 # Simulate a bursty oscillation
-osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                             enter_burst=enter_burst,
-                             leave_burst=leave_burst)
+burst = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                               enter_burst=enter_burst,
+                               leave_burst=leave_burst)
+
+###################################################################################################
+
+# Plot the simulated burst signal
+plot_time_series(times, burst, xlim=[0, n_seconds])
+
+###################################################################################################
+#
+# By updating the burst settings, we can change the overall probability of bursting.
+#
+# For example, we can shorten burst duration by increasing the probability to leave bursts.
+#
+# Alternatively, we can increase the number of bursts by increasing the probability
+# to enter a burst.
+#
+
+###################################################################################################
+
+# Simulate a bursty oscillation, with a higher probability to leave bursts
+short_burst = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                     enter_burst=0.1, leave_burst=0.4)
+
+# Simulate a bursty oscillation, with a higher probability of entering bursts
+more_bursts = sim_bursty_oscillation(n_seconds, fs, osc_freq,
+                                     enter_burst=0.4, leave_burst=0.1)
+
+###################################################################################################
+
+# Plot the simulated burst signals
+plot_time_series(times, short_burst, xlim=[0, n_seconds], title='Shorter Burst')
+plot_time_series(times, more_bursts, xlim=[0, n_seconds], title='More Bursts')
+
+###################################################################################################
+# Burst Durations
+# ~~~~~~~~~~~~~~~
+#
+# Another way to control the bursty-ness is to define the burst durations.
+#
+# Still using :func:`~.sim_bursty_oscillation`, rather than defining burst probabilities,
+# we can define the number of cycle within / between bursts.
+#
+
+###################################################################################################
+
+# Burst settings
+n_cycles_burst = 3
+n_cycles_off = 2
+
+###################################################################################################
+
+# Simulate a bursty oscillation, defined in terms of durations
+burst = sim_bursty_oscillation(n_seconds, fs, osc_freq, 'durations',
+                               n_cycles_burst=n_cycles_burst,
+                               n_cycles_off=n_cycles_off)
+
+###################################################################################################
+
+# Plot the simulated burst signal
+plot_time_series(times, burst, xlim=[0, n_seconds])
+
+###################################################################################################
+# Simulate Variable Oscillations
+# ------------------------------
+#
+# Another option is to simulate oscillations that vary in their parameters over time.
+#
+# To do this, we can use :func:`~.sim_variable_oscillation`, which allows for defining
+# parameters per cycle.
+#
+
+###################################################################################################
+
+# Define variable frequencies
+freqs = np.tile([10, 12, 10, 8, 6, 8], 5)
+
+###################################################################################################
+
+# Simulate variable oscillatory signal
+variable = sim_variable_oscillation(n_seconds, fs, freqs)
+
+###################################################################################################
+
+# Plot the simulated variable signal
+plot_time_series(times, variable, xlim=[0, n_seconds])
+
+###################################################################################################
+#
+# In the above, we defined a variable frequency for a sinusoidal signal.
+#
+# We can also define cycle-by-cycle values for other parameters, including for other cycle types.
+#
+
+###################################################################################################
+
+# Reset general simulation settings
+n_seconds = 2.25
 times = create_times(n_seconds, fs)
 
+# Define ranges of frequencies and rise decay symmetries
+freqs = np.concatenate([np.arange(5., 15, 1), np.arange(15, 5, -1)])
+rdsyms = np.concatenate([np.arange(0., 1, 0.1), np.arange(1, 0, -0.1)])
+
 ###################################################################################################
 
-# Plot the simulated data, in the time domain
-plot_time_series(times, osc, xlim=[0, n_seconds])
+# Simulate variable oscillatory signal
+variable = sim_variable_oscillation(n_seconds, fs, freqs, cycle='asine', rdsym=rdsyms)
 
 ###################################################################################################
+
+# Plot the simulated variable signal
+plot_time_series(times, variable, xlim=[0, n_seconds])
+
+###################################################################################################
+# Simulate Damped Oscillations
+# ----------------------------
 #
-# We can shorten burst duration by increasing the probability to leave bursts.
+# We can also simulated damped oscillations, using :func:`~.sim_damped_oscillation`.
 #
 
 ###################################################################################################
 
-# Simulate a bursty oscillation, with a specified burst probability
-leave_burst = .4
-osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                             enter_burst=enter_burst,
-                             leave_burst=leave_burst)
+# Reset general simulation settings
+n_seconds = 2.
 times = create_times(n_seconds, fs)
 
-###################################################################################################
+# Define oscillation frequency
+osc_freq = 10
 
-# Plot the simulated data, in the time domain
-plot_time_series(times, osc, xlim=[0, n_seconds])
-
-###################################################################################################
-#
-# We can increase the number of bursts by increasing the probability to enter a burst.
-#
+# Define dampening parameters
+damping = 1.
 
 ###################################################################################################
 
-# Simulate a bursty oscillation, with a specified burst probability
-enter_burst = .4
-osc = sim_bursty_oscillation(n_seconds, fs, osc_freq,
-                             enter_burst=enter_burst,
-                             leave_burst=leave_burst)
-times = create_times(n_seconds, fs)
+# Simulate a damped oscillation
+damped = sim_damped_oscillation(n_seconds, fs, osc_freq, damping)
 
 ###################################################################################################
 
-# Plot the simulated data, in the time domain
-plot_time_series(times, osc, xlim=[0, n_seconds])
+# Plot the simulated damped oscillation
+plot_time_series(times, variable, xlim=[0, n_seconds])
