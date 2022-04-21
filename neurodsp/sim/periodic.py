@@ -256,16 +256,16 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     cycle_params = [dict(zip(param_keys, params)) for params in param_values]
     cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
 
-    # Determine start/end indices
-    cyc_lens = [int(np.ceil(1 / freq * fs)) for freq in freqs]
+    # Determine start/end indices, in samples
+    cyc_lens = [compute_nsamples(1 / freq, fs) for freq in freqs]
     ends = np.cumsum(cyc_lens, dtype=int)
     starts = [0, *ends[:-1]]
 
-    # Simulate
+    # Check and get the total number of signals, and initialize the output array
     n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
-
     sig = np.zeros(n_samples)
 
+    # Simulate signal, adding each cycle with spefified parameters
     for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
 
         if start > n_samples or end > n_samples:
@@ -460,7 +460,7 @@ def get_burst_samples(is_oscillating, fs, freq):
         Definition of whether each sample is part of a burst or not.
     """
 
-    n_samples_cycle = int(1/freq * fs)
+    n_samples_cycle = compute_nsamples(1 / freq, fs)
     bursts = np.repeat(is_oscillating, n_samples_cycle)
 
     return bursts
