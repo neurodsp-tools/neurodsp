@@ -60,6 +60,11 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     cycle : 1d array
         Simulated cycle.
 
+    Notes
+    -----
+    Any function defined in sim.cycles as `sim_label_cycle(n_seconds, fs, **params)`,
+    is accessible by this function. The `cycle_type` input must match the label.
+
     Examples
     --------
     Simulate a half second sinusoid, corresponding to a 2 Hz cycle (frequency=1/n_seconds):
@@ -69,11 +74,6 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     Simulate a sawtooth cycle, corresponding to a 10 Hz cycle:
 
     >>> cycle = sim_cycle(n_seconds=0.1, fs=500, cycle_type='sawtooth', width=0.3)
-
-    Notes
-    -----
-    Any function defined in sim.cycles as `sim_label_cycle(n_seconds, fs, **params)`,
-    is accessible by this function. The `cycle_type` input must match the label.
     """
 
     if isinstance(cycle_type, str):

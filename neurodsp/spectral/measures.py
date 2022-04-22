@@ -106,6 +106,18 @@ def compute_band_ratio(freqs, powers, low_band, high_band, method='mean'):
     ratio : float
         Band ratio.
 
+    Notes
+    -----
+    This function is provided as a convenience function, for computing band ratio measures
+    in order to, for example, compare to other measures. In general, band ratio measures
+    are not recommended, as they conflate aperiodic and periodic features (see [1] for more).
+
+    References
+    ----------
+    .. [1] Donoghue, T., Dominguez, J., & Voytek, B. (2020). Electrophysiological Frequency
+           Band Ratio Measures Conflate Periodic and Aperiodic Neural Activity. ENeuro, 7(6),
+           ENEURO.0192-20.2020. DOI: https://doi.org/10.1523/ENEURO.0192-20.2020
+
     Examples
     --------
     Compute theta/beta band ratio in a simulated signal:

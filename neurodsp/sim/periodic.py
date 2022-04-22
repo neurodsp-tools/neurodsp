@@ -458,7 +458,7 @@ def get_burst_samples(is_oscillating, fs, freq):
 
     Returns
     -------
-    1d array of bool
+    bursts : 1d array of bool
         Definition of whether each sample is part of a burst or not.
     """
 

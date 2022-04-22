@@ -1,4 +1,4 @@
-"""Compute spectral measures that measure spectral variance."""
+"""Compute spectral variance."""
 
 import numpy as np
 from scipy.signal import spectrogram

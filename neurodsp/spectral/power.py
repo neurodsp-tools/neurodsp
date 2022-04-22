@@ -1,4 +1,4 @@
-"""Compute spectral measures that measure spectral power.
+"""Compute spectral power.
 
 Notes
 -----
