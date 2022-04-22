@@ -11,12 +11,12 @@ def convert_exponent_alpha(exponent):
     Parameters
     ----------
     exponent : float
-        Exponent value for a 1/f distribution.
+        Aperiodic exponent value, representing a 1/f distribution.
 
     Returns
     -------
     alpha : float
-        Predicted alpha value for the given exponent value.
+        Predicted DFA alpha value for the given exponent value.
 
     References
     ----------
@@ -26,7 +26,7 @@ def convert_exponent_alpha(exponent):
            https://doi.org/10.1016/j.jneumeth.2013.10.017
     """
 
-    return (-exponent + 1) / 2
+    return (-exponent + 1) / 2.
 
 
 def convert_alpha_exponent(alpha):
@@ -40,7 +40,7 @@ def convert_alpha_exponent(alpha):
     Returns
     -------
     exponent : float
-        Predicted exponent value for the given alpha value.
+        Predicted aperiodic exponent value, representing a 1/f distribution.
 
     References
     ----------
@@ -50,7 +50,7 @@ def convert_alpha_exponent(alpha):
            https://doi.org/10.1016/j.jneumeth.2013.10.017
     """
 
-    return -2 * alpha + 1
+    return -2. * alpha + 1
 
 
 def convert_exponent_hurst(exponent, fractional_class):
@@ -59,11 +59,11 @@ def convert_exponent_hurst(exponent, fractional_class):
     Parameters
     ----------
     exponent : float
-        Exponent value for a 1/f distribution.
+        Aperiodic exponent value, representing a 1/f distribution.
     fractional_class : {'gaussian', 'brownian'}
         The class of input data that the given exponent value relates to.
         This can be either 'fractional Gaussian noise' or 'fractional Brownian motion.'
-        Note that this is required as the conversion differs between the two classes.
+        This is required as the conversion differs between the two classes.
 
     Returns
     -------
@@ -80,10 +80,13 @@ def convert_exponent_hurst(exponent, fractional_class):
 
     check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
 
+    # Switch sign of exponent (assumed to be negative) for this conversion
+    exponent = -exponent
+
     if fractional_class == 'gaussian':
-        hurst = (exponent + 1) / 2
+        hurst = (exponent + 1) / 2.
     elif fractional_class == 'brownian':
-        hurst = (exponent - 1) / 2
+        hurst = (exponent - 1) / 2.
 
     return hurst
 
@@ -97,12 +100,12 @@ def convert_hurst_exponent(hurst, fractional_class):
     fractional_class : {'gaussian', 'brownian'}
         The class of input data that the given exponent value relates to.
         This can be either 'fractional Gaussian noise' or 'fractional Brownian motion.'
-        Note that this is required as the conversion differs between the two classes.
+        This is required as the conversion differs between the two classes.
 
     Returns
     -------
     exponent : float
-        Predicted exponent value for the given Hurst exponent value.
+        Predicted aperiodic exponent value, representing a 1/f distribution.
 
     References
     ----------
@@ -115,9 +118,12 @@ def convert_hurst_exponent(hurst, fractional_class):
     check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
 
     if fractional_class == 'gaussian':
-        exponent = 2 * hurst - 1
+        exponent = 2. * hurst - 1
     elif fractional_class == 'brownian':
-        exponent = 2 * hurst + 1
+        exponent = 2. * hurst + 1
+
+    # Convert predicted exponent value to have a negative sign
+    exponent = -exponent
 
     return exponent
 
@@ -128,7 +134,7 @@ def convert_exponent_hfd(exponent):
     Parameters
     ----------
     exponent : float
-        Exponent value.
+        Aperiodic exponent value, representing a 1/f distribution.
 
     Returns
     -------
@@ -137,7 +143,7 @@ def convert_exponent_hfd(exponent):
 
     Notes
     -----
-    This works for exponents between [1, 3] (inclusive).
+    This works for exponents between [-1, -3] (inclusive).
     As a special case, if exp is 0, FD is 2.
 
     References
@@ -149,10 +155,12 @@ def convert_exponent_hfd(exponent):
     """
 
     if exponent == 0:
-        hfd = 2
+        hfd = 2.
     else:
+        # Switch sign of exponent (assumed to be negative) for this conversion
+        exponent = -exponent
         check_param_range(exponent, 'exponent', [1, 3])
-        hfd = (5 - exponent) / 2
+        hfd = (5 - exponent) / 2.
 
     return hfd
 
@@ -168,12 +176,11 @@ def convert_hfd_exponent(hfd):
     Returns
     -------
     exponent : float
-        Predicted 1/f exponent value.
+        Predicted aperiodic exponent value, representing a 1/f distribution.
 
     Notes
     -----
     This works for Fractal Dimensions between [1, 2] (inclusive).
-    As a special case, if Fractal Dimension is 2, exponent is 0.
 
     References
     ----------
@@ -183,10 +190,9 @@ def convert_hfd_exponent(hfd):
            Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002
     """
 
-    if hfd == 2:
-        exponent = 0
-    else:
-        check_param_range(hurst, 'hurst', [1, 2])
-        exponent = -2 * hfd + 5
+    check_param_range(hfd, 'hfd', [1, 2])
+    exponent = -2. * hfd + 5
+    # Convert predicted exponent value to have a negative sign
+    exponent = -exponent
 
     return exponent
