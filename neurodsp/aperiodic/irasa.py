@@ -52,6 +52,15 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
     .. [1] Wen, H., & Liu, Z. (2016). Separating Fractal and Oscillatory Components in
            the Power Spectrum of Neurophysiological Signal. Brain Topography, 29(1), 13–26.
            DOI: https://doi.org/10.1007/s10548-015-0448-0
+
+    Examples
+    --------
+    Apply IRASA to a simulated combined time series:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, psd_aperiodic, psd_periodic = compute_irasa(sig, fs=500, f_range=[3, 50])
     """
 
     # Check & get the resampling factors, with rounding to avoid floating point precision errors

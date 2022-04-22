@@ -312,6 +312,8 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
 
     Examples
     --------
+    Simulate a damped alpha oscillation:
+
     >>> sig = sim_damped_oscillation(1, 1000, 10, .1)
     """
 

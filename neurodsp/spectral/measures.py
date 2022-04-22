@@ -24,6 +24,16 @@ def compute_absolute_power(freqs, powers, band, method='sum'):
     -------
     abs_power : float
         Computed absolute power.
+
+    Examples
+    --------
+    Compute absolute alpha power in a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig = sim_combined(10, 500, {'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, powers = compute_spectrum(sig, fs=500)
+    >>> abs_power = compute_absolute_power(freqs, powers, [8, 12])
     """
 
     _, band_powers = trim_spectrum(freqs, powers, band)
@@ -53,6 +63,16 @@ def compute_relative_power(freqs, powers, band, method='sum', norm_range=None):
     -------
     rel_power : float
         Computed relative power.
+
+    Examples
+    --------
+    Compute relative alpha power in a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig = sim_combined(10, 500, {'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, powers = compute_spectrum(sig, fs=500)
+    >>> abs_power = compute_relative_power(freqs, powers, [8, 12])
     """
 
     band_power = compute_absolute_power(freqs, powers, band, method)
@@ -85,6 +105,16 @@ def compute_band_ratio(freqs, powers, low_band, high_band, method='mean'):
     -------
     ratio : float
         Band ratio.
+
+    Examples
+    --------
+    Compute theta/beta band ratio in a simulated signal:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig = sim_combined(10, 500, {'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+    >>> freqs, powers = compute_spectrum(sig, fs=500)
+    >>> abs_power = compute_band_ratio(freqs, powers, [4, 8], [13, 30])
     """
 
     # Compute the power in each band

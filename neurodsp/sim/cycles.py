@@ -285,6 +285,14 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     -------
     cycle  : 1d array
         Output values for skewed gaussian function.
+
+
+    Examples
+    --------
+    Simulate a 2 Hz asymmetric sine cycle:
+
+    >>> cycle = sim_skewed_gaussian_cycle(n_seconds=0.5, fs=500, center=0.25,
+    ...                                   std=0.25, alpha=2.5, height=1)
     """
 
     n_samples = compute_nsamples(n_seconds, fs)

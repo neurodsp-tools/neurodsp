@@ -59,6 +59,20 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
         - computes ordinary least squares fits across signal windows
     - RS: rescaled range
         - computes the range of signal windows, divided by the standard deviation
+
+    Examples
+    --------
+    Compute DFA of a simulated pink noise signal:
+
+    >>> from neurodsp.sim import sim_powerlaw
+    >>> sig = sim_powerlaw(n_seconds=10, fs=500, exponent=-1)
+    >>> t_scales, flucts, dfa_exp = compute_fluctuations(sig, fs=500)
+
+    Compute the Hurst exponent of a simulated pink noise signal:
+
+    >>> from neurodsp.sim import sim_powerlaw
+    >>> sig = sim_powerlaw(n_seconds=10, fs=500, exponent=-1)
+    >>> t_scales, flucts, hurst_exp = compute_fluctuations(sig, fs=500)
     """
 
     check_param_options(method, 'method', ['dfa', 'rs'])
