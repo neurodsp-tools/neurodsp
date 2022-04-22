@@ -12,7 +12,8 @@ This tutorial covers the ``neurodsp.sim.combined`` module.
 # sphinx_gallery_thumbnail_number = 1
 
 # Import sim functions
-from neurodsp.sim import sim_combined
+from neurodsp.sim.combined import sim_combined, sim_peak_oscillation
+from neurodsp.sim.aperiodic import sim_powerlaw
 from neurodsp.utils import set_random_seed
 
 # Import function to compute power spectra
@@ -152,3 +153,41 @@ sig = sim_combined(n_seconds, fs, components)
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, sig)
+
+###################################################################################################
+# Simulate Peak Oscillation
+# -------------------------
+#
+# Next, we will simulate time series with a peak in the power spectrum, that we can
+# define in terms of the specific location and shape of the oscillatory peak.
+#
+# In order to make this simulation, we precompute an aperiodic signal, to which
+# we can add an oscillatory component to make the overall signal.
+#
+# To do so, we use the :func:`~.sim_peak_oscillation` function to add an oscillation to
+# the aperiodic component, specifying a desired central frequency, bandwidth, and peak height.
+#
+
+###################################################################################################
+
+# Precompute an aperiodic time series
+ap_sig = sim_powerlaw(n_seconds, fs, exponent=-1)
+
+# Define settings that define the peak to add
+freq = 10
+bw = 3
+height = 1
+
+# Simulate the peak oscillation signal
+sig = sim_peak_oscillation(ap_sig, fs, freq, bw, height)
+
+###################################################################################################
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, sig)
+
+###################################################################################################
+
+# Plot the simulated data, in the frequency domain
+freqs, psd = compute_spectrum(sig, fs)
+plot_power_spectra(freqs, psd)
