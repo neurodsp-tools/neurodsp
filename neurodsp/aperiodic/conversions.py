@@ -24,6 +24,18 @@ def convert_exponent_alpha(exponent):
            of spectral exponent estimation techniques for 1/fβ processes with applications to
            the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
+
+    Examples
+    --------
+    Convert a powerlaw exponent for pink noise to the expected DFA value:
+
+    >>> convert_exponent_alpha(-1)
+    1.0
+
+    Convert a powerlaw exponent for white noise to the expected DFA value:
+
+    >>> convert_exponent_alpha(0)
+    0.5
     """
 
     return (-exponent + 1) / 2.
@@ -48,6 +60,13 @@ def convert_alpha_exponent(alpha):
            of spectral exponent estimation techniques for 1/fβ processes with applications to
            the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
+
+    Examples
+    --------
+    Convert a DFA alpha value to the expected powerlaw exponent:
+
+    >>> convert_alpha_exponent(1)
+    -1.0
     """
 
     return -2. * alpha + 1
@@ -76,6 +95,18 @@ def convert_exponent_hurst(exponent, fractional_class):
            of spectral exponent estimation techniques for 1/fβ processes with applications to
            the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
+
+    Examples
+    --------
+    Convert a powerlaw exponent to the expected hurst exponent, for fractional Gaussian noise:
+
+    >>> convert_exponent_hurst(-1, 'gaussian')
+    1.0
+
+    Convert a powerlaw exponent to the expected hurst exponent, for fractional Brownian motion:
+
+    >>> convert_exponent_hurst(-1, 'brownian')
+    0.0
     """
 
     check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
@@ -113,6 +144,18 @@ def convert_hurst_exponent(hurst, fractional_class):
            of spectral exponent estimation techniques for 1/fβ processes with applications to
            the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
+
+    Examples
+    --------
+    Convert a Hurst exponent value to the expected powerlaw exponent, for fractional Gaussian noise:
+
+    >>> convert_hurst_exponent(1, 'gaussian')
+    -1.0
+
+    Convert a Hurst exponent value to the expected powerlaw exponent, for fractional Brownian noise:
+
+    >>> convert_hurst_exponent(0, 'brownian')
+    -1.0
     """
 
     check_param_options(fractional_class, 'fractional_class', ['gaussian', 'brownian'])
@@ -144,7 +187,7 @@ def convert_exponent_hfd(exponent):
     Notes
     -----
     This works for exponents between [-1, -3] (inclusive).
-    As a special case, if exp is 0, FD is 2.
+    As a special case, if exponent is 0, Higuchi Fractal Dimension is 2.
 
     References
     ----------
@@ -152,6 +195,13 @@ def convert_exponent_hfd(exponent):
            Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application
            to time series associated with natural phenomena. Journal of Physics: Conference
            Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002
+
+    Examples
+    --------
+    Convert exponent value to the expected Higuchi fractal dimension:
+
+    >>> convert_exponent_hfd(-1)
+    2.0
     """
 
     if exponent == 0:
@@ -188,6 +238,13 @@ def convert_hfd_exponent(hfd):
            Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application
            to time series associated with natural phenomena. Journal of Physics: Conference
            Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002
+
+    Examples
+    --------
+    Convert Higuchi fractal dimension value to expected exponent value:
+
+    >>> convert_hfd_exponent(2)
+    -1.0
     """
 
     check_param_range(hfd, 'hfd', [1, 2])
