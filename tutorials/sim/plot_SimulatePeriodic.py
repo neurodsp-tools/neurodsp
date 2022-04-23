@@ -209,15 +209,13 @@ plot_time_series(times, more_bursts, xlim=[0, n_seconds], title='More Bursts')
 ###################################################################################################
 
 # Burst settings
-n_cycles_burst = 3
-n_cycles_off = 2
+burst_params = dict(n_cycles_burst=3, n_cycles_off=2)
 
 ###################################################################################################
 
 # Simulate a bursty oscillation, defined in terms of durations
 burst = sim_bursty_oscillation(n_seconds, fs, osc_freq, 'durations',
-                               n_cycles_burst=n_cycles_burst,
-                               n_cycles_off=n_cycles_off)
+                               burst_params=burst_params)
 
 ###################################################################################################
 
@@ -303,4 +301,4 @@ damped = sim_damped_oscillation(n_seconds, fs, osc_freq, damping)
 ###################################################################################################
 
 # Plot the simulated damped oscillation
-plot_time_series(times, variable, xlim=[0, n_seconds])
+plot_time_series(times, damped, xlim=[0, n_seconds])

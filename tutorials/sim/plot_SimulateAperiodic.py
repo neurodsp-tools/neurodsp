@@ -199,7 +199,7 @@ freqs, knee_psd1 = compute_spectrum(knee_ap1, fs)
 freqs, knee_psd2 = compute_spectrum(knee_ap2, fs)
 
 # Plot the simulated data, in the frequency domain
-plot_power_spectra(freqs, [knee_ap1, knee_ap2], ['Knee1', 'Knee2'])
+plot_power_spectra(freqs, [knee_psd1, knee_psd2], ['Knee1', 'Knee2'])
 
 ###################################################################################################
 # Simulate Fractional Noise
@@ -228,7 +228,7 @@ plot_power_spectra(freqs, [knee_ap1, knee_ap2], ['Knee1', 'Knee2'])
 ###################################################################################################
 
 # Simulate fractional gaussian noise signal
-gn_ap = sim_frac_gaussian_noise(n_seconds, fs, exponent=-1)
+gn_ap = sim_frac_gaussian_noise(n_seconds, fs, exponent=-.5)
 
 # Plot the simulated data, in the time domain
 plot_time_series(times, gn_ap, title='Simulated Fractional Gaussian Noise')
