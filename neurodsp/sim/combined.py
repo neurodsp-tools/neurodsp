@@ -65,8 +65,8 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
     # Collect the sim function to use, and repeat variance if is single number
     components = {(get_sim_func(name) if isinstance(name, str) else name) : params \
                    for name, params in components.items()}
-    variances = repeat(component_variances) if isinstance(component_variances, (int, float, np.number)) \
-        else iter(component_variances)
+    variances = repeat(component_variances) if \
+        isinstance(component_variances, (int, float, np.number)) else iter(component_variances)
 
     # Simulate each component of the signal
     sig_components = []

@@ -3,7 +3,6 @@
 from itertools import repeat, cycle
 
 import numpy as np
-import numpy.ma as ma
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
@@ -157,5 +156,5 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
     >>> plot_bursts(times, sig, is_burst, labels=['Raw Data', 'Detected Bursts'])
     """
 
-    bursts = ma.array(sig, mask=np.invert(bursting))
+    bursts = np.ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)

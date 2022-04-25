@@ -21,8 +21,8 @@ def convert_exponent_alpha(exponent):
     References
     ----------
     .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
-           of spectral exponent estimation techniques for 1/fβ processes with applications to
-           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           of spectral exponent estimation techniques for 1/fβ processes with applications to the
+           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
 
     Examples
@@ -57,8 +57,8 @@ def convert_alpha_exponent(alpha):
     References
     ----------
     .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
-           of spectral exponent estimation techniques for 1/fβ processes with applications to
-           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           of spectral exponent estimation techniques for 1/fβ processes with applications to the
+           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
 
     Examples
@@ -92,8 +92,8 @@ def convert_exponent_hurst(exponent, fractional_class):
     References
     ----------
     .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
-           of spectral exponent estimation techniques for 1/fβ processes with applications to
-           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           of spectral exponent estimation techniques for 1/fβ processes with applications to the
+           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
 
     Examples
@@ -141,8 +141,8 @@ def convert_hurst_exponent(hurst, fractional_class):
     References
     ----------
     .. [1] Schaefer, A., Brach, J. S., Perera, S., & Sejdić, E. (2014). A comparative analysis
-           of spectral exponent estimation techniques for 1/fβ processes with applications to
-           the analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
+           of spectral exponent estimation techniques for 1/fβ processes with applications to the
+           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.
            https://doi.org/10.1016/j.jneumeth.2013.10.017
 
     Examples
