@@ -200,8 +200,8 @@ def convert_exponent_hfd(exponent):
     --------
     Convert exponent value to the expected Higuchi fractal dimension:
 
-    >>> convert_exponent_hfd(-1)
-    2.0
+    >>> convert_exponent_hfd(-2)
+    1.5
     """
 
     if exponent == 0:
@@ -243,8 +243,8 @@ def convert_hfd_exponent(hfd):
     --------
     Convert Higuchi fractal dimension value to expected exponent value:
 
-    >>> convert_hfd_exponent(2)
-    -1.0
+    >>> convert_hfd_exponent(1.5)
+    -2.0
     """
 
     check_param_range(hfd, 'hfd', [1, 2])
