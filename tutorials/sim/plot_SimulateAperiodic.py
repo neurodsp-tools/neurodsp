@@ -247,4 +247,4 @@ plot_time_series(times, gn_ap, title='Simulated Fractional Gaussian Noise')
 bm_ap = sim_frac_brownian_motion(n_seconds, fs, exponent=-2)
 
 # Plot the simulated data, in the time domain
-plot_time_series(times, gn_ap, title='Simulated Fractional Brownian Motion')
+plot_time_series(times, bm_ap, title='Simulated Fractional Brownian Motion')

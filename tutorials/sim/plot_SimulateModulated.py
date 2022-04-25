@@ -102,7 +102,7 @@ plot_time_series(times, msig)
 # Call signatures
 # ^^^^^^^^^^^^^^^
 #
-# In the above, we have explicitly simulating both the base signal and the modulating signal.
+# In the above, we explicitly simulated both the base signal and the modulating signal.
 #
 # When using :func:`~.modulate_signal`, we can also pass in instruction
 #

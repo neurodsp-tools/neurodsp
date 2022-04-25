@@ -152,7 +152,7 @@ plot_time_series(None, kernel, figsize=(4, 3))
 # Simulating Action Potentials
 # ----------------------------
 #
-# There is also the # :func:`~.sim_action_potential` function for simulating action potentials.
+# There is also the :func:`~.sim_action_potential` function for simulating action potentials.
 #
 # This function simulates an action potential as a sum of skewed Gaussians.
 #

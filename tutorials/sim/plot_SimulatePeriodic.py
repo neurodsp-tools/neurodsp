@@ -194,6 +194,9 @@ more_bursts = sim_bursty_oscillation(n_seconds, fs, osc_freq,
 
 # Plot the simulated burst signals
 plot_time_series(times, short_burst, xlim=[0, n_seconds], title='Shorter Burst')
+
+###################################################################################################
+
 plot_time_series(times, more_bursts, xlim=[0, n_seconds], title='More Bursts')
 
 ###################################################################################################
@@ -256,23 +259,21 @@ plot_time_series(times, variable, xlim=[0, n_seconds])
 
 ###################################################################################################
 
-# Reset general simulation settings
-n_seconds = 2.25
-times = create_times(n_seconds, fs)
-
 # Define ranges of frequencies and rise decay symmetries
-freqs = np.concatenate([np.arange(5., 15, 1), np.arange(15, 5, -1)])
-rdsyms = np.concatenate([np.arange(0., 1, 0.1), np.arange(1, 0, -0.1)])
+freqs = np.concatenate([np.linspace(5, 14, 10), np.linspace(13, 5, 9)])
+rdsyms = np.concatenate([np.linspace(0, .9, 10), np.linspace(.8, 0, 9)])
 
 ###################################################################################################
 
 # Simulate variable oscillatory signal
-variable = sim_variable_oscillation(n_seconds, fs, freqs, cycle='asine', rdsym=rdsyms)
+variable = sim_variable_oscillation(None, fs, freqs, cycle='asine', rdsym=rdsyms)
 
 ###################################################################################################
 
 # Plot the simulated variable signal
-plot_time_series(times, variable, xlim=[0, n_seconds])
+times = np.arange(0, len(variable)/fs, 1/fs)
+
+plot_time_series(times, variable)
 
 ###################################################################################################
 # Simulate Damped Oscillations

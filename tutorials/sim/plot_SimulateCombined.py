@@ -158,7 +158,7 @@ plot_time_series(times, sig)
 # Simulate Peak Oscillation
 # -------------------------
 #
-# Next, we will simulate time series with a peak in the power spectrum, that we can
+# Next, we will simulate a time series with a peak in the power spectrum, that we can
 # define in terms of the specific location and shape of the oscillatory peak.
 #
 # In order to make this simulation, we precompute an aperiodic signal, to which
@@ -176,7 +176,7 @@ ap_sig = sim_powerlaw(n_seconds, fs, exponent=-1)
 # Define settings that define the peak to add
 freq = 10
 bw = 3
-height = 1
+height = 2
 
 # Simulate the peak oscillation signal
 sig = sim_peak_oscillation(ap_sig, fs, freq, bw, height)
