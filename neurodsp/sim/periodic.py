@@ -4,7 +4,7 @@ from itertools import repeat
 
 import numpy as np
 
-from neurodsp.utils.data import compute_nsamples, create_times
+from neurodsp.utils.data import compute_nsamples, compute_cycle_nseconds, create_times
 from neurodsp.utils.checks import check_param_range, check_param_options
 from neurodsp.utils.decorators import normalize
 from neurodsp.sim.cycles import sim_cycle, sim_normalized_cycle
@@ -56,8 +56,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
     n_cycles = int(np.ceil(n_seconds * freq))
 
     # Compute the number of seconds per cycle for the requested frequency
-    #   The rounding is needed to get a value that works with the sampling rate
-    n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+    n_seconds_cycle = compute_cycle_nseconds(freq, fs)
 
     # Create a single cycle of an oscillation, for the requested frequency
     cycle = sim_cycle(n_seconds_cycle, fs, cycle, phase, **cycle_params)
@@ -161,7 +160,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
             burst_params[burst_param] = temp
 
     # Simulate a normalized cycle to use for bursts
-    n_seconds_cycle = 1/freq
+    n_seconds_cycle = compute_cycle_nseconds(freq, fs)
     osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase=phase, **cycle_params)
 
     # Calculate the number of cycles needed to tile the full signal
@@ -256,22 +255,22 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     cycle_params = [dict(zip(param_keys, params)) for params in param_values]
     cycle_params = [{}] * len(freqs) if len(cycle_params) == 0 else cycle_params
 
-    # Determine start/end indices
-    cyc_lens = [int(np.ceil(1 / freq * fs)) for freq in freqs]
+    # Determine start/end indices, in samples
+    cyc_lens = [compute_nsamples(1 / freq, fs) for freq in freqs]
     ends = np.cumsum(cyc_lens, dtype=int)
     starts = [0, *ends[:-1]]
 
-    # Simulate
+    # Check and get the total number of signals, and initialize the output array
     n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
-
     sig = np.zeros(n_samples)
 
+    # Simulate signal, adding each cycle with spefified parameters
     for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
 
         if start > n_samples or end > n_samples:
             break
 
-        n_seconds_cycle = int(np.ceil(fs / freq)) / fs
+        n_seconds_cycle = compute_cycle_nseconds(freq, fs)
         sig[start:end] = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase, **params)
 
     return sig
@@ -462,7 +461,7 @@ def get_burst_samples(is_oscillating, fs, freq):
         Definition of whether each sample is part of a burst or not.
     """
 
-    n_samples_cycle = int(1/freq * fs)
+    n_samples_cycle = compute_nsamples(1 / freq, fs)
     bursts = np.repeat(is_oscillating, n_samples_cycle)
 
     return bursts
