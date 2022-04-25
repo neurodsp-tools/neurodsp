@@ -97,6 +97,14 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
     -------
     cycle : 1d array
         Simulated spike cycle.
+
+    Examples
+    --------
+    Simulate an action potential:
+
+    >>> ap = sim_action_potential(n_seconds=0.01, fs=30000,
+    ...                           centers=[0.35, 0.45, 0.6], stds=[0.1, 0.1, 0.1],
+    ...                           alphas=[-1, 0, 1], heights=[1.5, -5, 0.5])
     """
 
     # Prevent circular import

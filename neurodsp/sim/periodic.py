@@ -312,6 +312,8 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
 
     Examples
     --------
+    Simulate a damped alpha oscillation:
+
     >>> sig = sim_damped_oscillation(1, 1000, 10, .1)
     """
 
@@ -456,7 +458,7 @@ def get_burst_samples(is_oscillating, fs, freq):
 
     Returns
     -------
-    1d array of bool
+    bursts : 1d array of bool
         Definition of whether each sample is part of a burst or not.
     """
 

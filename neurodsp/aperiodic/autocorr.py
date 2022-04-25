@@ -25,6 +25,14 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
         Time points, in samples, at which autocorrelations are computed.
     autocorrs : 1d array
         Autocorrelation values, for across time lags.
+
+    Examples
+    --------
+    Compute the autocorrelation of a simulated pink noise signal:
+
+    >>> from neurodsp.sim import sim_powerlaw
+    >>> sig = sim_powerlaw(n_seconds=10, fs=500, exponent=-1)
+    >>> timepoints, autocorrs = compute_autocorr(sig)
     """
 
     if demean:
