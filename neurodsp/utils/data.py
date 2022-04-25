@@ -115,10 +115,10 @@ def compute_cycle_nseconds(freq, fs=None):
 
     Parameters
     ----------
-    fs :  float
-        Sampling rate, in Hz.
-    freq : float, optional
+    freq : float
         Oscillation frequency, in Hz.
+    fs :  float, optional
+        Sampling rate, in Hz.
         If provided, this is used to get a cycle length optimized for the sampling rate.
 
     Returns
