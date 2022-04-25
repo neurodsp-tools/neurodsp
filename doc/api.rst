@@ -227,6 +227,20 @@ Signal Decomposition
     compute_irasa
     fit_irasa
 
+Conversions
+~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.aperiodic.conversions
+.. autosummary::
+    :toctree: generated/
+
+    convert_exponent_alpha
+    convert_alpha_exponent
+    convert_exponent_hurst
+    convert_hurst_exponent
+    convert_exponent_hfd
+    convert_hfd_exponent
+
 Simulations
 -----------
 
