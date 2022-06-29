@@ -47,15 +47,33 @@ def savefig(func):
         save_kwargs.setdefault('bbox_inches', 'tight')
 
         # Check and collect whether to close the plot
-        close = kwargs.pop('close', None)
+        close = kwargs.pop('close', False)
 
         func(*args, **kwargs)
 
         if save_fig:
-            full_path = pjoin(file_path, file_name) if file_path else file_name
-            plt.savefig(full_path, **save_kwargs)
-
-        if close:
-            plt.close()
+            save_figure(file_name, file_path, close, **save_kwargs)
 
     return decorated
+
+
+def save_figure(file_name, file_path=None, close=False, **save_kwargs):
+    """Save out a figure.
+
+    Parameters
+    ----------
+    file_name : str
+        File name for the figure file to save out.
+    file_path : str or Path
+        Path for where to save out the figure to.
+    close : bool, optional, default: False
+        Whether to close the plot after saving.
+    save_kwargs
+        Additional arguments to pass into the save function.
+    """
+
+    full_path = pjoin(file_path, file_name) if file_path else file_name
+    plt.savefig(full_path, **save_kwargs)
+
+    if close:
+        plt.close()
