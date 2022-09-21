@@ -11,14 +11,14 @@ from neurodsp.utils import remove_nans
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.data import create_times, compute_nsamples
 from neurodsp.utils.decorators import normalize
+from neurodsp.utils.norm import normalize_sig
 from neurodsp.sim.utils import rotate_timeseries
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
 ###################################################################################################
 
-@normalize
-def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
+def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, lam=None):
     """Simulate a Poisson population.
 
     Parameters
@@ -31,6 +31,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
         Number of neurons in the simulated population.
     firing_rate : float, optional, default: 2
         Firing rate of individual neurons in the population.
+    lam : float, optional, default: None
+        Mean and variance of the Poisson distribution. None defaults to n_neurons * firing_rate.
 
     Returns
     -------
@@ -56,8 +58,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2):
     >>> sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)
     """
 
-    # Poisson population rate signal scales with # of neurons and individual rate
-    lam = n_neurons * firing_rate
+    # Poisson population rate signal scales with the number of neurons and firing rate
+    lam = n_neurons * firing_rate if lam is None else lam
 
     # Variance is equal to the mean
     sig = np.random.normal(loc=lam, scale=lam**0.5, size=compute_nsamples(n_seconds, fs))
@@ -118,8 +120,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
         t_ker = 5. * tau_d
 
     # Simulate an extra bit because the convolution will trim & turn off normalization
-    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate,
-                          mean=None, variance=None)
+    sig = sim_poisson_pop((n_seconds + t_ker), fs, n_neurons, firing_rate)
     ker = sim_synaptic_kernel(t_ker, fs, tau_r, tau_d)
     sig = np.convolve(sig, ker, 'valid')[:compute_nsamples(n_seconds, fs)]
 
@@ -185,8 +186,7 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     return sig
 
 
-@normalize
-def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
+def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     """Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
@@ -200,7 +200,9 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     mu : float, optional, default: 0.0
         Mean of the random walk.
     sigma : float, optional, default: 5.0
-        Standard deviation of the random walk.
+        Scaling of the Wiener process (dWt).
+    norm : bool, optional, default: True
+        Whether to normalize the signal to the mean (mu) and variance ((sigma**2 / (2 * theta))).
 
     Returns
     -------
@@ -216,9 +218,12 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
     Where:
 
     - mu : mean
-    - sigma : standard deviation
+    - sigma : Wiener scaling
     - theta : memory scale
     - dWt : increments of Wiener process, i.e. white noise
+
+    The Wiener scaling (sigma) differs from the standard deviation of the signal.
+    The standard deviation of the signal will instead equal: sigma / np.sqrt(2 * theta).
 
     See the wikipedia page [1]_ for the integral solution.
 
@@ -243,6 +248,10 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5.):
 
     sig = x0 * ex + mu * (1. - ex) + sigma * ex * \
         np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
+
+    if norm:
+        variance = sigma ** 2 / (2 * theta)
+        sig = normalize_sig(sig, mean=mu, variance=variance)
 
     return sig
 
