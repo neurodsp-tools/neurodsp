@@ -37,7 +37,7 @@ def plot_swm_pattern(pattern, ax=None, **kwargs):
     >>> plot_swm_pattern(avg_window)
     """
 
-    ax = check_ax(ax, (4, 4))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (4, 4)))
 
     ax.plot(pattern, 'k')
 
@@ -78,7 +78,7 @@ def plot_lagged_coherence(freqs, lcs, ax=None, **kwargs):
     >>> plot_lagged_coherence(freqs, lag_cohs)
     """
 
-    ax = check_ax(ax, (6, 3))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (6, 3)))
 
     ax.plot(freqs, lcs, 'k.-')
 

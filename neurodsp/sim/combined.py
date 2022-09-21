@@ -6,6 +6,7 @@ import numpy as np
 from scipy.linalg import norm
 
 from neurodsp.sim.info import get_sim_func
+from neurodsp.sim.utils import modulate_signal
 from neurodsp.utils.decorators import normalize
 from neurodsp.utils.data import create_times
 
@@ -64,8 +65,8 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
     # Collect the sim function to use, and repeat variance if is single number
     components = {(get_sim_func(name) if isinstance(name, str) else name) : params \
                    for name, params in components.items()}
-    variances = repeat(component_variances) if isinstance(component_variances, (int, float)) \
-        else iter(component_variances)
+    variances = repeat(component_variances) if \
+        isinstance(component_variances, (int, float, np.number)) else iter(component_variances)
 
     # Simulate each component of the signal
     sig_components = []
@@ -122,41 +123,93 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
 
     >>> from neurodsp.sim import sim_powerlaw
     >>> fs = 500
-    >>> sig_ap = sim_powerlaw(n_seconds=10, fs=fs)
+    >>> sig_ap = sim_powerlaw(n_seconds=10, fs=fs, exponent=-2.0)
     >>> sig = sim_peak_oscillation(sig_ap, fs=fs, freq=20, bw=5, height=7)
     """
 
     sig_len = len(sig_ap)
     times = create_times(sig_len / fs, fs)
 
-    # Construct the aperiodic component and compute its Fourier transform
-    # Only use the first half of the frequencies from the FFT since the signal is real
+    # Compute the Fourier transform of the aperiodic signal
+    #   We extract the first half of the frequencies from the FFT, since the signal is real
     sig_ap_hat = np.fft.fft(sig_ap)[0:(sig_len // 2 + 1)]
 
-    # Create the range of frequencies that appear in the power spectrum since these
-    # will be the frequencies in the cosines we sum below
+    # Create the corresponding frequency vector, which is used to create the cosines to sum
     freqs = np.linspace(0, fs / 2, num=sig_len // 2 + 1, endpoint=True)
 
-    # Construct the array of relative heights above the aperiodic power spectrum
-    rel_heights = np.array([height * np.exp(-(lin_freq - freq) ** 2 / (2 * bw ** 2)) \
-        for lin_freq in freqs])
+    # Compute the periodic signal
+    sig_periodic = np.zeros(sig_len)
 
-    # Build an array of the sum of squares of the cosines to use in the amplitude calculation
-    cosine_norms = np.array([norm(np.cos(2 * np.pi * lin_freq * times), 2) ** 2 \
-        for lin_freq in freqs])
+    for f_val, fft in zip(freqs, sig_ap_hat):
 
-    # Build an array of the amplitude coefficients
-    cosine_coeffs = np.array([\
-        (-np.real(sig_ap_hat[ell]) + np.sqrt(np.real(sig_ap_hat[ell]) ** 2 + \
-        (10 ** rel_heights[ell] - 1) * np.abs(sig_ap_hat[ell]) ** 2)) / cosine_norms[ell] \
-        for ell in range(cosine_norms.shape[0])])
+        # Compute the sum of squares of the cosines
+        cos_times = 2 * np.pi * f_val * times
+        cos_norm = norm(np.cos(cos_times), 2) ** 2
 
-    # Add cosines with the respective coefficients and with a random phase shift for each one
-    sig_periodic = np.sum(np.array([cosine_coeffs[ell] * \
-                                   np.cos(2 * np.pi * freqs[ell] * times + \
-                                          2 * np.pi * np.random.rand()) \
-                          for ell in range(cosine_norms.shape[0])]), axis=0)
+        # Compute random phase shift
+        pha = np.cos(cos_times + 2 * np.pi * np.random.rand())
 
+        # Define relative height above the aperiodic power spectrum
+        hgt = height * np.exp(-(f_val - freq) ** 2 / (2 * bw ** 2))
+
+        sig_periodic += (-np.real(fft) + np.sqrt(np.real(fft) ** 2 + \
+            (10 ** hgt - 1) * np.abs(fft) ** 2)) / cos_norm * pha
+
+    # Create the combined signal by summing periodic & aperiodic
     sig = sig_ap + sig_periodic
 
     return sig
+
+
+@normalize
+def sim_modulated_signal(n_seconds, fs, sig_func, sig_params, mod_func, mod_params):
+    """Simulate an amplitude modulated signal.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Signal sampling rate, in Hz.
+    sig_func : str
+        Name of the function to use to simulate the signal.
+    sig_param : dictionary
+        Parameters for the signal generation function.
+    mod_func : callable
+        Name of the function to use to simulate the modulating signal.
+    mod_params : dictionary
+        Parameters for the modulation function.
+
+    Returns
+    -------
+    msig : 1d array
+        Amplitude modulated signal.
+
+    Notes
+    -----
+    String labels for `sig_func` & `mod_func` can be any sim function available in the module.
+
+    Examples
+    --------
+    Simulate an oscillatory signal that is amplitude modulated for a slower oscillation:
+
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> msig_osc = sim_modulated_signal(n_seconds, fs,
+    ...                                 'sim_oscillation', {'freq' : 10},
+    ...                                 'sim_oscillation', {'freq' : 1})
+
+    Simulate an oscillatory signal that is amplitude modulated by a 1/f drift:
+
+    >>> n_seconds = 10
+    >>> fs = 500
+    >>> msig_ap = sim_modulated_signal(n_seconds, fs,
+    ...                                'sim_oscillation', {'freq' : 10},
+    ...                                'sim_powerlaw', {'exponent' : -1})
+    """
+
+    sig = get_sim_func(sig_func)(n_seconds, fs, **sig_params)
+    mod = get_sim_func(mod_func)(n_seconds, fs, **mod_params)
+    msig = modulate_signal(sig, mod)
+
+    return msig

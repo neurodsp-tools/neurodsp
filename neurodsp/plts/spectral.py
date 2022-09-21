@@ -45,7 +45,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
     >>> plot_power_spectra(freqs, powers)
     """
 
-    ax = check_ax(ax, (6, 6))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (6, 6)))
 
     freqs = repeat(freqs) if isinstance(freqs, np.ndarray) and freqs.ndim == 1 else freqs
     powers = [powers] if isinstance(powers, np.ndarray) and powers.ndim == 1 else powers
@@ -92,7 +92,7 @@ def plot_scv(freqs, scv, ax=None, **kwargs):
     >>> plot_scv(freqs, scv)
     """
 
-    ax = check_ax(ax, (5, 5))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (5, 5)))
 
     ax.loglog(freqs, scv)
 
@@ -129,7 +129,7 @@ def plot_scv_rs_lines(freqs, scv_rs, ax=None, **kwargs):
     >>> plot_scv_rs_lines(freqs, scv_rs)
     """
 
-    ax = check_ax(ax, (8, 8))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (8, 8)))
 
     ax.loglog(freqs, scv_rs, 'k', alpha=0.1)
     ax.loglog(freqs, np.mean(scv_rs, axis=1), lw=2)
@@ -171,7 +171,7 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None, **kwargs):
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
     """
 
-    ax = check_ax(ax, (10, 5))
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', (10, 5)))
 
     im = ax.imshow(np.log10(scv_rs), aspect='auto',
                    extent=(t_inds[0], t_inds[-1], freqs[-1], freqs[0]))
@@ -219,9 +219,9 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
     >>> plot_spectral_hist(freqs, bins, spect_hist)
     """
 
-    # Get axis, by default scaling figure height based on number of bins
+    # Get axis, with default of scaling figure height based on number of bins
     figsize = (8, 12 * len(power_bins) / len(freqs))
-    ax = check_ax(ax, figsize)
+    ax = check_ax(ax, figsize=kwargs.pop('figsize', figsize))
 
     # Plot histogram intensity as image and automatically adjust aspect ratio
     im = ax.imshow(spectral_hist, extent=[freqs[0], freqs[-1], power_bins[0], power_bins[-1]],

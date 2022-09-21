@@ -1,4 +1,4 @@
-"""Compute spectral measures that measure spectral power.
+"""Compute spectral power.
 
 Notes
 -----
@@ -12,6 +12,7 @@ from scipy.signal import spectrogram, medfilt
 from neurodsp.utils.core import get_avg_func
 from neurodsp.utils.data import create_freqs
 from neurodsp.utils.decorators import multidim
+from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 from neurodsp.spectral.utils import trim_spectrum
@@ -53,6 +54,8 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
+    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt'])
+
     if method == 'welch':
         return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
 
@@ -61,9 +64,6 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
     elif method == 'medfilt':
         return compute_spectrum_medfilt(sig, fs, **kwargs)
-
-    else:
-        raise ValueError('Unknown power spectrum method: %s' % method)
 
 
 @multidim(select=[0])

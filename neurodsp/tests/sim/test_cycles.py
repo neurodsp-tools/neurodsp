@@ -1,5 +1,6 @@
 """Tests for neurodsp.sim.cycle."""
 
+import pytest
 from pytest import raises
 
 import numpy as np
@@ -60,18 +61,17 @@ def test_sim_sine_cycle():
     cycle = sim_sine_cycle(N_SECONDS_CYCLE, FS_ODD)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
-def test_sim_asine_cycle():
+@pytest.mark.parametrize('side', ['both', 'peak', 'trough'])
+def test_sim_asine_cycle(side):
 
-    for side in ['both', 'peak', 'trough']:
+    cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS, 0.25, side=side)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
 
-        cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS, 0.25)
-        check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+    cycle = sim_asine_cycle(N_SECONDS_ODD, FS, 0.25, side=side)
+    check_sim_output(cycle, n_seconds=N_SECONDS_ODD)
 
-        cycle = sim_asine_cycle(N_SECONDS_ODD, FS, 0.25)
-        check_sim_output(cycle, n_seconds=N_SECONDS_ODD)
-
-        cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS_ODD, 0.25)
-        check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
+    cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS_ODD, 0.25, side=side)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
 def test_sim_sawtooth_cycle():
 
@@ -158,7 +158,7 @@ def test_phase_shift_cycle():
     check_sim_output(cycle_shifted, n_seconds=N_SECONDS_CYCLE)
     assert np.argmin(cycle_shifted) == 0
 
-    # Check max-to-mix sim
+    # Check max-to-max sim
     cycle_shifted = phase_shift_cycle(cycle, 'max')
     check_sim_output(cycle_shifted, n_seconds=N_SECONDS_CYCLE)
     assert np.argmax(cycle_shifted) == 0

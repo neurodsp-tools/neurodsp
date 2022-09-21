@@ -73,14 +73,14 @@ def check_n_cycles(n_cycles, len_cycles=None):
         An iterable version of the number of cycles.
     """
 
-    if isinstance(n_cycles, (int, float)):
+    if isinstance(n_cycles, (int, float, np.number)):
 
         if n_cycles <= 0:
             raise ValueError('Number of cycles must be a positive number.')
 
         n_cycles = repeat(n_cycles)
 
-    elif isinstance(n_cycles, (list, np.ndarray)):
+    elif isinstance(n_cycles, (tuple, list, np.ndarray)):
 
         for cycle in n_cycles:
             if cycle <= 0:

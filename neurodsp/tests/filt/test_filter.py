@@ -20,9 +20,6 @@ def test_filter_signal(tsig):
     out = filter_signal(tsig, FS, 'bandpass', F_RANGE, filter_type='iir', butterworth_order=3)
     assert out.shape == tsig.shape
 
-    with raises(ValueError):
-        out = filter_signal(tsig, FS, 'bandpass', F_RANGE, filter_type='bad')
-
     # 2d check
     sigs = np.array([tsig, tsig])
     outs = filter_signal(sigs, FS, 'bandpass', F_RANGE, remove_edges=False)

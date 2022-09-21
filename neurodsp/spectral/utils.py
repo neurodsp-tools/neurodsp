@@ -2,6 +2,9 @@
 
 import numpy as np
 
+# Alias a function that has moved, for backwards compatibility
+from neurodsp.sim.utils import rotate_spectrum as rotate_powerlaw
+
 ###################################################################################################
 ###################################################################################################
 
@@ -51,6 +54,7 @@ def trim_spectrum(freqs, power_spectra, f_range):
         else power_spectra[:, f_mask]
 
     return freqs_ext, power_spectra_ext
+
 
 def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     """Extract a frequency or time range of interest from a spectrogram.
@@ -123,53 +127,3 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
         times_ext = times
 
     return freqs_ext, times_ext, spg_ext
-
-
-def rotate_powerlaw(freqs, spectrum, delta_exponent, f_rotation=1):
-    """Rotate the power law exponent of a power spectrum.
-
-    Parameters
-    ----------
-    freqs : 1d array
-        Frequency axis of input spectrum, in Hz.
-    spectrum : 1d array
-        Power spectrum to be rotated.
-    delta_exponent : float
-        Change in power law exponent to be applied.
-        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).
-    f_rotation : float, optional, default: 1
-        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.
-        This only matters if not further normalizing signal variance.
-
-    Returns
-    -------
-    rotated_spectrum : 1d array
-        Rotated spectrum.
-
-    Examples
-    --------
-    Rotate a power spectrum, calculated on simulated data:
-
-    >>> from neurodsp.sim import sim_combined
-    >>> from neurodsp.spectral import compute_spectrum
-    >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
-    >>> freqs, spectrum = compute_spectrum(sig, fs=500)
-    >>> rotated_spectrum = rotate_powerlaw(freqs, spectrum, -1)
-    """
-
-    if freqs[0] == 0:
-        skipped_zero = True
-        f_0, p_0 = freqs[0], spectrum[0]
-        freqs, spectrum = freqs[1:], spectrum[1:]
-    else:
-        skipped_zero = False
-
-    mask = (np.abs(freqs) / f_rotation)**-delta_exponent
-    rotated_spectrum = mask * spectrum
-
-    if skipped_zero:
-        freqs = np.insert(freqs, 0, f_0)
-        rotated_spectrum = np.insert(rotated_spectrum, 0, p_0)
-
-    return rotated_spectrum

@@ -12,7 +12,8 @@ This tutorial covers the the ``neurodsp.sim.aperiodic`` module.
 # sphinx_gallery_thumbnail_number = 3
 
 # Import sim functions
-from neurodsp.sim import sim_powerlaw, sim_random_walk, sim_synaptic_current
+from neurodsp.sim import (sim_powerlaw, sim_random_walk, sim_synaptic_current,
+                          sim_knee, sim_frac_gaussian_noise, sim_frac_brownian_motion)
 from neurodsp.utils import set_random_seed
 
 # Import function to compute power spectra
@@ -72,7 +73,7 @@ plot_power_spectra(freqs, psd)
 
 ###################################################################################################
 # Simulate Filtered 1/f Activity
-# ------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # The power law simulation function is also integrated with a filter. This can be useful
 # for filtering out some low frequencies, as is often done with neural signals,
@@ -166,3 +167,84 @@ freqs, rw_psd = compute_spectrum(rw_ap, fs)
 freqs, syn_psd = compute_spectrum(syn_ap, fs)
 
 plot_power_spectra(freqs, [rw_psd, syn_psd], ['Random Walk', 'Synaptic'])
+
+###################################################################################################
+# Simulate Knee Signal
+# --------------------
+#
+# To simulate signals with a knee, being able to control both exponents, and the knee,
+# use the :func:`~.sim_knee` function.
+#
+
+###################################################################################################
+
+# Simulate a knee signal, with specified exponents & knee
+knee_ap1 = sim_knee(n_seconds, fs, exponent1=-0.5, exponent2=-1, knee=100)
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, knee_ap1, title='Simulated Knee Signal')
+
+###################################################################################################
+
+# Simulate another knee signal, with different exponents & knee
+knee_ap2 = sim_knee(n_seconds, fs, exponent1=-1, exponent2=-2, knee=100)
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, knee_ap2, title='Simulated Knee Signal')
+
+###################################################################################################
+
+# Compute power spectra of the simulated knee signals
+freqs, knee_psd1 = compute_spectrum(knee_ap1, fs)
+freqs, knee_psd2 = compute_spectrum(knee_ap2, fs)
+
+# Plot the simulated data, in the frequency domain
+plot_power_spectra(freqs, [knee_psd1, knee_psd2], ['Knee1', 'Knee2'])
+
+###################################################################################################
+# Simulate Fractional Noise
+# -------------------------
+#
+# We also include methods from the field of statistics to simulate other forms
+# of aperiodic signals.
+#
+# These include:
+#
+# - fractional gaussian noise, which can be simulated as a self-similar stochastic process
+# - fractional brownian motion, which is generalization of brownian motion
+#
+# Both of these signal types can be used to simulate aperiodic time series, with
+# powerlaw spectral densities.
+#
+
+###################################################################################################
+# Fractional Gaussian Noise
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# To simulate a fractional gaussian noise signal, use the
+# the :func:`~.sim_frac_gaussian_noise` function.
+#
+
+###################################################################################################
+
+# Simulate fractional gaussian noise signal
+gn_ap = sim_frac_gaussian_noise(n_seconds, fs, exponent=-.5)
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, gn_ap, title='Simulated Fractional Gaussian Noise')
+
+###################################################################################################
+# Fractional Brownian Motion
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# To simulate a fractional brownian motion signal, use the
+# :func:`~.sim_frac_brownian_motion` function.
+#
+
+###################################################################################################
+
+# Simulate fractional brownian motion signal
+bm_ap = sim_frac_brownian_motion(n_seconds, fs, exponent=-2)
+
+# Plot the simulated data, in the time domain
+plot_time_series(times, bm_ap, title='Simulated Fractional Brownian Motion')

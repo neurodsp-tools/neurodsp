@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from neurodsp.utils.checks import check_param_options
+
 ###################################################################################################
 ###################################################################################################
 
@@ -10,20 +12,22 @@ def get_avg_func(avg_type):
 
     Parameters
     ----------
-    avg_type : {'mean', 'median'}
+    avg_type : {'mean', 'median', 'sum'}
         The type of averaging function to use.
 
     Returns
     -------
-    avg_func : callable
-        Requested averaging function.
+    func : callable
+        Requested function.
     """
 
-    if avg_type == 'mean':
-        avg_func = np.mean
-    elif avg_type == 'median':
-        avg_func = np.median
-    else:
-        raise ValueError('Averaging method not understood.')
+    check_param_options(avg_type, 'avg_type', ['mean', 'median', 'sum'])
 
-    return avg_func
+    if avg_type == 'mean':
+        func = np.mean
+    elif avg_type == 'median':
+        func = np.median
+    elif avg_type == 'sum':
+        func = np.sum
+
+    return func

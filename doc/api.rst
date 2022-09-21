@@ -102,8 +102,8 @@ Spectral Analyses
 
 Functions and utilities in the ``spectral`` module, for spectral analyses.
 
-Spectral Power Measures
-~~~~~~~~~~~~~~~~~~~~~~~
+Spectral Power
+~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
 .. autosummary::
@@ -114,8 +114,19 @@ Spectral Power Measures
     compute_spectrum_wavelet
     compute_spectrum_medfilt
 
-Spectral Variance Measures
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Spectral Measures
+~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.spectral
+.. autosummary::
+    :toctree: generated/
+
+    compute_absolute_power
+    compute_relative_power
+    compute_band_ratio
+
+Spectral Variance
+~~~~~~~~~~~~~~~~~
 
 .. currentmodule:: neurodsp.spectral
 .. autosummary::
@@ -134,7 +145,6 @@ Spectral Utilities
 
     trim_spectrum
     trim_spectrogram
-    rotate_powerlaw
 
 Burst Detection
 ---------------
@@ -217,6 +227,20 @@ Signal Decomposition
     compute_irasa
     fit_irasa
 
+Conversions
+~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.aperiodic.conversions
+.. autosummary::
+    :toctree: generated/
+
+    convert_exponent_alpha
+    convert_alpha_exponent
+    convert_exponent_hurst
+    convert_hurst_exponent
+    convert_exponent_hfd
+    convert_hfd_exponent
+
 Simulations
 -----------
 
@@ -246,9 +270,11 @@ Aperiodic Signals
     sim_synaptic_current
     sim_knee
     sim_random_walk
+    sim_frac_gaussian_noise
+    sim_frac_brownian_motion
 
-Transients & Cycles
-~~~~~~~~~~~~~~~~~~~
+Transients
+~~~~~~~~~~
 
 .. currentmodule:: neurodsp.sim.transients
 .. autosummary::
@@ -256,6 +282,10 @@ Transients & Cycles
 
     sim_synaptic_kernel
     sim_action_potential
+    sim_damped_erp
+
+Cycles
+~~~~~~
 
 .. currentmodule:: neurodsp.sim.cycles
 .. autosummary::
@@ -273,23 +303,24 @@ Transients & Cycles
 Combined Signals
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim
+.. currentmodule:: neurodsp.sim.combined
 .. autosummary::
     :toctree: generated/
 
     sim_combined
     sim_peak_oscillation
+    sim_modulated_signal
 
 Utilities
 ~~~~~~~~~
 
-.. currentmodule:: neurodsp.utils.data
+.. currentmodule:: neurodsp.sim.utils
 .. autosummary::
     :toctree: generated/
 
-    create_freqs
-    create_times
-    create_samples
+    rotate_spectrum
+    rotate_timeseries
+    modulate_signal
 
 Random Seed
 ~~~~~~~~~~~
@@ -376,14 +407,23 @@ Normalization
     demean
     normalize_variance
 
-Data Management
-~~~~~~~~~~~~~~~
+Data
+~~~~
 
 .. currentmodule:: neurodsp.utils.data
 .. autosummary::
     :toctree: generated/
 
+    create_freqs
+    create_times
+    create_samples
+    compute_nsamples
+    compute_nseconds
+    compute_cycle_nseconds
     split_signal
+
+Outliers
+~~~~~~~~
 
 .. currentmodule:: neurodsp.utils.outliers
 .. autosummary::

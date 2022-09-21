@@ -2,6 +2,8 @@
 
 from inspect import getmembers, isfunction
 
+from neurodsp.utils.checks import check_param_options
+
 ###################################################################################################
 ###################################################################################################
 
@@ -12,7 +14,7 @@ def get_sim_funcs(module_name):
 
     Parameters
     ----------
-    module_name : {'periodic', 'aperiodic', 'transients', 'combined'}
+    module_name : {'periodic', 'aperiodic', 'cycles', 'transients', 'combined'}
         Simulation sub-module to get sim functions from.
 
     Returns
@@ -21,13 +23,12 @@ def get_sim_funcs(module_name):
         A dictionary containing the available sim functions from the requested sub-module.
     """
 
+    check_param_options(module_name, 'module_name', SIM_MODULES)
+
     # Note: imports done within function to avoid circular import
     from neurodsp.sim import periodic, aperiodic, transients, combined, cycles
 
-    if module_name in SIM_MODULES:
-        module = eval(module_name)
-    else:
-        raise ValueError('Requested sim module not understood.')
+    module = eval(module_name)
 
     funcs = {name : func for name, func in getmembers(module, isfunction) \
         if name[0:4] == 'sim_' and func.__module__.split('.')[-1] == module.__name__.split('.')[-1]}

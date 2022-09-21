@@ -4,6 +4,7 @@ from warnings import warn
 
 from neurodsp.filt.fir import filter_signal_fir
 from neurodsp.filt.iir import filter_signal_iir
+from neurodsp.utils.checks import check_param_options
 
 ###################################################################################################
 ###################################################################################################
@@ -71,17 +72,18 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
     ...                          filter_type='fir', f_range=(1, 25))
     """
 
+    check_param_options(filter_type, 'filter_type', ['fir', 'iir'])
+
     if filter_type.lower() == 'fir':
         return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
                                  remove_edges, print_transitions,
                                  plot_properties, return_filter)
+
     elif filter_type.lower() == 'iir':
         _iir_checks(n_seconds, butterworth_order, remove_edges)
         return filter_signal_iir(sig, fs, pass_type, f_range, butterworth_order,
                                  print_transitions, plot_properties,
                                  return_filter)
-    else:
-        raise ValueError('Filter type not understood.')
 
 
 def _iir_checks(n_seconds, butterworth_order, remove_edges):

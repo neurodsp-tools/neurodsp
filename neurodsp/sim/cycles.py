@@ -23,16 +23,18 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
         This is NOT the period of the cycle, but the length of the returned array of the cycle.
     fs : float
         Sampling frequency of the cycle simulation.
-    cycle_type : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'ap'} or callable
-        What type of cycle to simulate. Options:
+    cycle_type : str or callable
+        What type of cycle to simulate. String label options include:
 
         * sine: a sine wave cycle
-        * asine: an asymmetric sine wave
-        * sawtooth: a sawtooth wave
+        * asine: an asymmetric sine cycle
+        * sawtooth: a sawtooth cycle
         * gaussian: a gaussian cycle
         * skewed_gaussian: a skewed gaussian cycle
         * exp: a cycle with exponential decay
         * 2exp: a cycle with exponential rise and decay
+        * exp_cos: an exponential cosine cycle
+        * asym_harmonic: an asymmetric cycle made as a sum of harmonics
         * ap: an action potential
 
     phase : float or {'min', 'max'}, optional, default: 0
@@ -49,12 +51,19 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
         * skewed_gaussian: `center`, `std`, `alpha`, `height`
         * exp: `tau_d`, decay time, in seconds
         * 2exp: `tau_r` & `tau_d` rise time, and decay time, in seconds
+        * exp_cos: `exp`, `scale`, `shift`
+        * asym_harmonic: `phi`, the phase at each harmonic and `n_harmonics`
         * ap: `centers`, `stds`, `alphas`, `heights`
 
     Returns
     -------
     cycle : 1d array
         Simulated cycle.
+
+    Notes
+    -----
+    Any function defined in sim.cycles as `sim_label_cycle(n_seconds, fs, **params)`,
+    is accessible by this function. The `cycle_type` input must match the label.
 
     Examples
     --------
@@ -65,11 +74,6 @@ def sim_cycle(n_seconds, fs, cycle_type, phase=0, **cycle_params):
     Simulate a sawtooth cycle, corresponding to a 10 Hz cycle:
 
     >>> cycle = sim_cycle(n_seconds=0.1, fs=500, cycle_type='sawtooth', width=0.3)
-
-    Notes
-    -----
-    Any function defined in sim.cycles as `sim_label_cycle(n_seconds, fs, **params)`,
-    is accessible by this function. The `cycle_type` input must match the label.
     """
 
     if isinstance(cycle_type, str):
@@ -149,10 +153,14 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     """
 
     check_param_range(rdsym, 'rdsym', [0., 1.])
+    check_param_options(side, 'side', ['both', 'peak', 'trough'])
 
     # Determine number of samples
     n_samples = compute_nsamples(n_seconds, fs)
     half_sample = int(n_samples/2)
+
+    # Check for an odd number of samples (for half peaks, we need to fix this later)
+    remainder = n_samples % 2
 
     # Calculate number of samples rising
     n_rise = int(np.round(n_samples * rdsym))
@@ -163,28 +171,27 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     n_decay = n_samples - n_rise
     n_decay1 = half_sample - n_rise1
 
-    # Create phase defintion for cycle with both extrema being asymmetric
+    # Create phase definition for cycle with both extrema being asymmetric
     if side == 'both':
 
         phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
                            np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
                            np.linspace(-np.pi/2, 0, n_rise2 + 1)[:-1]])
 
-    # Create phase defintion for cycle with only one extrema being asymmetric
+    # Create phase definition for cycle with only one extrema being asymmetric
     elif side == 'peak':
 
+        half_sample += 1 if bool(remainder) else 0
         phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
                            np.linspace(np.pi/2, np.pi, n_decay1 + 1)[1:-1],
                            np.linspace(-np.pi, 0, half_sample + 1)[:-1]])
 
     elif side == 'trough':
 
+        half_sample -= 1 if not bool(remainder) else 0
         phase = np.hstack([np.linspace(0, np.pi, half_sample + 1)[:-1],
                            np.linspace(-np.pi, -np.pi/2, n_decay1 + 1),
                            np.linspace(-np.pi/2, 0, n_rise1 + 1)[:-1]])
-
-    else:
-        raise ValueError("Input for 'side' not understood.")
 
     # Convert phase definition to signal
     cycle = np.sin(phase)
@@ -270,7 +277,7 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     std : float
         Standard deviation of the gaussian kernel, in seconds.
     alpha : float
-        Magnitiude and direction of the skew.
+        Magnitude and direction of the skew.
     height : float, optional, default: 1.
         Maximum value of the cycle.
 
@@ -278,6 +285,14 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
     -------
     cycle  : 1d array
         Output values for skewed gaussian function.
+
+
+    Examples
+    --------
+    Simulate a 2 Hz asymmetric sine cycle:
+
+    >>> cycle = sim_skewed_gaussian_cycle(n_seconds=0.5, fs=500, center=0.25,
+    ...                                   std=0.25, alpha=2.5, height=1)
     """
 
     n_samples = compute_nsamples(n_seconds, fs)
@@ -313,7 +328,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
 
         - `exp=0` : zeros
         - `exp=.5`: wide peaks, narrow troughs
-        - `exp=1.`: symetrical peaks and troughs (sine wave)
+        - `exp=1.`: symmetrical peaks and troughs (sine wave)
         - `exp=5.`: wide troughs, narrow peaks
 
     scale : float, optional, default: 2

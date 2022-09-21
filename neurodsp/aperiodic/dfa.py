@@ -3,6 +3,7 @@
 import numpy as np
 
 from neurodsp.utils.data import split_signal
+from neurodsp.utils.checks import check_param_options
 
 ###################################################################################################
 ###################################################################################################
@@ -39,7 +40,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
         Time-scales over which fluctuation measures were computed.
     fluctuations : 1d array
         Average fluctuation at each scale.
-    exp : float
+    result : float
         Slope of line in log-log when plotting time scales against fluctuations.
         This is the alpha value for DFA, or the Hurst exponent for rescaled range.
 
@@ -58,7 +59,23 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
         - computes ordinary least squares fits across signal windows
     - RS: rescaled range
         - computes the range of signal windows, divided by the standard deviation
+
+    Examples
+    --------
+    Compute DFA of a simulated pink noise signal:
+
+    >>> from neurodsp.sim import sim_powerlaw
+    >>> sig = sim_powerlaw(n_seconds=10, fs=500, exponent=-1)
+    >>> t_scales, flucts, dfa_exp = compute_fluctuations(sig, fs=500)
+
+    Compute the Hurst exponent of a simulated pink noise signal:
+
+    >>> from neurodsp.sim import sim_powerlaw
+    >>> sig = sim_powerlaw(n_seconds=10, fs=500, exponent=-1)
+    >>> t_scales, flucts, hurst_exp = compute_fluctuations(sig, fs=500)
     """
+
+    check_param_options(method, 'method', ['dfa', 'rs'])
 
     # Get log10 equi-spaced scales and translate that into window lengths
     t_scales = np.logspace(np.log10(min_scale), np.log10(max_scale), n_scales)
@@ -78,13 +95,11 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
             fluctuations[idx] = compute_detrended_fluctuation(sig, win_len=win_len, deg=deg)
         elif method == 'rs':
             fluctuations[idx] = compute_rescaled_range(sig, win_len=win_len)
-        else:
-            raise ValueError('Fluctuation method not understood.')
 
     # Calculate the relationship between between fluctuations & time scales
-    exp = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
+    result = np.polyfit(np.log10(t_scales), np.log10(fluctuations), deg=1)[0]
 
-    return t_scales, fluctuations, exp
+    return t_scales, fluctuations, result
 
 
 def compute_rescaled_range(sig, win_len):

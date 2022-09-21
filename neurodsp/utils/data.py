@@ -19,7 +19,7 @@ def create_freqs(freq_start, freq_stop, freq_step=1):
 
     Returns
     -------
-    1d array
+    freqs : 1d array
         Frequency indices.
     """
 
@@ -40,7 +40,7 @@ def create_times(n_seconds, fs, start_val=0.):
 
     Returns
     -------
-    1d array
+    times : 1d array
         Time indices.
     """
 
@@ -52,14 +52,14 @@ def create_samples(n_samples, start_val=0):
 
     Parameters
     ----------
-    n_seconds : int
+    n_seconds : float
         Signal duration, in seconds.
     start_val : int, optional, default: 0
         Starting value for the samples definition.
 
     Returns
     -------
-    1d array
+    samples : 1d array
         Sample indices.
     """
 
@@ -71,14 +71,14 @@ def compute_nsamples(n_seconds, fs):
 
     Parameters
     ----------
-    n_seconds : int
+    n_seconds : float
         Signal duration, in seconds.
     fs : float
         Signal sampling rate, in Hz.
 
     Returns
     -------
-    int
+    n_samples : int
         The number of samples.
 
     Notes
@@ -89,6 +89,54 @@ def compute_nsamples(n_seconds, fs):
     """
 
     return int(np.ceil(n_seconds * fs))
+
+
+def compute_nseconds(sig, fs):
+    """Compute the length, in time, of a signal.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series.
+    fs : float
+        Signal sampling rate, in Hz.
+
+    Returns
+    -------
+    fs : float
+        Signal duration, in seconds.
+    """
+
+    return len(sig) / fs
+
+
+def compute_cycle_nseconds(freq, fs=None):
+    """Compute the length, in seconds, for a single cycle at a particular frequency.
+
+    Parameters
+    ----------
+    freq : float
+        Oscillation frequency, in Hz.
+    fs :  float, optional
+        Sampling rate, in Hz.
+        If provided, this is used to get a cycle length optimized for the sampling rate.
+
+    Returns
+    -------
+    n_seconds : float
+        The number of seconds of a single cycle at the specified frequency.
+
+    Notes
+    -----
+    The rounding is used to get a value that works with the sampling rate.
+    """
+
+    if fs:
+        n_seconds = int(np.ceil(fs / freq)) / fs
+    else:
+        n_seconds = 1 / freq
+
+    return n_seconds
 
 
 def split_signal(sig, n_samples):
@@ -103,7 +151,7 @@ def split_signal(sig, n_samples):
 
     Returns
     -------
-    segs : 2d array
+    segments : 2d array
         The signal, split into segments, with shape [n_segment, segment_size].
 
     Notes

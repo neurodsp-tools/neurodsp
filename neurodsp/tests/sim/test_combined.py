@@ -44,3 +44,15 @@ def test_sim_peak_oscillation():
     _, powers = compute_spectrum(sig, FS)
 
     assert abs(np.argmax(powers-powers_ap) - FREQ1) < 5
+
+def test_sim_modulated_signal():
+
+    msig1 = sim_modulated_signal(N_SECONDS, FS,
+                                'sim_oscillation', {'freq' : 10},
+                                'sim_oscillation', {'freq' : 1})
+    check_sim_output(msig1)
+
+    msig2 = sim_modulated_signal(N_SECONDS, FS,
+                                 'sim_oscillation', {'freq' : 10},
+                                 'sim_powerlaw', {})
+    check_sim_output(msig2)
