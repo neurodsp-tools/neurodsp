@@ -58,7 +58,7 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, lam=None):
     >>> sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)
     """
 
-    # Poisson population rate signal scales with # of neurons and individual rate
+    # Poisson population rate signal scales with the number of neurons and firing rate
     lam = n_neurons * firing_rate if lam is None else lam
 
     # Variance is equal to the mean
@@ -202,7 +202,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     sigma : float, optional, default: 5.0
         Scaling of the Wiener process (dWt).
     norm : bool, optional, default: True
-        Ensure signal is normalize to mean (mu) and variance ((sigma**2 / (2 * theta))).
+        Whether to normalize the signal to the mean (mu) and variance ((sigma**2 / (2 * theta))).
 
     Returns
     -------
@@ -250,7 +250,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
         np.cumsum(np.exp(theta * times) * np.sqrt(dt) * ws)
 
     if norm:
-        variance = sigma**2 / (2 * theta)
+        variance = sigma ** 2 / (2 * theta)
         sig = normalize_sig(sig, mean=mu, variance=variance)
 
     return sig
