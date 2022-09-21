@@ -30,17 +30,21 @@ Tools to analyze and simulate neural time series, using digital signal processin
 Overview
 --------
 
-`neurodsp` is a collection of approaches for applying digital signal processing to neural time series, including algorithms that have been proposed for the analysis of neural time series. It also includes simulation tools for generating plausible simulations of neural time series.
+`neurodsp` is a collection of approaches for applying digital signal processing, and
+related algorithms, to neural time series. It also includes simulation tools for generating
+plausible simulations of neural time series.
 
 Available modules in ``NeuroDSP`` include:
 
 - ``filt`` : Filter data with bandpass, highpass, lowpass, or notch filters
+- ``timefrequency`` : Estimate instantaneous measures of oscillatory activity
+- ``spectral`` : Compute freqeuncy domain features such as power spectra
 - ``burst`` : Detect bursting oscillations in neural signals
 - ``rhythm`` : Find and analyze rhythmic and recurrent patterns in time series
-- ``spectral`` : Compute spectral domain features such as power spectra
-- ``timefrequency`` : Estimate instantaneous measures of oscillatory activity
+- ``aperiodic`` : Analyze aperiodic features of neural time series
 - ``sim`` : Simulate time series, including periodic and aperiodic signal components
-- ``plts`` : Plotting functions
+- ``plts`` : Plot neural time series and derived measures
+- ``utils`` : Additional utilities for managing time series data
 
 Documentation
 -------------
