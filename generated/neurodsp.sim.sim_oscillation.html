@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.sim_oscillation &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.sim_oscillation &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,20 +113,24 @@
 <dt id="neurodsp.sim.sim_oscillation">
 <code class="sig-prename descclassname">neurodsp.sim.</code><code class="sig-name descname">sim_oscillation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">freq</span></em>, <em class="sig-param"><span class="n">cycle</span><span class="o">=</span><span class="default_value">'sine'</span></em>, <em class="sig-param"><span class="n">phase</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">cycle_params</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/periodic.html#sim_oscillation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.sim_oscillation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate an oscillation.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
+<dd class="field-odd"><dl>
 <dt><strong>n_seconds</strong><span class="classifier">float</span></dt><dd><p>Simulation time, in seconds.</p>
 </dd>
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Signal sampling rate, in Hz.</p>
 </dd>
 <dt><strong>freq</strong><span class="classifier">float</span></dt><dd><p>Oscillation frequency.</p>
 </dd>
-<dt><strong>cycle</strong><span class="classifier">{‘sine’, ‘asine’, ‘sawtooth’, ‘gaussian’, ‘exp’, ‘2exp’}</span></dt><dd><p>What type of oscillation cycle to simulate.
+<dt><strong>cycle</strong><span class="classifier">{‘sine’, ‘asine’, ‘sawtooth’, ‘gaussian’, ‘exp’, ‘2exp’, ‘exp_cos’, ‘asym_harmonic’}</span></dt><dd><blockquote>
+<div><p>or callable</p>
+</div></blockquote>
+<p>What type of oscillation cycle to simulate.
 See <cite>sim_cycle</cite> for details on cycle types and parameters.</p>
 </dd>
-<dt><strong>phase</strong><span class="classifier">float, optional, default: 0</span></dt><dd><p>If non-zero, applies a phase shift to the oscillation by rotating the cycle.
-The shift is defined as a relative proportion of cycle, between [0, 1].</p>
+<dt><strong>phase</strong><span class="classifier">float or {‘min’, ‘max’}, optional, default: 0</span></dt><dd><p>If non-zero, applies a phase shift to the oscillation by rotating the cycle.
+If a float, the shift is defined as a relative proportion of cycle, between [0, 1].
+If ‘min’ or ‘max’, the cycle is shifted to start at it’s minima or maxima.</p>
 </dd>
 <dt><strong>**cycle_params</strong></dt><dd><p>Parameters for the simulated oscillation cycle.</p>
 </dd>
@@ -154,9 +157,17 @@ The shift is defined as a relative proportion of cycle, between [0, 1].</p>
 
 <div class="section" id="examples-using-neurodsp-sim-sim-oscillation">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_oscillation</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-oscillation" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic, or oscillatory, signals."><div class="figure align-default" id="id1">
+<div class="sphx-glr-thumbcontainer" tooltip="Apply autocorrelation measures to neural signals."><div class="figure align-default" id="id1">
+<img alt="Autocorrelation Measures" src="../_images/sphx_glr_plot_Autocorr_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/aperiodic/plot_Autocorr.html#sphx-glr-auto-tutorials-aperiodic-plot-autocorr-py"><span class="std std-ref">Autocorrelation Measures</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply amplitude modulation to simulated signals."><div class="figure align-default" id="id2">
+<img alt="Modulating Signals" src="../_images/sphx_glr_plot_SimulateModulated_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic, or oscillatory, signals."><div class="figure align-default" id="id3">
 <img alt="Simulating Periodic Signals" src="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div><div style='clear:both'></div></div>
 </div>
@@ -173,8 +184,8 @@ The shift is defined as a relative proportion of cycle, between [0, 1].</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

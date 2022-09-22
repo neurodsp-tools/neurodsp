@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.cycles.sim_gaussian_cycle &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.cycles.sim_gaussian_cycle &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -112,7 +111,7 @@
 <h1>neurodsp.sim.cycles.sim_gaussian_cycle<a class="headerlink" href="#neurodsp-sim-cycles-sim-gaussian-cycle" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="neurodsp.sim.cycles.sim_gaussian_cycle">
-<code class="sig-prename descclassname">neurodsp.sim.cycles.</code><code class="sig-name descname">sim_gaussian_cycle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">std</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/cycles.html#sim_gaussian_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.cycles.sim_gaussian_cycle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">neurodsp.sim.cycles.</code><code class="sig-name descname">sim_gaussian_cycle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">std</span></em>, <em class="sig-param"><span class="n">center</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/cycles.html#sim_gaussian_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.cycles.sim_gaussian_cycle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a cycle of a gaussian.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -122,6 +121,8 @@
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling frequency of the cycle simulation.</p>
 </dd>
 <dt><strong>std</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of the gaussian kernel, in seconds.</p>
+</dd>
+<dt><strong>center</strong><span class="classifier">float, optional, default: 0.5</span></dt><dd><p>The center of the gaussian.</p>
 </dd>
 </dl>
 </dd>
@@ -153,8 +154,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

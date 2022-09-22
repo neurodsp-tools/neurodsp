@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.aperiodic.conversions &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.aperiodic.conversions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Convert between aperiodic and related measures.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_range</span><span class="p">,</span> <span class="n">check_param_options</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="convert_exponent_alpha"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_exponent_alpha.html#neurodsp.aperiodic.conversions.convert_exponent_alpha">[docs]</a><span class="k">def</span> <span class="nf">convert_exponent_alpha</span><span class="p">(</span><span class="n">exponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a powerlaw exponent to the expected DFA alpha value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Aperiodic exponent value, representing a 1/f distribution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Predicted DFA alpha value for the given exponent value.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Schaefer, A., Brach, J. S., Perera, S., &amp; Sejdić, E. (2014). A comparative analysis</span>
+<span class="sd">           of spectral exponent estimation techniques for 1/fβ processes with applications to the</span>
+<span class="sd">           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.</span>
+<span class="sd">           https://doi.org/10.1016/j.jneumeth.2013.10.017</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert a powerlaw exponent for pink noise to the expected DFA value:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_exponent_alpha(-1)</span>
+<span class="sd">    1.0</span>
+
+<span class="sd">    Convert a powerlaw exponent for white noise to the expected DFA value:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_exponent_alpha(0)</span>
+<span class="sd">    0.5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">exponent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span></div>
+
+
+<div class="viewcode-block" id="convert_alpha_exponent"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_alpha_exponent.html#neurodsp.aperiodic.conversions.convert_alpha_exponent">[docs]</a><span class="k">def</span> <span class="nf">convert_alpha_exponent</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a DFA alpha value to the expected powerlaw exponent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Alpha value from a detrended fluctuation analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Predicted aperiodic exponent value, representing a 1/f distribution.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Schaefer, A., Brach, J. S., Perera, S., &amp; Sejdić, E. (2014). A comparative analysis</span>
+<span class="sd">           of spectral exponent estimation techniques for 1/fβ processes with applications to the</span>
+<span class="sd">           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.</span>
+<span class="sd">           https://doi.org/10.1016/j.jneumeth.2013.10.017</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert a DFA alpha value to the expected powerlaw exponent:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_alpha_exponent(1)</span>
+<span class="sd">    -1.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="convert_exponent_hurst"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_exponent_hurst.html#neurodsp.aperiodic.conversions.convert_exponent_hurst">[docs]</a><span class="k">def</span> <span class="nf">convert_exponent_hurst</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="n">fractional_class</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a powerlaw exponent to the expected Hurst exponent value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Aperiodic exponent value, representing a 1/f distribution.</span>
+<span class="sd">    fractional_class : {&#39;gaussian&#39;, &#39;brownian&#39;}</span>
+<span class="sd">        The class of input data that the given exponent value relates to.</span>
+<span class="sd">        This can be either &#39;fractional Gaussian noise&#39; or &#39;fractional Brownian motion.&#39;</span>
+<span class="sd">        This is required as the conversion differs between the two classes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hurst : float</span>
+<span class="sd">        Predicted Hurst exponent for the given exponent value.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Schaefer, A., Brach, J. S., Perera, S., &amp; Sejdić, E. (2014). A comparative analysis</span>
+<span class="sd">           of spectral exponent estimation techniques for 1/fβ processes with applications to the</span>
+<span class="sd">           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.</span>
+<span class="sd">           https://doi.org/10.1016/j.jneumeth.2013.10.017</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert a powerlaw exponent to the expected hurst exponent, for fractional Gaussian noise:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_exponent_hurst(-1, &#39;gaussian&#39;)</span>
+<span class="sd">    1.0</span>
+
+<span class="sd">    Convert a powerlaw exponent to the expected hurst exponent, for fractional Brownian motion:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_exponent_hurst(-1, &#39;brownian&#39;)</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">fractional_class</span><span class="p">,</span> <span class="s1">&#39;fractional_class&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;brownian&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Switch sign of exponent (assumed to be negative) for this conversion</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="n">exponent</span>
+
+    <span class="k">if</span> <span class="n">fractional_class</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+        <span class="n">hurst</span> <span class="o">=</span> <span class="p">(</span><span class="n">exponent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+    <span class="k">elif</span> <span class="n">fractional_class</span> <span class="o">==</span> <span class="s1">&#39;brownian&#39;</span><span class="p">:</span>
+        <span class="n">hurst</span> <span class="o">=</span> <span class="p">(</span><span class="n">exponent</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+    <span class="k">return</span> <span class="n">hurst</span></div>
+
+<div class="viewcode-block" id="convert_hurst_exponent"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_hurst_exponent.html#neurodsp.aperiodic.conversions.convert_hurst_exponent">[docs]</a><span class="k">def</span> <span class="nf">convert_hurst_exponent</span><span class="p">(</span><span class="n">hurst</span><span class="p">,</span> <span class="n">fractional_class</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a Hurst exponent value to the expected powerlaw exponent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hurst : float</span>
+<span class="sd">        Hurst exponent value.</span>
+<span class="sd">    fractional_class : {&#39;gaussian&#39;, &#39;brownian&#39;}</span>
+<span class="sd">        The class of input data that the given exponent value relates to.</span>
+<span class="sd">        This can be either &#39;fractional Gaussian noise&#39; or &#39;fractional Brownian motion.&#39;</span>
+<span class="sd">        This is required as the conversion differs between the two classes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Predicted aperiodic exponent value, representing a 1/f distribution.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Schaefer, A., Brach, J. S., Perera, S., &amp; Sejdić, E. (2014). A comparative analysis</span>
+<span class="sd">           of spectral exponent estimation techniques for 1/fβ processes with applications to the</span>
+<span class="sd">           analysis of stride interval time series. Journal of Neuroscience Methods, 222, 118–130.</span>
+<span class="sd">           https://doi.org/10.1016/j.jneumeth.2013.10.017</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert a Hurst exponent value to the expected powerlaw exponent, for fractional Gaussian noise:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_hurst_exponent(1, &#39;gaussian&#39;)</span>
+<span class="sd">    -1.0</span>
+
+<span class="sd">    Convert a Hurst exponent value to the expected powerlaw exponent, for fractional Brownian noise:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_hurst_exponent(0, &#39;brownian&#39;)</span>
+<span class="sd">    -1.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">fractional_class</span><span class="p">,</span> <span class="s1">&#39;fractional_class&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;brownian&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">fractional_class</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">hurst</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">fractional_class</span> <span class="o">==</span> <span class="s1">&#39;brownian&#39;</span><span class="p">:</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">hurst</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># Convert predicted exponent value to have a negative sign</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="n">exponent</span>
+
+    <span class="k">return</span> <span class="n">exponent</span></div>
+
+
+<div class="viewcode-block" id="convert_exponent_hfd"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_exponent_hfd.html#neurodsp.aperiodic.conversions.convert_exponent_hfd">[docs]</a><span class="k">def</span> <span class="nf">convert_exponent_hfd</span><span class="p">(</span><span class="n">exponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert exponent to expected Higuchi fractal dimension value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Aperiodic exponent value, representing a 1/f distribution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hfd : float</span>
+<span class="sd">        Predicted Higuchi fractal dimension value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This works for exponents between [-1, -3] (inclusive).</span>
+<span class="sd">    As a special case, if exponent is 0, Higuchi Fractal Dimension is 2.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Cervantes-De la Torre, F., González-Trejo, J. I., Real-Ramírez, C. A., &amp;</span>
+<span class="sd">           Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application</span>
+<span class="sd">           to time series associated with natural phenomena. Journal of Physics: Conference</span>
+<span class="sd">           Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert exponent value to the expected Higuchi fractal dimension:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_exponent_hfd(-2)</span>
+<span class="sd">    1.5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">exponent</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">hfd</span> <span class="o">=</span> <span class="mf">2.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Switch sign of exponent (assumed to be negative) for this conversion</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="n">exponent</span>
+        <span class="n">check_param_range</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="n">hfd</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">-</span> <span class="n">exponent</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+    <span class="k">return</span> <span class="n">hfd</span></div>
+
+
+<div class="viewcode-block" id="convert_hfd_exponent"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.conversions.convert_hfd_exponent.html#neurodsp.aperiodic.conversions.convert_hfd_exponent">[docs]</a><span class="k">def</span> <span class="nf">convert_hfd_exponent</span><span class="p">(</span><span class="n">hfd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert Higuchi fractal dimension value to expected 1/f exponent value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hfd : float</span>
+<span class="sd">        Higuchi fractal dimension value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    exponent : float</span>
+<span class="sd">        Predicted aperiodic exponent value, representing a 1/f distribution.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This works for Fractal Dimensions between [1, 2] (inclusive).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Cervantes-De la Torre, F., González-Trejo, J. I., Real-Ramírez, C. A., &amp;</span>
+<span class="sd">           Hoyos-Reyes, L. F. (2013). Fractal dimension algorithms and their application</span>
+<span class="sd">           to time series associated with natural phenomena. Journal of Physics: Conference</span>
+<span class="sd">           Series, 475, 012002. https://doi.org/10.1088/1742-6596/475/1/012002</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Convert Higuchi fractal dimension value to expected exponent value:</span>
+
+<span class="sd">    &gt;&gt;&gt; convert_hfd_exponent(1.5)</span>
+<span class="sd">    -2.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_param_range</span><span class="p">(</span><span class="n">hfd</span><span class="p">,</span> <span class="s1">&#39;hfd&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">hfd</span> <span class="o">+</span> <span class="mi">5</span>
+    <span class="c1"># Convert predicted exponent value to have a negative sign</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="n">exponent</span>
+
+    <span class="k">return</span> <span class="n">exponent</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

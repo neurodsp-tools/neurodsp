@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -149,6 +148,18 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The dual-threshold burst detection algorithm was originally proposed in <a class="reference internal" href="#rded6269d9c01-1" id="id1">[1]</a>.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rded6269d9c01-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Feingold, J., Gibson, D. J., DePasquale, B., &amp; Graybiel, A. M. (2015).
+Bursts of beta oscillation differentiate postperformance activity in
+the striatum and motor cortex of monkeys performing movement tasks.
+Proceedings of the National Academy of Sciences, 112(44), 13687–13692.
+DOI: <a class="reference external" href="https://doi.org/10.1073/pnas.1517629112">https://doi.org/10.1073/pnas.1517629112</a></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p>Detect bursts using the dual threshold algorithm:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
@@ -163,13 +174,13 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
 
 <div class="section" id="examples-using-neurodsp-burst-detect-bursts-dual-threshold">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.detect_bursts_dual_threshold</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id1">
+<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id3">
 <img alt="Using NeuroDSP with MNE" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><div class="figure align-default" id="id2">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><div class="figure align-default" id="id4">
 <img alt="Burst Detection" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div style='clear:both'></div></div>
 </div>
@@ -186,8 +197,8 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

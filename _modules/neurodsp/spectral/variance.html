@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.spectral.variance &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.spectral.variance &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,13 +108,14 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for neurodsp.spectral.variance</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Compute spectral measures that measure spectral variance.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Compute spectral variance.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">spectrogram</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">discard_outliers</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_options</span>
 <span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span>
 <span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="kn">import</span> <span class="n">check_spg_settings</span>
 
@@ -127,7 +127,7 @@
     <span class="sd">&quot;&quot;&quot;Compute the spectral coefficient of variation (SCV) at each frequency.</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
@@ -184,7 +184,7 @@
     <span class="sd">&quot;&quot;&quot;Compute a resampled version of the spectral coefficient of variation (SCV).</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
@@ -243,8 +243,10 @@
 <span class="sd">    &gt;&gt;&gt; freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method=&#39;bootstrap&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Compute spectrogram of data</span>
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">,</span> <span class="s1">&#39;rolling&#39;</span><span class="p">])</span>
     <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span> <span class="o">=</span> <span class="n">check_spg_settings</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
+
+    <span class="c1"># Compute spectrogram of data</span>
     <span class="n">freqs</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">spg</span> <span class="o">=</span> <span class="n">spectrogram</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;bootstrap&#39;</span><span class="p">:</span>
@@ -283,9 +285,6 @@
         <span class="c1"># Grab the time indices from the spectrogram</span>
         <span class="n">t_inds</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="n">nsteps</span><span class="p">]</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown resampling method: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span></div>
 
 
@@ -295,7 +294,7 @@
     <span class="sd">&quot;&quot;&quot;Compute the distribution of log10 power at each frequency from the signal spectrogram.</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Time series of measurement values.</span>
 <span class="sd">    fs : float</span>
@@ -375,8 +374,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sliding Window Matching &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Window Matching &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,26 +109,37 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="sliding-window-matching">
 <span id="sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"></span><h1>Sliding Window Matching<a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h1>
-<p>Find recurrent patterns in a neural signal using Sliding Window Matching.</p>
+<p>Find recurring patterns in neural signals using Sliding Window Matching.</p>
 <p>This tutorial primarily covers the <a class="reference internal" href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-func docutils literal notranslate"><span class="pre">sliding_window_matching()</span></code></a> function.</p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>This notebook shows how to use sliding window matching (SWM) for identifying recurring
-patterns in a neural signal, like the shape of an oscillatory waveform.</p>
-<p>For more details on Sliding Window Matching see Gips et al., 2017, J Neuro Methods.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the sliding window matching function</span>
+<p>Non-periodic or non-sinusoidal properties can be difficult to assess in frequency domain
+methods. To try and address this, the sliding window matching (SWM) algorithm has been
+proposed for detecting and measuring recurring, but unknown, patterns in time series data.
+Patterns of interest may be transient events, and/or the waveform shape of neural oscillations.</p>
+<p>In this example, we will explore applying the SWM algorithm to some LFP data.</p>
+<p>The SWM approach tries to find recurring patterns (or motifs) in the data, using sliding
+windows. An iterative process samples window randomly, and compares each to the average
+window. The goal is to find a selection of windows that look maximally like the average
+window, at which point the occurrences of the window have been detected, and the average
+window pattern can be examined.</p>
+<p>The sliding window matching algorithm is described in
+<a class="reference external" href="https://doi.org/10.1016/j.jneumeth.2016.11.001">Gips et al, 2017</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Import the sliding window matching function</span>
 <span class="kn">from</span> <span class="nn">neurodsp.rhythm</span> <span class="kn">import</span> <a href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">sliding_window_matching</span></a>
 
 <span class="c1"># Import utilities for loading and plotting data</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.download</span> <span class="kn">import</span> <span class="n">load_ndsp_data</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.rhythm</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_swm_pattern.html#neurodsp.plts.plot_swm_pattern" title="neurodsp.plts.plot_swm_pattern" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_swm_pattern</span></a>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <span class="n">create_times</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.norm</span> <span class="kn">import</span> <span class="n">normalize_sig</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set random seed, for reproducibility</span>
@@ -139,48 +149,90 @@ patterns in a neural signal, like the shape of an oscillatory waveform.</p>
 </div>
 <div class="section" id="load-neural-signal">
 <h2>Load neural signal<a class="headerlink" href="#load-neural-signal" title="Permalink to this headline">¶</a></h2>
+<p>First, we will load a segment of ECoG data, as an example time series.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data files</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_1.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">normalize_sig</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Set sampling rate, and create a times vector for plotting</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Next, we can visualize this data segment. As we can see this segment of data has
+some prominent bursts of oscillations, in this case, in the beta frequency.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="plot SlidingWindowMatching" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SlidingWindowMatching_001.png" />
 </div>
-<div class="section" id="apply-sliding-window-matching-to-neural-signal">
-<h2>Apply sliding window matching to neural signal<a class="headerlink" href="#apply-sliding-window-matching-to-neural-signal" title="Permalink to this headline">¶</a></h2>
-<p>The loaded neural signal has a beta oscillation, that we can attempt to analyze
-with the sliding window matching approach.</p>
-<p>We will define the window length to be about 1 cycle, which should roughly extract
-the waveform shape of the neural oscillation.</p>
+<div class="section" id="apply-sliding-window-matching">
+<h2>Apply sliding window matching<a class="headerlink" href="#apply-sliding-window-matching" title="Permalink to this headline">¶</a></h2>
+<p>The beta oscillation in our data segment looks like it might have some non-sinusoidal
+properties. We can investigate this with sliding window matching.</p>
 <p>Sliding window matching can be applied with the
 <a class="reference internal" href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-func docutils literal notranslate"><span class="pre">sliding_window_matching()</span></code></a> function.</p>
+<div class="section" id="data-preprocessing">
+<h3>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this headline">¶</a></h3>
+<p>Typically, the input signal does not have to be filtered into a band of interest to use SWM.</p>
+<p>If the goal is to characterize non-sinusoidal rhythms, you typically won’t want to
+apply a filter that will smooth out the features of interest.</p>
+<p>However, if the goal is to characterize higher frequency activity, it can be useful to
+apply a highpass filter, so that the method does not converge on a lower frequency motif.</p>
+<p>In our case, the beta rhythm of interest is the most prominent, low frequency, feature of the
+data, so we won’t apply a filter.</p>
+</div>
+<div class="section" id="algorithm-settings">
+<h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<p>The SWM algorithm has some algorithm specific settings that need to be applied, including:</p>
+<ul class="simple">
+<li><p><cite>win_len</cite> : the length of the window, defined in seconds</p></li>
+<li><p><cite>win_spacing</cite> : the minimum distance between windows, also defined in seconds</p></li>
+</ul>
+<p>The length of the window influences the patterns that are extracted from the data.
+Typically, you want to set the window length to match the expected timescale of the
+patterns under study.</p>
+<p>For our purposes, we will define the window length to be about 1 cycle of a beta oscillation,
+which should help the algorithm to find the waveform shape of the neural oscillation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define window length &amp; minimum window spacing, both in seconds</span>
 <span class="n">win_len</span> <span class="o">=</span> <span class="o">.</span><span class="mi">055</span>
-<span class="n">win_spacing</span> <span class="o">=</span> <span class="o">.</span><span class="mi">2</span>
-
-<span class="c1"># Apply the sliding window matching algorithm to the time series</span>
-<span class="n">avg_window</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">costs</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span>
-                                                           <span class="n">max_iterations</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">win_spacing</span> <span class="o">=</span> <span class="o">.</span><span class="mi">055</span>
 </pre></div>
 </div>
-<p>You can plot the resulting pattern with <a class="reference internal" href="../../generated/neurodsp.plts.plot_swm_pattern.html#neurodsp.plts.plot_swm_pattern" title="neurodsp.plts.plot_swm_pattern"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_swm_pattern()</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the discovered pattern</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply the sliding window matching algorithm to the time series</span>
+<span class="n">windows</span><span class="p">,</span> <span class="n">window_starts</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">var_thresh</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examine-the-results">
+<h3>Examine the Results<a class="headerlink" href="#examine-the-results" title="Permalink to this headline">¶</a></h3>
+<p>What we got back from the SWM function are the calculate average window, the list
+of indices in the data of the windows, and the calculated costs for each iteration of
+the algorithm run.</p>
+<p>In order to visualize the resulting pattern, we can use
+<a class="reference internal" href="../../generated/neurodsp.plts.plot_swm_pattern.html#neurodsp.plts.plot_swm_pattern" title="neurodsp.plts.plot_swm_pattern"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_swm_pattern()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the average window</span>
+<span class="n">avg_window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Plot the discovered pattern</span>
 <a href="../../generated/neurodsp.plts.plot_swm_pattern.html#neurodsp.plts.plot_swm_pattern" title="neurodsp.plts.plot_swm_pattern" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_swm_pattern</span></a><span class="p">(</span><span class="n">avg_window</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="Average Pattern" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SlidingWindowMatching_002.png" />
-<p>Notice that the beta cycles have sharper troughs than peaks, and the average window is
-a beta cycle with a sharp trough.</p>
-<p>One thing to explore is how these results change by changing the random seed.</p>
-<p>Using more data and increasing the number of iterations helps the robustness of the algorithm.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.126 seconds)</p>
+<p>In the above average pattern, that looks to capture a beta rhythm, we can notice some
+waveform shape of the extracted rhythm.</p>
+</div>
+<div class="section" id="concluding-notes">
+<h3>Concluding Notes<a class="headerlink" href="#concluding-notes" title="Permalink to this headline">¶</a></h3>
+<p>One thing to keep in mind is that the SWM algorithm includes a random element of sampling
+and comparing the windows - meaning it is not deterministic. Because of this, results
+can change with different random seeds.</p>
+<p>To explore this, go back and change the random seed, and see how the output changes.</p>
+<p>You can also set the number of iterations that the algorithm sweeps through. Increasing
+the number of iterations, and using longer data segments, can help improve the robustness
+of the algorithm results.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.682 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1c6c1cedd051526d62a430480e5dcfa7/plot_SlidingWindowMatching.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SlidingWindowMatching.py</span></code></a></p>
@@ -190,6 +242,7 @@ a beta cycle with a sharp trough.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
 </div>
 </div>
 
@@ -205,8 +258,8 @@ a beta cycle with a sharp trough.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

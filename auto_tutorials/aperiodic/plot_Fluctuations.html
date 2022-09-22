@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluctuation analyses &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-aperiodic-plot-fluctuations-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="fluctuation-analyses">
+<span id="sphx-glr-auto-tutorials-aperiodic-plot-fluctuations-py"></span><h1>Fluctuation analyses<a class="headerlink" href="#fluctuation-analyses" title="Permalink to this headline">¶</a></h1>
+<p>Apply fluctuation analyses, such as detrended fluctuation analysis (DFA) to neural signals.</p>
+<p>DFA was first proposed in the context of genetics in
+<a class="reference external" href="https://doi.org/10.1103/PhysRevE.49.1685">Peng et al, 1994</a>,
+and was recently reviewed in the context of neural data in
+<a class="reference external" href="https://doi.org/10.3389/fphys.2012.00450">Hardstone et al, 2012</a>.</p>
+<p>This tutorial covers <code class="docutils literal notranslate"><span class="pre">neurodsp.aperiodic.dfa</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a>
+
+<span class="c1"># Import the function for computing fluctuation analyses</span>
+<span class="kn">from</span> <span class="nn">neurodsp.aperiodic</span> <span class="kn">import</span> <span class="n">compute_fluctuations</span>
+</pre></div>
+</div>
+<div class="section" id="detrended-fluctuation-analysis">
+<h2>Detrended Fluctuation Analysis<a class="headerlink" href="#detrended-fluctuation-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Detrended fluctuation analysis (DFA) is a method for analyzing the self-similarity of a signal.</p>
+<p>DFA is in some ways similar to autocorrelation measures, and is typically used to look
+for long-range, powerlaw correlations. It does so by dividing the signals into windows,
+fitting local trends, and then examining the pattern across window sizes.</p>
+<p>For more information on the details of DFA, see the description of the algorithm on
+<a class="reference external" href="https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis">Wikipedia</a>.</p>
+<div class="section" id="dfa-exponent">
+<h3>DFA Exponent<a class="headerlink" href="#dfa-exponent" title="Permalink to this headline">¶</a></h3>
+<p>The output of the DFA algorithm is the ‘DFA exponent’, which is the slope of the linear fit
+between windows sizes and fluctuations. The value of this exponent can be interpreted in
+terms of the properties of the signal.</p>
+<p>In particular, DFA exponents represent:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(0 &lt; \alpha &lt; 0.5\)</span> : anti-correlated</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha = 0.5\)</span> : white noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(0.5 &lt; \alpha &lt; 1\)</span> : correlated (stationary)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha = 1.0\)</span> : 1/f</p></li>
+<li><p><span class="math notranslate nohighlight">\(1 &lt; \alpha &lt; 2\)</span> : correlated (non-stationary)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="applying-dfa">
+<h2>Applying DFA<a class="headerlink" href="#applying-dfa" title="Permalink to this headline">¶</a></h2>
+<p>Here, to introduce DFA, we will use colored noise signals (white noise and pink noise).
+These signals have different auto-correlation properties, and so should have different DFA
+results, which we can then compare between the signals.</p>
+<p>Note that DFA can be applied to multiple signal types. Though here we using simulated
+aperiodic time series, in analyses of neural field data, DFA is most often used to examine
+amplitude time series of neural oscillations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="c1"># Simulate a white noise signal</span>
+<span class="n">sig_wn</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Simulate a pink noise powerlaw signal</span>
+<span class="n">sig_pl</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="calculating-dfa">
+<h3>Calculating DFA<a class="headerlink" href="#calculating-dfa" title="Permalink to this headline">¶</a></h3>
+<p>The DFA algorithm involves:</p>
+<ol class="arabic simple">
+<li><p>Removing the mean of a signal (detrending)</p></li>
+<li><p>Computing the cumulative sum of the signal</p></li>
+<li><p>Splitting the signal into equal-sized windows</p></li>
+<li><p>Fitting a polynomial across the windows</p></li>
+<li><p>Calculate the mean squared residual (fluctuation) of the fit</p></li>
+</ol>
+<p>Steps 3-5 are repeated for various window sizes.</p>
+<p>The DFA algorithm is available through the <a class="reference internal" href="../../generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations" title="neurodsp.aperiodic.dfa.compute_fluctuations"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_fluctuations()</span></code></a> function.</p>
+</div>
+<div class="section" id="algorithm-settings">
+<h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<p>The DFA algorithm requires certain settings, including:</p>
+<ul class="simple">
+<li><p><cite>n_scales</cite> : the number of scales to estimate fluctuations over</p></li>
+<li><p><cite>min_scale</cite> : the shortest scale, in seconds, to compute over</p></li>
+<li><p><cite>max_scale</cite> : the longest scale, in seconds, to compute over</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute DFA for a white noise signal</span>
+<span class="n">ts_wn</span><span class="p">,</span> <span class="n">flucs_wn</span><span class="p">,</span> <span class="n">exp_wn</span> <span class="o">=</span> <span class="n">compute_fluctuations</span><span class="p">(</span><span class="n">sig_wn</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                               <span class="n">min_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># Compute DFA for a pink noise signal</span>
+<span class="n">ts_pl</span><span class="p">,</span> <span class="n">flucs_pl</span><span class="p">,</span> <span class="n">exp_pl</span> <span class="o">=</span> <span class="n">compute_fluctuations</span><span class="p">(</span><span class="n">sig_pl</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                               <span class="n">min_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../../generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations" title="neurodsp.aperiodic.dfa.compute_fluctuations"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_fluctuations()</span></code></a> function returns the time scales and
+measured fluctuations from the DFA analysis.</p>
+<p>In the plot below, fluctuations are plotted across window sizes for both signals in
+log-log space.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ts_wn</span><span class="p">,</span> <span class="n">flucs_wn</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;White Noise&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">ts_pl</span><span class="p">,</span> <span class="n">flucs_pl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Power Law&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Fluctuations Across Window Sizes&quot;</span><span class="p">,</span>
+       <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Time Scales&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Fluctuations&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+<img alt="Fluctuations Across Window Sizes" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Fluctuations_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7fcce8ac8dc0&gt;
+</pre></div>
+</div>
+<p>The function also returns the DFA exponent, equivalent to the slope of the log-log
+plot of fluctuations and timescales.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check calculated DFA exponents</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;White noise signal DFA exponent:</span><span class="se">\t</span><span class="s2"> </span><span class="si">{:1.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exp_wn</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Power law signal DFA exponent:</span><span class="se">\t</span><span class="s2"> </span><span class="si">{:1.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exp_pl</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>White noise signal DFA exponent:         0.521
+Power law signal DFA exponent:   1.021
+</pre></div>
+</div>
+<p>As we can see the, DFA exponent for the white noise signal is ~=0.5 while for the
+powerlaw signal it is ~=1. These match with the expected values for these signals.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.201 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-aperiodic-plot-fluctuations-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5bfd86ff2633f707594cecf33d4d1859/plot_Fluctuations.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_Fluctuations.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/abbebb06e5ddf70ee02bbba4b4becb5c/plot_Fluctuations.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_Fluctuations.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

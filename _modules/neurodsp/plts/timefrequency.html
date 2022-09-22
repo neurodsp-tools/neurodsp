@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.plts.timefrequency &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.plts.timefrequency</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Plotting functions for neurodsp.timefrequency.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.plts.style</span> <span class="kn">import</span> <span class="n">style_plot</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.utils</span> <span class="kn">import</span> <span class="n">check_ax</span><span class="p">,</span> <span class="n">savefig</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="plot_timefrequency"><a class="viewcode-back" href="../../../generated/neurodsp.plts.plot_timefrequency.html#neurodsp.plts.plot_timefrequency">[docs]</a><span class="nd">@savefig</span>
+<span class="nd">@style_plot</span>
+<span class="k">def</span> <span class="nf">plot_timefrequency</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">x_ticks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y_ticks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a time-frequency representation of data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    times : 1d array</span>
+<span class="sd">        The time dimension for the time-frequency representation.</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        The frequency dimension for the time-frequency representation.</span>
+<span class="sd">    powers : 2d array</span>
+<span class="sd">        Power values to plot.</span>
+<span class="sd">        If array is complex, the real component is taken for plotting.</span>
+<span class="sd">    x_ticks, y_ticks : int or array_like</span>
+<span class="sd">        Defines the tick labels to add to the plot.</span>
+<span class="sd">        If int, is the number of evenly sampled labels to add to the plot.</span>
+<span class="sd">        If array_like, is a set of labels to add to the plot.</span>
+<span class="sd">    ax : matplotlib.Axes, optional</span>
+<span class="sd">        Figure axes upon which to plot.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments for customizing the plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Plot a Morlet transformation:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_bursty_oscillation</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.timefrequency.wavelets import compute_wavelet_transform</span>
+<span class="sd">    &gt;&gt;&gt; fs=1000</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_bursty_oscillation(n_seconds=10, fs=fs, freq=10)</span>
+<span class="sd">    &gt;&gt;&gt; times = np.arange(0, len(sig)/fs, 1/fs)</span>
+<span class="sd">    &gt;&gt;&gt; freqs = np.arange(1, 50, 1)</span>
+<span class="sd">    &gt;&gt;&gt; mwt = compute_wavelet_transform(sig, fs, freqs)</span>
+<span class="sd">    &gt;&gt;&gt; plot_timefrequency(times, freqs, mwt)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">powers</span><span class="p">):</span>
+        <span class="n">powers</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">powers</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">powers</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency (Hz)&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_ticks</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">x_tick_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">times</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">x_ticks</span><span class="p">)</span>
+        <span class="n">x_ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_ticks</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_tick_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">times</span> <span class="o">-</span> <span class="n">val</span><span class="p">))</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">x_ticks</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="n">x_tick_pos</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">x_ticks</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_ticks</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">y_ticks_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">freqs</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">y_ticks</span><span class="p">)</span>
+        <span class="n">y_ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">freqs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_ticks</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y_ticks_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">freqs</span> <span class="o">-</span> <span class="n">val</span><span class="p">))</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">y_ticks</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">y_ticks_pos</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">y_ticks</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

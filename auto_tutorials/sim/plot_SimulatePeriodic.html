@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simulating Periodic Signals &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulating Periodic Signals &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,22 +109,24 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="simulating-periodic-signals">
 <span id="sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"></span><h1>Simulating Periodic Signals<a class="headerlink" href="#simulating-periodic-signals" title="Permalink to this headline">¶</a></h1>
 <p>Simulate periodic, or oscillatory, signals.</p>
 <p>This tutorial covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.periodic</span></code> module.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import sim functions</span>
-<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Import sim functions</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="p">(</span><a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">,</span>
+                          <a href="../../generated/neurodsp.sim.sim_variable_oscillation.html#neurodsp.sim.sim_variable_oscillation" title="neurodsp.sim.sim_variable_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_variable_oscillation</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.sim_damped_oscillation.html#neurodsp.sim.sim_damped_oscillation" title="neurodsp.sim.sim_damped_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_damped_oscillation</span></a><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span>
 
 <span class="c1"># Import function to compute power spectra</span>
 <span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a>
 
 <span class="c1"># Import utilities for plotting data</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">create_times</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
@@ -143,15 +144,16 @@ to download the full example code</p>
 <p>Continuous periodic signals can be created with <a class="reference internal" href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_oscillation()</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Define oscillation frequency</span>
 <span class="n">osc_freq</span> <span class="o">=</span> <span class="mf">6.6</span>
 
 <span class="c1"># Simulate a sinusoidal oscillation</span>
 <span class="n">osc_sine</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">)</span>
-
-<span class="c1"># Create a times vector for our simulation</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-
-<span class="c1"># Plot the simulated data, in the time domain</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc_sine</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -169,11 +171,14 @@ simulate different aspects of periodic neural activity.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">asine</span></code>: an asymmetric sine wave</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sawtooth</span></code>: a sawtooth wave</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">gaussian</span></code>: a gaussian cycle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skewed_gaussian</span></code> : a skewed gaussian cycle</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exp</span></code>: a cycle with exponential decay</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">2exp</span></code>: a cycle with exponential rise and decay</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exp_cos</span></code>: an exponential cosine cycle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asym_harmonic</span></code>: an asymmetric cycle made as a sum of sinusoids</p></li>
 </ul>
 <p>Note that these cycle kernels are all created with the
-<a class="reference internal" href="../../generated/neurodsp.sim.sim_cycle.html#neurodsp.sim.sim_cycle" title="neurodsp.sim.sim_cycle"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_cycle()</span></code></a> function.</p>
+<a class="reference internal" href="../../generated/neurodsp.sim.cycles.sim_cycle.html#neurodsp.sim.cycles.sim_cycle" title="neurodsp.sim.cycles.sim_cycle"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_cycle()</span></code></a> function.</p>
 </div>
 <div class="section" id="simulate-a-shapely-oscillation">
 <h2>Simulate a Shapely Oscillation<a class="headerlink" href="#simulate-a-shapely-oscillation" title="Permalink to this headline">¶</a></h2>
@@ -181,8 +186,10 @@ simulate different aspects of periodic neural activity.</p>
 which stands for ‘asymmetric sinusoidal’.</p>
 <p>Using the <cite>asine</cite> kernel, we can simulate arbitrary rise-decay symmetry of oscillations.</p>
 <p>We’ll plot it over our original sinusoidal oscillation, so we can compare them.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a shape-y oscillations</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define settings</span>
 <span class="n">rdsym</span> <span class="o">=</span> <span class="mf">0.2</span>
+
+<span class="c1"># Simulate a non-sinusoidal oscillation</span>
 <span class="n">osc_shape</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
                             <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=</span><span class="n">rdsym</span><span class="p">)</span>
 </pre></div>
@@ -209,56 +216,139 @@ non-sinusoidal nature of the oscillation.</p>
 <h2>Simulate a Bursty Oscillation<a class="headerlink" href="#simulate-a-bursty-oscillation" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes we want to study oscillations that come and go, so it can be useful to simulate
 oscillations with this property.</p>
-<p>You can simulate bursty oscillations with <a class="reference internal" href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_bursty_oscillation()</span></code></a>.</p>
-<p>To control the bursty-ness of the simulated signal, you can control the probability
-that a burst will start or stop with each new cycle.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for simulation</span>
-<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">30</span>
+<p>Bursty oscillations can be simulated with <a class="reference internal" href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_bursty_oscillation()</span></code></a>.</p>
+<div class="section" id="burst-probability">
+<h3>Burst Probability<a class="headerlink" href="#burst-probability" title="Permalink to this headline">¶</a></h3>
+<p>One way to control the bursty-ness of the simulated signal, is to control
+the probability that a burst will start or stop with each new cycle.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
-<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
-<span class="c1"># Simulate a bursty oscillation</span>
-<span class="n">osc</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                             <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                             <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="c1"># Define oscillation frequency</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="c1"># Burst settings</span>
+<span class="n">enter_burst</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">leave_burst</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation</span>
+<span class="n">burst</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                               <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
+                               <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated burst signal</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">burst</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_004.png" />
-<p>We can shorten burst duration by increasing the probability to leave bursts.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
-<span class="n">leave_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
-<span class="n">osc</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                             <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                             <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<p>By updating the burst settings, we can change the overall probability of bursting.</p>
+<p>For example, we can shorten burst duration by increasing the probability to leave bursts.</p>
+<p>Alternatively, we can increase the number of bursts by increasing the probability
+to enter a burst.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a higher probability to leave bursts</span>
+<span class="n">short_burst</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                     <span class="n">enter_burst</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">leave_burst</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="c1"># Simulate a bursty oscillation, with a higher probability of entering bursts</span>
+<span class="n">more_bursts</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
+                                     <span class="n">enter_burst</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">leave_burst</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated burst signals</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">short_burst</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Shorter Burst&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" />
-<p>We can increase the number of bursts by increasing the probability to enter a burst.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, with a specified burst probability</span>
-<span class="n">enter_burst</span> <span class="o">=</span> <span class="o">.</span><span class="mi">4</span>
-<span class="n">osc</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span>
-                             <span class="n">enter_burst</span><span class="o">=</span><span class="n">enter_burst</span><span class="p">,</span>
-                             <span class="n">leave_burst</span><span class="o">=</span><span class="n">leave_burst</span><span class="p">)</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<img alt="Shorter Burst" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_005.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">more_bursts</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;More Bursts&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the time domain</span>
-<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">osc</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+<img alt="More Bursts" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" />
+</div>
+<div class="section" id="burst-durations">
+<h3>Burst Durations<a class="headerlink" href="#burst-durations" title="Permalink to this headline">¶</a></h3>
+<p>Another way to control the bursty-ness is to define the burst durations.</p>
+<p>Still using <a class="reference internal" href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_bursty_oscillation()</span></code></a>, rather than defining burst probabilities,
+we can define the number of cycle within / between bursts.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Burst settings</span>
+<span class="n">burst_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">n_cycles_burst</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_cycles_off</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_006.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.434 seconds)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a bursty oscillation, defined in terms of durations</span>
+<span class="n">burst</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_bursty_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="s1">&#39;durations&#39;</span><span class="p">,</span>
+                               <span class="n">burst_params</span><span class="o">=</span><span class="n">burst_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated burst signal</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">burst</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_007.png" />
+</div>
+</div>
+<div class="section" id="simulate-variable-oscillations">
+<h2>Simulate Variable Oscillations<a class="headerlink" href="#simulate-variable-oscillations" title="Permalink to this headline">¶</a></h2>
+<p>Another option is to simulate oscillations that vary in their parameters over time.</p>
+<p>To do this, we can use <a class="reference internal" href="../../generated/neurodsp.sim.sim_variable_oscillation.html#neurodsp.sim.sim_variable_oscillation" title="neurodsp.sim.sim_variable_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_variable_oscillation()</span></code></a>, which allows for defining
+parameters per cycle.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define variable frequencies</span>
+<span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate variable oscillatory signal</span>
+<span class="n">variable</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_variable_oscillation.html#neurodsp.sim.sim_variable_oscillation" title="neurodsp.sim.sim_variable_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_variable_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freqs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated variable signal</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_008.png" />
+<p>In the above, we defined a variable frequency for a sinusoidal signal.</p>
+<p>We can also define cycle-by-cycle values for other parameters, including for other cycle types.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define ranges of frequencies and rise decay symmetries</span>
+<span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">)])</span>
+<span class="n">rdsyms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate variable oscillatory signal</span>
+<span class="n">variable</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_variable_oscillation.html#neurodsp.sim.sim_variable_oscillation" title="neurodsp.sim.sim_variable_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_variable_oscillation</span></a><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;asine&#39;</span><span class="p">,</span> <span class="n">rdsym</span><span class="o">=</span><span class="n">rdsyms</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated variable signal</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">variable</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_009.png" />
+</div>
+<div class="section" id="simulate-damped-oscillations">
+<h2>Simulate Damped Oscillations<a class="headerlink" href="#simulate-damped-oscillations" title="Permalink to this headline">¶</a></h2>
+<p>We can also simulated damped oscillations, using <a class="reference internal" href="../../generated/neurodsp.sim.sim_damped_oscillation.html#neurodsp.sim.sim_damped_oscillation" title="neurodsp.sim.sim_damped_oscillation"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_damped_oscillation()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reset general simulation settings</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Define oscillation frequency</span>
+<span class="n">osc_freq</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Define dampening parameters</span>
+<span class="n">damping</span> <span class="o">=</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a damped oscillation</span>
+<span class="n">damped</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_damped_oscillation.html#neurodsp.sim.sim_damped_oscillation" title="neurodsp.sim.sim_damped_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_damped_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">osc_freq</span><span class="p">,</span> <span class="n">damping</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated damped oscillation</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">damped</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot SimulatePeriodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulatePeriodic_010.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.154 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateperiodic-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/c7d80e2dc776a96a4f77d038b3aae3d0/plot_SimulatePeriodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulatePeriodic.py</span></code></a></p>
@@ -283,8 +373,8 @@ that a burst will start or stop with each new cycle.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

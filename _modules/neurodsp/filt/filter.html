@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.filt.filter &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.filter &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -115,6 +114,7 @@
 
 <span class="kn">from</span> <span class="nn">neurodsp.filt.fir</span> <span class="kn">import</span> <span class="n">filter_signal_fir</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt.iir</span> <span class="kn">import</span> <span class="n">filter_signal_iir</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_options</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
@@ -126,7 +126,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : 1d or 2d array</span>
 <span class="sd">        Time series to be filtered.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -182,17 +182,18 @@
 <span class="sd">    ...                          filter_type=&#39;fir&#39;, f_range=(1, 25))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">filter_type</span><span class="p">,</span> <span class="s1">&#39;filter_type&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fir&#39;</span><span class="p">,</span> <span class="s1">&#39;iir&#39;</span><span class="p">])</span>
+
     <span class="k">if</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;fir&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span>
                                  <span class="n">remove_edges</span><span class="p">,</span> <span class="n">print_transitions</span><span class="p">,</span>
                                  <span class="n">plot_properties</span><span class="p">,</span> <span class="n">return_filter</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
         <span class="n">_iir_checks</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">,</span> <span class="n">remove_edges</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">filter_signal_iir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">,</span>
                                  <span class="n">print_transitions</span><span class="p">,</span> <span class="n">plot_properties</span><span class="p">,</span>
-                                 <span class="n">return_filter</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Filter type not understood.&#39;</span><span class="p">)</span></div>
+                                 <span class="n">return_filter</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_iir_checks</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">,</span> <span class="n">remove_edges</span><span class="p">):</span>
@@ -218,8 +219,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

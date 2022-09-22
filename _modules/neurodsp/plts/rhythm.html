@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.plts.rhythm &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.plts.rhythm &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -135,6 +134,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    Plot the average pattern from a sliding window matching analysis:</span>
 
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
 <span class="sd">    &gt;&gt;&gt; from neurodsp.rhythm import sliding_window_matching</span>
 <span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
@@ -142,11 +142,12 @@
 <span class="sd">    ...                                &#39;sim_bursty_oscillation&#39;: {&#39;freq&#39;: 20,</span>
 <span class="sd">    ...                                                           &#39;enter_burst&#39;: .25,</span>
 <span class="sd">    ...                                                           &#39;leave_burst&#39;: .25}})</span>
-<span class="sd">    &gt;&gt;&gt; avg_window, _, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)</span>
+<span class="sd">    &gt;&gt;&gt; windows, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)</span>
+<span class="sd">    &gt;&gt;&gt; avg_window = np.mean(windows)</span>
 <span class="sd">    &gt;&gt;&gt; plot_swm_pattern(avg_window)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
 
@@ -187,7 +188,7 @@
 <span class="sd">    &gt;&gt;&gt; plot_lagged_coherence(freqs, lag_cohs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">lcs</span><span class="p">,</span> <span class="s1">&#39;k.-&#39;</span><span class="p">)</span>
 
@@ -206,8 +207,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

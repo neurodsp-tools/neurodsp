@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.plts.time_series &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.plts.time_series &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,11 +113,12 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">cycle</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.plts.style</span> <span class="kn">import</span> <span class="n">style_plot</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.utils</span> <span class="kn">import</span> <span class="n">check_ax</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_samples</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_options</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
@@ -130,9 +130,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    times : 1d array or list of 1d array</span>
+<span class="sd">    times : 1d or 2d array, or list of 1d array, or None</span>
 <span class="sd">        Time definition(s) for the time series to be plotted.</span>
-<span class="sd">    sigs : 1d array or list of 1d array</span>
+<span class="sd">        If None, time series will be plotted in terms of samples instead of time.</span>
+<span class="sd">    sigs : 1d or 2d array, or list of 1d array</span>
 <span class="sd">        Time series to plot.</span>
 <span class="sd">    labels : list of str, optional</span>
 <span class="sd">        Labels for each time series.</span>
@@ -156,10 +157,16 @@
 <span class="sd">    &gt;&gt;&gt; plot_time_series(times, sig)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
 
-    <span class="n">times</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="n">times</span>
-    <span class="n">sigs</span> <span class="o">=</span> <span class="p">[</span><span class="n">sigs</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="n">sigs</span>
+    <span class="n">sigs</span> <span class="o">=</span> <span class="p">[</span><span class="n">sigs</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sigs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="n">sigs</span>
+
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;Time (s)&#39;</span>
+    <span class="k">if</span> <span class="n">times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">create_samples</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sigs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;Samples&#39;</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">times</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="n">times</span>
 
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">labels</span>
@@ -174,7 +181,7 @@
     <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sigs</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (uV)&#39;</span><span class="p">)</span></div>
 
 
@@ -185,9 +192,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    times : 1d array or list of 1d array</span>
+<span class="sd">    times : 1d or 2d array, or list of 1d array, or None</span>
 <span class="sd">        Time definition(s) for the time series to be plotted.</span>
-<span class="sd">    sigs : 1d array or list of 1d array</span>
+<span class="sd">        If None, time series will be plotted in terms of samples instead of time.</span>
+<span class="sd">    sigs : 1d or 2d array, or list of 1d array</span>
 <span class="sd">        Time series to plot.</span>
 <span class="sd">    measure : {&#39;phase&#39;, &#39;amplitude&#39;, &#39;frequency&#39;}</span>
 <span class="sd">        Which kind of measure is being plotted.</span>
@@ -210,12 +218,13 @@
 <span class="sd">    &gt;&gt;&gt; plot_instantaneous_measure(times, pha, measure=&#39;phase&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">measure</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency&#39;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Measure not understood.&#39;</span><span class="p">)</span>
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">measure</span><span class="p">,</span> <span class="s1">&#39;measure&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency&#39;</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">measure</span> <span class="o">==</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span>
         <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sigs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Phase (rad)&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;-$\pi$&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span> <span class="k">if</span> <span class="n">ax</span> <span class="k">else</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="sa">r</span><span class="s1">&#39;-$\pi$&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">])</span>
     <span class="k">elif</span> <span class="n">measure</span> <span class="o">==</span> <span class="s1">&#39;amplitude&#39;</span><span class="p">:</span>
         <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sigs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">measure</span> <span class="o">==</span> <span class="s1">&#39;frequency&#39;</span><span class="p">:</span>
@@ -229,8 +238,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    times : 1d array</span>
+<span class="sd">    times : 1d array or None</span>
 <span class="sd">        Time definition for the time series to be plotted.</span>
+<span class="sd">        If None, time series will be plotted in terms of samples instead of time.</span>
 <span class="sd">    sig : 1d array</span>
 <span class="sd">        Time series to plot.</span>
 <span class="sd">    bursting : 1d array</span>
@@ -256,9 +266,7 @@
 <span class="sd">    &gt;&gt;&gt; plot_bursts(times, sig, is_burst, labels=[&#39;Raw Data&#39;, &#39;Detected Bursts&#39;])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">check_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-
-    <span class="n">bursts</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">bursting</span><span class="p">))</span>
+    <span class="n">bursts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">bursting</span><span class="p">))</span>
     <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">bursts</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
@@ -273,8 +281,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

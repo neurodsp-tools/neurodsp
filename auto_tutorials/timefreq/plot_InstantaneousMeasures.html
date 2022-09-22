@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Time-frequency analysis &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time-frequency analysis &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,8 +109,7 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="time-frequency-analysis">
 <span id="sphx-glr-auto-tutorials-timefreq-plot-instantaneousmeasures-py"></span><h1>Time-frequency analysis<a class="headerlink" href="#time-frequency-analysis" title="Permalink to this headline">¶</a></h1>
@@ -123,7 +121,7 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">neurodsp.timefrequency</span> <span class="kn">import</span> <a href="../../generated/neurodsp.timefrequency.amp_by_time.html#neurodsp.timefrequency.amp_by_time" title="neurodsp.timefrequency.amp_by_time" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">amp_by_time</span></a><span class="p">,</span> <a href="../../generated/neurodsp.timefrequency.freq_by_time.html#neurodsp.timefrequency.freq_by_time" title="neurodsp.timefrequency.freq_by_time" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">freq_by_time</span></a><span class="p">,</span> <a href="../../generated/neurodsp.timefrequency.phase_by_time.html#neurodsp.timefrequency.phase_by_time" title="neurodsp.timefrequency.phase_by_time" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">phase_by_time</span></a>
 
 <span class="c1"># Import utilities for loading and plotting data</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">create_times</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.download</span> <span class="kn">import</span> <span class="n">load_ndsp_data</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_instantaneous_measure.html#neurodsp.plts.plot_instantaneous_measure" title="neurodsp.plts.plot_instantaneous_measure" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_instantaneous_measure</span></a>
 </pre></div>
@@ -137,7 +135,7 @@ to download the full example code</p>
 
 <span class="c1"># Set sampling rate, and create a times vector for plotting</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
 <span class="c1"># Set the frequency range to be used</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
@@ -209,7 +207,7 @@ such as applying a median filter, is used to make it smoother.</p>
 </pre></div>
 </div>
 <img alt="plot InstantaneousMeasures" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_InstantaneousMeasures_004.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.611 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.188 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-timefreq-plot-instantaneousmeasures-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/cfe3154ea0b8f3647dc23b772985bb68/plot_InstantaneousMeasures.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_InstantaneousMeasures.py</span></code></a></p>
@@ -234,8 +232,8 @@ such as applying a median filter, is used to make it smoother.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

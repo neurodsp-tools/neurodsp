@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.combined &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.combined &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,14 +113,17 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.sim.info</span> <span class="kn">import</span> <span class="n">get_sim_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.utils</span> <span class="kn">import</span> <span class="n">modulate_signal</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="sim_combined"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_combined.html#neurodsp.sim.sim_combined">[docs]</a><span class="nd">@normalize</span>
+<div class="viewcode-block" id="sim_combined"><a class="viewcode-back" href="../../../generated/neurodsp.sim.combined.sim_combined.html#neurodsp.sim.combined.sim_combined">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">component_variances</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate a signal by combining multiple component signals.</span>
 
@@ -173,8 +175,8 @@
     <span class="c1"># Collect the sim function to use, and repeat variance if is single number</span>
     <span class="n">components</span> <span class="o">=</span> <span class="p">{(</span><span class="n">get_sim_func</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">name</span><span class="p">)</span> <span class="p">:</span> <span class="n">params</span> \
                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-    <span class="n">variances</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">component_variances</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">component_variances</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> \
-        <span class="k">else</span> <span class="nb">iter</span><span class="p">(</span><span class="n">component_variances</span><span class="p">)</span>
+    <span class="n">variances</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">component_variances</span><span class="p">)</span> <span class="k">if</span> \
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">component_variances</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">))</span> <span class="k">else</span> <span class="nb">iter</span><span class="p">(</span><span class="n">component_variances</span><span class="p">)</span>
 
     <span class="c1"># Simulate each component of the signal</span>
     <span class="n">sig_components</span> <span class="o">=</span> <span class="p">[]</span>
@@ -182,17 +184,145 @@
 
         <span class="c1"># If list, params should be a list of separate parameters for each function call</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">sig_components</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">func</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">cur_params</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">variances</span><span class="p">))</span> \
-                <span class="k">for</span> <span class="n">cur_params</span> <span class="ow">in</span> <span class="n">params</span><span class="p">])</span>
+            <span class="n">sig_components</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">func</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">cur_params</span><span class="p">,</span>
+                                        <span class="n">variance</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">variances</span><span class="p">))</span> <span class="k">for</span> <span class="n">cur_params</span> <span class="ow">in</span> <span class="n">params</span><span class="p">])</span>
 
         <span class="c1"># Otherwise, params should be a dictionary of parameters for single call</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">sig_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">variances</span><span class="p">)))</span>
+            <span class="n">sig_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+                                       <span class="n">variance</span><span class="o">=</span><span class="nb">next</span><span class="p">(</span><span class="n">variances</span><span class="p">)))</span>
 
     <span class="c1"># Combine total signal across all simulated components</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sig_components</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_peak_oscillation"><a class="viewcode-back" href="../../../generated/neurodsp.sim.combined.sim_peak_oscillation.html#neurodsp.sim.combined.sim_peak_oscillation">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_peak_oscillation</span><span class="p">(</span><span class="n">sig_ap</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a signal with an aperiodic component and a specific oscillation peak.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig_ap : 1d array</span>
+<span class="sd">        The timeseries of the aperiodic component.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of ``sig_ap``.</span>
+<span class="sd">    freq : float</span>
+<span class="sd">        Central frequency for the gaussian peak in Hz.</span>
+<span class="sd">    bw : float</span>
+<span class="sd">        Bandwidth, or standard deviation, of gaussian peak in Hz.</span>
+<span class="sd">    height : float</span>
+<span class="sd">        Relative height of the gaussian peak at the central frequency ``freq``.</span>
+<span class="sd">        Units of log10(power), over the aperiodic component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Time series with desired power spectrum.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function creates a time series whose power spectrum consists of an aperiodic component</span>
+<span class="sd">    and a gaussian peak at ``freq`` with standard deviation ``bw`` and relative ``height``.</span>
+<span class="sd">    - The periodic component of the signal will be sinusoidal.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a signal with aperiodic exponent of -2 &amp; oscillation central frequency of 20 Hz:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; sig_ap = sim_powerlaw(n_seconds=10, fs=fs, exponent=-2.0)</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_peak_oscillation(sig_ap, fs=fs, freq=20, bw=5, height=7)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sig_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig_ap</span><span class="p">)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">sig_len</span> <span class="o">/</span> <span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Compute the Fourier transform of the aperiodic signal</span>
+    <span class="c1">#   We extract the first half of the frequencies from the FFT, since the signal is real</span>
+    <span class="n">sig_ap_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig_ap</span><span class="p">)[</span><span class="mi">0</span><span class="p">:(</span><span class="n">sig_len</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+    <span class="c1"># Create the corresponding frequency vector, which is used to create the cosines to sum</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fs</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">sig_len</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Compute the periodic signal</span>
+    <span class="n">sig_periodic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sig_len</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">f_val</span><span class="p">,</span> <span class="n">fft</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">sig_ap_hat</span><span class="p">):</span>
+
+        <span class="c1"># Compute the sum of squares of the cosines</span>
+        <span class="n">cos_times</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f_val</span> <span class="o">*</span> <span class="n">times</span>
+        <span class="n">cos_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cos_times</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># Compute random phase shift</span>
+        <span class="n">pha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">cos_times</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+
+        <span class="c1"># Define relative height above the aperiodic power spectrum</span>
+        <span class="n">hgt</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">f_val</span> <span class="o">-</span> <span class="n">freq</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bw</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">sig_periodic</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fft</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fft</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> \
+            <span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="n">hgt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">cos_norm</span> <span class="o">*</span> <span class="n">pha</span>
+
+    <span class="c1"># Create the combined signal by summing periodic &amp; aperiodic</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">sig_ap</span> <span class="o">+</span> <span class="n">sig_periodic</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_modulated_signal"><a class="viewcode-back" href="../../../generated/neurodsp.sim.combined.sim_modulated_signal.html#neurodsp.sim.combined.sim_modulated_signal">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_modulated_signal</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">sig_func</span><span class="p">,</span> <span class="n">sig_params</span><span class="p">,</span> <span class="n">mod_func</span><span class="p">,</span> <span class="n">mod_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate an amplitude modulated signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Signal sampling rate, in Hz.</span>
+<span class="sd">    sig_func : str</span>
+<span class="sd">        Name of the function to use to simulate the signal.</span>
+<span class="sd">    sig_param : dictionary</span>
+<span class="sd">        Parameters for the signal generation function.</span>
+<span class="sd">    mod_func : callable</span>
+<span class="sd">        Name of the function to use to simulate the modulating signal.</span>
+<span class="sd">    mod_params : dictionary</span>
+<span class="sd">        Parameters for the modulation function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    msig : 1d array</span>
+<span class="sd">        Amplitude modulated signal.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    String labels for `sig_func` &amp; `mod_func` can be any sim function available in the module.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate an oscillatory signal that is amplitude modulated for a slower oscillation:</span>
+
+<span class="sd">    &gt;&gt;&gt; n_seconds = 10</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; msig_osc = sim_modulated_signal(n_seconds, fs,</span>
+<span class="sd">    ...                                 &#39;sim_oscillation&#39;, {&#39;freq&#39; : 10},</span>
+<span class="sd">    ...                                 &#39;sim_oscillation&#39;, {&#39;freq&#39; : 1})</span>
+
+<span class="sd">    Simulate an oscillatory signal that is amplitude modulated by a 1/f drift:</span>
+
+<span class="sd">    &gt;&gt;&gt; n_seconds = 10</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; msig_ap = sim_modulated_signal(n_seconds, fs,</span>
+<span class="sd">    ...                                &#39;sim_oscillation&#39;, {&#39;freq&#39; : 10},</span>
+<span class="sd">    ...                                &#39;sim_powerlaw&#39;, {&#39;exponent&#39; : -1})</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="n">sig_func</span><span class="p">)(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">sig_params</span><span class="p">)</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="n">mod_func</span><span class="p">)(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">mod_params</span><span class="p">)</span>
+    <span class="n">msig</span> <span class="o">=</span> <span class="n">modulate_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">msig</span></div>
 </pre></div>
 
     </div>
@@ -206,8 +336,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

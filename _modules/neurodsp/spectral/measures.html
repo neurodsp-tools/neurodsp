@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.spectral.measures &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.spectral.measures</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;&quot;Compute spectral power related measures.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="kn">import</span> <span class="n">get_avg_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="compute_absolute_power"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_absolute_power.html#neurodsp.spectral.compute_absolute_power">[docs]</a><span class="k">def</span> <span class="nf">compute_absolute_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute absolute power for a given frequency band.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequency values.</span>
+<span class="sd">    powers : 1d array</span>
+<span class="sd">        Power spectrum power values.</span>
+<span class="sd">    band : list of [float, float]</span>
+<span class="sd">        Band definition.</span>
+<span class="sd">    method : {&#39;sum&#39;, &#39;mean&#39;, &#39;median&#39;}, optional</span>
+<span class="sd">        Method to use to compute power across the band.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    abs_power : float</span>
+<span class="sd">        Computed absolute power.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute absolute alpha power in a simulated signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(10, 500, {&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39;: {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, powers = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; abs_power = compute_absolute_power(freqs, powers, [8, 12])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">band_powers</span> <span class="o">=</span> <span class="n">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">band</span><span class="p">)</span>
+    <span class="n">abs_power</span> <span class="o">=</span> <span class="n">get_avg_func</span><span class="p">(</span><span class="n">method</span><span class="p">)(</span><span class="n">band_powers</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">abs_power</span></div>
+
+
+<div class="viewcode-block" id="compute_relative_power"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_relative_power.html#neurodsp.spectral.compute_relative_power">[docs]</a><span class="k">def</span> <span class="nf">compute_relative_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">norm_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute relative power for a given frequency band.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequency values.</span>
+<span class="sd">    powers : 1d array</span>
+<span class="sd">        Power spectrum power values.</span>
+<span class="sd">    band : list of [float, float]</span>
+<span class="sd">        Band definition.</span>
+<span class="sd">    method : {&#39;sum&#39;, &#39;mean&#39;, &#39;median&#39;}, optional</span>
+<span class="sd">        Method to use to compute power across the band.</span>
+<span class="sd">    norm_range : list of [float, float], optional</span>
+<span class="sd">        Frequency range to use to compute total power.</span>
+<span class="sd">        If not provided, the whole spectrum is used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rel_power : float</span>
+<span class="sd">        Computed relative power.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute relative alpha power in a simulated signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(10, 500, {&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39;: {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, powers = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; abs_power = compute_relative_power(freqs, powers, [8, 12])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">band_power</span> <span class="o">=</span> <span class="n">compute_absolute_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="n">total_band</span> <span class="o">=</span> <span class="p">[</span><span class="n">freqs</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">freqs</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">norm_range</span> <span class="k">else</span> <span class="n">norm_range</span>
+    <span class="n">total_power</span> <span class="o">=</span> <span class="n">compute_absolute_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">total_band</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="n">rel_power</span> <span class="o">=</span> <span class="n">band_power</span> <span class="o">/</span> <span class="n">total_power</span>
+
+    <span class="k">return</span> <span class="n">rel_power</span></div>
+
+
+<div class="viewcode-block" id="compute_band_ratio"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_band_ratio.html#neurodsp.spectral.compute_band_ratio">[docs]</a><span class="k">def</span> <span class="nf">compute_band_ratio</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">low_band</span><span class="p">,</span> <span class="n">high_band</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate band ratio measure between two predefined frequency ranges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequency values.</span>
+<span class="sd">    powers : 1d array</span>
+<span class="sd">        Power spectrum power values.</span>
+<span class="sd">    low_band : list of [float, float]</span>
+<span class="sd">        Band definition for the lower band.</span>
+<span class="sd">    high_band : list of [float, float]</span>
+<span class="sd">        Band definition for the upper band.</span>
+<span class="sd">    method : {&#39;mean&#39;, &#39;median&#39;, &#39;sum&#39;}, optional</span>
+<span class="sd">        Method to use to compute power across the band.</span>
+
+<span class="sd">    Outputs</span>
+<span class="sd">    -------</span>
+<span class="sd">    ratio : float</span>
+<span class="sd">        Band ratio.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function is provided as a convenience function, for computing band ratio measures</span>
+<span class="sd">    in order to, for example, compare to other measures. In general, band ratio measures</span>
+<span class="sd">    are not recommended, as they conflate aperiodic and periodic features (see [1] for more).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Donoghue, T., Dominguez, J., &amp; Voytek, B. (2020). Electrophysiological Frequency</span>
+<span class="sd">           Band Ratio Measures Conflate Periodic and Aperiodic Neural Activity. ENeuro, 7(6),</span>
+<span class="sd">           ENEURO.0192-20.2020. DOI: https://doi.org/10.1523/ENEURO.0192-20.2020</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute theta/beta band ratio in a simulated signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(10, 500, {&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39;: {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, powers = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; abs_power = compute_band_ratio(freqs, powers, [4, 8], [13, 30])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the power in each band</span>
+    <span class="n">low_band_power</span> <span class="o">=</span> <span class="n">compute_absolute_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">low_band</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+    <span class="n">high_band_power</span> <span class="o">=</span> <span class="n">compute_absolute_power</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="n">high_band</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the ratio between bands</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">low_band_power</span> <span class="o">/</span> <span class="n">high_band_power</span>
+
+    <span class="k">return</span> <span class="n">ratio</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

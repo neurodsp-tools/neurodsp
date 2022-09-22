@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="#">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,8 +109,26 @@
       
   <div class="section" id="neuro-digital-signal-processing-toolbox">
 <h1>Neuro Digital Signal Processing Toolbox<a class="headerlink" href="#neuro-digital-signal-processing-toolbox" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="ProjectStatus" src="https://www.repostatus.org/badges/latest/active.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a> <a class="reference external" href="https://travis-ci.com/github/neurodsp-tools/neurodsp"><img alt="BuildStatus" src="https://travis-ci.com/neurodsp-tools/neurodsp.svg" /></a> <a class="reference external" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="Coverage" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="PythonVersions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a> <a class="reference external" href="https://doi.org/10.21105/joss.01272"><img alt="Publication" src="https://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a></p>
+<p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="ProjectStatus" src="https://www.repostatus.org/badges/latest/active.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a> <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml"><img alt="BuildStatus" src="https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="Coverage" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg" /></a> <a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="PythonVersions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a> <a class="reference external" href="https://doi.org/10.21105/joss.01272"><img alt="Publication" src="https://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a></p>
 <p>Tools to analyze and simulate neural time series, using digital signal processing.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p><cite>neurodsp</cite> is a collection of approaches for applying digital signal processing, and
+related algorithms, to neural time series. It also includes simulation tools for generating
+plausible simulations of neural time series.</p>
+<p>Available modules in <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute freqeuncy domain features such as power spectra</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillations in neural signals</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rhythm</span></code> : Find and analyze rhythmic and recurrent patterns in time series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aperiodic</span></code> : Analyze aperiodic features of neural time series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate time series, including periodic and aperiodic signal components</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plts</span></code> : Plot neural time series and derived measures</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils</span></code> : Additional utilities for managing time series data</p></li>
+</ul>
+</div>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Documentation for the <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> module is available <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/">here</a>.</p>
@@ -127,7 +144,7 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 </div>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> is written in Python, and requires Python &gt;= 3.5 to run.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> is written in Python, and requires Python &gt;= 3.6 to run.</p>
 <p>It has the following dependencies:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/numpy/numpy">numpy</a></p></li>
@@ -167,32 +184,21 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
-<p>Please use the
-<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">Github issue tracker</a>
-to file bug reports and/or ask questions about this project.</p>
-</div>
-<div class="section" id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
-<p>Available modules in <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> include:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">filt</span></code> : Filter data with bandpass, highpass, lowpass, or notch filters</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">burst</span></code> : Detect bursting oscillations in neural signals</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rhythm</span></code> : Find and analyze rhythmic and recurrent patterns in time series</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spectral</span></code> : Compute spectral domain features such as power spectra</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> : Estimate instantaneous measures of oscillatory activity</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sim</span></code> : Simulate time series, including periodic and aperiodic signal components</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plts</span></code> : Plotting functions</p></li>
-</ul>
 </div>
 <div class="section" id="contribute">
 <h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> welcomes and encourages contributions from the community!</p>
-<p>If you have an idea of something to add to NeuroDSP, please start by opening an
-<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a>.</p>
-<p>When writing code to add to NeuroDSP, please follow the
-<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/CONTRIBUTING.md">Contribution Guidelines</a>.</p>
-<p>We also require that all contributors follow our
-<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a>.</p>
+<p>This project welcomes and encourages contributions from the community!</p>
+<p>To file bug reports and/or ask questions about this project, please use the
+<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">Github issue tracker</a>.</p>
+<p>To see and get involved in discussions about the module, check out:</p>
+<ul class="simple">
+<li><p>the <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issues board</a> for topics relating to code updates, bugs, and fixes</p></li>
+<li><p>the <a class="reference external" href="https://github.com/neurodsp-tools/Development">development page</a> for discussion of potential major updates to the module</p></li>
+</ul>
+<p>When interacting with this project, please use the
+<a class="reference external" href="https://github.com/neurodsp-tools/fooof/blob/main/CONTRIBUTING.md">contribution guidelines</a>
+and follow the
+<a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/main/CODE_OF_CONDUCT.md">code of conduct</a>.</p>
 </div>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
@@ -220,9 +226,12 @@ DOI: 10.21105/joss.01272
 </div>
 <div class="section" id="funding">
 <h2>Funding<a class="headerlink" href="#funding" title="Permalink to this headline">¶</a></h2>
-<p>Supported by NIH award R01 GM134363</p>
-<p><a class="reference external" href="https://www.nigms.nih.gov/">NIGMS</a></p>
+<p>Supported by NIH award R01 GM134363 from the
+<a class="reference external" href="https://www.nigms.nih.gov/">NIGMS</a>.</p>
 <a class="reference internal image-reference" href="https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png"><img alt="https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png" src="https://www.nih.gov/sites/all/themes/nih/images/nih-logo-color.png" style="width: 400px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </div>
 </div>
 
@@ -238,8 +247,8 @@ DOI: 10.21105/joss.01272
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -121,13 +120,14 @@
 </dd>
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
 </dd>
-<dt><strong>freqs</strong><span class="classifier">1d array or list of float</span></dt><dd><p>If array, frequency values to estimate with morlet wavelets.
+<dt><strong>freqs</strong><span class="classifier">1d array or list of float</span></dt><dd><p>The frequency values at which to estimate lagged coherence.
+If array, defines the frequency values to use.
 If list, define the frequency range, as [freq_start, freq_stop, freq_step].
 The <cite>freq_step</cite> is optional, and defaults to 1. Range is inclusive of <cite>freq_stop</cite> value.</p>
 </dd>
-<dt><strong>n_cycles</strong><span class="classifier">float or list of float, default: 3</span></dt><dd><p>Number of cycles of each frequency to use to compute lagged coherence.
-If a single value, the same number of cycles is used for each frequency value.
-If a list or list_like, then should be a n_cycles corresponding to each frequency.</p>
+<dt><strong>n_cycles</strong><span class="classifier">float or list of float, default: 3</span></dt><dd><p>The number of cycles to use to compute lagged coherence, for each frequency.
+If a single value, the same number of cycles is used for each frequency.
+If a list or list_like, there should be a value corresponding to each frequency.</p>
 </dd>
 <dt><strong>return_spectrum</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>If True, return the lagged coherence for all frequency values.
 Otherwise, only the mean lagged coherence value across the frequency range is returned.</p>
@@ -145,12 +145,16 @@ Only returned if <cite>return_spectrum</cite> is True.</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The lagged coherence algorithm is described in <a class="reference internal" href="#re32d6195de75-1" id="id1">[1]</a>.</p></li>
+</ul>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="re32d6195de75-1"><span class="brackets">1</span></dt>
-<dd><p>Fransen, A. M., van Ede, F., &amp; Maris, E. (2015).
-Identifying neuronal oscillations using rhythmicity.
-Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003</p>
+<dt class="label" id="re32d6195de75-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Fransen, A. M., van Ede, F., &amp; Maris, E. (2015). Identifying neuronal
+oscillations using rhythmicity. NeuroImage, 118, 256-267.
+DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2015.06.003">https://doi.org/10.1016/j.neuroimage.2015.06.003</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -168,13 +172,13 @@ Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003</p>
 
 <div class="section" id="examples-using-neurodsp-rhythm-compute-lagged-coherence">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.compute_lagged_coherence</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id2">
+<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id3">
 <img alt="Using NeuroDSP with MNE" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Compute lagged coherence on neural signals."><div class="figure align-default" id="id3">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><div class="figure align-default" id="id4">
 <img alt="Lagged Coherence" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div style='clear:both'></div></div>
 </div>
@@ -191,8 +195,8 @@ Neuroimage, 118, 256-267. DOI: 10.1016/j.neuroimage.2015.06.003</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

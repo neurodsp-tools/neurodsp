@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.filt.checks &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.filt.checks &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -170,9 +169,9 @@
     <span class="c1"># Check that frequency cutoff inputs are appropriate</span>
     <span class="c1">#   For band filters, 2 inputs required &amp; second entry must be &gt; first</span>
     <span class="k">if</span> <span class="n">pass_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="ow">and</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Second cutoff frequency must be greater than first.&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two cutoff frequencies required for bandpass and bandstop filters.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Map f_range to f_lo and f_hi</span>
@@ -180,16 +179,16 @@
 
     <span class="c1"># For lowpass and highpass can be tuple or int/float</span>
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;lowpass&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)):</span>
             <span class="n">f_hi</span> <span class="o">=</span> <span class="n">f_range</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="n">f_hi</span> <span class="o">=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">f_lo</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;highpass&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)):</span>
             <span class="n">f_lo</span> <span class="o">=</span> <span class="n">f_range</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="n">f_lo</span> <span class="o">=</span> <span class="n">f_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">f_hi</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -261,7 +260,7 @@
     <span class="c1"># Check that frequency response goes below transition level (has significant attenuation)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">db</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="n">passes</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The filter attenuation never goes below </span><span class="si">{}</span><span class="s1"> dB.&#39;</span>\
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The filter attenuation never goes below </span><span class="si">{}</span><span class="s1"> dB. &#39;</span>\
              <span class="s1">&#39;Increase filter length.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="c1"># If there is no attenuation, cannot calculate bands, so return here</span>
         <span class="k">return</span> <span class="n">passes</span>
@@ -270,7 +269,7 @@
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">db</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">db</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">passes</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The low or high frequency stopband never gets attenuated by&#39;</span>\
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The low or high frequency stopband never gets attenuated by &#39;</span>\
                  <span class="s1">&#39;more than </span><span class="si">{}</span><span class="s1"> dB. Increase filter length.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
 
     <span class="c1"># Compute pass &amp; transition bandwidth</span>
@@ -280,8 +279,8 @@
     <span class="c1"># Raise warning if transition bandwidth is too high</span>
     <span class="k">if</span> <span class="n">transition_bw</span> <span class="o">&gt;</span> <span class="n">pass_bw</span><span class="p">:</span>
         <span class="n">passes</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Transition bandwidth is  </span><span class="si">{:.1f}</span><span class="s1">  Hz. This is greater than the desired&#39;</span>\
-             <span class="s1">&#39;pass/stop bandwidth of  </span><span class="si">{:.1f}</span><span class="s1"> Hz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transition_bw</span><span class="p">,</span> <span class="n">pass_bw</span><span class="p">))</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Transition bandwidth is </span><span class="si">{:.1f}</span><span class="s1"> Hz. This is greater than the desired &#39;</span>\
+             <span class="s1">&#39;pass/stop bandwidth of </span><span class="si">{:.1f}</span><span class="s1"> Hz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transition_bw</span><span class="p">,</span> <span class="n">pass_bw</span><span class="p">))</span>
 
     <span class="c1"># Print out transition bandwidth and pass bandwidth to the user</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -326,8 +325,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

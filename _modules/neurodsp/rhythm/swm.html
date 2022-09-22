@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.rhythm.swm &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.rhythm.swm &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,7 +108,7 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for neurodsp.rhythm.swm</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;The sliding window matching algorithm for identifying rhythmic components of a neural signal.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;The sliding window matching algorithm for identifying recurring patterns in a neural signal.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -119,8 +118,8 @@
 <span class="c1">###################################################################################################</span>
 
 <div class="viewcode-block" id="sliding_window_matching"><a class="viewcode-back" href="../../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">sliding_window_matching</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-                            <span class="n">temperature</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_starts_custom</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">sliding_window_matching</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                            <span class="n">window_starts_custom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_thresh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find recurring patterns in a time series using the sliding window matching algorithm.</span>
 
 <span class="sd">    Parameters</span>
@@ -130,153 +129,196 @@
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
 <span class="sd">    win_len : float</span>
-<span class="sd">        Window length, in seconds.</span>
+<span class="sd">        Window length, in seconds. This is L in the original paper.</span>
 <span class="sd">    win_spacing : float</span>
-<span class="sd">        Minimum window spacing, in seconds.</span>
-<span class="sd">    max_iterations : int</span>
+<span class="sd">        Minimum spacing between windows, in seconds. This is G in the original paper.</span>
+<span class="sd">    max_iterations : int, optional, default: 100</span>
 <span class="sd">        Maximum number of iterations of potential changes in window placement.</span>
-<span class="sd">    temperature : float</span>
-<span class="sd">        Temperature parameter. Controls probability of accepting a new window.</span>
-<span class="sd">    window_starts_custom : 1d array, optional</span>
+<span class="sd">    window_starts_custom : 1d array, optional, default: None</span>
 <span class="sd">        Custom pre-set locations of initial windows.</span>
+<span class="sd">    var_thresh: float, optional, default: None</span>
+<span class="sd">        Removes initial windows with variance below a set threshold. This speeds up</span>
+<span class="sd">        runtime proportional to the number of low variance windows in the data.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    avg_window : 1d array</span>
-<span class="sd">        The average waveform in &#39;sig&#39; in the frequency &#39;f_range&#39; triggered on &#39;trigger&#39;.</span>
+<span class="sd">    windows : 2d array</span>
+<span class="sd">        Putative patterns discovered in the input signal.</span>
 <span class="sd">    window_starts : 1d array</span>
 <span class="sd">        Indices at which each window begins for the final set of windows.</span>
-<span class="sd">    costs : 1d array</span>
-<span class="sd">        Cost function value at each iteration.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This algorithm is originally described in [1]_. This re-implementation is a minimal,</span>
+<span class="sd">      modified version of original ([2]_), which has more available options.</span>
+<span class="sd">    - The `win_len` parameter should be chosen to be about the size of the motif of interest.</span>
+<span class="sd">      The larger this window size, the more likely the pattern to reflect slower patterns.</span>
+<span class="sd">    - The `win_spacing` parameter also determines the number of windows that are used.</span>
+<span class="sd">    - If looking at high frequency activity, you may want to apply a highpass filter,</span>
+<span class="sd">      so that the algorithm does not converge on a low frequency motif.</span>
+<span class="sd">    - This version has the following changes to speed up convergence:</span>
+
+<span class="sd">      1. Each iteration is similar to an epoch, randomly moving all windows in</span>
+<span class="sd">         random order. The original implementation randomly selects windows and</span>
+<span class="sd">         does not guarantee even resampling.</span>
+<span class="sd">      2. New window acceptance is determined via increased correlation coefficients</span>
+<span class="sd">         and reduced variance across windows.</span>
+<span class="sd">      3. Phase optimization / realignment to escape local minima.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &amp;</span>
 <span class="sd">           van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological</span>
 <span class="sd">           recordings. Journal of Neuroscience Methods, 275, 66-79.</span>
-<span class="sd">           DOI: 10.1016/j.jneumeth.2016.11.001</span>
-<span class="sd">           Matlab Code: https://github.com/bartgips/SWM</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - Apply a highpass filter if looking at high frequency activity, so that it does</span>
-<span class="sd">      not converge on a low frequency motif.</span>
-<span class="sd">    - Parameters `win_len` and `win_spacing` should be chosen to be about the size of the</span>
-<span class="sd">      motif of interest, and the N derived should be about the number of occurrences.</span>
+<span class="sd">           DOI: https://doi.org/10.1016/j.jneumeth.2016.11.001</span>
+<span class="sd">    .. [2] Matlab Code implementation: https://github.com/bartgips/SWM</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Search for reoccuring patterns using sliding window matching in a simulated beta signal:</span>
+<span class="sd">    Search for reoccurring patterns using sliding window matching in a simulated beta signal:</span>
 
 <span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
-<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
-<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {&#39;f_range&#39;: (2, None)},</span>
-<span class="sd">    ...                                &#39;sim_bursty_oscillation&#39;: {&#39;freq&#39;: 20,</span>
-<span class="sd">    ...                                                           &#39;enter_burst&#39;: .25,</span>
-<span class="sd">    ...                                                           &#39;leave_burst&#39;: .25}})</span>
-<span class="sd">    &gt;&gt;&gt; avg_window, window_starts, costs = sliding_window_matching(sig, fs=500, win_len=0.05,</span>
-<span class="sd">    ...                                                            win_spacing=0.20)</span>
+<span class="sd">    &gt;&gt;&gt; components = {&#39;sim_bursty_oscillation&#39; : {&#39;freq&#39; : 20, &#39;phase&#39; : &#39;min&#39;},</span>
+<span class="sd">    ...               &#39;sim_powerlaw&#39; : {&#39;f_range&#39; : (2, None)}}</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(10, fs=500, components=components, component_variances=(1, .05))</span>
+<span class="sd">    &gt;&gt;&gt; windows, starts = sliding_window_matching(sig, fs=500, win_len=0.05,</span>
+<span class="sd">    ...                                           win_spacing=0.05, var_thresh=.5)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Compute window length and spacing in samples</span>
-    <span class="n">win_n_samps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_len</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
-    <span class="n">spacing_n_samps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_spacing</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">win_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_len</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">win_spacing</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_spacing</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
 
     <span class="c1"># Initialize window positions</span>
     <span class="k">if</span> <span class="n">window_starts_custom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">window_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_n_samps</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">spacing_n_samps</span><span class="p">)</span>
+        <span class="n">window_starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">window_starts</span> <span class="o">=</span> <span class="n">window_starts_custom</span>
-    <span class="n">n_windows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">window_starts</span><span class="p">)</span>
 
-    <span class="c1"># Randomly sample windows with replacement</span>
-    <span class="n">random_window_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_windows</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">)</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">win_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">window_starts</span><span class="p">])</span>
 
-    <span class="c1"># Calculate initial cost</span>
-    <span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_iterations</span><span class="p">)</span>
-    <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_n_samps</span><span class="p">)</span>
+    <span class="c1"># Compute new window bounds</span>
+    <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">_compute_bounds</span><span class="p">(</span><span class="n">window_starts</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_len</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">iter_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">):</span>
+    <span class="c1"># Remove low variance windows to speed up runtime</span>
+    <span class="k">if</span> <span class="n">var_thresh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="c1"># Pick a random window position to randomly replace with a</span>
-        <span class="c1"># new window to improve cross-window similarity</span>
-        <span class="n">window_idx_replace</span> <span class="o">=</span> <span class="n">random_window_idx</span><span class="p">[</span><span class="n">iter_num</span><span class="p">]</span>
+        <span class="n">thresh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">loc</span><span class="p">:</span><span class="n">loc</span> <span class="o">+</span> <span class="n">win_len</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">var_thresh</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">window_starts</span><span class="p">])</span>
 
-        <span class="c1"># Find a new allowed position for the window</span>
-        <span class="n">window_starts_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">window_starts</span><span class="p">)</span>
-        <span class="n">window_starts_temp</span><span class="p">[</span><span class="n">window_idx_replace</span><span class="p">]</span> <span class="o">=</span> <span class="n">_find_new_window_idx</span><span class="p">(</span>
-            <span class="n">window_starts</span><span class="p">,</span> <span class="n">spacing_n_samps</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_n_samps</span><span class="p">)</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">windows</span><span class="p">[</span><span class="n">thresh</span><span class="p">]</span>
+        <span class="n">window_starts</span> <span class="o">=</span> <span class="n">window_starts</span><span class="p">[</span><span class="n">thresh</span><span class="p">]</span>
+        <span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">lower_bounds</span><span class="p">[</span><span class="n">thresh</span><span class="p">]</span>
+        <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">upper_bounds</span><span class="p">[</span><span class="n">thresh</span><span class="p">]</span>
 
-        <span class="c1"># Calculate the cost &amp; the change in the cost function</span>
-        <span class="n">cost_temp</span> <span class="o">=</span> <span class="n">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">window_starts_temp</span><span class="p">,</span> <span class="n">win_n_samps</span><span class="p">)</span>
-        <span class="n">delta_cost</span> <span class="o">=</span> <span class="n">cost_temp</span> <span class="o">-</span> <span class="n">costs</span><span class="p">[</span><span class="n">iter_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Modified SWM procedure</span>
+    <span class="n">window_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">windows</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="c1"># Calculate the acceptance probability</span>
-        <span class="n">p_accept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta_cost</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">temperature</span><span class="p">))</span>
+    <span class="n">corrs</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_len</span><span class="p">)</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">windows</span> <span class="o">-</span> <span class="n">windows</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
 
-        <span class="c1"># Accept update to J with a certain probability</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">p_accept</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iterations</span><span class="p">):</span>
 
-            <span class="c1"># Update costs &amp; windows</span>
-            <span class="n">costs</span><span class="p">[</span><span class="n">iter_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_temp</span>
-            <span class="n">window_starts</span> <span class="o">=</span> <span class="n">window_starts_temp</span>
+        <span class="c1"># Randomly shuffle order of windows</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">window_idxs</span><span class="p">)</span>
 
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">win_idx</span> <span class="ow">in</span> <span class="n">window_idxs</span><span class="p">:</span>
 
-            <span class="c1"># Update costs</span>
-            <span class="n">costs</span><span class="p">[</span><span class="n">iter_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">iter_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Find a new, random window start</span>
+            <span class="n">_window_starts</span> <span class="o">=</span> <span class="n">window_starts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">_window_starts</span><span class="p">[</span><span class="n">win_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lower_bounds</span><span class="p">[</span><span class="n">win_idx</span><span class="p">],</span>
+                                                                 <span class="n">upper_bounds</span><span class="p">[</span><span class="n">win_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
-    <span class="c1"># Calculate average window</span>
-    <span class="n">avg_window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">win_n_samps</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">w_ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_windows</span><span class="p">):</span>
-        <span class="n">avg_window</span> <span class="o">=</span> <span class="n">avg_window</span> <span class="o">+</span> <span class="n">sig</span><span class="p">[</span><span class="n">window_starts</span><span class="p">[</span><span class="n">w_ind</span><span class="p">]:</span><span class="n">window_starts</span><span class="p">[</span><span class="n">w_ind</span><span class="p">]</span> <span class="o">+</span> <span class="n">win_n_samps</span><span class="p">]</span>
-    <span class="n">avg_window</span> <span class="o">=</span> <span class="n">avg_window</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_windows</span><span class="p">)</span>
+            <span class="c1"># Accept new window if correlation increases and variance decreases</span>
+            <span class="n">_corrs</span><span class="p">,</span> <span class="n">_variance</span> <span class="o">=</span> <span class="n">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">_window_starts</span><span class="p">,</span> <span class="n">win_len</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">avg_window</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">costs</span></div>
+            <span class="k">if</span> <span class="n">_corrs</span><span class="p">[</span><span class="n">win_idx</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">corrs</span><span class="p">[</span><span class="n">win_idx</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="ow">and</span>  <span class="n">_variance</span> <span class="o">&lt;</span> <span class="n">variance</span><span class="p">:</span>
+
+                <span class="n">corrs</span> <span class="o">=</span> <span class="n">_corrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">variance</span> <span class="o">=</span> <span class="n">_variance</span>
+                <span class="n">window_starts</span> <span class="o">=</span> <span class="n">_window_starts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">_compute_bounds</span><span class="p">(</span>\
+                    <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_len</span><span class="p">)</span>
+
+        <span class="c1"># Phase optimization</span>
+        <span class="n">_window_starts</span> <span class="o">=</span> <span class="n">window_starts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">win_len</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_len</span><span class="o">/</span><span class="mi">2</span><span class="p">)):</span>
+
+            <span class="n">_starts</span> <span class="o">=</span> <span class="n">_window_starts</span> <span class="o">+</span> <span class="n">shift</span>
+
+            <span class="c1"># Skip windows shifts that are out-of-bounds</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">_starts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_starts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_len</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">_windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">win_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">_starts</span><span class="p">])</span>
+
+            <span class="n">_mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">_windows</span> <span class="o">-</span> <span class="n">_windows</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
+
+            <span class="k">if</span> <span class="n">_mae</span> <span class="o">&lt;</span> <span class="n">mae</span><span class="p">:</span>
+                <span class="n">window_starts</span> <span class="o">=</span> <span class="n">_starts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">windows</span> <span class="o">=</span> <span class="n">_windows</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">mae</span> <span class="o">=</span> <span class="n">_mae</span>
+
+        <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">_compute_bounds</span><span class="p">(</span>\
+            <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-</span> <span class="n">win_len</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">windows</span><span class="p">,</span> <span class="n">window_starts</span></div>
 
 
 <span class="k">def</span> <span class="nf">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_n_samps</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the cost, which is proportional to the difference between pairs of windows.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Compute the cost, as correlation coefficients and variance across windows.</span>
 
-    <span class="c1"># Get all windows and z-score them</span>
-    <span class="n">n_windows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">window_starts</span><span class="p">)</span>
-    <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_windows</span><span class="p">,</span> <span class="n">win_n_samps</span><span class="p">))</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    window_starts : list of int</span>
+<span class="sd">        The list of window start definitions.</span>
+<span class="sd">    win_n_samps : int</span>
+<span class="sd">        The length of each window, in samples.</span>
 
-    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">window</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">window_starts</span><span class="p">):</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">sig</span><span class="p">[</span><span class="n">window</span><span class="p">:</span><span class="n">window_starts</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+</span> <span class="n">win_n_samps</span><span class="p">]</span>
-        <span class="n">windows</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    corrs : 2d array</span>
+<span class="sd">        Window correlation matrix.</span>
+<span class="sd">    variance : float</span>
+<span class="sd">        Sum of the variance across windows.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Calculate distances for all pairs of windows</span>
-    <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ind1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_windows</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">ind2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ind1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_windows</span><span class="p">):</span>
-            <span class="n">window_diff</span> <span class="o">=</span> <span class="n">windows</span><span class="p">[</span><span class="n">ind1</span><span class="p">]</span> <span class="o">-</span> <span class="n">windows</span><span class="p">[</span><span class="n">ind2</span><span class="p">]</span>
-            <span class="n">dist_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">window_diff</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">win_n_samps</span><span class="p">)</span>
-            <span class="n">dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist_temp</span><span class="p">)</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">win_n_samps</span><span class="p">]</span> <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">window_starts</span><span class="p">])</span>
 
-    <span class="c1"># Calculate cost function, which is the average difference, roughly</span>
-    <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_windows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">corrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">cost</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">windows</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">corrs</span><span class="p">,</span> <span class="n">variance</span>
 
 
-<span class="k">def</span> <span class="nf">_find_new_window_idx</span><span class="p">(</span><span class="n">window_starts</span><span class="p">,</span> <span class="n">spacing_n_samps</span><span class="p">,</span> <span class="n">n_samp</span><span class="p">,</span> <span class="n">tries_limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find a new sample for the starting window.&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">_compute_bounds</span><span class="p">(</span><span class="n">window_starts</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute bounds on a new window.</span>
 
-    <span class="k">for</span> <span class="n">n_try</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tries_limit</span><span class="p">):</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    window_starts : list of int</span>
+<span class="sd">        The list of window start definitions.</span>
+<span class="sd">    win_spacing : float</span>
+<span class="sd">        Minimum spacing between windows, in seconds.</span>
+<span class="sd">    start, end : int</span>
+<span class="sd">        Start and end edges for the possible window.</span>
 
-        <span class="c1"># Generate a random sample &amp; check how close it is to other window starts</span>
-        <span class="n">new_samp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n_samp</span><span class="p">)</span>
-        <span class="n">dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">window_starts</span> <span class="o">-</span> <span class="n">new_samp</span><span class="p">)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lower_bounds, upper_bounds : 1d array</span>
+<span class="sd">        Computed upper and lower bounds for the window position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">spacing_n_samps</span><span class="p">:</span>
-            <span class="k">break</span>
+    <span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">window_starts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">win_spacing</span>
+    <span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">lower_bounds</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;SWM algorithm has difficulty finding a new window. </span><span class="se">\</span>
-<span class="s1">                            Try increasing the spacing parameter.&#39;</span><span class="p">)</span>
+    <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">window_starts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">win_spacing</span>
+    <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">upper_bounds</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">upper_bounds</span><span class="p">),</span> <span class="n">end</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">new_samp</span>
+    <span class="k">return</span> <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span>
 </pre></div>
 
     </div>
@@ -290,8 +332,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

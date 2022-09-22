@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lagged Coherence &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lagged Coherence &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,27 +109,31 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="lagged-coherence">
 <span id="sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"></span><h1>Lagged Coherence<a class="headerlink" href="#lagged-coherence" title="Permalink to this headline">¶</a></h1>
-<p>Compute lagged coherence on neural signals.</p>
+<p>Calculate the rhythmicity of neural signal with the lagged coherence algorithm.</p>
 <p>This tutorial primarily covers the <a class="reference internal" href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_lagged_coherence()</span></code></a> function.</p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Lagged coherence is a measure to quantify the rhythmicity of neural signals.</p>
-<p>For more details on the lagged coherence measure see Fransen et al., 2015, Neuroimage.</p>
+<p>Lagged coherence works by quantifying phase consistency between non-overlapping data fragments,
+calculated with Fourier coefficients. The consistency of the phase differences across
+epochs indexes the rhythmicity of the signal. Lagged coherence can be calculated for a
+particular frequency, and/or across a range of frequencies of interest.</p>
+<p>The lagged coherence algorithm is described in
+<a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2015.06.003">Fransen et al, 2015</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># Import the lagged coherence function</span>
 <span class="kn">from</span> <span class="nn">neurodsp.rhythm</span> <span class="kn">import</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a>
 
-<span class="c1"># Import simulation code for creating test data</span>
-<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.sim_combined.html#neurodsp.sim.sim_combined" title="neurodsp.sim.sim_combined" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_combined</span></a>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a>
+<span class="c1"># Import functions for simulating data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <span class="n">sim_combined</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <span class="n">create_times</span>
 
-<span class="c1"># Import utilities for loading and plotting data</span>
+<span class="c1"># Import utilities for loading and plotting</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.download</span> <span class="kn">import</span> <span class="n">load_ndsp_data</span>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 <span class="kn">from</span> <span class="nn">neurodsp.plts.rhythm</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a>
@@ -143,23 +146,40 @@ to download the full example code</p>
 </div>
 <div class="section" id="simulate-an-example-signal">
 <h2>Simulate an Example Signal<a class="headerlink" href="#simulate-an-example-signal" title="Permalink to this headline">¶</a></h2>
-<p>First, we’ll simulate an example signal that starts with a burst of alpha activity, followed
-by a period of only aperiodic activity.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set time and sampling rate</span>
-<span class="n">n_seconds_burst</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">n_seconds_noise</span> <span class="o">=</span> <span class="mi">2</span>
+<p>First, let’s start by creating some simulated data, to which we can apply lagged coherence.</p>
+<div class="section" id="simulation-settings">
+<h3>Simulation Settings<a class="headerlink" href="#simulation-settings" title="Permalink to this headline">¶</a></h3>
+<p>We’ll start with an example signal that starts with a burst of alpha activity,
+followed by a period of only aperiodic activity.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the sampling rate</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
 
+<span class="c1"># Set time for each segment of the simulated signal, in seconds</span>
+<span class="n">t_osc</span> <span class="o">=</span> <span class="mi">1</span>           <span class="c1"># oscillation</span>
+<span class="n">t_ap</span> <span class="o">=</span> <span class="mi">2</span>            <span class="c1"># aperiodic</span>
+
+<span class="c1"># Set the frequency of the oscillation</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Set the exponent value for the aperiodic activity</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
 <span class="c1"># Create a times vector</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="n">n_seconds_burst</span> <span class="o">+</span> <span class="n">n_seconds_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">t_osc</span> <span class="o">+</span> <span class="n">t_ap</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-the-simulated-data">
+<h3>Create the simulated data<a class="headerlink" href="#create-the-simulated-data" title="Permalink to this headline">¶</a></h3>
+<p>Next, we will create our simulated data, by concatenating simulated segments of data
+with and without a rhythm.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a signal component with an oscillation</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="n">freq</span><span class="p">},</span>
+                      <span class="s1">&#39;sim_powerlaw&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;f_range&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)}}</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">t_osc</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 
-<span class="c1"># Simulate a signal component with an oscillation</span>
-<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-              <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
-<span class="n">s1</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_combined.html#neurodsp.sim.sim_combined" title="neurodsp.sim.sim_combined" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_combined</span></a><span class="p">(</span><span class="n">n_seconds_burst</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-
-<span class="c1"># Simulate a signal component with just noise</span>
-<span class="n">s2</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="c1"># Simulate a signal component with only aperiodic activity</span>
+<span class="n">s2</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">t_ap</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="c1"># Join signals together to approximate a &#39;burst&#39;</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
@@ -171,70 +191,121 @@ by a period of only aperiodic activity.</p>
 </div>
 <img alt="plot LaggedCoherence" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_LaggedCoherence_001.png" />
 </div>
-<div class="section" id="compute-lagged-coherence-for-an-alpha-oscillation">
-<h2>Compute lagged coherence for an alpha oscillation<a class="headerlink" href="#compute-lagged-coherence-for-an-alpha-oscillation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="compute-lagged-coherence-on-simulated-data">
+<h2>Compute lagged coherence on simulated data<a class="headerlink" href="#compute-lagged-coherence-on-simulated-data" title="Permalink to this headline">¶</a></h2>
 <p>We can compute lagged coherence with the <a class="reference internal" href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_lagged_coherence()</span></code></a> function.</p>
+<div class="section" id="data-preprocessing-algorithm-settings">
+<h3>Data Preprocessing &amp; Algorithm Settings<a class="headerlink" href="#data-preprocessing-algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<p>The lagged coherence calculates the FFT across segments of the input data, and examines
+phase properties of frequencies of interest. As a spectral method that relies of the Fourier
+transform, the data does not have to be filtered prior to applying lagged coherence.</p>
+<p>You do have to specify which frequencies to examine the lagged coherence for, which is
+provided to the function as the <cite>freqs</cite> input. This input, which can specify either a list
+or a range of frequencies, indicates which frequencies to analyze with lagged coherence.</p>
+<p>An optional setting is the number of cycles to use at each frequency. This parameter
+controls the segment size used for each frequency.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency range to compute lagged coherence across</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-
-<span class="c1"># Compute lagged coherence</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="apply-lagged-coherence">
+<h3>Apply Lagged Coherence<a class="headerlink" href="#apply-lagged-coherence" title="Permalink to this headline">¶</a></h3>
+<p>Next, we can apply the lagged coherence algorithm to get the average lagged coherence
+across the alpha range.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute lagged coherence</span>
 <span class="n">lag_coh_alpha</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
-
-<span class="c1"># Check the resulting value</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lagged-coherence-result">
+<h3>Lagged coherence result<a class="headerlink" href="#lagged-coherence-result" title="Permalink to this headline">¶</a></h3>
+<p>The resulting lagged coherence value is bound between 0 and 1, with higher values
+indicating greater rhythmicity in the signal.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the resulting value</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence = &#39;</span><span class="p">,</span> <span class="n">lag_coh_alpha</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.853976263997615
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.6981128683467898
 </pre></div>
+</div>
+<p>The calculated lagged coherence value in the alpha range is high, meaning our measured
+lagged coherence value is indicating a large amount of rhythmicity across the analyzed
+frequencies. This is expected, since our simulated signal contains an alpha oscillation.</p>
 </div>
 </div>
 <div class="section" id="compute-lagged-coherence-across-the-frequency-spectrum">
 <h2>Compute lagged coherence across the frequency spectrum<a class="headerlink" href="#compute-lagged-coherence-across-the-frequency-spectrum" title="Permalink to this headline">¶</a></h2>
-<p>Notice that lagged coherence peaks around 10Hz (the frequency of our oscillation).</p>
-<p>However, the peak is not very specific to that frequency.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate lagged coherence across a frequency range</span>
-<span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-                                               <span class="n">return_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<p>What we calculated above was the average lagged coherence across a frequency range of
+interest, specifically the alpha range of (8, 12).</p>
+<p>Instead of looking at the average lagged coherence across a range, we can also
+calculated the lagged coherence for each frequency, and then look at the
+the distribution of lagged coherence values.</p>
+<p>To do so, we can set the <cite>return_spectrum</cite> parameter to be True, to indicated the function
+to return the full spectrum of lagged coherence values, as opposed to the average
+across the given range.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency range to compute the spectrum of LC values across</span>
+<span class="n">lc_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can plot the lagged coherence results with <a class="reference internal" href="../../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_lagged_coherence()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate lagged coherence across a frequency range</span>
+<span class="n">lag_coh_by_f</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">lc_range</span><span class="p">,</span> <span class="n">return_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Our outputs for lagged coherence are now a vector of lagged coherence values, as well
+as a vector of the frequencies that they correspond to.</p>
+<p>To visualize this result, we can use the <a class="reference internal" href="../../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_lagged_coherence()</span></code></a> function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize lagged coherence as a function of frequency</span>
 <a href="../../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">lag_coh_by_f</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="plot LaggedCoherence" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_LaggedCoherence_002.png" />
+<p>In these results, the lagged coherence peaks around 10 Hz. This is expected, as that is the
+frequency of the oscillation that we simulated, and the signal contains no other rhythms.</p>
+<p>Notice, however, that the peak around 10 Hz is not very specific to that frequency (it’s
+quite broad). This reflects the frequency resolution of the measure.</p>
+<p>The frequency resolution is controlled by the <cite>n_cycles</cite> parameter. You can explore how
+the spectrum of lagged coherence values varies as you chance the <cite>n_cycles</cite> input.</p>
 </div>
-<div class="section" id="compute-lagged-coherence-for-time-segments-with-and-without-burst">
-<h2>Compute lagged coherence for time segments with and without burst<a class="headerlink" href="#compute-lagged-coherence-for-time-segments-with-and-without-burst" title="Permalink to this headline">¶</a></h2>
-<p>Note that lagged coherence is greater when analyzing a neural signal that has a burst in
-the frequency range of interest, compared to a signal that does not have an oscillation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate coherence for data with the burst - the 1st second of data</span>
-<span class="n">lag_coh_burst</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">fs</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+<div class="section" id="compute-lagged-coherence-for-segments-with-and-without-bursts">
+<h2>Compute lagged coherence for segments with and without bursts<a class="headerlink" href="#compute-lagged-coherence-for-segments-with-and-without-bursts" title="Permalink to this headline">¶</a></h2>
+<p>Another factor we may want to keep in mind is that we are analyzing a signal with a
+bursty oscillation, and averaging the lagged coherence across the entire time range.</p>
+<p>To examine how the measure varies when the oscillation is and is not present, we can
+restrict our analysis to particular segments of the signal.</p>
+<p>In the following, we will apply lagged coherence separately to the bursting and
+non-bursting segments of the data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate coherence for data segment with the oscillation present</span>
+<span class="n">lc_burst</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">t_osc</span><span class="o">*</span><span class="n">fs</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 
-<span class="c1"># Calculate coherence for data without the burst - the 2nd second of data</span>
-<span class="n">lag_coh_noburst</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">fs</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">fs</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_burst</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, not bursting = &#39;</span><span class="p">,</span> <span class="n">lag_coh_noburst</span><span class="p">)</span>
+<span class="c1"># Calculate coherence for data segment without the alpha present burst</span>
+<span class="n">lc_noburst</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">t_osc</span><span class="o">*</span><span class="n">fs</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">fs</span><span class="o">*</span><span class="n">t_ap</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, bursting = &#39;</span><span class="p">,</span> <span class="n">lc_burst</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence, not bursting = &#39;</span><span class="p">,</span> <span class="n">lc_noburst</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence, bursting =  0.9997392977993007
-Lagged coherence, not bursting =  0.6340098045107515
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence, bursting =  0.9809114285238912
+Lagged coherence, not bursting =  0.357112530688723
 </pre></div>
 </div>
 </div>
 <div class="section" id="compute-lagged-coherence-of-an-example-neural-signal">
 <h2>Compute lagged coherence of an example neural signal<a class="headerlink" href="#compute-lagged-coherence-of-an-example-neural-signal" title="Permalink to this headline">¶</a></h2>
-<p>Next, let’s apply lagged coherence to some real data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data files</span>
+<p>Finally, let’s apply the lagged coherence algorithm to some real data.</p>
+<p>First we can load and plot a segment of real data, which in this case is
+a segment of ECoG data with a beta oscillation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data file</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_1.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 <span class="n">sig_filt_true</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_1_filt.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Set sampling rate, and create a times vector for plotting</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">times</span> <span class="o">=</span> <a href="../../generated/neurodsp.utils.create_times.html#neurodsp.utils.create_times" title="neurodsp.utils.create_times" class="sphx-glr-backref-module-neurodsp-utils sphx-glr-backref-type-py-function"><span class="n">create_times</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span><span class="o">/</span><span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot example signal</span>
@@ -242,21 +313,28 @@ Lagged coherence, not bursting =  0.6340098045107515
 </pre></div>
 </div>
 <img alt="plot LaggedCoherence" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_LaggedCoherence_003.png" />
+<p>Now let’s apply lagged coherence to the loaded data. In this data, we suspect rhythmicity
+in the beta range, so that is the range that we will examine with lagged coherence.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency range to compute lagged coherence across</span>
-<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">beta_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 
-<span class="c1"># Compute lagged coherence</span>
-<span class="n">lag_coh_beta</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
-
-<span class="c1"># Check lagged coherence result</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lagged coherence = &#39;</span><span class="p">,</span> <span class="n">lag_coh_beta</span><span class="p">)</span>
+<span class="c1"># Compute lagged coherence across the beta range in the real data</span>
+<span class="n">lc_betas</span><span class="p">,</span> <span class="n">freqs_beta</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">beta_range</span><span class="p">,</span> <span class="n">return_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lagged coherence =  0.24582055225422916
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the distribution of lagged coherence values in the real data</span>
+<a href="../../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a><span class="p">(</span><span class="n">freqs_beta</span><span class="p">,</span> <span class="n">lc_betas</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.190 seconds)</p>
+<img alt="plot LaggedCoherence" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_LaggedCoherence_004.png" />
+<div class="section" id="concluding-notes">
+<h3>Concluding Notes<a class="headerlink" href="#concluding-notes" title="Permalink to this headline">¶</a></h3>
+<p>In the above, we can see a pattern of lagged coherence across the examined range, that
+is consistent with beta rhythmicity.</p>
+<p>To further explore this, we might want to examine the robustness by trying different
+values for <cite>n_cycles</cite>, and/or comparing the this result to peaks in the power spectrum,
+and/or with burst detection results.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.426 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-rhythm-plot-laggedcoherence-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5d3626ea0e78e2c7d64d8fc1a4bfc4df/plot_LaggedCoherence.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_LaggedCoherence.py</span></code></a></p>
@@ -266,6 +344,7 @@ Lagged coherence, not bursting =  0.6340098045107515
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
 </div>
 </div>
 
@@ -281,8 +360,8 @@ Lagged coherence, not bursting =  0.6340098045107515
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

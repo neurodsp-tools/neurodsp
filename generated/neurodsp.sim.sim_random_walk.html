@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.sim_random_walk &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.sim_random_walk &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -112,7 +111,7 @@
 <h1>neurodsp.sim.sim_random_walk<a class="headerlink" href="#neurodsp-sim-sim-random-walk" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="neurodsp.sim.sim_random_walk">
-<code class="sig-prename descclassname">neurodsp.sim.</code><code class="sig-name descname">sim_random_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">theta</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">5.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_random_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.sim_random_walk" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">neurodsp.sim.</code><code class="sig-name descname">sim_random_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">theta</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">5.0</span></em>, <em class="sig-param"><span class="n">norm</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_random_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.sim_random_walk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -125,13 +124,15 @@
 </dd>
 <dt><strong>mu</strong><span class="classifier">float, optional, default: 0.0</span></dt><dd><p>Mean of the random walk.</p>
 </dd>
-<dt><strong>sigma</strong><span class="classifier">float, optional, default: 5.0</span></dt><dd><p>Standard deviation of the random walk.</p>
+<dt><strong>sigma</strong><span class="classifier">float, optional, default: 5.0</span></dt><dd><p>Scaling of the Wiener process (dWt).</p>
+</dd>
+<dt><strong>norm</strong><span class="classifier">bool, optional, default: True</span></dt><dd><p>Whether to normalize the signal to the mean (mu) and variance ((sigma**2 / (2 * theta))).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>sig: 1d array</dt><dd><p>Simulated random walk signal.</p>
+<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Simulated random walk signal.</p>
 </dd>
 </dl>
 </dd>
@@ -142,13 +143,19 @@
 <p>Where:</p>
 <ul class="simple">
 <li><p>mu : mean</p></li>
-<li><p>sigma : standard deviation</p></li>
+<li><p>sigma : Wiener scaling</p></li>
 <li><p>theta : memory scale</p></li>
 <li><p>dWt : increments of Wiener process, i.e. white noise</p></li>
 </ul>
+<p>The Wiener scaling (sigma) differs from the standard deviation of the signal.
+The standard deviation of the signal will instead equal: sigma / np.sqrt(2 * theta).</p>
+<p>See the wikipedia page <a class="reference internal" href="#rb4476d1c5760-1" id="id1">[1]</a> for the integral solution.</p>
 <p class="rubric">References</p>
-<p>See the wikipedia page for the integral solution:</p>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution">https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution</a></p>
+<dl class="citation">
+<dt class="label" id="rb4476d1c5760-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Ornstein-Uhlenbeck_process#Formal_solution">https://en.wikipedia.org/wiki/Ornstein-Uhlenbeck_process#Formal_solution</a></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p>Simulate a Ornstein-Uhlenbeck random walk:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
@@ -158,9 +165,9 @@
 
 <div class="section" id="examples-using-neurodsp-sim-sim-random-walk">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_random_walk</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-random-walk" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><div class="figure align-default" id="id1">
+<div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><div class="figure align-default" id="id3">
 <img alt="Simulating Aperiodic Signals" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div><div style='clear:both'></div></div>
 </div>
@@ -177,8 +184,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

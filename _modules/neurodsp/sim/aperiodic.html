@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.aperiodic &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.aperiodic &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -113,21 +112,23 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">zscore</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">toeplitz</span><span class="p">,</span> <span class="n">cholesky</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.filt</span> <span class="kn">import</span> <span class="n">filter_signal</span><span class="p">,</span> <span class="n">infer_passtype</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt.fir</span> <span class="kn">import</span> <span class="n">compute_filter_length</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="kn">import</span> <span class="n">check_filter_definition</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">remove_nans</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_range</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span><span class="p">,</span> <span class="n">compute_nsamples</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">normalize</span>
-<span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <span class="n">rotate_powerlaw</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.norm</span> <span class="kn">import</span> <span class="n">normalize_sig</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.utils</span> <span class="kn">import</span> <span class="n">rotate_timeseries</span>
 <span class="kn">from</span> <span class="nn">neurodsp.sim.transients</span> <span class="kn">import</span> <span class="n">sim_synaptic_kernel</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="sim_poisson_pop"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_poisson_pop.html#neurodsp.sim.sim_poisson_pop">[docs]</a><span class="nd">@normalize</span>
-<span class="k">def</span> <span class="nf">sim_poisson_pop</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="sim_poisson_pop"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_poisson_pop.html#neurodsp.sim.sim_poisson_pop">[docs]</a><span class="k">def</span> <span class="nf">sim_poisson_pop</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate a Poisson population.</span>
 
 <span class="sd">    Parameters</span>
@@ -140,6 +141,8 @@
 <span class="sd">        Number of neurons in the simulated population.</span>
 <span class="sd">    firing_rate : float, optional, default: 2</span>
 <span class="sd">        Firing rate of individual neurons in the population.</span>
+<span class="sd">    lam : float, optional, default: None</span>
+<span class="sd">        Mean and variance of the Poisson distribution. None defaults to n_neurons * firing_rate.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -165,11 +168,11 @@
 <span class="sd">    &gt;&gt;&gt; sig = sim_poisson_pop(n_seconds=1, fs=500, n_neurons=1000, firing_rate=2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Poisson population rate signal scales with # of neurons and individual rate</span>
-    <span class="n">lam</span> <span class="o">=</span> <span class="n">n_neurons</span> <span class="o">*</span> <span class="n">firing_rate</span>
+    <span class="c1"># Poisson population rate signal scales with the number of neurons and firing rate</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">n_neurons</span> <span class="o">*</span> <span class="n">firing_rate</span> <span class="k">if</span> <span class="n">lam</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">lam</span>
 
     <span class="c1"># Variance is equal to the mean</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">lam</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">lam</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">))</span>
 
     <span class="c1"># Enforce that sig is non-negative in cases of low firing rate</span>
     <span class="n">sig</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sig</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
@@ -206,7 +209,14 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The resulting signal is most similar to unsigned intracellular current or conductance change.</span>
+<span class="sd">    - This simulation is based on the one used in [1]_.</span>
+<span class="sd">    - The resulting signal is most similar to unsigned intracellular current or conductance change.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Gao, R., Peterson, E. J., &amp; Voytek, B. (2017). Inferring synaptic</span>
+<span class="sd">           excitation/inhibition balance from field potentials. NeuroImage, 158, 70–78.</span>
+<span class="sd">           DOI: https://doi.org/10.1016/j.neuroimage.2017.06.078</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -220,16 +230,73 @@
         <span class="n">t_ker</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">*</span> <span class="n">tau_d</span>
 
     <span class="c1"># Simulate an extra bit because the convolution will trim &amp; turn off normalization</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_poisson_pop</span><span class="p">((</span><span class="n">n_seconds</span> <span class="o">+</span> <span class="n">t_ker</span><span class="p">),</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">firing_rate</span><span class="p">,</span>
-                          <span class="n">mean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_poisson_pop</span><span class="p">((</span><span class="n">n_seconds</span> <span class="o">+</span> <span class="n">t_ker</span><span class="p">),</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">firing_rate</span><span class="p">)</span>
     <span class="n">ker</span> <span class="o">=</span> <span class="n">sim_synaptic_kernel</span><span class="p">(</span><span class="n">t_ker</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">)</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">ker</span><span class="p">,</span> <span class="s1">&#39;valid&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">ker</span><span class="p">,</span> <span class="s1">&#39;valid&#39;</span><span class="p">)[:</span><span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)]</span>
 
     <span class="k">return</span> <span class="n">sig</span></div>
 
 
-<div class="viewcode-block" id="sim_random_walk"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk">[docs]</a><span class="nd">@normalize</span>
-<span class="k">def</span> <span class="nf">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">5.</span><span class="p">):</span>
+<div class="viewcode-block" id="sim_knee"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_knee</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent1</span><span class="p">,</span> <span class="n">exponent2</span><span class="p">,</span> <span class="n">knee</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a signal whose power spectrum has a 1/f structure with a knee.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    exponent1 : float</span>
+<span class="sd">        Power law exponent before the knee.</span>
+<span class="sd">    exponent2 : float</span>
+<span class="sd">        Power law exponent after the knee.</span>
+<span class="sd">    knee : float</span>
+<span class="sd">        Knee parameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Time series with the desired power spectrum.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This simulated time series has a power spectrum that follows the Lorentzian equation:</span>
+
+<span class="sd">    `P(f) = 1 / (f**(exponent1) * f**(exponent2 + exponent1) + knee)`</span>
+
+<span class="sd">    - This simulation creates this power spectrum shape using a sum of sinusoids.</span>
+<span class="sd">    - The slope of the log power spectrum before the knee is exponent1</span>
+<span class="sd">    - The slope after the knee is exponent2, but only when the sign of</span>
+<span class="sd">      exponent1 and exponent2 are the same.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate a time series with exponent1 of -1, exponent2 of -2, and knee of 100:</span>
+
+<span class="sd">    &gt;&gt; sim_knee(n_seconds=10, fs=1000, exponent1=-1, exponent2=-2, knee=100)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Create frequencies for the power spectrum and drop the DC component</span>
+    <span class="c1">#   These frequencies are used to create the cosines to sum</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fs</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c1"># Compute cosine amplitude coefficients and add a random phase shift</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
+
+        <span class="n">sig</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">f</span> <span class="o">**</span> <span class="o">-</span><span class="n">exponent1</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">exponent2</span> <span class="o">-</span> <span class="n">exponent1</span><span class="p">)</span> <span class="o">+</span> <span class="n">knee</span><span class="p">)))</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f</span> <span class="o">*</span> <span class="n">times</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_random_walk"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk">[docs]</a><span class="k">def</span> <span class="nf">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</span>
 
 <span class="sd">    Parameters</span>
@@ -243,11 +310,13 @@
 <span class="sd">    mu : float, optional, default: 0.0</span>
 <span class="sd">        Mean of the random walk.</span>
 <span class="sd">    sigma : float, optional, default: 5.0</span>
-<span class="sd">        Standard deviation of the random walk.</span>
+<span class="sd">        Scaling of the Wiener process (dWt).</span>
+<span class="sd">    norm : bool, optional, default: True</span>
+<span class="sd">        Whether to normalize the signal to the mean (mu) and variance ((sigma**2 / (2 * theta))).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sig: 1d array</span>
+<span class="sd">    sig : 1d array</span>
 <span class="sd">        Simulated random walk signal.</span>
 
 <span class="sd">    Notes</span>
@@ -259,15 +328,18 @@
 <span class="sd">    Where:</span>
 
 <span class="sd">    - mu : mean</span>
-<span class="sd">    - sigma : standard deviation</span>
+<span class="sd">    - sigma : Wiener scaling</span>
 <span class="sd">    - theta : memory scale</span>
 <span class="sd">    - dWt : increments of Wiener process, i.e. white noise</span>
 
+<span class="sd">    The Wiener scaling (sigma) differs from the standard deviation of the signal.</span>
+<span class="sd">    The standard deviation of the signal will instead equal: sigma / np.sqrt(2 * theta).</span>
+
+<span class="sd">    See the wikipedia page [1]_ for the integral solution.</span>
+
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    See the wikipedia page for the integral solution:</span>
-
-<span class="sd">    https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process#Formal_solution</span>
+<span class="sd">    .. [1] https://en.wikipedia.org/wiki/Ornstein-Uhlenbeck_process#Formal_solution</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -286,6 +358,10 @@
 
     <span class="n">sig</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">*</span> <span class="n">ex</span> <span class="o">+</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">ex</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">ex</span> <span class="o">*</span> \
         <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="n">times</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">ws</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">normalize_sig</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="n">variance</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sig</span></div>
 
@@ -309,8 +385,17 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sig: 1d array</span>
+<span class="sd">    sig : 1d array</span>
 <span class="sd">        Time-series with the desired power law exponent.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Powerlaw data with exponents is created by spectrally rotating white noise [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Timmer, J., &amp; Konig, M. (1995). On Generating Power Law Noise.</span>
+<span class="sd">           Astronomy and Astrophysics, 300, 707–710.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -323,6 +408,9 @@
 <span class="sd">    &gt;&gt;&gt; sig = sim_powerlaw(n_seconds=1, fs=500, exponent=-1.5, f_range=(2, None))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># Compute the number of samples for the simulated time series</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
     <span class="c1"># Get the number of samples to simulate for the signal</span>
     <span class="c1">#   If signal is to be filtered, with FIR, add extra to compensate for edges</span>
     <span class="k">if</span> <span class="n">f_range</span> <span class="ow">and</span> <span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filter_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
@@ -333,11 +421,9 @@
                                          <span class="n">n_seconds</span><span class="o">=</span><span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_seconds&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                                          <span class="n">n_cycles</span><span class="o">=</span><span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_cycles&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
-        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span> <span class="o">+</span> <span class="n">filt_len</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">n_samples</span> <span class="o">+=</span> <span class="n">filt_len</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_seconds</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
-
+    <span class="c1"># Simulate the powerlaw data</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">_create_powerlaw</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">f_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -346,6 +432,163 @@
         <span class="c1"># Drop the edges, that were compensated for, if not using FIR filter</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">filter_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filter_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
             <span class="n">sig</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">remove_nans</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_frac_gaussian_noise"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_frac_gaussian_noise</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hurst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional gaussian noise.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    exponent : float, optional, default: 0</span>
+<span class="sd">        Desired power law exponent of the spectrum of the signal.</span>
+<span class="sd">        Must be in the range (-1, 1).</span>
+<span class="sd">    hurst : float, optional, default: None</span>
+<span class="sd">        Desired Hurst parameter, which must be in the range (0, 1).</span>
+<span class="sd">        If provided, this value overwrites the `exponent` parameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig: 1d array</span>
+<span class="sd">        Simulated fractional gaussian noise time series.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The time series can be specified with either a desired power law exponent,</span>
+<span class="sd">    or alternatively with a specified Hurst parameter.</span>
+
+<span class="sd">    The Hurst parameter is not the Hurst exponent as defined in rescaled range analysis.</span>
+<span class="sd">    The Hurst parameter is defined for self-similar processes such that Y(at) = a^H Y(t)</span>
+<span class="sd">    for all a &gt; 0, where this equality holds in distribution.</span>
+
+<span class="sd">    The relationship between the power law exponent and the Hurst parameter</span>
+<span class="sd">    for fractional gaussian noise is exponent = 2 * hurst - 1.</span>
+
+<span class="sd">    For more information, consult [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Eke, A., Herman, P., Kocsis, L., &amp; Kozak, L. R. (2002). Fractal characterization of</span>
+<span class="sd">           complexity in temporal physiological signals. Physiological Measurement, 23(1), R1–R38.</span>
+<span class="sd">           DOI: https://doi.org/10.1088/0967-3334/23/1/201</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate fractional gaussian noise with a power law decay of 0 (white noise):</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, exponent=0)</span>
+
+<span class="sd">    Simulate fractional gaussian noise with a Hurst parameter of 0.5 (also white noise):</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_frac_gaussian_noise(n_seconds=1, fs=500, hurst=0.5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">hurst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">check_param_range</span><span class="p">(</span><span class="n">hurst</span><span class="p">,</span> <span class="s1">&#39;hurst&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">check_param_range</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Infer the hurst parameter from exponent</span>
+        <span class="n">hurst</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">exponent</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># Compute the number of samples for the simulated time series</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Define helper function for computing the auto-covariance</span>
+    <span class="k">def</span> <span class="nf">autocov</span><span class="p">(</span><span class="n">hurst</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hurst</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> \
+                                <span class="n">k</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hurst</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hurst</span><span class="p">))</span>
+
+    <span class="c1"># Build the autocovariance matrix</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">autocov</span><span class="p">(</span><span class="n">hurst</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
+    <span class="n">autocov_matrix</span> <span class="o">=</span> <span class="n">toeplitz</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
+
+    <span class="c1"># Use the Cholesky factor to transform white noise to get the desired time series</span>
+    <span class="n">white_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">cholesky_factor</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">autocov_matrix</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">cholesky_factor</span> <span class="o">@</span> <span class="n">white_noise</span>
+
+    <span class="k">return</span> <span class="n">sig</span></div>
+
+
+<div class="viewcode-block" id="sim_frac_brownian_motion"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_frac_brownian_motion.html#neurodsp.sim.sim_frac_brownian_motion">[docs]</a><span class="nd">@normalize</span>
+<span class="k">def</span> <span class="nf">sim_frac_brownian_motion</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">hurst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional brownian motion.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    exponent : float, optional, default: -2</span>
+<span class="sd">        Desired power law exponent of the spectrum of the signal.</span>
+<span class="sd">        Must be in the range (-3, -1).</span>
+<span class="sd">    hurst : float, optional, default: None</span>
+<span class="sd">        Desired Hurst parameter, which must be in the range (0, 1).</span>
+<span class="sd">        If provided, this value overwrites the `exponent` parameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        Simulated fractional brownian motion time series.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The time series can be specified with either a desired power law exponent,</span>
+<span class="sd">    or alternatively with a specified Hurst parameter.</span>
+
+<span class="sd">    Note that when specifying there can be some bias leading to a steeper than expected</span>
+<span class="sd">    spectrum of the simulated signal. This bias is higher for exponent values near to 1,</span>
+<span class="sd">    and may be more severe in shorter signals.</span>
+
+<span class="sd">    The Hurst parameter is not the Hurst exponent in general. The Hurst parameter</span>
+<span class="sd">    is defined for self-similar processes such that Y(at) = a^H Y(t) for all a &gt; 0,</span>
+<span class="sd">    where this equality holds in distribution.</span>
+
+<span class="sd">    The relationship between the power law exponent and the Hurst parameter</span>
+<span class="sd">    for fractional brownian motion is exponent = 2 * hurst + 1</span>
+
+<span class="sd">    For more information, consult [1]_ and/or [2]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Eke, A., Herman, P., Kocsis, L., &amp; Kozak, L. R. (2002). Fractal characterization of</span>
+<span class="sd">           complexity in temporal physiological signals. Physiological Measurement, 23(1), R1–R38.</span>
+<span class="sd">           DOI: https://doi.org/10.1088/0967-3334/23/1/201</span>
+<span class="sd">    .. [2] Dieker, T. (2004). Simulation of fractional Brownian motion. 77.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate fractional brownian motion with a power law exponent of -2 (brown noise):</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_frac_brownian_motion(n_seconds=1, fs=500, exponent=-2)</span>
+
+<span class="sd">    Simulate fractional brownian motion with a Hurst parameter of 0.5 (also brown noise):</span>
+
+<span class="sd">    &gt;&gt;&gt; sig = sim_frac_brownian_motion(n_seconds=1, fs=500, hurst=0.5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">hurst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">check_param_range</span><span class="p">(</span><span class="n">hurst</span><span class="p">,</span> <span class="s1">&#39;hurst&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">check_param_range</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Infer the hurst parameter from exponent</span>
+        <span class="n">hurst</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">exponent</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># Fractional brownian motion is the cumulative sum of fractional gaussian noise</span>
+    <span class="n">fgn</span> <span class="o">=</span> <span class="n">sim_frac_gaussian_noise</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">hurst</span><span class="o">=</span><span class="n">hurst</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">fgn</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sig</span></div>
 
@@ -360,11 +603,11 @@
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate of simulated signal, in Hz.</span>
 <span class="sd">    exponent : float</span>
-<span class="sd">        Desired power-law exponent, of the form P(f)=f^exponent.</span>
+<span class="sd">        Desired powerlaw exponent, of the form P(f)=f^exponent.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sig: 1d array</span>
+<span class="sd">    sig : 1d array</span>
 <span class="sd">        Time-series with the desired power law exponent.</span>
 
 <span class="sd">    Notes</span>
@@ -375,14 +618,11 @@
     <span class="c1"># Start with white noise signal, that we will rotate, in frequency space</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
 
-    <span class="c1"># Compute the FFT</span>
-    <span class="n">fft_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
-    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="c1"># Create the desired exponent by spectrally rotating the time series</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">rotate_timeseries</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">-</span><span class="n">exponent</span><span class="p">)</span>
 
-    <span class="c1"># Rotate spectrum and invert back to time series, with a z-score to normalize</span>
-    <span class="c1">#   Delta exponent is divided by two, as the FFT output is in units of amplitude not power</span>
-    <span class="n">fft_output_rot</span> <span class="o">=</span> <span class="n">rotate_powerlaw</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">fft_output</span><span class="p">,</span> <span class="o">-</span><span class="n">exponent</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fft_output_rot</span><span class="p">)))</span>
+    <span class="c1"># z-score to normalize</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sig</span>
 </pre></div>
@@ -398,8 +638,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

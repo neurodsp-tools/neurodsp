@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.transients &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.transients &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -113,14 +112,16 @@
 
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span><span class="p">,</span> <span class="n">compute_nsamples</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="sim_synaptic_kernel"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_synaptic_kernel.html#neurodsp.sim.sim_synaptic_kernel">[docs]</a><span class="k">def</span> <span class="nf">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
+<div class="viewcode-block" id="sim_synaptic_kernel"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_synaptic_kernel.html#neurodsp.sim.transients.sim_synaptic_kernel">[docs]</a><span class="k">def</span> <span class="nf">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simulate a synaptic kernel with specified time constants.</span>
 
 <span class="sd">    Parameters</span>
@@ -182,6 +183,134 @@
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">kernel</span></div>
+
+
+<div class="viewcode-block" id="sim_action_potential"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_action_potential.html#neurodsp.sim.transients.sim_action_potential">[docs]</a><span class="k">def</span> <span class="nf">sim_action_potential</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">stds</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">heights</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate an action potential as the sum of skewed gaussians.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of cycle window in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling frequency of the cycle simulation.</span>
+<span class="sd">    centers : array-like or float</span>
+<span class="sd">        Times where the peak occurs in the pre-skewed gaussian.</span>
+<span class="sd">    stds : array-like or float</span>
+<span class="sd">        Standard deviations of the gaussian kernels, in seconds.</span>
+<span class="sd">    alphas : array-like or float</span>
+<span class="sd">        Magnitiude and direction of the skew.</span>
+<span class="sd">    heights : array-like or float</span>
+<span class="sd">        Maximum value of the cycles.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cycle : 1d array</span>
+<span class="sd">        Simulated spike cycle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate an action potential:</span>
+
+<span class="sd">    &gt;&gt;&gt; ap = sim_action_potential(n_seconds=0.01, fs=30000,</span>
+<span class="sd">    ...                           centers=[0.35, 0.45, 0.6], stds=[0.1, 0.1, 0.1],</span>
+<span class="sd">    ...                           alphas=[-1, 0, 1], heights=[1.5, -5, 0.5])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Prevent circular import</span>
+    <span class="kn">from</span> <span class="nn">neurodsp.sim.cycles</span> <span class="kn">import</span> <span class="n">sim_skewed_gaussian_cycle</span>
+
+    <span class="c1"># Determine number of parameters and repeat if necessary</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_params</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="p">[</span><span class="n">centers</span><span class="p">,</span> <span class="n">stds</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">heights</span><span class="p">]:</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">n_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+    <span class="c1"># Parameter checking</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">n_params</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unequal lengths between two or more of {centers, stds, alphas, heights}.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Simulate</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c1"># Single gaussian</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_skewed_gaussian_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">stds</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">heights</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># Multiple gaussians</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">compute_nsamples</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">)):</span>
+            <span class="n">cycle</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">sim_skewed_gaussian_cycle</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cycle</span></div>
+
+
+<div class="viewcode-block" id="sim_damped_erp"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_damped_erp.html#neurodsp.sim.transients.sim_damped_erp">[docs]</a><span class="k">def</span> <span class="nf">sim_damped_erp</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">time_start</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simulate an ERP complex as a decaying (damped) sine wave.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Length of simulated kernel in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    amp : float</span>
+<span class="sd">        Amplitude of the ERP.</span>
+<span class="sd">    freq : float</span>
+<span class="sd">        Frequency of the ERP complex, in Hz.</span>
+<span class="sd">    decay : float, optional, default: 0.05</span>
+<span class="sd">        The exponential decay time of the ERP envelope.</span>
+<span class="sd">    time_start : float, optional, default: 0.</span>
+<span class="sd">        Start time, in seconds. Samples prior to start time are zero.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    erp : 1d array</span>
+<span class="sd">        Simulated ERP.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This approach simulates simplified ERP complex as an exponentially decaying sine wave.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate an ERP complex with a frequency of 7 Hz and a 50 ms decay time:</span>
+
+<span class="sd">    &gt;&gt;&gt; erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=7, decay=0.05)</span>
+
+<span class="sd">    Simulate an ERP complex with a frequency of 10 Hz and a 25 ms decay time:</span>
+
+<span class="sd">    &gt;&gt;&gt; erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)</span>
+
+<span class="sd">    Reference</span>
+<span class="sd">    ---------</span>
+<span class="sd">    .. [1] van Diepen, R. M., &amp; Mazaheri, A. (2018). The Caveats of observing</span>
+<span class="sd">           Inter-Trial Phase-Coherence in Cognitive Neuroscience. Scientific Reports, 8(1).</span>
+<span class="sd">           DOI: https://doi.org/10.1038/s41598-018-20423-z</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="n">_erp</span> <span class="o">=</span> <span class="n">amp</span> <span class="o">*</span> <span class="p">((</span><span class="n">times</span><span class="p">)</span> <span class="o">/</span> <span class="n">decay</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">/</span> <span class="n">decay</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">))</span>
+
+    <span class="n">sample_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_start</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+
+    <span class="n">erp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+    <span class="n">erp</span><span class="p">[</span><span class="n">sample_start</span><span class="p">:]</span> <span class="o">=</span> <span class="n">_erp</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">-</span><span class="n">sample_start</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">erp</span></div>
 </pre></div>
 
     </div>
@@ -195,8 +324,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>

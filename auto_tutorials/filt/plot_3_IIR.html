@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIR Filters &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="iir-filters">
+<span id="sphx-glr-auto-tutorials-filt-plot-3-iir-py"></span><h1>IIR Filters<a class="headerlink" href="#iir-filters" title="Permalink to this headline">¶</a></h1>
+<p>Design, apply, and evaluate IIR Filters.</p>
+<p>This tutorial covers the design and application of Infinite Impulse Response (IIR) filters,
+available in <code class="docutils literal notranslate"><span class="pre">neurodsp.filt.iir</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import functions for simulating test data</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">set_random_seed</span><span class="p">,</span> <span class="n">create_times</span>
+
+<span class="c1"># Import functions for IIR filtering</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt</span> <span class="kn">import</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.iir</span> <span class="kn">import</span> <a href="../../generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">design_iir_filter</span></a><span class="p">,</span> <span class="n">apply_iir_filter</span>
+<span class="kn">from</span> <span class="nn">neurodsp.filt.utils</span> <span class="kn">import</span> <span class="n">compute_frequency_response</span><span class="p">,</span> <span class="n">compute_transition_band</span>
+
+<span class="c1"># Import plotting functions</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response" title="neurodsp.plts.plot_frequency_response" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_frequency_response</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>IIR Filters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Infinite impulse response filters are filters for which the response to a single impulse
+is infinite. These filters are sometimes useful due to their efficiency.</p>
+<p>IIR filters have an impulse response that is dependent on past values of the impulse
+and impulse response (i.e. recursion or feedback), producing a response that is never zero.
+Because to this, the IIR filters are not typically applied using convolution.</p>
+<p>The math introduced in the FIR tutorial may be extended to IIR filters, with a
+second expression representing feedback:</p>
+<div class="math notranslate nohighlight">
+\[y(n) = \sum_{k=0}^M b_k x(n-k) - \sum_{k=1}^N a_k y(n-k)\]</div>
+<div class="math notranslate nohighlight">
+\[H(z) = \frac{\sum_{k=0}^M b_k z^{-k}}{\sum_{k=1}^N a_k z^{-k}}\]</div>
+<p>The IIR filters available in NeuroDSP are Butterworth digital filters, applied using cascaded
+second-order sections (SOS), all of which is used from the scipy implementations.
+For more information on the specifics of these filters, see the scipy documentation.</p>
+<p>Simulate an example signal to use for this example.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Define settings for simulating time series</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+              <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
+<span class="n">variances</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Simulate time series, and create associated time definition</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<p>Neurodsp supports Butterworth IIR filter, which we can design with
+the <a class="reference internal" href="../../generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">design_iir_filter()</span></code></a> function.</p>
+<p>To create a Butterworth IIR filter, we need to specify the passband and the frequency range.</p>
+<p>We also need to set the filter order, which controls how smooth (low orders) or steep
+(high orders) the roll-off of the transition band is.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define filter settings</span>
+<span class="n">pass_type</span> <span class="o">=</span> <span class="s1">&#39;bandpass&#39;</span>
+<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">butterworth_order</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="c1"># Design the filter, getting the second-order series (sos) values for the filter</span>
+<span class="n">sos</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">design_iir_filter</span></a><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we have our filter definition, we can evaluate our filter.</p>
+<p>Next, we can calculate the frequency response, <span class="math notranslate nohighlight">\(b_k\)</span>, for our IIR filter.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the frequency response for the IIR filter</span>
+<span class="n">f_db</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">compute_frequency_response</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Plot the frequency response</span>
+<a href="../../generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response" title="neurodsp.plts.plot_frequency_response" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_frequency_response</span></a><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Frequency response" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
+  db = 20 * np.log10(abs(h_vals))
+</pre></div>
+</div>
+<p>Above, we can see our frequency response of our filter, which shows us how different
+frequencies are affected by our filter. Ideally, we want zero attenuation in our passband,
+and a lot of attenuation in the stopband(s).</p>
+<p>Another way to quantify these properties is the transition band, which is bandwidth (in Hz)
+that it takes for the filter to change from high to low attenuation. This quantifies how
+sharp the transition is between stopband and passband. By default, transition bands are computed
+as the range between -20 dB and -3 dB attenuation, but you can also customize these values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the transition band of the filter</span>
+<span class="n">t_band</span> <span class="o">=</span> <span class="n">compute_transition_band</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+
+<span class="c1"># Print the transition band</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transition band: </span><span class="si">{:4.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t_band</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition band: 10.00
+</pre></div>
+</div>
+<p>In the above, we have designed and evaluated an IIR filter. Note that the properties of the
+filter will depend on the passband and cutoff frequencies, and especially the filter order.</p>
+<p>You can explore changing these settings to see how they impact the filter properties.</p>
+</div>
+<div class="section" id="apply">
+<h2>Apply<a class="headerlink" href="#apply" title="Permalink to this headline">¶</a></h2>
+<p>The filter we previously designed may now be applied to a signal, which can be done with
+the <code class="xref py py-func docutils literal notranslate"><span class="pre">apply_iir_filter()</span></code> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply the filter to our signal</span>
+<span class="n">sig_filt</span> <span class="o">=</span> <span class="n">apply_iir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">sos</span><span class="p">)</span>
+
+<span class="c1"># Plot the filtered and original time series</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot 3 IIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_002.png" />
+<p>In the above, we can see both the original signal, and the filtered version.</p>
+<p>Note that inspecting the filtered signal together with the original signal is recommended.</p>
+<div class="section" id="using-filter-signal">
+<h3>Using filter_signal<a class="headerlink" href="#using-filter-signal" title="Permalink to this headline">¶</a></h3>
+<p>In the above, we did a step-by-step procedure of designing, evaluating, and applying our filter.</p>
+<p>Note that all of these elements can also be done directly through the
+<a class="reference internal" href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_signal()</span></code></a> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sig_filt</span><span class="p">,</span> <span class="n">sos</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span>
+                              <span class="n">filter_type</span><span class="o">=</span><span class="s1">&#39;iir&#39;</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="o">=</span><span class="n">butterworth_order</span><span class="p">,</span>
+                              <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_transitions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">return_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Frequency response" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_003.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
+  warn(&#39;Edge artifacts are not removed when using an IIR filter.&#39;)
+/home/rph/Projects/neurodsp/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
+  db = 20 * np.log10(abs(h_vals))
+Transition bandwidth is 10.0 Hz.
+Pass/stop bandwidth is 49.0 Hz.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="example-application-line-noise-removal">
+<h2>Example Application: Line Noise Removal<a class="headerlink" href="#example-application-line-noise-removal" title="Permalink to this headline">¶</a></h2>
+<p>A common application of IIR filters is for line noise removal.</p>
+<p>In this example, a 3rd order Butterworth filter is applied to remove 60Hz noise.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal, with a low frequency oscillation and 60 Hz line noise</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">60</span><span class="p">}]}</span>
+<span class="n">variances</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter settings</span>
+<span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">62</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># Bandstop filter the data to remove line noise</span>
+<span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span>
+                         <span class="n">filter_type</span><span class="o">=</span><span class="s1">&#39;iir&#39;</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
+  warn(&#39;Edge artifacts are not removed when using an IIR filter.&#39;)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="plot 3 IIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_004.png" />
+<p>One thing you might notice in the plot above is that there are edge artifacts. The data
+points at the edge of the signal don’t appear to the fully filtered, and some of the high
+frequency activity remains. This is because data points at the edge of a signal do not
+get fully processed by the filter.</p>
+<p>Note that, different from FIR filters, with IIR filters there is no simple way to remove
+these edges, since, due to the recursion of IIR filters, we can’t as easily define the
+extent of the edge effect. Because of this, edges are not automatically excluded, but as
+we can see edge effects can still be present, and may need to be considered.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.415 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-3-iir-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0e340ad09646be3050e21b76ba9b4824/plot_3_IIR.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_3_IIR.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8318319d56892619863367e93a791ddc/plot_3_IIR.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_3_IIR.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

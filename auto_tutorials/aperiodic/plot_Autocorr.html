@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocorrelation Measures &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-aperiodic-plot-autocorr-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="autocorrelation-measures">
+<span id="sphx-glr-auto-tutorials-aperiodic-plot-autocorr-py"></span><h1>Autocorrelation Measures<a class="headerlink" href="#autocorrelation-measures" title="Permalink to this headline">¶</a></h1>
+<p>Apply autocorrelation measures to neural signals.</p>
+<p>Autocorrelation is the correlation of a signal with delayed copies of itself.
+Autocorrelation measures can be useful to investigate properties of neural signals.</p>
+<p>This tutorial covers <code class="docutils literal notranslate"><span class="pre">neurodsp.aperiodic.autocorr</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a>
+
+<span class="c1"># Import the function for computing autocorrelation</span>
+<span class="kn">from</span> <span class="nn">neurodsp.aperiodic</span> <span class="kn">import</span> <span class="n">compute_autocorr</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>Autocorrelation Measures<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Autocorrelation is computed as the correlation between the original signal and delayed
+copies, across different lags.</p>
+<p>The result is a measure of how correlated a signal is to itself, across time,
+and the timescale of autocorrelation.</p>
+<div class="section" id="algorithm-settings">
+<h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<p>Settings for computing autocorrelation are:</p>
+<ul class="simple">
+<li><p><cite>max_lag</cite> : the maximum lag to compute autocorrelation for</p></li>
+<li><p><cite>lag_step</cite> : the step size to advance across when computing autocorrelation</p></li>
+</ul>
+<p>Both parameters are defined in samples, with defaults of using a step size of 1 sample,
+stepping up to a maximum lag of 1000 samples.</p>
+<p>Autocorrelation can be computed with <a class="reference internal" href="../../generated/neurodsp.aperiodic.autocorr.compute_autocorr.html#neurodsp.aperiodic.autocorr.compute_autocorr" title="neurodsp.aperiodic.autocorr.compute_autocorr"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_autocorr()</span></code></a> function, which
+returns <cite>timepoints</cite> at which autocorrelation was calculated, and <cite>autocorrs</cite>, which are
+the resulting correlation coefficients.</p>
+</div>
+</div>
+<div class="section" id="autocorrelation-of-periodic-signals">
+<h2>Autocorrelation of Periodic Signals<a class="headerlink" href="#autocorrelation-of-periodic-signals" title="Permalink to this headline">¶</a></h2>
+<p>First, let’s examine periodic signals, specifically sine waves.</p>
+<p>Note that periodic signals are by definition rhythmic. This means that we should expect
+the autocorrelation to also have a rhythmic pattern across time.</p>
+<p>Imagine, for example, moving one sine wave across another. At some points, when they are
+in phase, they will line up exactly (have a high correlation), while at others, when they
+are out of phase, they will have either low or anti-correlation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
+<span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Define the frequencies for the sinusoids</span>
+<span class="n">freq1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">freq2</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># Simulate sinusoids</span>
+<span class="n">sig_osc1</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq1</span><span class="p">)</span>
+<span class="n">sig_osc2</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_oscillation</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freq2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute autocorrelation on the periodic time series</span>
+<span class="n">timepoints_osc1</span><span class="p">,</span> <span class="n">autocorrs_osc1</span> <span class="o">=</span> <span class="n">compute_autocorr</span><span class="p">(</span><span class="n">sig_osc1</span><span class="p">)</span>
+<span class="n">timepoints_osc2</span><span class="p">,</span> <span class="n">autocorrs_osc2</span> <span class="o">=</span> <span class="n">compute_autocorr</span><span class="p">(</span><span class="n">sig_osc2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="autocorrelation-of-a-sinusoidal-signal">
+<h3>Autocorrelation of a sinusoidal signal<a class="headerlink" href="#autocorrelation-of-a-sinusoidal-signal" title="Permalink to this headline">¶</a></h3>
+<p>The autocorrelation of the first sine wave is plotted below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot autocorrelations</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timepoints_osc1</span><span class="p">,</span> <span class="n">autocorrs_osc1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;lag (samples)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;autocorrelation&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<img alt="plot Autocorr" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Autocorr_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Text(0, 0.5, &#39;autocorrelation&#39;), Text(0.5, 0, &#39;lag (samples)&#39;)]
+</pre></div>
+</div>
+<p>As we can see, the autocorrelation of a sinusoid is itself a sinusoid!</p>
+<p>This reflects that a sinusoid related to itself will oscillate between being
+positively and negatively correlated with itself.</p>
+<p>Next, let’s compare the autocorrelation of different sinusoids.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot autocorrelations for two different sinusoids</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timepoints_osc1</span><span class="p">,</span> <span class="n">autocorrs_osc1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;10 Hz&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timepoints_osc2</span><span class="p">,</span> <span class="n">autocorrs_osc2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;20 Hz&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;lag (samples)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;autocorrelation&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot Autocorr" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Autocorr_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7fcce8bf7220&gt;
+</pre></div>
+</div>
+<p>In the above, we can see that the autocorrelation of sinusoids with different frequencies
+leads to autocorrelation results with different timescales.</p>
+<p>If you compare to the number of samples on the x-axis, keeping in mind the sampling
+rate (1000 Hz), you can check that the autocorrelation of a sinusoidal signal is
+a sinusoid of the same frequency.</p>
+</div>
+</div>
+<div class="section" id="autocorrelation-of-aperiodic-signals">
+<h2>Autocorrelation of Aperiodic Signals<a class="headerlink" href="#autocorrelation-of-aperiodic-signals" title="Permalink to this headline">¶</a></h2>
+<p>Next, lets consider the autocorrelation of aperiodic signals.</p>
+<p>Here we will use white noise, as an example of a signal without autocorrelation, and
+pink noise, which does, by definition, have temporal auto-correlations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a white noise signal</span>
+<span class="n">sig_wn</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Simulate a pink noise signal</span>
+<span class="n">sig_pn</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute autocorrelation on the aperiodic time series</span>
+<span class="n">timepoints_wn</span><span class="p">,</span> <span class="n">autocorrs_wn</span> <span class="o">=</span> <span class="n">compute_autocorr</span><span class="p">(</span><span class="n">sig_wn</span><span class="p">)</span>
+<span class="n">timepoints_pn</span><span class="p">,</span> <span class="n">autocorrs_pn</span> <span class="o">=</span> <span class="n">compute_autocorr</span><span class="p">(</span><span class="n">sig_pn</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the autocorrelations of the aperiodic signals</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timepoints_wn</span><span class="p">,</span> <span class="n">autocorrs_wn</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;White Noise&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timepoints_pn</span><span class="p">,</span> <span class="n">autocorrs_pn</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pink Noise&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;lag (samples)&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;autocorrelation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="plot Autocorr" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_Autocorr_003.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7fcce8bcaeb0&gt;
+</pre></div>
+</div>
+<p>In the above, we can see that for white noise, the autocorrelation is only high at
+a lag of 0 samples, with all other lags being uncorrelated.</p>
+<p>By comparison, the pink noise signal has a pattern of decreasing autocorrelation
+across increasing lags. This is characteristic of powerlaw data.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.313 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-aperiodic-plot-autocorr-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/6a711936a1c8d2d7492be0a4b9031845/plot_Autocorr.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_Autocorr.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/3caf6077f914541152f3d210b9eb063c/plot_Autocorr.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_Autocorr.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

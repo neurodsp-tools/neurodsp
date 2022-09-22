@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.sim.combined.sim_peak_oscillation &#8212; neurodsp 2.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="neurodsp-sim-combined-sim-peak-oscillation">
+<h1>neurodsp.sim.combined.sim_peak_oscillation<a class="headerlink" href="#neurodsp-sim-combined-sim-peak-oscillation" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="neurodsp.sim.combined.sim_peak_oscillation">
+<code class="sig-prename descclassname">neurodsp.sim.combined.</code><code class="sig-name descname">sim_peak_oscillation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig_ap</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">freq</span></em>, <em class="sig-param"><span class="n">bw</span></em>, <em class="sig-param"><span class="n">height</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/combined.html#sim_peak_oscillation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.combined.sim_peak_oscillation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate a signal with an aperiodic component and a specific oscillation peak.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sig_ap</strong><span class="classifier">1d array</span></dt><dd><p>The timeseries of the aperiodic component.</p>
+</dd>
+<dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate of <code class="docutils literal notranslate"><span class="pre">sig_ap</span></code>.</p>
+</dd>
+<dt><strong>freq</strong><span class="classifier">float</span></dt><dd><p>Central frequency for the gaussian peak in Hz.</p>
+</dd>
+<dt><strong>bw</strong><span class="classifier">float</span></dt><dd><p>Bandwidth, or standard deviation, of gaussian peak in Hz.</p>
+</dd>
+<dt><strong>height</strong><span class="classifier">float</span></dt><dd><p>Relative height of the gaussian peak at the central frequency <code class="docutils literal notranslate"><span class="pre">freq</span></code>.
+Units of log10(power), over the aperiodic component.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series with desired power spectrum.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function creates a time series whose power spectrum consists of an aperiodic component</p></li>
+</ul>
+<p>and a gaussian peak at <code class="docutils literal notranslate"><span class="pre">freq</span></code> with standard deviation <code class="docutils literal notranslate"><span class="pre">bw</span></code> and relative <code class="docutils literal notranslate"><span class="pre">height</span></code>.
+- The periodic component of the signal will be sinusoidal.</p>
+<p class="rubric">Examples</p>
+<p>Simulate a signal with aperiodic exponent of -2 &amp; oscillation central frequency of 20 Hz:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_powerlaw</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fs</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig_ap</span> <span class="o">=</span> <span class="n">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_peak_oscillation</span><span class="p">(</span><span class="n">sig_ap</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bw</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div style='clear:both'></div></div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

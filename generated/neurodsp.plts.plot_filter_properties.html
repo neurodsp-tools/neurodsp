@@ -3,15 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.plts.plot_filter_properties &#8212; neurodsp 2.1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neurodsp.plts.plot_filter_properties &#8212; neurodsp 2.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -112,7 +111,7 @@
 <h1>neurodsp.plts.plot_filter_properties<a class="headerlink" href="#neurodsp-plts-plot-filter-properties" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="neurodsp.plts.plot_filter_properties">
-<code class="sig-prename descclassname">neurodsp.plts.</code><code class="sig-name descname">plot_filter_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_db</span></em>, <em class="sig-param"><span class="n">db</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">impulse_response</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/plts/filt.html#plot_filter_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.plts.plot_filter_properties" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">neurodsp.plts.</code><code class="sig-name descname">plot_filter_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_db</span></em>, <em class="sig-param"><span class="n">db</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">impulse_response</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/plts/filt.html#plot_filter_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.plts.plot_filter_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot filter properties, including frequency response and filter kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -124,6 +123,8 @@
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
 </dd>
 <dt><strong>impulse_response</strong><span class="classifier">1d array</span></dt><dd><p>The impulse response of a filter. For an FIR filter, these are the filter coefficients.</p>
+</dd>
+<dt><strong>figsize</strong><span class="classifier">tuple, optional</span></dt><dd><p>Size to create the figure.</p>
 </dd>
 </dl>
 </dd>
@@ -140,7 +141,14 @@
 </div>
 </dd></dl>
 
-<div style='clear:both'></div></div>
+<div class="section" id="examples-using-neurodsp-plts-plot-filter-properties">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.plts.plot_filter_properties</span></code><a class="headerlink" href="#examples-using-neurodsp-plts-plot-filter-properties" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate FIR Filters."><div class="figure align-default" id="id1">
+<img alt="FIR Filters" src="../_images/sphx_glr_plot_2_FIR_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div style='clear:both'></div></div>
+</div>
 
 
     </div>
@@ -154,8 +162,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2021, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+        &copy; Copyright 2018-2022, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
     </p>
   </div>
 </footer>
