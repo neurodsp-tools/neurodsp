@@ -30,6 +30,8 @@ def check_param_range(param, label, bounds):
         "It should be between {:1.1f} and {:1.1f}.".format(*bounds)
         raise ValueError(msg)
 
+# Alias for non-breaking backwards compatibility
+def check_param(param, label, bounds): check_param_range(param, label, bounds)
 
 def check_param_options(param, label, options):
     """Check a parameter value is one of the acceptable options.
