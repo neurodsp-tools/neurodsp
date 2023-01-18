@@ -1,7 +1,7 @@
 """Filter signals with FIR filters."""
 
 import numpy as np
-from scipy.signal import firwin
+from scipy.signal import firwin, convolve
 
 from neurodsp.utils import remove_nans, restore_nans
 from neurodsp.utils.decorators import multidim
@@ -131,7 +131,7 @@ def apply_fir_filter(sig, filter_coefs):
     >>> filt_sig = apply_fir_filter(sig, filter_coefs)
     """
 
-    return np.convolve(filter_coefs, sig, 'same')
+    return convolve(sig, filter_coefs, mode='same')
 
 
 def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
