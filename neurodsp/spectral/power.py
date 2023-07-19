@@ -54,7 +54,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
-    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt'])
+    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt', 'multitaper'])
 
     if method == 'welch':
         return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
@@ -64,6 +64,9 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
     elif method == 'medfilt':
         return compute_spectrum_medfilt(sig, fs, **kwargs)
+
+    elif method == 'multitaper':
+        return compute_spectrum_multitaper(sig, fs **kwargs)
 
 
 @multidim(select=[0])
@@ -239,5 +242,49 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
+
+    return freqs, spectrum
+
+
+def compute_spectrum_multitaper(sig, fs, bandwidth, num_windows):
+    """Compute the power spectral density using the multi-taper method.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    bandwith : float
+        Frequency bandwith of multi-taper window function.
+    num_windows : int.
+        Number of slepian windows used to weight the signal.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the measure was calculated.
+    spectrum : 1d or 2d array
+        Power spectral density using multi-taper method.
+    """
+
+    from scipy.signal.windows import dpss
+
+    # Compute signal length based on input shape
+    sig_len = sig.shape[sig.ndim - 1]
+
+    # Create slepian sequences
+    slepian_sequences = dpss(sig_len, bandwidth/2, num_windows)
+
+    # Compute fourier on signal weighted by each slepian sequence
+    freqs = np.fft.rfftfreq(sig_len, 1. /fs)
+    spectrums = np.fft.rfft(slepian_sequences[:, np.newaxis]*sig)
+
+    # Average spectrums of each sequence for final result
+    spectrum = spectrums.mean(axis=0)
+
+    # Convert output to 1d if necessary
+    if sig.ndim == 1:
+        spectrum = spectrum[0]
 
     return freqs, spectrum
