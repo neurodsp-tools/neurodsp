@@ -1,7 +1,7 @@
 """Default settings for tests."""
 
 import os
-import pkg_resources as pkg
+from pathlib import Path
 
 import numpy as np
 
@@ -35,5 +35,6 @@ EPS = 10**(-10)
 EPS_FILT = 10**(-3)
 
 # Set paths for test files
-BASE_TEST_FILE_PATH = pkg.resource_filename(__name__, 'test_files')
+TESTS_PATH = Path(os.path.abspath(os.path.dirname(__file__)))
+BASE_TEST_FILE_PATH = TESTS_PATH / 'test_files'
 TEST_PLOTS_PATH = os.path.join(BASE_TEST_FILE_PATH, 'plots')
