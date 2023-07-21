@@ -66,7 +66,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         return compute_spectrum_medfilt(sig, fs, **kwargs)
 
     elif method == 'multitaper':
-        return compute_spectrum_multitaper(sig, fs **kwargs)
+        return compute_spectrum_multitaper(sig, fs, **kwargs)
 
 
 @multidim(select=[0])
@@ -278,7 +278,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth, num_windows):
 
     # Compute fourier on signal weighted by each slepian sequence
     freqs = np.fft.rfftfreq(sig_len, 1. /fs)
-    spectrums = np.fft.rfft(slepian_sequences[:, np.newaxis]*sig)
+    spectrums = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis]*sig))**2
 
     # Average spectrums of each sequence for final result
     spectrum = spectrums.mean(axis=0)
