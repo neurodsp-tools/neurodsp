@@ -59,6 +59,12 @@ def test_compute_spectrum_welch(tsig, tsig_sine):
     expected_answer = np.zeros_like(psd_welch[0:FREQ_SINE])
     assert np.allclose(psd_welch[0:FREQ_SINE], expected_answer, atol=EPS)
 
+    # Test zero padding
+    freqs, spectrum = compute_spectrum(
+        np.tile(tsig, (2, 1)), FS, nperseg=100, noverlap=0, npad=1000, f_range=(1, 200)
+    )
+    np.all(spectrum[0] == spectrum[1])
+
 def test_compute_spectrum_wavelet(tsig):
 
     freqs, spectrum = compute_spectrum_wavelet(tsig, FS, freqs=FREQS_ARR, avg_type='mean')
