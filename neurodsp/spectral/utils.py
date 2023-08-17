@@ -127,3 +127,69 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
         times_ext = times
 
     return freqs_ext, times_ext, spg_ext
+
+
+def window_pad(sig, nperseg, noverlap, npad):
+    """Pads windows (for Welch's PSD) with zeros.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series.
+    nperseg : int, optional
+        Length of each segment, in number of samples, at the
+        beginning and end of each window.
+    noverlap : int, optional
+        Number of points to overlap between segments,
+        applied prior to padding.
+
+    Returns
+    -------
+    sig_windowed : 1d or 2d array
+        Windowed signal, with zeros padded at the around each window.
+    """
+
+    if sig.ndim == 2:
+        # Handle 2d signals
+        for i, s in enumerate(sig):
+
+            _sig_win, _nperseg, _noverlap = window_pad(s, nperseg, noverlap, npad)
+
+            if i == 0:
+                sig_windowed = np.zeros((len(sig), len(_sig_win)))
+
+            sig_windowed[i] = _sig_win
+
+        # Update nperseg and noverlap
+        nperseg, noverlap = _nperseg, _noverlap
+
+    else:
+        # Handle 1d signals
+        nwindows = int(np.ceil(len(sig)/nperseg))
+        sig_windowed = np.zeros((nwindows, nperseg+(2*npad)))
+
+        for i in range(nwindows):
+
+            # Signal indices
+            start = max(0, (i*nperseg)-noverlap)
+            end = min(len(sig), start+nperseg)
+
+            if end-start != nperseg:
+                # Stop if a full window can't be created
+                #   at end of signal
+                break
+
+            # Pad
+            sig_windowed[i] = np.pad(sig[start:end], npad)
+
+        # Trim zeros and pad end
+        sig_windowed = sig_windowed[:i].flatten()
+
+        # Update nperseg
+        nperseg += (2*npad)
+
+        # Overlap is zero since overlapping segments was
+        #   applied prior to padding each window.
+        noverlap = 0
+
+    return sig_windowed, nperseg, noverlap

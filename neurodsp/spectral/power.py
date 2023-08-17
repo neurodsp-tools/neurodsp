@@ -15,7 +15,7 @@ from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
-from neurodsp.spectral.utils import trim_spectrum
+from neurodsp.spectral.utils import trim_spectrum, window_pad
 from neurodsp.spectral.checks import check_spg_settings
 
 ###################################################################################################
@@ -118,7 +118,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
-                           nperseg=None, noverlap=None,
+                           nperseg=None, noverlap=None, npad=None,
                            f_range=None, outlier_percent=None):
     """Compute the power spectral density using Welch's method.
 
@@ -178,6 +178,12 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
     # Calculate the short time Fourier transform with signal.spectrogram
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+
+    # Pad signal if requested
+    if npad is not None:
+        sig, nperseg, noverlap = window_pad(sig, nperseg, noverlap, npad)
+
+    # Compute spectrogram
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
     # Throw out outliers if indicated
