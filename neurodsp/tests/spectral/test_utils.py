@@ -1,10 +1,11 @@
 """Tests for neurodsp.spectral.utils."""
 
+import pytest
+
 import numpy as np
 from numpy.testing import assert_equal
 
 from neurodsp.tests.settings import FS
-
 from neurodsp.spectral.utils import *
 
 ###################################################################################################
@@ -41,7 +42,9 @@ def test_trim_spectrogram():
     assert_equal(f_ext, np.array([6, 7, 8]))
     assert_equal(t_ext, times)
 
-def test_window_pad():
+
+@pytest.mark.parametrize("fast_len", [True, False])
+def test_window_pad(fast_len):
 
     nperseg = 100
     noverlap = 10
@@ -49,7 +52,7 @@ def test_window_pad():
 
     sig = np.random.rand(1000)
 
-    sig_windowed, _nperseg, _noverlap = window_pad(sig, nperseg, noverlap, npad)
+    sig_windowed, _nperseg, _noverlap = window_pad(sig, nperseg, noverlap, npad, fast_len)
 
     # Overlap was handled correctly b/w the first two windows
     assert np.all(sig_windowed[npad:npad+nperseg][-noverlap:] ==
