@@ -34,9 +34,15 @@ def apply_axis_style(ax, style_args=AXIS_STYLE_ARGS, **kwargs):
         Keyword arguments that define plot style to apply.
     """
 
+    axis_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
+
+    # Special case: catch and apply minorticks being set to True or False
+    mtick_dict = {True : 'minorticks_on', False : 'minorticks_off'}
+    if 'minorticks' in axis_kwargs:
+        getattr(ax, mtick_dict[axis_kwargs.pop('minorticks')])()
+
     # Apply any provided axis style arguments
-    plot_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
-    ax.set(**plot_kwargs)
+    ax.set(**axis_kwargs)
 
 
 def apply_line_style(ax, style_args=LINE_STYLE_ARGS, **kwargs):
