@@ -82,6 +82,7 @@ def test_plot_multi_time_series(tsig_comb):
                            file_name='test_plot_multi_time_series-1.png')
 
     plot_multi_time_series(times, np.array([tsig_comb, tsig_comb, tsig_comb]),
+                           colors=['red', 'green', 'blue'],
                            save_fig=True, file_path=TEST_PLOTS_PATH,
                            file_name='test_plot_multi_time_series-2.png')
 
