@@ -16,7 +16,7 @@ from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 from neurodsp.spectral.utils import trim_spectrum
-from neurodsp.spectral.checks import check_spg_settings
+from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
 
 ###################################################################################################
 ###################################################################################################
@@ -246,7 +246,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     return freqs, spectrum
 
 
-def compute_spectrum_multitaper(sig, fs, bandwidth, num_windows):
+def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None):
     """Compute the power spectral density using the multi-taper method.
 
     Parameters
@@ -255,8 +255,8 @@ def compute_spectrum_multitaper(sig, fs, bandwidth, num_windows):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    bandwith : float
-        Frequency bandwith of multi-taper window function.
+    bandwidth : float
+        Frequency bandwidth of multi-taper window function.
     num_windows : int.
         Number of slepian windows used to weight the signal.
 
@@ -273,8 +273,11 @@ def compute_spectrum_multitaper(sig, fs, bandwidth, num_windows):
     # Compute signal length based on input shape
     sig_len = sig.shape[sig.ndim - 1]
 
+    # check settings
+    nw, num_windows = check_mt_settings(sig_len, fs, bandwidth, num_windows)
+
     # Create slepian sequences
-    slepian_sequences = dpss(sig_len, bandwidth/2, num_windows)
+    slepian_sequences = dpss(sig_len, nw, num_windows)
 
     # Compute fourier on signal weighted by each slepian sequence
     freqs = np.fft.rfftfreq(sig_len, 1. /fs)
