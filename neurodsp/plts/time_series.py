@@ -28,7 +28,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     labels : list of str, optional
         Labels for each time series.
     colors : str or list of str
-        Colors to use to plot lines.
+        Color(s) to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     **kwargs
@@ -158,3 +158,45 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
 
     bursts = np.ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)
+
+
+@savefig
+@style_plot
+def plot_multi_time_series(times, sigs, color='black', ax=None, **plt_kwargs):
+    """Plot multiple time series, with a vertical offset.
+
+    Parameters
+    ----------
+    times : 1d or 2d array, or list of 1d array, or None
+        Time definition(s) for the time series to be plotted.
+        If None, time series will be plotted in terms of samples instead of time.
+    sigs : 2d array or list of 1d array
+        xx
+    colors : str or list of str
+        Color(s) to use to plot lines.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
+    """
+
+    xlabel = 'Time (s)'
+    if times is None:
+        times = create_samples(len(sigs[0]))
+        xlabel = 'Samples'
+
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+
+    color = repeat(color) if isinstance(color, str) else iter(color)
+
+    ax = check_ax(ax, figsize=plt_kwargs.pop('figsize', None))
+
+    sigs = np.array(sigs)
+    step = 0.8 * np.ptp(sigs[0])
+
+    for ind, (time, sig) in enumerate(zip(times, sigs)):
+        ax.plot(time, sig+step*ind, color=next(color), **plt_kwargs)
+
+    ax.set(yticks=[])
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel('Channels')

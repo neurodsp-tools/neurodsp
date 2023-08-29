@@ -71,3 +71,20 @@ def test_plot_bursts(tsig_burst):
     plot_bursts(times, tsig_burst, bursts,
                 save_fig=True, file_path=TEST_PLOTS_PATH,
                 file_name='test_plot_bursts.png')
+
+@plot_test
+def test_plot_multi_time_series(tsig_comb):
+
+    times = create_times(N_SECONDS, FS)
+
+    plot_multi_time_series(times, [tsig_comb, tsig_comb],
+                           save_fig=True, file_path=TEST_PLOTS_PATH,
+                           file_name='test_plot_multi_time_series-1.png')
+
+    plot_multi_time_series(times, np.array([tsig_comb, tsig_comb, tsig_comb]),
+                           save_fig=True, file_path=TEST_PLOTS_PATH,
+                           file_name='test_plot_multi_time_series-2.png')
+
+    plot_multi_time_series([times, times[:-500]], [tsig_comb, tsig_comb[:-500]],
+                           save_fig=True, file_path=TEST_PLOTS_PATH,
+                           file_name='test_plot_multi_time_series-3.png')
