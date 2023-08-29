@@ -5,7 +5,8 @@
 
 ## Define collections of style arguments
 # Plot style arguments are those that can be defined on an axis object
-AXIS_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim']
+AXIS_STYLE_ARGS = ['title', 'xlabel', 'ylabel', 'xlim', 'ylim',
+                   'xticks', 'yticks', 'xticklabels', 'yticklabels']
 # Line style arguments are those that can be defined on a line object
 LINE_STYLE_ARGS = ['alpha', 'lw', 'linewidth', 'ls', 'linestyle',
                    'marker', 'ms', 'markersize']
