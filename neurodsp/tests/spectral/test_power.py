@@ -20,6 +20,9 @@ def test_compute_spectrum(tsig):
     freqs, spectrum = compute_spectrum(tsig, FS, method='medfilt')
     assert freqs.shape == spectrum.shape
 
+    freqs, spectrum = compute_spectrum(tsig, FS, method='multitaper')
+    assert freqs.shape == spectrum.shape
+
 def test_compute_spectrum_2d(tsig2d):
 
     freqs, spectrum = compute_spectrum(tsig2d, FS, method='welch')
@@ -31,6 +34,10 @@ def test_compute_spectrum_2d(tsig2d):
     assert spectrum.ndim == 2
 
     freqs, spectrum = compute_spectrum(tsig2d, FS, method='medfilt')
+    assert freqs.shape[-1] == spectrum.shape[-1]
+    assert spectrum.ndim == 2
+
+    freqs, spectrum = compute_spectrum(tsig2d, FS, method='multitaper')
     assert freqs.shape[-1] == spectrum.shape[-1]
     assert spectrum.ndim == 2
 
@@ -83,3 +90,11 @@ def test_compute_spectrum_medfilt(tsig, tsig_sine):
     #   Therefore, it should match the estimate of psd from above
     _, psd_medfilt = compute_spectrum(tsig_sine, FS, method='medfilt', filt_len=0.1)
     assert np.allclose(psd, psd_medfilt, atol=EPS)
+
+def test_compute_spectrum_multitaper(tsig):
+
+    freqs, spectrum = compute_spectrum_multitaper(tsig, FS)
+    assert freqs.shape == spectrum.shape
+
+
+
