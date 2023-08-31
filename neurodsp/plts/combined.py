@@ -8,8 +8,6 @@ from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.utils import savefig
 
-from neurodsp.utils.checks import check_dict_key
-
 ###################################################################################################
 ###################################################################################################
 
