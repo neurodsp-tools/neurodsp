@@ -61,7 +61,7 @@ def test_compute_spectrum_welch(tsig, tsig_sine):
 
     # Test zero padding
     freqs, spectrum = compute_spectrum(
-        np.tile(tsig, (2, 1)), FS, nperseg=100, noverlap=0, npad=1000, f_range=(1, 200)
+        np.tile(tsig, (2, 1)), FS, nperseg=100, noverlap=0, nfft=1000, f_range=(1, 200)
     )
     assert np.all(spectrum[0] == spectrum[1])
 

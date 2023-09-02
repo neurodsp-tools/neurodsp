@@ -195,6 +195,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
             nwindows = int(np.ceil(len(sig)/nperseg))
 
         if nsamples is None or pad_left is None or pad_right is None:
+            # Skipped if called from the 2d case
             nsamples, pad_left, pad_right = _find_pad_size(
                 nperseg, npad, fast_len
             )
@@ -216,7 +217,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
             # Pad
             sig_windowed[i] = np.pad(sig[start:end], (pad_left, pad_right))
 
-        # Trim zeros and pad end
+        # Removed incomplete windows and flatten
         sig_windowed = sig_windowed[:i].flatten()
 
         # Update nperseg
@@ -232,25 +233,19 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
 def _find_pad_size(nperseg, npad, fast_len):
     """Determine pad size and number of samples required."""
 
-    nsamples = nperseg+(2*npad)
+    nsamples = nperseg + npad
 
-    pad_left = npad
-    pad_right = npad
+    pad_left = npad // 2
+    pad_right = npad - pad_left
 
     if fast_len:
-        # Adjust nsamples to the fastest length,
-        #   accounting for zero-padding
+        # Increase nsamples to the next fastest length,
+        #   and update for zero-padding size
         nsamples = next_fast_len(nsamples)
 
-        total_pad = nsamples - nperseg
-        pad_left = total_pad // 2
-
-        if total_pad % 2 == 0:
-            # Even number of zero padded samples
-            pad_right = pad_left
-        else:
-            # Odd number of padded samples
-            #   Right side will have +1 samples
-            pad_right = pad_left + 1
+        # New padding
+        npad = nsamples - nperseg
+        pad_left = npad // 2
+        pad_right = npad - pad_left
 
     return nsamples, pad_left, pad_right

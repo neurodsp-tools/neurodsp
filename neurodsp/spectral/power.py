@@ -119,7 +119,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
-                           nperseg=None, noverlap=None, npad=None,
+                           nperseg=None, noverlap=None, nfft=None,
                            fast_len=False, f_range=None, outlier_percent=None):
     """Compute the power spectral density using Welch's method.
 
@@ -144,8 +144,9 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     noverlap : int, optional
         Number of points to overlap between segments.
         If None, noverlap = nperseg // 8.
-    npad : int, optional
-        Number of samples to zero pad windows per side.
+    nfft : int, optional
+        Number of samples per window. Requires nfft > nperseg.
+        Windows are zero-padded by the difference, nfft - nperseg.
     fast_len : bool, optional, default: False
         Moves nperseg to the fastest length to reduce computation.
         See scipy.fft.next_fast_len for details.
@@ -186,7 +187,10 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
 
     # Pad signal if requested
-    if npad is not None:
+    if nfft is not None and nfft < nperseg:
+        raise ValueError('nfft must be greater than nperseg.')
+    elif nfft is not None:
+        npad = nfft - nperseg
         noverlap = nperseg // 8 if noverlap is None else noverlap
         sig, nperseg, noverlap = window_pad(sig, nperseg, noverlap, npad, fast_len)
     elif fast_len:

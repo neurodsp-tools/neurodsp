@@ -63,4 +63,4 @@ def test_window_pad(fast_len):
     assert nwin == int(nwin)
 
     # Ensure updated nperseg is correct
-    assert _nperseg == nperseg + (2*npad)
+    assert _nperseg == nperseg + npad
