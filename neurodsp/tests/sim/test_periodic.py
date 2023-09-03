@@ -104,10 +104,13 @@ def test_sim_damped_oscillation():
 def test_make_bursts():
 
     is_osc = np.array([False, False, True, True, False, True, False, True, True, False])
-    cycle = np.ones([10])
+    cycle = np.ones([100])
 
     sig = make_bursts(N_SECONDS, FS, is_osc, cycle)
     check_sim_output(sig)
+
+    # Three is added since each of the three continuous bursts are fully completed
+    assert sig.sum() == (is_osc.sum() * 100) + 3
 
     # Test make bursts with uneven division of signal and cycle divisions
     #   In this test, there aren't enough samples in the signal to add last cycle
