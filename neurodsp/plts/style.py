@@ -18,7 +18,7 @@ def check_style_options():
     print('Valid style arguments:')
     for label, options in zip(['Axis', 'Line', 'Custom'],
                               [AXIS_STYLE_ARGS, LINE_STYLE_ARGS, CUSTOM_STYLE_ARGS]):
-        print('  ', label, '\t', ', '.join(options))
+        print('    {:10s}    {}'.format(label, ', '.join(options)))
 
 
 def apply_axis_style(ax, style_args=AXIS_STYLE_ARGS, **kwargs):
@@ -153,9 +153,24 @@ def style_plot(func, *args, **kwargs):
     By default, this function applies styling with the `plot_style` function. Custom
     functions for applying style can be passed in using `plot_style` as a keyword argument.
 
-    The `plot_style` function calls sub-functions for applying style different plot elements,
-    and these sub-functions can be overridden by passing in alternatives for `axis_styler`,
-    `line_styler`, and `custom_styler`.
+    The `plot_style` function calls sub-functions for applying different plot elements, including:
+
+    - `axis_styler`: apply style options to an axis
+    - `line_styler`: applies style options to lines objects in a plot
+    - `collection_styler`: applies style options to collections objects in a plot
+    - `custom_style`: applies custom style options
+
+    Each of these sub-functions can be overridden by passing in alternatives.
+
+    To see the full set of style arguments that are supported, run the following code:
+
+    >>> from fooof.plts.style import check_style_options
+    >>> check_style_options()
+    Valid style arguments:
+        Axis          title, xlabel, ylabel, xlim, ylim
+        Line          alpha, lw, linewidth, ls, linestyle, marker, ms, markersize
+        Collection    alpha, edgecolor
+        Custom        title_fontsize, label_size, tick_labelsize, legend_size, legend_loc
     """
 
     @wraps(func)
