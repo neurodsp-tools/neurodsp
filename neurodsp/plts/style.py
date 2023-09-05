@@ -187,7 +187,7 @@ def style_plot(func, *args, **kwargs):
 
     To see the full set of style arguments that are supported, run the following code:
 
-    >>> from fooof.plts.style import check_style_options
+    >>> from neurodsp.plts.style import check_style_options
     >>> check_style_options()
     Valid style arguments:
         Axis          title, xlabel, ylabel, xlim, ylim
