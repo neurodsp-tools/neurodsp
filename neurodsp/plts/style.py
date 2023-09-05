@@ -129,14 +129,15 @@ def apply_custom_style(ax, **kwargs):
 
 
 def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
-               custom_styler=apply_custom_style, **kwargs):
+               collection_styler=apply_collection_style, custom_styler=apply_custom_style,
+               **kwargs):
     """Apply plot style to a figure axis.
 
     Parameters
     ----------
     ax : matplotlib.Axes
         Figure axes to apply style to.
-    axis_styler, line_styler, custom_styler : callable, optional
+    axis_styler, line_styler, collection_styler, custom_styler : callable, optional
         Functions to apply style to aspects of the plot.
     **kwargs
         Keyword arguments that define style to apply.
