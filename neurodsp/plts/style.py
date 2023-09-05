@@ -5,9 +5,9 @@ from functools import wraps
 
 import matplotlib.pyplot as plt
 
-from neurodsp.plts.settings import AXIS_STYLE_ARGS, LINE_STYLE_ARGS, CUSTOM_STYLE_ARGS, STYLE_ARGS
-from neurodsp.plts.settings import (LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC,
-                                    TICK_LABELSIZE, TITLE_FONTSIZE)
+from neurodsp.plts.settings import (AXIS_STYLE_ARGS, LINE_STYLE_ARGS, COLLECTION_STYLE_ARGS,
+                                    CUSTOM_STYLE_ARGS, STYLE_ARGS, TICK_LABELSIZE, TITLE_FONTSIZE,
+                                    LABEL_SIZE, LEGEND_SIZE, LEGEND_LOC)
 
 ###################################################################################################
 ###################################################################################################
@@ -75,6 +75,27 @@ def apply_line_style(ax, style_args=LINE_STYLE_ARGS, **kwargs):
             line.set(**{style : next(values)})
 
 
+def apply_collection_style(ax, style_args=COLLECTION_STYLE_ARGS, **kwargs):
+    """Apply collection plot style.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        Figure axes to apply style to.
+    style_args : list of str
+        A list of arguments to be sub-selected from `kwargs` and applied as collection styling.
+    **kwargs
+        Keyword arguments that define collection style to apply.
+    """
+
+    # Get the collection related styling arguments from the keyword arguments
+    collection_kwargs = {key : val for key, val in kwargs.items() if key in style_args}
+
+    # Apply any provided collection style arguments
+    for collection in ax.collections:
+        collection.set(**collection_kwargs)
+
+
 def apply_custom_style(ax, **kwargs):
     """Apply custom plot style.
 
@@ -128,6 +149,7 @@ def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
 
     axis_styler(ax, **kwargs)
     line_styler(ax, **kwargs)
+    collection_styler(ax, **kwargs)
     custom_styler(ax, **kwargs)
 
 
