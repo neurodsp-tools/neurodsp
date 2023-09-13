@@ -264,7 +264,7 @@ def sim_variable_oscillation(n_seconds, fs, freqs, cycle='sine', phase=0, **cycl
     n_samples = np.sum(cyc_lens) if n_seconds is None else compute_nsamples(n_seconds, fs)
     sig = np.zeros(n_samples)
 
-    # Simulate signal, adding each cycle with spefified parameters
+    # Simulate signal, adding each cycle with specified parameters
     for freq, params, start, end in zip(freqs, cycle_params, starts, ends):
 
         if start > n_samples or end > n_samples:
@@ -290,8 +290,8 @@ def sim_damped_oscillation(n_seconds, fs, freq, gamma, growth=None):
     gamma : float
         Parametric dampening coefficient.
     growth : float, optional, default: None
-        Logistic growth rate to smooth the heaviside step function. If None,
-        a non-smoothed heaviside is used.
+        Logistic growth rate to smooth the Heaviside step function.
+        If None, a non-smoothed Heaviside is used.
 
     Returns
     -------
@@ -358,7 +358,7 @@ def make_bursts(n_seconds, fs, is_oscillating, cycle):
 
         # If set as an oscillating cycle, add cycle to signal
         #   The sample check is to check there are enough samples left to add a full cycle
-        #   If there are not, this skipps the add, leaving zeros instead of adding part of a cycle
+        #   If there are not, this skips the add, leaving zeros instead of adding part of a cycle
         if is_osc and sig_ind + n_samples_cycle < n_samples:
             burst_sig[sig_ind:sig_ind+n_samples_cycle] = cycle
 
