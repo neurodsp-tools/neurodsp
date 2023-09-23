@@ -9,7 +9,7 @@ from neurodsp.utils.checks import check_param_options
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
+def filter_signal(sig, fs, pass_type, f_range, filter_type=None,
                   n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
                   print_transitions=False, plot_properties=False, return_filter=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
@@ -39,8 +39,8 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
         Length of filter, in seconds, if using an FIR filter.
         This parameter overwrites `n_cycles`.
     filter_type : {'fir', 'iir'}, optional
-        Whether to use an FIR or IIR filter.
-        The only IIR filter offered is a butterworth filter.
+        Whether to use an FIR or IIR filter. IIR option is a butterworth filter.
+        If None, type is inferred from input parameters, and/or defaults to FIR.
     remove_edges : bool, optional, default: True
         If True, replace samples within half the kernel length to be np.nan.
         Only used for FIR filters.
@@ -72,9 +72,14 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
     ...                          filter_type='fir', f_range=(1, 25))
     """
 
-    check_param_options(filter_type, 'filter_type', ['fir', 'iir'])
+    if filter_type is not None:
+        check_param_options(filter_type, 'filter_type', ['fir', 'iir'])
+    else:
+        # Infer IIR if relevant parameter set, otherwise, assume FIR
+        filter_type = 'iir' if butterworth_order is not None else 'fir'
 
     if filter_type.lower() == 'fir':
+        _fir_checks(butterworth_order)
         return filter_signal_fir(sig, fs, pass_type, f_range, n_cycles, n_seconds,
                                  remove_edges, print_transitions,
                                  plot_properties, return_filter)
@@ -86,13 +91,19 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type='fir',
                                  return_filter)
 
 
-def _iir_checks(n_seconds, butterworth_order, remove_edges):
-    """Checks for using an IIR filter if called from the general filter function."""
+def _fir_checks(butterworth_order):
+    """Check inputs for using an FIR filter if called from the general filter function."""
 
-    # Check inputs for IIR filters
+    if butterworth_order is not None:
+        raise ValueError('`butterworth_order` should not be defined when using an FIR filter.')
+
+
+def _iir_checks(n_seconds, butterworth_order, remove_edges):
+    """Check inputs for using an IIR filter if called from the general filter function."""
+
     if n_seconds is not None:
-        raise ValueError('n_seconds should not be defined for an IIR filter.')
+        raise ValueError('`n_seconds` should not be defined for an IIR filter.')
     if butterworth_order is None:
-        raise ValueError('butterworth_order must be defined when using an IIR filter.')
+        raise ValueError('`butterworth_order` must be defined when using an IIR filter.')
     if remove_edges:
         warn('Edge artifacts are not removed when using an IIR filter.')
