@@ -80,6 +80,9 @@ def multidim(select=[]):
                 else:
                     out = np.array(outs)
 
+            else:
+                raise ValueError('Arrays of 3 or more dimensions are not supported.')
+
             return out
 
         return wrapper
