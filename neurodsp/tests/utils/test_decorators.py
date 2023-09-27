@@ -1,5 +1,7 @@
 """Tests for neurodsp.utils.decorators."""
 
+from pytest import raises
+
 import numpy as np
 
 from neurodsp.utils.decorators import *
@@ -24,6 +26,15 @@ def test_multidim():
     def func(sig):
         return np.sum(sig)
 
-    # Check that the output of the func gets applied across dimensions
-    out = func(np.array([[1, 2], [1, 2]]))
-    assert np.array_equal(out, np.array([3, 3]))
+    # Test function gets applied normally to 1D input
+    arr1d = np.array([1, 2, 3, 4])
+    assert func(arr1d) == 10
+
+    # Test function gets applied across dimensions for 2D input
+    arr2d = np.array([[1, 2], [1, 2]])
+    assert np.array_equal(func(arr2d), np.array([3, 3]))
+
+    # Check error for input of unsupported dimension
+    arr3d = np.array([[[1, 2], [3, 4]], [[1, 2], [3, 4]]])
+    with raises(ValueError):
+        func(arr3d)
