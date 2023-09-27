@@ -17,7 +17,7 @@ def robust_hilbert(sig):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
 
     Returns
@@ -53,7 +53,7 @@ def phase_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -99,7 +99,7 @@ def amp_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -144,7 +144,7 @@ def freq_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.

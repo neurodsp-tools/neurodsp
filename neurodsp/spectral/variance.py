@@ -18,7 +18,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
@@ -75,7 +75,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
@@ -185,7 +185,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.

@@ -18,7 +18,7 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.

@@ -19,7 +19,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.

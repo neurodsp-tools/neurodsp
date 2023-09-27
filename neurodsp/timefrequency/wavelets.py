@@ -16,7 +16,7 @@ def compute_wavelet_transform(sig, fs, freqs, n_cycles=7, scaling=0.5, norm='amp
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -71,8 +71,8 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
 
     Parameters
     ----------
-    sig : 1d array
-        Time series to filter.
+    sig : 1d or 2d array
+        Time series.
     fs : float
         Sampling rate, in Hz.
     freq : float
