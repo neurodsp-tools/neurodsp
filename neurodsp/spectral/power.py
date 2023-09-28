@@ -26,7 +26,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -41,7 +41,7 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     -------
     freqs : 1d array
         Frequencies at which the measure was calculated.
-    spectrum : 1d or 2d array
+    spectrum : nd array
         Power spectral density.
 
     Examples
@@ -72,7 +72,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -89,7 +89,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     -------
     freqs : 1d array
         Frequencies at which the measure was calculated.
-    spectrum : 1d or 2d array
+    spectrum : nd array
         Power spectral density.
 
     Examples
@@ -124,7 +124,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -152,7 +152,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     -------
     freqs : 1d array
         Frequencies at which the measure was calculated.
-    spectrum : 1d or 2d array
+    spectrum : nd array
         Power spectral density.
 
     Notes
@@ -200,7 +200,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -213,7 +213,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     -------
     freqs : 1d array
         Frequencies at which the measure was calculated.
-    spectrum : 1d or 2d array
+    spectrum : nd array
         Power spectral density.
 
     Examples

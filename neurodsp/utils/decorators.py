@@ -81,7 +81,18 @@ def multidim(select=[]):
                     out = np.array(outs)
 
             else:
-                raise ValueError('Arrays of 3 or more dimensions are not supported.')
+                # Reshape to 2d and run func
+                shape = sig.shape
+                sig_2d = sig.reshape(-1, shape[-1])
+                out = wrapper(sig_2d, *args, **kwargs)
+
+                # Reshape back to original shape
+                if isinstance(out, (tuple, list)):
+                    for i in range(len(out)):
+                        if i not in select:
+                            out[i] = out[i].reshape((*shape[:-1], -1))
+                else:
+                    out = out.reshape((*shape[:-1], -1))
 
             return out
 

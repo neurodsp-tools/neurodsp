@@ -18,7 +18,7 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -37,7 +37,7 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
 
     Returns
     -------
-    lcs : float or 1d array
+    lcs : float or nd array
         If `return_spectrum` is False: mean lagged coherence value across the frequency range.
         If `return_spectrum` is True: lagged coherence values for all frequencies.
     freqs : 1d array
