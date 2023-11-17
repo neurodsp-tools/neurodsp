@@ -114,8 +114,8 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
     Notes
     -----
     - This function creates a time series whose power spectrum consists of an aperiodic component
-    and a gaussian peak at ``freq`` with standard deviation ``bw`` and relative ``height``.
-    - The periodic component of the signal will be sinusoidal.
+      and a gaussian peak at ``freq`` with standard deviation ``bw`` and relative ``height``
+    - The periodic component of the signal will be sinusoidal
 
     Examples
     --------
