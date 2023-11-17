@@ -102,6 +102,7 @@ html_theme_options = {
         ("Glossary", "glossary"),
         ("Tutorials", "auto_tutorials/index"),
         ("Examples", "auto_examples/index"),
+        ("Reference", "reference"),
         ("GitHub", "https://github.com/neurodsp-tools/neurodsp", True)
     ],
 
