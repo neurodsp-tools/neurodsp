@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtering &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Filtering &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,13 +110,14 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="filtering">
+<section class="sphx-glr-example-title" id="filtering">
 <span id="sphx-glr-auto-tutorials-filt-plot-1-filtering-py"></span><h1>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h1>
 <p>Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters.</p>
 <p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.filt</span></code> module.</p>
-<div class="section" id="filtering-with-neurodsp">
+<section id="filtering-with-neurodsp">
 <h2>Filtering with NeuroDSP<a class="headerlink" href="#filtering-with-neurodsp" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_signal()</span></code></a> function is the main function for filtering using NeuroDSP.</p>
 <p>In this tutorial, we will examine filtering signals with different passbands.
@@ -152,7 +154,7 @@ The passband of a filter is the range of frequencies that can ‘pass’ through
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="bandpass-filters">
+<section id="bandpass-filters">
 <h3>Bandpass filters<a class="headerlink" href="#bandpass-filters" title="Permalink to this headline">¶</a></h3>
 <p>A bandpass filter allows through frequencies within a given frequency range.</p>
 <p>These filters can be useful to filter a signal to a specific band range, for example
@@ -180,13 +182,12 @@ filtering to the theta range, defined as 4-8 Hz.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 1 Filtering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_1_Filtering_001.png" />
-<p>Notice that the edges of the filtered signal are clipped (no red).</p>
+<img src="../../_images/sphx_glr_plot_1_Filtering_001.png" srcset="../../_images/sphx_glr_plot_1_Filtering_001.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/><p>Notice that the edges of the filtered signal are clipped (no red).</p>
 <p>Edge artifact removal is done by default in NeuroDSP filtering, because
 the signal samples at the edges only experienced part of the filter.</p>
 <p>To bypass this feature, set <cite>remove_edges=False</cite>, but at your own risk!</p>
-</div>
-<div class="section" id="highpass-filter">
+</section>
+<section id="highpass-filter">
 <h3>Highpass filter<a class="headerlink" href="#highpass-filter" title="Permalink to this headline">¶</a></h3>
 <p>Highpass filters are filters that pass through all frequencies above a specified cutoff point.</p>
 <p>These filters can be used to remove low frequency drift from the data.</p>
@@ -212,9 +213,8 @@ the signal samples at the edges only experienced part of the filter.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 1 Filtering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_1_Filtering_002.png" />
-</div>
-<div class="section" id="lowpass-filter">
+<img src="../../_images/sphx_glr_plot_1_Filtering_002.png" srcset="../../_images/sphx_glr_plot_1_Filtering_002.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
+<section id="lowpass-filter">
 <h3>Lowpass filter<a class="headerlink" href="#lowpass-filter" title="Permalink to this headline">¶</a></h3>
 <p>Lowpass filters are filters that pass through all frequencies below a specified cutoff point.</p>
 <p>These filters can be used to remove high frequency activity from the data.</p>
@@ -227,9 +227,8 @@ the signal samples at the edges only experienced part of the filter.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 1 Filtering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_1_Filtering_003.png" />
-</div>
-<div class="section" id="bandstop-filter">
+<img src="../../_images/sphx_glr_plot_1_Filtering_003.png" srcset="../../_images/sphx_glr_plot_1_Filtering_003.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
+<section id="bandstop-filter">
 <h3>Bandstop filter<a class="headerlink" href="#bandstop-filter" title="Permalink to this headline">¶</a></h3>
 <p>Bandstop filters are filters that remove a specified band range from the data.</p>
 <p>Next let’s try a bandstop filter, to remove 60 Hz noise from the data.</p>
@@ -247,8 +246,7 @@ the 60Hz oscillation much (try this yourself!).</p>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
   warn(&#39;The filter attenuation never goes below {} dB. &#39;\
 </pre></div>
 </div>
@@ -256,10 +254,9 @@ the 60Hz oscillation much (try this yourself!).</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 1 Filtering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_1_Filtering_004.png" />
-</div>
-</div>
-<div class="section" id="real-data-example">
+<img src="../../_images/sphx_glr_plot_1_Filtering_004.png" srcset="../../_images/sphx_glr_plot_1_Filtering_004.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
+</section>
+<section id="real-data-example">
 <h2>Real Data Example<a class="headerlink" href="#real-data-example" title="Permalink to this headline">¶</a></h2>
 <p>Finally, let’s apply a filter to a segment of real data.</p>
 <p>In this example, we will apply a bandpass filter in the beta range to a segment of neural data.</p>
@@ -282,22 +279,21 @@ the 60Hz oscillation much (try this yourself!).</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">],</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 1 Filtering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_1_Filtering_005.png" />
-<p>In the above, we can see the original and filtered versions of some real neural data.</p>
+<img src="../../_images/sphx_glr_plot_1_Filtering_005.png" srcset="../../_images/sphx_glr_plot_1_Filtering_005.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/><p>In the above, we can see the original and filtered versions of some real neural data.</p>
 <p>You might notice that in the filtered time series, the resulting oscillation appears to be
 more sinusoidal than the original signal really is.</p>
 <p>If you are interested in this problem, and how to deal with it, you should check out
 <a class="reference external" href="https://bycycle-tools.github.io/bycycle/">bycycle</a>,
 which is a tool for time-domain analyses of waveform shape.</p>
-<div class="section" id="conclusion">
+<section id="conclusion">
 <h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
 <p>This tutorial has been a brief introduction to applying the filters that are available
 in NeuroDSP. Note that in practice you will likely do more checking of filters that you
 use (checking the filter response, for example), and may need to update settings.</p>
 <p>For more information on different kinds of filters and their settings and
 properties, and how to evaluate filters see the subsequent tutorials.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.660 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.503 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/cecc4d52322bc6b8a15fb5414115860f/plot_1_Filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1_Filtering.py</span></code></a></p>
 </div>
@@ -306,9 +302,9 @@ properties, and how to evaluate filters see the subsequent tutorials.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -322,8 +318,8 @@ properties, and how to evaluate filters see the subsequent tutorials.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

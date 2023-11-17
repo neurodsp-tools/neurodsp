@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Documentation &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>API Documentation &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="glossary.html">Glossary</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="auto_examples/index.html">Examples</a></li>
+                <li><a href="reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,10 +108,10 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="api-documentation">
+  <section id="api-documentation">
 <span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
 <p>This is the API reference for the neurodsp module.</p>
-<div class="section" id="table-of-contents">
+<section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -186,10 +187,10 @@
 </li>
 </ul>
 </div>
-<div class="section" id="filtering">
+<section id="filtering">
 <h3><a class="toc-backref" href="#id3">Filtering</a><a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">filt</span></code> module, for filtering time series.</p>
-<div class="section" id="general-filter-function">
+<section id="general-filter-function">
 <h4><a class="toc-backref" href="#id4">General Filter Function</a><a class="headerlink" href="#general-filter-function" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -197,13 +198,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal</span></code></a>(sig, fs, pass_type, f_range[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal</span></code></a>(sig, fs, pass_type, f_range[, ...])</p></td>
 <td><p>Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="fir-filters">
+</section>
+<section id="fir-filters">
 <h4><a class="toc-backref" href="#id5">FIR Filters</a><a class="headerlink" href="#fir-filters" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -214,13 +215,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.filter_signal_fir.html#neurodsp.filt.filter_signal_fir" title="neurodsp.filt.filter_signal_fir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal_fir</span></code></a>(sig, fs, pass_type, f_range)</p></td>
 <td><p>Apply an FIR filter to a signal.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter" title="neurodsp.filt.design_fir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_fir_filter</span></code></a>(fs, pass_type, f_range[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter" title="neurodsp.filt.design_fir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_fir_filter</span></code></a>(fs, pass_type, f_range[, ...])</p></td>
 <td><p>Design an FIR filter.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="iir-filters">
+</section>
+<section id="iir-filters">
 <h4><a class="toc-backref" href="#id6">IIR Filters</a><a class="headerlink" href="#iir-filters" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -228,16 +229,16 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.filter_signal_iir.html#neurodsp.filt.filter_signal_iir" title="neurodsp.filt.filter_signal_iir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal_iir</span></code></a>(sig, fs, pass_type, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.filter_signal_iir.html#neurodsp.filt.filter_signal_iir" title="neurodsp.filt.filter_signal_iir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_signal_iir</span></code></a>(sig, fs, pass_type, ...[, ...])</p></td>
 <td><p>Apply an IIR filter to a signal.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_iir_filter</span></code></a>(fs, pass_type, f_range, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">design_iir_filter</span></code></a>(fs, pass_type, f_range, ...)</p></td>
 <td><p>Design an IIR filter.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="check-filter-properties">
+</section>
+<section id="check-filter-properties">
 <h4><a class="toc-backref" href="#id7">Check Filter Properties</a><a class="headerlink" href="#check-filter-properties" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -248,13 +249,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.checks.check_filter_definition.html#neurodsp.filt.checks.check_filter_definition" title="neurodsp.filt.checks.check_filter_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_filter_definition</span></code></a>(pass_type, f_range)</p></td>
 <td><p>Check a filter definition for validity, and get filter frequency range of the filter.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.checks.check_filter_properties.html#neurodsp.filt.checks.check_filter_properties" title="neurodsp.filt.checks.check_filter_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_filter_properties</span></code></a>(filter_coefs, …[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.checks.check_filter_properties.html#neurodsp.filt.checks.check_filter_properties" title="neurodsp.filt.checks.check_filter_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_filter_properties</span></code></a>(filter_coefs, ...[, ...])</p></td>
 <td><p>Check a filters properties, including pass band and transition band.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="filter-utilities">
+</section>
+<section id="filter-utilities">
 <h4><a class="toc-backref" href="#id8">Filter Utilities</a><a class="headerlink" href="#filter-utilities" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -262,7 +263,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.utils.compute_frequency_response.html#neurodsp.filt.utils.compute_frequency_response" title="neurodsp.filt.utils.compute_frequency_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_frequency_response</span></code></a>(filter_coefs, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.filt.utils.compute_frequency_response.html#neurodsp.filt.utils.compute_frequency_response" title="neurodsp.filt.utils.compute_frequency_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_frequency_response</span></code></a>(filter_coefs, ...)</p></td>
 <td><p>Compute the frequency response of a filter.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.filt.utils.compute_pass_band.html#neurodsp.filt.utils.compute_pass_band" title="neurodsp.filt.utils.compute_pass_band"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_pass_band</span></code></a>(fs, pass_type, f_range)</p></td>
@@ -279,12 +280,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="time-frequency-analyses">
+</section>
+</section>
+<section id="time-frequency-analyses">
 <h3><a class="toc-backref" href="#id9">Time-Frequency Analyses</a><a class="headerlink" href="#time-frequency-analyses" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">timefrequency</span></code> module, for time-frequency analyses.</p>
-<div class="section" id="hilbert-methods">
+<section id="hilbert-methods">
 <h4><a class="toc-backref" href="#id10">Hilbert Methods</a><a class="headerlink" href="#hilbert-methods" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -306,8 +307,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="wavelet-methods">
+</section>
+<section id="wavelet-methods">
 <h4><a class="toc-backref" href="#id11">Wavelet Methods</a><a class="headerlink" href="#wavelet-methods" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -315,20 +316,20 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_wavelet_transform</span></code></a>(sig, fs, freqs[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_wavelet_transform</span></code></a>(sig, fs, freqs[, ...])</p></td>
 <td><p>Compute the time-frequency representation of a signal using morlet wavelets.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.timefrequency.convolve_wavelet.html#neurodsp.timefrequency.convolve_wavelet" title="neurodsp.timefrequency.convolve_wavelet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve_wavelet</span></code></a>(sig, fs, freq[, n_cycles, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.timefrequency.convolve_wavelet.html#neurodsp.timefrequency.convolve_wavelet" title="neurodsp.timefrequency.convolve_wavelet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve_wavelet</span></code></a>(sig, fs, freq[, n_cycles, ...])</p></td>
 <td><p>Convolve a signal with a complex wavelet.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="spectral-analyses">
+</section>
+</section>
+<section id="spectral-analyses">
 <h3><a class="toc-backref" href="#id12">Spectral Analyses</a><a class="headerlink" href="#spectral-analyses" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">spectral</span></code> module, for spectral analyses.</p>
-<div class="section" id="spectral-power">
+<section id="spectral-power">
 <h4><a class="toc-backref" href="#id13">Spectral Power</a><a class="headerlink" href="#spectral-power" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -339,19 +340,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum</span></code></a>(sig, fs[, method, avg_type])</p></td>
 <td><p>Compute the power spectral density of a time series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_welch.html#neurodsp.spectral.compute_spectrum_welch" title="neurodsp.spectral.compute_spectrum_welch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_welch</span></code></a>(sig, fs[, avg_type, …])</p></td>
-<td><p>Compute the power spectral density using Welch’s method.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_welch.html#neurodsp.spectral.compute_spectrum_welch" title="neurodsp.spectral.compute_spectrum_welch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_welch</span></code></a>(sig, fs[, avg_type, ...])</p></td>
+<td><p>Compute the power spectral density using Welch's method.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_wavelet.html#neurodsp.spectral.compute_spectrum_wavelet" title="neurodsp.spectral.compute_spectrum_wavelet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_wavelet</span></code></a>(sig, fs, freqs[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_wavelet.html#neurodsp.spectral.compute_spectrum_wavelet" title="neurodsp.spectral.compute_spectrum_wavelet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_wavelet</span></code></a>(sig, fs, freqs[, ...])</p></td>
 <td><p>Compute the power spectral density using wavelets.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_medfilt.html#neurodsp.spectral.compute_spectrum_medfilt" title="neurodsp.spectral.compute_spectrum_medfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_medfilt</span></code></a>(sig, fs[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectrum_medfilt.html#neurodsp.spectral.compute_spectrum_medfilt" title="neurodsp.spectral.compute_spectrum_medfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectrum_medfilt</span></code></a>(sig, fs[, ...])</p></td>
 <td><p>Compute the power spectral density as a smoothed FFT.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="spectral-measures">
+</section>
+<section id="spectral-measures">
 <h4><a class="toc-backref" href="#id14">Spectral Measures</a><a class="headerlink" href="#spectral-measures" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -365,13 +366,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_relative_power.html#neurodsp.spectral.compute_relative_power" title="neurodsp.spectral.compute_relative_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_relative_power</span></code></a>(freqs, powers, band)</p></td>
 <td><p>Compute relative power for a given frequency band.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_band_ratio.html#neurodsp.spectral.compute_band_ratio" title="neurodsp.spectral.compute_band_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_band_ratio</span></code></a>(freqs, powers, low_band, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_band_ratio.html#neurodsp.spectral.compute_band_ratio" title="neurodsp.spectral.compute_band_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_band_ratio</span></code></a>(freqs, powers, low_band, ...)</p></td>
 <td><p>Calculate band ratio measure between two predefined frequency ranges.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="spectral-variance">
+</section>
+<section id="spectral-variance">
 <h4><a class="toc-backref" href="#id15">Spectral Variance</a><a class="headerlink" href="#spectral-variance" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -379,19 +380,19 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scv</span></code></a>(sig, fs[, window, nperseg, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scv</span></code></a>(sig, fs[, window, nperseg, ...])</p></td>
 <td><p>Compute the spectral coefficient of variation (SCV) at each frequency.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scv_rs</span></code></a>(sig, fs[, window, nperseg, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_scv_rs.html#neurodsp.spectral.compute_scv_rs" title="neurodsp.spectral.compute_scv_rs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scv_rs</span></code></a>(sig, fs[, window, nperseg, ...])</p></td>
 <td><p>Compute a resampled version of the spectral coefficient of variation (SCV).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectral_hist</span></code></a>(sig, fs[, window, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spectral_hist</span></code></a>(sig, fs[, window, ...])</p></td>
 <td><p>Compute the distribution of log10 power at each frequency from the signal spectrogram.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="spectral-utilities">
+</section>
+<section id="spectral-utilities">
 <h4><a class="toc-backref" href="#id16">Spectral Utilities</a><a class="headerlink" href="#spectral-utilities" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -402,17 +403,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.spectral.trim_spectrum.html#neurodsp.spectral.trim_spectrum" title="neurodsp.spectral.trim_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_spectrum</span></code></a>(freqs, power_spectra, f_range)</p></td>
 <td><p>Extract a frequency range of interest from power spectra.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.trim_spectrogram.html#neurodsp.spectral.trim_spectrogram" title="neurodsp.spectral.trim_spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_spectrogram</span></code></a>(freqs, times, spg[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.spectral.trim_spectrogram.html#neurodsp.spectral.trim_spectrogram" title="neurodsp.spectral.trim_spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_spectrogram</span></code></a>(freqs, times, spg[, ...])</p></td>
 <td><p>Extract a frequency or time range of interest from a spectrogram.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="burst-detection">
+</section>
+</section>
+<section id="burst-detection">
 <h3><a class="toc-backref" href="#id17">Burst Detection</a><a class="headerlink" href="#burst-detection" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">burst</span></code> module, for detection bursts in time series.</p>
-<div class="section" id="burst-detection-algorithms">
+<section id="burst-detection-algorithms">
 <h4><a class="toc-backref" href="#id18">Burst Detection Algorithms</a><a class="headerlink" href="#burst-detection-algorithms" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -420,13 +421,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detect_bursts_dual_threshold</span></code></a>(sig, fs, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detect_bursts_dual_threshold</span></code></a>(sig, fs, ...[, ...])</p></td>
 <td><p>Detect bursts in a signal using the dual threshold algorithm.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="burst-utilities">
+</section>
+<section id="burst-utilities">
 <h4><a class="toc-backref" href="#id19">Burst Utilities</a><a class="headerlink" href="#burst-utilities" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -439,12 +440,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="rhythm-analyses">
+</section>
+</section>
+<section id="rhythm-analyses">
 <h3><a class="toc-backref" href="#id20">Rhythm Analyses</a><a class="headerlink" href="#rhythm-analyses" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">rhythm</span></code> module, for finding and analyzing rhythmic and recurring patterns in time series.</p>
-<div class="section" id="sliding-window-matching">
+<section id="sliding-window-matching">
 <h4><a class="toc-backref" href="#id21">Sliding Window Matching</a><a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -452,13 +453,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sliding_window_matching</span></code></a>(sig, fs, win_len, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sliding_window_matching</span></code></a>(sig, fs, win_len, ...)</p></td>
 <td><p>Find recurring patterns in a time series using the sliding window matching algorithm.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="lagged-coherence">
+</section>
+<section id="lagged-coherence">
 <h4><a class="toc-backref" href="#id22">Lagged Coherence</a><a class="headerlink" href="#lagged-coherence" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -466,17 +467,17 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_lagged_coherence</span></code></a>(sig, fs, freqs[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_lagged_coherence</span></code></a>(sig, fs, freqs[, ...])</p></td>
 <td><p>Compute lagged coherence, reflecting the rhythmicity across a frequency range.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="aperiodic-analyses">
+</section>
+</section>
+<section id="aperiodic-analyses">
 <h3><a class="toc-backref" href="#id23">Aperiodic Analyses</a><a class="headerlink" href="#aperiodic-analyses" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">aperiodic</span></code> module, for analyzing aperiodic activity in time series.</p>
-<div class="section" id="auto-correlation-analyses">
+<section id="auto-correlation-analyses">
 <h4><a class="toc-backref" href="#id24">Auto-correlation Analyses</a><a class="headerlink" href="#auto-correlation-analyses" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -484,13 +485,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.autocorr.compute_autocorr.html#neurodsp.aperiodic.autocorr.compute_autocorr" title="neurodsp.aperiodic.autocorr.compute_autocorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_autocorr</span></code></a>(sig[, max_lag, lag_step, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.autocorr.compute_autocorr.html#neurodsp.aperiodic.autocorr.compute_autocorr" title="neurodsp.aperiodic.autocorr.compute_autocorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_autocorr</span></code></a>(sig[, max_lag, lag_step, ...])</p></td>
 <td><p>Compute the signal autocorrelation (lagged correlation).</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="fluctuation-analyses">
+</section>
+<section id="fluctuation-analyses">
 <h4><a class="toc-backref" href="#id25">Fluctuation Analyses</a><a class="headerlink" href="#fluctuation-analyses" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -498,7 +499,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations" title="neurodsp.aperiodic.dfa.compute_fluctuations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_fluctuations</span></code></a>(sig, fs[, n_scales, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations" title="neurodsp.aperiodic.dfa.compute_fluctuations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_fluctuations</span></code></a>(sig, fs[, n_scales, ...])</p></td>
 <td><p>Compute a fluctuation analysis on a signal.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.dfa.compute_rescaled_range.html#neurodsp.aperiodic.dfa.compute_rescaled_range" title="neurodsp.aperiodic.dfa.compute_rescaled_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_rescaled_range</span></code></a>(sig, win_len)</p></td>
@@ -509,8 +510,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="signal-decomposition">
+</section>
+<section id="signal-decomposition">
 <h4><a class="toc-backref" href="#id26">Signal Decomposition</a><a class="headerlink" href="#signal-decomposition" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -526,8 +527,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="conversions">
+</section>
+<section id="conversions">
 <h4><a class="toc-backref" href="#id27">Conversions</a><a class="headerlink" href="#conversions" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -541,7 +542,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.conversions.convert_alpha_exponent.html#neurodsp.aperiodic.conversions.convert_alpha_exponent" title="neurodsp.aperiodic.conversions.convert_alpha_exponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_alpha_exponent</span></code></a>(alpha)</p></td>
 <td><p>Convert a DFA alpha value to the expected powerlaw exponent.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.conversions.convert_exponent_hurst.html#neurodsp.aperiodic.conversions.convert_exponent_hurst" title="neurodsp.aperiodic.conversions.convert_exponent_hurst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_exponent_hurst</span></code></a>(exponent, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.conversions.convert_exponent_hurst.html#neurodsp.aperiodic.conversions.convert_exponent_hurst" title="neurodsp.aperiodic.conversions.convert_exponent_hurst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_exponent_hurst</span></code></a>(exponent, ...)</p></td>
 <td><p>Convert a powerlaw exponent to the expected Hurst exponent value.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.aperiodic.conversions.convert_hurst_exponent.html#neurodsp.aperiodic.conversions.convert_hurst_exponent" title="neurodsp.aperiodic.conversions.convert_hurst_exponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_hurst_exponent</span></code></a>(hurst, fractional_class)</p></td>
@@ -555,12 +556,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="simulations">
+</section>
+</section>
+<section id="simulations">
 <h3><a class="toc-backref" href="#id28">Simulations</a><a class="headerlink" href="#simulations" title="Permalink to this headline">¶</a></h3>
 <p>Functions and utilities in the <code class="docutils literal notranslate"><span class="pre">sim</span></code> module, for simulating time series.</p>
-<div class="section" id="periodic-signals">
+<section id="periodic-signals">
 <h4><a class="toc-backref" href="#id29">Periodic Signals</a><a class="headerlink" href="#periodic-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -568,7 +569,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_oscillation</span></code></a>(n_seconds, fs, freq[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_oscillation.html#neurodsp.sim.sim_oscillation" title="neurodsp.sim.sim_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_oscillation</span></code></a>(n_seconds, fs, freq[, ...])</p></td>
 <td><p>Simulate an oscillation.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_bursty_oscillation.html#neurodsp.sim.sim_bursty_oscillation" title="neurodsp.sim.sim_bursty_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_bursty_oscillation</span></code></a>(n_seconds, fs, freq)</p></td>
@@ -577,13 +578,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_variable_oscillation.html#neurodsp.sim.sim_variable_oscillation" title="neurodsp.sim.sim_variable_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_variable_oscillation</span></code></a>(n_seconds, fs, freqs)</p></td>
 <td><p>Simulate an oscillation that varies in frequency and cycle parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_damped_oscillation.html#neurodsp.sim.sim_damped_oscillation" title="neurodsp.sim.sim_damped_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_damped_oscillation</span></code></a>(n_seconds, fs, freq, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_damped_oscillation.html#neurodsp.sim.sim_damped_oscillation" title="neurodsp.sim.sim_damped_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_damped_oscillation</span></code></a>(n_seconds, fs, freq, ...)</p></td>
 <td><p>Simulate a damped relaxation oscillation.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="aperiodic-signals">
+</section>
+<section id="aperiodic-signals">
 <h4><a class="toc-backref" href="#id30">Aperiodic Signals</a><a class="headerlink" href="#aperiodic-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -594,28 +595,28 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_powerlaw</span></code></a>(n_seconds, fs[, exponent, f_range])</p></td>
 <td><p>Simulate a power law time series, with a specified exponent.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_poisson_pop.html#neurodsp.sim.sim_poisson_pop" title="neurodsp.sim.sim_poisson_pop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_poisson_pop</span></code></a>(n_seconds, fs[, n_neurons, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_poisson_pop.html#neurodsp.sim.sim_poisson_pop" title="neurodsp.sim.sim_poisson_pop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_poisson_pop</span></code></a>(n_seconds, fs[, n_neurons, ...])</p></td>
 <td><p>Simulate a Poisson population.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_synaptic_current.html#neurodsp.sim.sim_synaptic_current" title="neurodsp.sim.sim_synaptic_current"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_synaptic_current</span></code></a>(n_seconds, fs[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_synaptic_current.html#neurodsp.sim.sim_synaptic_current" title="neurodsp.sim.sim_synaptic_current"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_synaptic_current</span></code></a>(n_seconds, fs[, ...])</p></td>
 <td><p>Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee" title="neurodsp.sim.sim_knee"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_knee</span></code></a>(n_seconds, fs, exponent1, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee" title="neurodsp.sim.sim_knee"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_knee</span></code></a>(n_seconds, fs, exponent1, ...)</p></td>
 <td><p>Simulate a signal whose power spectrum has a 1/f structure with a knee.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk" title="neurodsp.sim.sim_random_walk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_random_walk</span></code></a>(n_seconds, fs[, theta, mu, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk" title="neurodsp.sim.sim_random_walk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_random_walk</span></code></a>(n_seconds, fs[, theta, mu, ...])</p></td>
 <td><p>Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise" title="neurodsp.sim.sim_frac_gaussian_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_frac_gaussian_noise</span></code></a>(n_seconds, fs[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise" title="neurodsp.sim.sim_frac_gaussian_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_frac_gaussian_noise</span></code></a>(n_seconds, fs[, ...])</p></td>
 <td><p>Simulate a timeseries as fractional gaussian noise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_frac_brownian_motion.html#neurodsp.sim.sim_frac_brownian_motion" title="neurodsp.sim.sim_frac_brownian_motion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_frac_brownian_motion</span></code></a>(n_seconds, fs[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.sim_frac_brownian_motion.html#neurodsp.sim.sim_frac_brownian_motion" title="neurodsp.sim.sim_frac_brownian_motion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_frac_brownian_motion</span></code></a>(n_seconds, fs[, ...])</p></td>
 <td><p>Simulate a timeseries as fractional brownian motion.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="transients">
+</section>
+<section id="transients">
 <h4><a class="toc-backref" href="#id31">Transients</a><a class="headerlink" href="#transients" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -626,16 +627,16 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.transients.sim_synaptic_kernel.html#neurodsp.sim.transients.sim_synaptic_kernel" title="neurodsp.sim.transients.sim_synaptic_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_synaptic_kernel</span></code></a>(n_seconds, fs, tau_r, tau_d)</p></td>
 <td><p>Simulate a synaptic kernel with specified time constants.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.transients.sim_action_potential.html#neurodsp.sim.transients.sim_action_potential" title="neurodsp.sim.transients.sim_action_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_action_potential</span></code></a>(n_seconds, fs, centers, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.transients.sim_action_potential.html#neurodsp.sim.transients.sim_action_potential" title="neurodsp.sim.transients.sim_action_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_action_potential</span></code></a>(n_seconds, fs, centers, ...)</p></td>
 <td><p>Simulate an action potential as the sum of skewed gaussians.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.transients.sim_damped_erp.html#neurodsp.sim.transients.sim_damped_erp" title="neurodsp.sim.transients.sim_damped_erp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_damped_erp</span></code></a>(n_seconds, fs, amp, freq[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.transients.sim_damped_erp.html#neurodsp.sim.transients.sim_damped_erp" title="neurodsp.sim.transients.sim_damped_erp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_damped_erp</span></code></a>(n_seconds, fs, amp, freq[, ...])</p></td>
 <td><p>Simulate an ERP complex as a decaying (damped) sine wave.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="cycles">
+</section>
+<section id="cycles">
 <h4><a class="toc-backref" href="#id32">Cycles</a><a class="headerlink" href="#cycles" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -658,19 +659,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_gaussian_cycle.html#neurodsp.sim.cycles.sim_gaussian_cycle" title="neurodsp.sim.cycles.sim_gaussian_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_gaussian_cycle</span></code></a>(n_seconds, fs, std[, center])</p></td>
 <td><p>Simulate a cycle of a gaussian.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_skewed_gaussian_cycle.html#neurodsp.sim.cycles.sim_skewed_gaussian_cycle" title="neurodsp.sim.cycles.sim_skewed_gaussian_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_skewed_gaussian_cycle</span></code></a>(n_seconds, fs, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_skewed_gaussian_cycle.html#neurodsp.sim.cycles.sim_skewed_gaussian_cycle" title="neurodsp.sim.cycles.sim_skewed_gaussian_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_skewed_gaussian_cycle</span></code></a>(n_seconds, fs, ...)</p></td>
 <td><p>Simulate a cycle of a skewed gaussian.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_exp_cos_cycle.html#neurodsp.sim.cycles.sim_exp_cos_cycle" title="neurodsp.sim.cycles.sim_exp_cos_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_exp_cos_cycle</span></code></a>(n_seconds, fs, exp[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_exp_cos_cycle.html#neurodsp.sim.cycles.sim_exp_cos_cycle" title="neurodsp.sim.cycles.sim_exp_cos_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_exp_cos_cycle</span></code></a>(n_seconds, fs, exp[, ...])</p></td>
 <td><p>Simulate an exponential cosine cycle.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_asym_harmonic_cycle.html#neurodsp.sim.cycles.sim_asym_harmonic_cycle" title="neurodsp.sim.cycles.sim_asym_harmonic_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_asym_harmonic_cycle</span></code></a>(n_seconds, fs, phi, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.cycles.sim_asym_harmonic_cycle.html#neurodsp.sim.cycles.sim_asym_harmonic_cycle" title="neurodsp.sim.cycles.sim_asym_harmonic_cycle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_asym_harmonic_cycle</span></code></a>(n_seconds, fs, phi, ...)</p></td>
 <td><p>Simulate an asymmetrical cycle as a sum of harmonics.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="combined-signals">
+</section>
+<section id="combined-signals">
 <h4><a class="toc-backref" href="#id33">Combined Signals</a><a class="headerlink" href="#combined-signals" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -678,19 +679,19 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_combined.html#neurodsp.sim.combined.sim_combined" title="neurodsp.sim.combined.sim_combined"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_combined</span></code></a>(n_seconds, fs, components[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_combined.html#neurodsp.sim.combined.sim_combined" title="neurodsp.sim.combined.sim_combined"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_combined</span></code></a>(n_seconds, fs, components[, ...])</p></td>
 <td><p>Simulate a signal by combining multiple component signals.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_peak_oscillation.html#neurodsp.sim.combined.sim_peak_oscillation" title="neurodsp.sim.combined.sim_peak_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_peak_oscillation</span></code></a>(sig_ap, fs, freq, bw, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_peak_oscillation.html#neurodsp.sim.combined.sim_peak_oscillation" title="neurodsp.sim.combined.sim_peak_oscillation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_peak_oscillation</span></code></a>(sig_ap, fs, freq, bw, ...)</p></td>
 <td><p>Simulate a signal with an aperiodic component and a specific oscillation peak.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_modulated_signal.html#neurodsp.sim.combined.sim_modulated_signal" title="neurodsp.sim.combined.sim_modulated_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_modulated_signal</span></code></a>(n_seconds, fs, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.combined.sim_modulated_signal.html#neurodsp.sim.combined.sim_modulated_signal" title="neurodsp.sim.combined.sim_modulated_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sim_modulated_signal</span></code></a>(n_seconds, fs, ...)</p></td>
 <td><p>Simulate an amplitude modulated signal.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="utilities">
+</section>
+<section id="utilities">
 <h4><a class="toc-backref" href="#id34">Utilities</a><a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -701,16 +702,16 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.utils.rotate_spectrum.html#neurodsp.sim.utils.rotate_spectrum" title="neurodsp.sim.utils.rotate_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_spectrum</span></code></a>(freqs, spectrum, delta_exponent)</p></td>
 <td><p>Rotate the power law exponent of a power spectrum.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.utils.rotate_timeseries.html#neurodsp.sim.utils.rotate_timeseries" title="neurodsp.sim.utils.rotate_timeseries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_timeseries</span></code></a>(sig, fs, delta_exp[, …])</p></td>
-<td><p>Rotate a timeseries of data, changing it’s 1/f exponent.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.sim.utils.rotate_timeseries.html#neurodsp.sim.utils.rotate_timeseries" title="neurodsp.sim.utils.rotate_timeseries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_timeseries</span></code></a>(sig, fs, delta_exp[, ...])</p></td>
+<td><p>Rotate a timeseries of data, changing it's 1/f exponent.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.utils.modulate_signal.html#neurodsp.sim.utils.modulate_signal" title="neurodsp.sim.utils.modulate_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modulate_signal</span></code></a>(sig, modulation[, fs, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.sim.utils.modulate_signal.html#neurodsp.sim.utils.modulate_signal" title="neurodsp.sim.utils.modulate_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modulate_signal</span></code></a>(sig, modulation[, fs, ...])</p></td>
 <td><p>Apply amplitude modulation to a signal.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="random-seed">
+</section>
+<section id="random-seed">
 <h4><a class="toc-backref" href="#id35">Random Seed</a><a class="headerlink" href="#random-seed" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -723,12 +724,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="plots">
+</section>
+</section>
+<section id="plots">
 <h3><a class="toc-backref" href="#id36">Plots</a><a class="headerlink" href="#plots" title="Permalink to this headline">¶</a></h3>
 <p>Functions in the <code class="docutils literal notranslate"><span class="pre">plts</span></code> module, for plotting time series and analysis outputs.</p>
-<div class="section" id="time-series">
+<section id="time-series">
 <h4><a class="toc-backref" href="#id37">Time Series</a><a class="headerlink" href="#time-series" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -736,10 +737,10 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_time_series</span></code></a>(times, sigs[, labels, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_time_series</span></code></a>(times, sigs[, labels, ...])</p></td>
 <td><p>Plot a time series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_instantaneous_measure.html#neurodsp.plts.plot_instantaneous_measure" title="neurodsp.plts.plot_instantaneous_measure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_instantaneous_measure</span></code></a>(times, sigs[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_instantaneous_measure.html#neurodsp.plts.plot_instantaneous_measure" title="neurodsp.plts.plot_instantaneous_measure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_instantaneous_measure</span></code></a>(times, sigs[, ...])</p></td>
 <td><p>Plot an instantaneous measure, of phase, amplitude or frequency.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_bursts</span></code></a>(times, sig, bursting[, ax])</p></td>
@@ -747,8 +748,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="spectral">
+</section>
+<section id="spectral">
 <h4><a class="toc-backref" href="#id38">Spectral</a><a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -756,7 +757,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_power_spectra</span></code></a>(freqs, powers[, labels, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_power_spectra</span></code></a>(freqs, powers[, labels, ...])</p></td>
 <td><p>Plot power spectra.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_scv.html#neurodsp.plts.plot_scv" title="neurodsp.plts.plot_scv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_scv</span></code></a>(freqs, scv[, ax])</p></td>
@@ -768,13 +769,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_scv_rs_matrix</span></code></a>(freqs, t_inds, scv_rs[, ax])</p></td>
 <td><p>Plot spectral coefficient of variation, from the resampling method, as a matrix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_spectral_hist.html#neurodsp.plts.plot_spectral_hist" title="neurodsp.plts.plot_spectral_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_spectral_hist</span></code></a>(freqs, power_bins, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_spectral_hist.html#neurodsp.plts.plot_spectral_hist" title="neurodsp.plts.plot_spectral_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_spectral_hist</span></code></a>(freqs, power_bins, ...[, ...])</p></td>
 <td><p>Plot spectral histogram.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="filter">
+</section>
+<section id="filter">
 <h4><a class="toc-backref" href="#id39">Filter</a><a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -782,7 +783,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_filter_properties.html#neurodsp.plts.plot_filter_properties" title="neurodsp.plts.plot_filter_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_filter_properties</span></code></a>(f_db, db, fs, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_filter_properties.html#neurodsp.plts.plot_filter_properties" title="neurodsp.plts.plot_filter_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_filter_properties</span></code></a>(f_db, db, fs, ...[, ...])</p></td>
 <td><p>Plot filter properties, including frequency response and filter kernel.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response" title="neurodsp.plts.plot_frequency_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_frequency_response</span></code></a>(f_db, db[, ax])</p></td>
@@ -793,8 +794,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="rhythm">
+</section>
+<section id="rhythm">
 <h4><a class="toc-backref" href="#id40">Rhythm</a><a class="headerlink" href="#rhythm" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -810,8 +811,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="time-frequency">
+</section>
+<section id="time-frequency">
 <h4><a class="toc-backref" href="#id41">Time Frequency</a><a class="headerlink" href="#time-frequency" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -819,17 +820,17 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_timefrequency.html#neurodsp.plts.plot_timefrequency" title="neurodsp.plts.plot_timefrequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_timefrequency</span></code></a>(times, freqs, powers[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/neurodsp.plts.plot_timefrequency.html#neurodsp.plts.plot_timefrequency" title="neurodsp.plts.plot_timefrequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_timefrequency</span></code></a>(times, freqs, powers[, ...])</p></td>
 <td><p>Plot a time-frequency representation of data.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="id2">
+</section>
+</section>
+<section id="id2">
 <h3><a class="toc-backref" href="#id42">Utilities</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Functions in the <code class="docutils literal notranslate"><span class="pre">utils</span></code> module, providing general utilities.</p>
-<div class="section" id="normalization">
+<section id="normalization">
 <h4><a class="toc-backref" href="#id43">Normalization</a><a class="headerlink" href="#normalization" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -848,8 +849,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="data">
+</section>
+<section id="data">
 <h4><a class="toc-backref" href="#id44">Data</a><a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -880,8 +881,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="outliers">
+</section>
+<section id="outliers">
 <h4><a class="toc-backref" href="#id45">Outliers</a><a class="headerlink" href="#outliers" title="Permalink to this headline">¶</a></h4>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -900,10 +901,10 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -917,8 +918,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

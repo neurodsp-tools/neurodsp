@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Using NeuroDSP with MNE &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Using NeuroDSP with MNE &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +110,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-mne-example-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-plot-mne-example-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="using-neurodsp-with-mne">
+<section class="sphx-glr-example-title" id="using-neurodsp-with-mne">
 <span id="sphx-glr-auto-examples-plot-mne-example-py"></span><h1>Using NeuroDSP with MNE<a class="headerlink" href="#using-neurodsp-with-mne" title="Permalink to this headline">¶</a></h1>
 <p>This example explores using NeuroDSP in combination with MNE.</p>
 <p>NeuroDSP is designed to offer a selection of methods and analyses that can be applied
@@ -147,7 +149,7 @@ MNE, you can follow instructions to get it
                            <a href="../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">,</span> <a href="../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="load-check-mne-data">
+<section id="load-check-mne-data">
 <h2>Load &amp; Check MNE Data<a class="headerlink" href="#load-check-mne-data" title="Permalink to this headline">¶</a></h2>
 <p>First, we will load the example dataset from MNE, and have a quick look at the data.</p>
 <p>The MNE sample dataset is a combined MEG/EEG recording with an audiovisual task, as
@@ -157,9 +159,11 @@ and analyze it as continuous (non-epoched) data.</p>
 <p>Note that if you don’t already have the data, the <code class="docutils literal notranslate"><span class="pre">sample.data_path</span></code> method
 will download the MNE sample dataset.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the data path for the MNE example data</span>
-<span class="n">raw_fname</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">data_path</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis_filt-0-40_raw.fif&#39;</span>
-
-<span class="c1"># Load the file of example MNE data</span>
+<span class="n">sample_data</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">data_path</span><span class="p">()</span>
+<span class="n">raw_fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_data</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis_filt-0-40_raw.fif&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the file of example MNE data</span>
 <span class="n">raw</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -168,6 +172,12 @@ will download the MNE sample dataset.</p>
 
 <span class="c1"># Grab the sampling rate from the data</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>NOTE: pick_types() is a legacy function. New code should use inst.pick(...).
+Removing projector &lt;Projection | PCA-v1, active : False, n_channels : 102&gt;
+Removing projector &lt;Projection | PCA-v2, active : False, n_channels : 102&gt;
+Removing projector &lt;Projection | PCA-v3, active : False, n_channels : 102&gt;
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for exploring an example channel of data</span>
@@ -186,9 +196,8 @@ will download the MNE sample dataset.</p>
 <a href="../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot mne example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_mne_example_001.png" />
-</div>
-<div class="section" id="calculate-power-spectra">
+<img src="../_images/sphx_glr_plot_mne_example_001.png" srcset="../_images/sphx_glr_plot_mne_example_001.png" alt="plot mne example" class = "sphx-glr-single-img"/></section>
+<section id="calculate-power-spectra">
 <h2>Calculate Power Spectra<a class="headerlink" href="#calculate-power-spectra" title="Permalink to this headline">¶</a></h2>
 <p>Next lets check the data in the frequency domain, calculating a power spectrum
 with the median Welch’s procedure from NeuroDSP.</p>
@@ -202,7 +211,6 @@ with the median Welch’s procedure from NeuroDSP.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">peak_cf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>8.008199869791666
 </pre></div>
 </div>
@@ -211,13 +219,11 @@ with the median Welch’s procedure from NeuroDSP.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freqs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">powers</span><span class="p">)],</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">powers</span><span class="p">),</span> <span class="s1">&#39;.r&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot mne example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_mne_example_002.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7fcce8aea9a0&gt;]
+<img src="../_images/sphx_glr_plot_mne_example_002.png" srcset="../_images/sphx_glr_plot_mne_example_002.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7fa0491b2ee0&gt;]
 </pre></div>
 </div>
-</div>
-<div class="section" id="look-for-bursts">
+</section>
+<section id="look-for-bursts">
 <h2>Look for Bursts<a class="headerlink" href="#look-for-bursts" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have a sense of the main rhythmicity of this piece of data, lets
 explore using NeuroDSP to investigate whether this rhythm is bursty.</p>
@@ -234,9 +240,8 @@ explore using NeuroDSP to investigate whether this rhythm is bursty.</p>
 <a href="../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Raw Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Bursts&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot mne example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_mne_example_003.png" />
-</div>
-<div class="section" id="measure-rhythmicity-with-lagged-coherence">
+<img src="../_images/sphx_glr_plot_mne_example_003.png" srcset="../_images/sphx_glr_plot_mne_example_003.png" alt="plot mne example" class = "sphx-glr-single-img"/></section>
+<section id="measure-rhythmicity-with-lagged-coherence">
 <h2>Measure Rhythmicity with Lagged Coherence<a class="headerlink" href="#measure-rhythmicity-with-lagged-coherence" title="Permalink to this headline">¶</a></h2>
 <p>So far, in an example channel of data, we have explored some rhythmic properties of
 the EEG data. We did so by finding the main frequency of rhythmic power, and checking
@@ -259,8 +264,7 @@ topographically across a range of frequencies.</p>
 <a href="../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">lcs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot mne example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_mne_example_004.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the most rhythmic frequency and the associated lagged coherence score</span>
+<img src="../_images/sphx_glr_plot_mne_example_004.png" srcset="../_images/sphx_glr_plot_mne_example_004.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the most rhythmic frequency and the associated lagged coherence score</span>
 <span class="n">max_freq</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">lcs</span><span class="p">)]</span>
 <span class="n">max_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lcs</span><span class="p">)</span>
 
@@ -268,7 +272,6 @@ topographically across a range of frequencies.</p>
       <span class="s1">&#39;with a lagged coherence score of </span><span class="si">{:1.2f}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_freq</span><span class="p">,</span> <span class="n">max_score</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The frequency with the greatest rhythmicity is 9.2 Hz with a lagged coherence score of 0.68.
 </pre></div>
 </div>
@@ -295,8 +298,8 @@ topographically across a range of frequencies.</p>
     <span class="n">max_score</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cur_lcs</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="plot-rhythmicity-across-the-scalp">
+</section>
+<section id="plot-rhythmicity-across-the-scalp">
 <h2>Plot Rhythmicity Across the Scalp<a class="headerlink" href="#plot-rhythmicity-across-the-scalp" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have calculated the lagged coherence across the scalp, we can use
 some MNE plotting utilities to plot these values across the scalp. To do so, we will
@@ -306,51 +309,47 @@ the posterior electrodes display more rhythmic properties than the frontal ones.
 <p>In the next plot, of the peak frequencies, we can see that these posterior regions
 are rhythmic in the alpha range, as well as there being a central cluster of beta rhythms.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot locations with highest lagged coherence rhythmicity score</span>
-<span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_score</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_score</span><span class="p">)</span>
-<span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_score</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_score</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_score</span><span class="p">)]</span>
+<span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_score</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vlim</span><span class="o">=</span><span class="n">vlim</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Add colorbar</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
-<span class="n">sm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">))</span>
-<span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">))</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">vlim</span><span class="p">))</span>
 <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Score&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img alt="plot mne example" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_mne_example_005.png" />
-</li>
-<li><img alt="plot mne example" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_mne_example_006.png" />
-</li>
+<li><img src="../_images/sphx_glr_plot_mne_example_005.png" srcset="../_images/sphx_glr_plot_mne_example_005.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
+<li><img src="../_images/sphx_glr_plot_mne_example_006.png" srcset="../_images/sphx_glr_plot_mne_example_006.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot frequency with most dominant rhythmicity</span>
-<span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span>
-<span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_freq</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_freq</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vlim</span><span class="o">=</span><span class="n">vlim</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Add colorbar</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
-<span class="n">sm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">))</span>
-<span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">))</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">vlim</span><span class="p">))</span>
 <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img alt="plot mne example" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_mne_example_007.png" />
-</li>
-<li><img alt="plot mne example" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_mne_example_008.png" />
-</li>
+<li><img src="../_images/sphx_glr_plot_mne_example_007.png" srcset="../_images/sphx_glr_plot_mne_example_007.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
+<li><img src="../_images/sphx_glr_plot_mne_example_008.png" srcset="../_images/sphx_glr_plot_mne_example_008.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 </ul>
-</div>
-<div class="section" id="further-analyses-with-mne">
+</section>
+<section id="further-analyses-with-mne">
 <h2>Further Analyses with MNE<a class="headerlink" href="#further-analyses-with-mne" title="Permalink to this headline">¶</a></h2>
 <p>That concludes the current example of using NeuroDSP in conjunction with MNE.</p>
 <p>In this example, we applied NeuroDSP functions to continuous segments of EEG data.</p>
 <p>Using a similar approach, you can also apply these and other analyses to epoched data,
 by managing and pre-processing data in MNE, selecting the data of interest, and then
 applying NeuroDSP functions to the data.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.845 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-mne-example-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.918 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-mne-example-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/ca734436f406bbd3b62faeeaf69f475f/plot_mne_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mne_example.py</span></code></a></p>
 </div>
@@ -359,8 +358,8 @@ applying NeuroDSP functions to the data.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -374,8 +373,8 @@ applying NeuroDSP functions to the data.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

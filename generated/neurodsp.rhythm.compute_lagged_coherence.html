@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,11 +108,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neurodsp-rhythm-compute-lagged-coherence">
+  <section id="neurodsp-rhythm-compute-lagged-coherence">
 <h1>neurodsp.rhythm.compute_lagged_coherence<a class="headerlink" href="#neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="neurodsp.rhythm.compute_lagged_coherence">
-<code class="sig-prename descclassname">neurodsp.rhythm.</code><code class="sig-name descname">compute_lagged_coherence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">freqs</span></em>, <em class="sig-param"><span class="n">n_cycles</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">return_spectrum</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/rhythm/lc.html#compute_lagged_coherence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.rhythm.compute_lagged_coherence" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="neurodsp.rhythm.compute_lagged_coherence">
+<span class="sig-prename descclassname"><span class="pre">neurodsp.rhythm.</span></span><span class="sig-name descname"><span class="pre">compute_lagged_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_spectrum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/rhythm/lc.html#compute_lagged_coherence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.rhythm.compute_lagged_coherence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute lagged coherence, reflecting the rhythmicity across a frequency range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -163,25 +164,23 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.20
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span><span class="p">:</span> <span class="p">{},</span>
 <span class="gp">... </span>                               <span class="s1">&#39;sim_bursty_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;enter_burst&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">50</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;leave_burst&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">25</span><span class="p">}})</span>
+<span class="gp">... </span>                                                          <span class="s1">&#39;enter_burst&#39;</span><span class="p">:</span> <span class="mf">.50</span><span class="p">,</span>
+<span class="gp">... </span>                                                          <span class="s1">&#39;leave_burst&#39;</span><span class="p">:</span> <span class="mf">.25</span><span class="p">}})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lag_cohs</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<div class="section" id="examples-using-neurodsp-rhythm-compute-lagged-coherence">
+<section id="examples-using-neurodsp-rhythm-compute-lagged-coherence">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.compute_lagged_coherence</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id3">
-<img alt="Using NeuroDSP with MNE" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><div class="figure align-default" id="id4">
-<img alt="Lagged Coherence" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div><div style='clear:both'></div></div>
-</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><img alt="" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
+<p><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Using NeuroDSP with MNE</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><img alt="" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Lagged Coherence</div>
+</div></div><div style='clear:both'></div></section>
+</section>
 
 
     </div>
@@ -195,8 +194,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.20
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

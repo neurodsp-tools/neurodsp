@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filter Checks &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Filter Checks &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +110,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="filter-checks">
+<section class="sphx-glr-example-title" id="filter-checks">
 <span id="sphx-glr-auto-tutorials-filt-plot-4-checks-py"></span><h1>Filter Checks<a class="headerlink" href="#filter-checks" title="Permalink to this headline">¶</a></h1>
 <p>Strategies and approaches for proper filter design and application.</p>
 <p>This tutorial covers available functionality and recommended approaches for checking
@@ -122,7 +124,7 @@ and applying filters, including utilities available across <code class="docutils
 <span class="kn">from</span> <span class="nn">neurodsp.plts</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
 </div>
-<div class="section" id="filtering-best-practices">
+<section id="filtering-best-practices">
 <h2>Filtering Best Practices<a class="headerlink" href="#filtering-best-practices" title="Permalink to this headline">¶</a></h2>
 <p>Although filtering can increase the signal-to-noise ratio (SNR), improper filter design
 may result can also introduce confounding distortions and artifacts.</p>
@@ -151,8 +153,8 @@ least some common issues may be caught through this process.</p>
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="filter-attenuation">
+</section>
+<section id="filter-attenuation">
 <h2>Filter Attenuation<a class="headerlink" href="#filter-attenuation" title="Permalink to this headline">¶</a></h2>
 <p>Filter attenuation refers to the degree to which frequencies are attenuated by a filter.</p>
 <p>You might sometimes see a user warning that warns about the level of attenuation. This
@@ -178,9 +180,7 @@ different filter lengths that do and do not achieve sufficient attenuation.</p>
                                <span class="n">n_seconds</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_4_checks_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
+<img src="../../_images/sphx_glr_plot_4_checks_001.png" srcset="../../_images/sphx_glr_plot_4_checks_001.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
   warn(&#39;The filter attenuation never goes below {} dB. &#39;\
 </pre></div>
 </div>
@@ -192,19 +192,18 @@ sufficient attenuation level.</p>
                               <span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_4_checks_002.png" />
-<p>When we make the filter definition longer, we see that the warning is now gone.</p>
+<img src="../../_images/sphx_glr_plot_4_checks_002.png" srcset="../../_images/sphx_glr_plot_4_checks_002.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><p>When we make the filter definition longer, we see that the warning is now gone.</p>
 <p>To see the difference in attenuation, compare the frequency response of two filters. In
 particular, have a look at the scales of the frequency response, to see the different levels
 of attenuation each filter attains.</p>
-</div>
-<div class="section" id="time-frequency-resolution-trade-off">
+</section>
+<section id="time-frequency-resolution-trade-off">
 <h2>Time-frequency resolution trade off<a class="headerlink" href="#time-frequency-resolution-trade-off" title="Permalink to this headline">¶</a></h2>
 <p>When designing and applying filters, one has to keep in mind the time-frequency resolution
 trade off. For filters, this relates to changing the filter length. With longer filter kernels,
 we get improved frequency resolution, but worse time resolution. With shorter filter kernels,
 temporal resolution increases, but the frequency resolution is worse.</p>
-<div class="section" id="two-bandpass-filters-one-long-and-one-short">
+<section id="two-bandpass-filters-one-long-and-one-short">
 <h3>Two bandpass filters (one long and one short)<a class="headerlink" href="#two-bandpass-filters-one-long-and-one-short" title="Permalink to this headline">¶</a></h3>
 <p>For an example, lets consider two FIR bandpass filters, with different lengths, and how
 this relates to their filter properties. We will once again use and compare a short and
@@ -224,14 +223,13 @@ a long filter, this time focusing on the different resolutions of the outputs.</
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 
 <span class="c1"># Filter the data</span>
-<span class="n">sig_filt_short</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">passband</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=.</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sig_filt_short</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">passband</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
 <span class="n">sig_filt_long</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">passband</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated by more than 20 dB. Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated by more than 20 dB. Increase filter length.
   warn(&#39;The low or high frequency stopband never gets attenuated by &#39;\
-/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is 10.2 Hz. This is greater than the desired pass/stop bandwidth of 4.0 Hz
+/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is 10.2 Hz. This is greater than the desired pass/stop bandwidth of 4.0 Hz
   warn(&#39;Transition bandwidth is {:.1f} Hz. This is greater than the desired &#39;\
 </pre></div>
 </div>
@@ -240,22 +238,19 @@ a long filter, this time focusing on the different resolutions of the outputs.</
                  <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Short Filter&#39;</span><span class="p">,</span> <span class="s1">&#39;Long Filter&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 4 checks" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_4_checks_003.png" />
-<p>In the plot above, we can see that the short filter preserves the start of the oscillation
+<img src="../../_images/sphx_glr_plot_4_checks_003.png" srcset="../../_images/sphx_glr_plot_4_checks_003.png" alt="plot 4 checks" class = "sphx-glr-single-img"/><p>In the plot above, we can see that the short filter preserves the start of the oscillation
 better than the long filter (i.e. the short filter has better temporal resolution).</p>
 <p>Notice also that the long filter correctly removed the 1Hz oscillation, but the short
 filter did not (i.e. the long filter has better frequency resolution).</p>
 <p>Another way to examine these properties is by looking at the properties of the two filters.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter and visualize properties for the short filter</span>
-<span class="n">sig_filt_short</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">sig_filt_short</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span>
                                <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_4_checks_004.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated by more than 20 dB. Increase filter length.
+<img src="../../_images/sphx_glr_plot_4_checks_004.png" srcset="../../_images/sphx_glr_plot_4_checks_004.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:162: UserWarning: The low or high frequency stopband never gets attenuated by more than 20 dB. Increase filter length.
   warn(&#39;The low or high frequency stopband never gets attenuated by &#39;\
-/home/rph/Projects/neurodsp/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is 10.2 Hz. This is greater than the desired pass/stop bandwidth of 4.0 Hz
+/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:172: UserWarning: Transition bandwidth is 10.2 Hz. This is greater than the desired pass/stop bandwidth of 4.0 Hz
   warn(&#39;Transition bandwidth is {:.1f} Hz. This is greater than the desired &#39;\
 </pre></div>
 </div>
@@ -264,8 +259,7 @@ filter did not (i.e. the long filter has better frequency resolution).</p>
                               <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_4_checks_005.png" />
-<p>By comparing between the filter definitions for the two filters (short and long), we
+<img src="../../_images/sphx_glr_plot_4_checks_005.png" srcset="../../_images/sphx_glr_plot_4_checks_005.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><p>By comparing between the filter definitions for the two filters (short and long), we
 can see the different resolutions. Note how the short filter have a much less specific
 frequency response, but a much more localized impulse response. By comparison, the longer
 filter has a much more localized frequency response, but a more temporally diffuse
@@ -273,9 +267,9 @@ impulse response.</p>
 <p>Temporal and frequency resolution are always a trade-off, and there is no single solution
 to the overall “best” filter. Rather, filter design depends on the application, and whether
 temporal or frequency resolution is more important for a given application.</p>
-</div>
-</div>
-<div class="section" id="reporting-on-filters">
+</section>
+</section>
+<section id="reporting-on-filters">
 <h2>Reporting on Filters<a class="headerlink" href="#reporting-on-filters" title="Permalink to this headline">¶</a></h2>
 <p>Designing and applying appropriate filters takes some care and attention. If you are reporting
 on work that includes using filters, then these reports should also include information
@@ -291,8 +285,8 @@ information that is recommended to report when using filters includes:</p>
 <li><p>Filter delay and causality</p></li>
 <li><p>Direction of application</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.893 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-4-checks-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.706 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-4-checks-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0b2e3b057609ad9c59cb9a6a2b09252a/plot_4_checks.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_4_checks.py</span></code></a></p>
 </div>
@@ -301,8 +295,8 @@ information that is recommended to report when using filters includes:</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -316,8 +310,8 @@ information that is recommended to report when using filters includes:</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

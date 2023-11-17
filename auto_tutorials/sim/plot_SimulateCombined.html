@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulating Combined Signals &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Simulating Combined Signals &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +110,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="simulating-combined-signals">
+<section class="sphx-glr-example-title" id="simulating-combined-signals">
 <span id="sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"></span><h1>Simulating Combined Signals<a class="headerlink" href="#simulating-combined-signals" title="Permalink to this headline">¶</a></h1>
 <p>Simulate combined signals, with periodic and aperiodic components.</p>
 <p>This tutorial covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.combined</span></code> module.</p>
@@ -138,7 +140,7 @@
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="simulate-combined-periodic-aperiodic-signals">
+<section id="simulate-combined-periodic-aperiodic-signals">
 <h2>Simulate Combined Periodic &amp; Aperiodic Signals<a class="headerlink" href="#simulate-combined-periodic-aperiodic-signals" title="Permalink to this headline">¶</a></h2>
 <p>In order to simulate a signal that looks more like a brain signal, you may want
 to simulate an oscillation together with aperiodic activity.</p>
@@ -163,14 +165,12 @@ component as a dictionary.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_001.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<img src="../../_images/sphx_glr_plot_SimulateCombined_001.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_001.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_002.png" />
-<p>We can switch out any components that we want, for example trading the stationary oscillation
+<img src="../../_images/sphx_glr_plot_SimulateCombined_002.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_002.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><p>We can switch out any components that we want, for example trading the stationary oscillation
 for a bursting oscillation, also with an aperiodic component.</p>
 <p>We can also control the relative proportions of each component, by using a parameter called
 <cite>component_variances</cite> that specifies the variance of each component.</p>
@@ -189,15 +189,13 @@ for a bursting oscillation, also with an aperiodic component.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_003.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<img src="../../_images/sphx_glr_plot_SimulateCombined_003.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_003.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_004.png" />
-</div>
-<div class="section" id="simulating-multiple-components-from-the-same-function">
+<img src="../../_images/sphx_glr_plot_SimulateCombined_004.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_004.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/></section>
+<section id="simulating-multiple-components-from-the-same-function">
 <h2>Simulating Multiple Components from the Same Function<a class="headerlink" href="#simulating-multiple-components-from-the-same-function" title="Permalink to this headline">¶</a></h2>
 <p>If you wish, you can also combine multiple components from the same simulation function.</p>
 <p>To do so, replace the dictionary of parameters with a list of parameters, where each
@@ -213,8 +211,7 @@ entry is a dictionary for each component, using the same simulation function.</p
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_005.png" />
-<p>This can also be combined with other types of components.</p>
+<img src="../../_images/sphx_glr_plot_SimulateCombined_005.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_005.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><p>This can also be combined with other types of components.</p>
 <p>For example, here we can combine multiple oscillations with an aperiodic component,
 while also controlling the relative proportions of each.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the components of the combined signal to simulate</span>
@@ -230,9 +227,8 @@ while also controlling the relative proportions of each.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_006.png" />
-</div>
-<div class="section" id="simulate-peak-oscillation">
+<img src="../../_images/sphx_glr_plot_SimulateCombined_006.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_006.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/></section>
+<section id="simulate-peak-oscillation">
 <h2>Simulate Peak Oscillation<a class="headerlink" href="#simulate-peak-oscillation" title="Permalink to this headline">¶</a></h2>
 <p>Next, we will simulate a time series with a peak in the power spectrum, that we can
 define in terms of the specific location and shape of the oscillatory peak.</p>
@@ -256,15 +252,13 @@ the aperiodic component, specifying a desired central frequency, bandwidth, and 
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_007.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<img src="../../_images/sphx_glr_plot_SimulateCombined_007.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_007.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateCombined" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateCombined_008.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.796 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulatecombined-py">
+<img src="../../_images/sphx_glr_plot_SimulateCombined_008.png" srcset="../../_images/sphx_glr_plot_SimulateCombined_008.png" alt="plot SimulateCombined" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.476 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulatecombined-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/263b6cac3c432439e2cf72e8cbf35d8f/plot_SimulateCombined.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulateCombined.py</span></code></a></p>
 </div>
@@ -273,8 +267,8 @@ the aperiodic component, specifying a desired central frequency, bandwidth, and 
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -288,8 +282,8 @@ the aperiodic component, specifying a desired central frequency, bandwidth, and 
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectral Domain Analysis: Power &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Spectral Domain Analysis: Power &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,13 +110,14 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="spectral-domain-analysis-power">
+<section class="sphx-glr-example-title" id="spectral-domain-analysis-power">
 <span id="sphx-glr-auto-tutorials-spectral-plot-spectralpower-py"></span><h1>Spectral Domain Analysis: Power<a class="headerlink" href="#spectral-domain-analysis-power" title="Permalink to this headline">¶</a></h1>
 <p>Apply spectral domain analyses, calculating power measures.</p>
 <p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.spectral.power</span></code> module.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial covers computing spectral power measures, such as the power spectral density (PSD).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import spectral power functions</span>
@@ -128,7 +130,7 @@
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
 </div>
-<div class="section" id="load-example-neural-signal">
+<section id="load-example-neural-signal">
 <h3>Load example neural signal<a class="headerlink" href="#load-example-neural-signal" title="Permalink to this headline">¶</a></h3>
 <p>First, we load the sample data, which is a segment of rat hippocampal LFP
 taken from the publicly available database CRCNS (specifically, from the ‘hc2’ dataset).</p>
@@ -145,11 +147,10 @@ taken from the publicly available database CRCNS (specifically, from the ‘hc2�
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SpectralPower" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralPower_001.png" />
-<p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz).</p>
-</div>
-</div>
-<div class="section" id="computing-the-power-spectral-density-psd">
+<img src="../../_images/sphx_glr_plot_SpectralPower_001.png" srcset="../../_images/sphx_glr_plot_SpectralPower_001.png" alt="plot SpectralPower" class = "sphx-glr-single-img"/><p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz).</p>
+</section>
+</section>
+<section id="computing-the-power-spectral-density-psd">
 <h2>Computing the power spectral density (PSD)<a class="headerlink" href="#computing-the-power-spectral-density-psd" title="Permalink to this headline">¶</a></h2>
 <p>A PSD is a frequency domain representation of a time series.</p>
 <p>Using the Fourier transform, the signal is split into orthogonal components
@@ -197,9 +198,8 @@ of different frequencies, and the amount of power in each frequency is estimated
                    <span class="p">[</span><span class="s1">&#39;Welch&#39;</span><span class="p">,</span> <span class="s1">&#39;Median Welch&#39;</span><span class="p">,</span> <span class="s1">&#39;Median Filter FFT&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SpectralPower" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralPower_002.png" />
-</div>
-<div class="section" id="aside-fitting-1-f-and-oscillations-in-power-spectra">
+<img src="../../_images/sphx_glr_plot_SpectralPower_002.png" srcset="../../_images/sphx_glr_plot_SpectralPower_002.png" alt="plot SpectralPower" class = "sphx-glr-single-img"/></section>
+<section id="aside-fitting-1-f-and-oscillations-in-power-spectra">
 <h2>Aside: Fitting 1/f and oscillations in power spectra<a class="headerlink" href="#aside-fitting-1-f-and-oscillations-in-power-spectra" title="Permalink to this headline">¶</a></h2>
 <p>You might notice in the above power spectra that there are regions of band-specific power,
 reflecting oscillations, as well as regions that show linear decrease when plotted in
@@ -213,8 +213,8 @@ JNeurophysiol, 2015; Gao et al., NeuroImage, 2017; Lombardi et al., Chaos, 2017<
 <p>If you are interesting in measuring these periodic (oscillatory) and aperiodic
 (1/f like) components from power spectra, check out the ‘fitting oscillations &amp;
 one-over f’ <a class="reference external" href="https://fooof-tools.github.io/fooof/">toolbox</a>.</p>
-</div>
-<div class="section" id="spectral-rotation">
+</section>
+<section id="spectral-rotation">
 <h2>Spectral Rotation<a class="headerlink" href="#spectral-rotation" title="Permalink to this headline">¶</a></h2>
 <p>Another included utility function is spectral rotation, which rotates the power
 spectrum about a given axis frequency, by an amount indicated by the ‘delta_exponent’
@@ -230,9 +230,8 @@ type of filtering with an ultra long filter kernel.</p>
                    <span class="p">[</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="s1">&#39;Rotated&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SpectralPower" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralPower_003.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.353 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralpower-py">
+<img src="../../_images/sphx_glr_plot_SpectralPower_003.png" srcset="../../_images/sphx_glr_plot_SpectralPower_003.png" alt="plot SpectralPower" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.417 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralpower-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9d004b4462571e217ae58a63328c9704/plot_SpectralPower.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SpectralPower.py</span></code></a></p>
 </div>
@@ -241,8 +240,8 @@ type of filtering with an ultra long filter kernel.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -256,8 +255,8 @@ type of filtering with an ultra long filter kernel.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

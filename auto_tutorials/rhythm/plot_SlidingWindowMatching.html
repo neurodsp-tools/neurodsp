@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sliding Window Matching &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Sliding Window Matching &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,13 +110,14 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="sliding-window-matching">
+<section class="sphx-glr-example-title" id="sliding-window-matching">
 <span id="sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"></span><h1>Sliding Window Matching<a class="headerlink" href="#sliding-window-matching" title="Permalink to this headline">¶</a></h1>
 <p>Find recurring patterns in neural signals using Sliding Window Matching.</p>
 <p>This tutorial primarily covers the <a class="reference internal" href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-func docutils literal notranslate"><span class="pre">sliding_window_matching()</span></code></a> function.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Non-periodic or non-sinusoidal properties can be difficult to assess in frequency domain
 methods. To try and address this, the sliding window matching (SWM) algorithm has been
@@ -146,8 +148,8 @@ window pattern can be examined.</p>
 <span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="load-neural-signal">
+</section>
+<section id="load-neural-signal">
 <h2>Load neural signal<a class="headerlink" href="#load-neural-signal" title="Permalink to this headline">¶</a></h2>
 <p>First, we will load a segment of ECoG data, as an example time series.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data files</span>
@@ -165,15 +167,14 @@ some prominent bursts of oscillations, in this case, in the beta frequency.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SlidingWindowMatching" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SlidingWindowMatching_001.png" />
-</div>
-<div class="section" id="apply-sliding-window-matching">
+<img src="../../_images/sphx_glr_plot_SlidingWindowMatching_001.png" srcset="../../_images/sphx_glr_plot_SlidingWindowMatching_001.png" alt="plot SlidingWindowMatching" class = "sphx-glr-single-img"/></section>
+<section id="apply-sliding-window-matching">
 <h2>Apply sliding window matching<a class="headerlink" href="#apply-sliding-window-matching" title="Permalink to this headline">¶</a></h2>
 <p>The beta oscillation in our data segment looks like it might have some non-sinusoidal
 properties. We can investigate this with sliding window matching.</p>
 <p>Sliding window matching can be applied with the
 <a class="reference internal" href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching"><code class="xref py py-func docutils literal notranslate"><span class="pre">sliding_window_matching()</span></code></a> function.</p>
-<div class="section" id="data-preprocessing">
+<section id="data-preprocessing">
 <h3>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this headline">¶</a></h3>
 <p>Typically, the input signal does not have to be filtered into a band of interest to use SWM.</p>
 <p>If the goal is to characterize non-sinusoidal rhythms, you typically won’t want to
@@ -182,8 +183,8 @@ apply a filter that will smooth out the features of interest.</p>
 apply a highpass filter, so that the method does not converge on a lower frequency motif.</p>
 <p>In our case, the beta rhythm of interest is the most prominent, low frequency, feature of the
 data, so we won’t apply a filter.</p>
-</div>
-<div class="section" id="algorithm-settings">
+</section>
+<section id="algorithm-settings">
 <h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this headline">¶</a></h3>
 <p>The SWM algorithm has some algorithm specific settings that need to be applied, including:</p>
 <ul class="simple">
@@ -196,16 +197,16 @@ patterns under study.</p>
 <p>For our purposes, we will define the window length to be about 1 cycle of a beta oscillation,
 which should help the algorithm to find the waveform shape of the neural oscillation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define window length &amp; minimum window spacing, both in seconds</span>
-<span class="n">win_len</span> <span class="o">=</span> <span class="o">.</span><span class="mi">055</span>
-<span class="n">win_spacing</span> <span class="o">=</span> <span class="o">.</span><span class="mi">055</span>
+<span class="n">win_len</span> <span class="o">=</span> <span class="mf">.055</span>
+<span class="n">win_spacing</span> <span class="o">=</span> <span class="mf">.055</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply the sliding window matching algorithm to the time series</span>
-<span class="n">windows</span><span class="p">,</span> <span class="n">window_starts</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">var_thresh</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">windows</span><span class="p">,</span> <span class="n">window_starts</span> <span class="o">=</span> <a href="../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching" title="neurodsp.rhythm.sliding_window_matching" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">sliding_window_matching</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">var_thresh</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="examine-the-results">
+</section>
+<section id="examine-the-results">
 <h3>Examine the Results<a class="headerlink" href="#examine-the-results" title="Permalink to this headline">¶</a></h3>
 <p>What we got back from the SWM function are the calculate average window, the list
 of indices in the data of the windows, and the calculated costs for each iteration of
@@ -219,11 +220,10 @@ the algorithm run.</p>
 <a href="../../generated/neurodsp.plts.plot_swm_pattern.html#neurodsp.plts.plot_swm_pattern" title="neurodsp.plts.plot_swm_pattern" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_swm_pattern</span></a><span class="p">(</span><span class="n">avg_window</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Average Pattern" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SlidingWindowMatching_002.png" />
-<p>In the above average pattern, that looks to capture a beta rhythm, we can notice some
+<img src="../../_images/sphx_glr_plot_SlidingWindowMatching_002.png" srcset="../../_images/sphx_glr_plot_SlidingWindowMatching_002.png" alt="Average Pattern" class = "sphx-glr-single-img"/><p>In the above average pattern, that looks to capture a beta rhythm, we can notice some
 waveform shape of the extracted rhythm.</p>
-</div>
-<div class="section" id="concluding-notes">
+</section>
+<section id="concluding-notes">
 <h3>Concluding Notes<a class="headerlink" href="#concluding-notes" title="Permalink to this headline">¶</a></h3>
 <p>One thing to keep in mind is that the SWM algorithm includes a random element of sampling
 and comparing the windows - meaning it is not deterministic. Because of this, results
@@ -232,8 +232,8 @@ can change with different random seeds.</p>
 <p>You can also set the number of iterations that the algorithm sweeps through. Increasing
 the number of iterations, and using longer data segments, can help improve the robustness
 of the algorithm results.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.682 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.234 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-rhythm-plot-slidingwindowmatching-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1c6c1cedd051526d62a430480e5dcfa7/plot_SlidingWindowMatching.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SlidingWindowMatching.py</span></code></a></p>
 </div>
@@ -242,9 +242,9 @@ of the algorithm results.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -258,8 +258,8 @@ of the algorithm results.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

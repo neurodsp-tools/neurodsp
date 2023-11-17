@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neurodsp.filt.filter_signal &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>neurodsp.filt.filter_signal &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,11 +108,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neurodsp-filt-filter-signal">
+  <section id="neurodsp-filt-filter-signal">
 <h1>neurodsp.filt.filter_signal<a class="headerlink" href="#neurodsp-filt-filter-signal" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="neurodsp.filt.filter_signal">
-<code class="sig-prename descclassname">neurodsp.filt.</code><code class="sig-name descname">filter_signal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">pass_type</span></em>, <em class="sig-param"><span class="n">f_range</span></em>, <em class="sig-param"><span class="n">filter_type</span><span class="o">=</span><span class="default_value">'fir'</span></em>, <em class="sig-param"><span class="n">n_cycles</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">n_seconds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">remove_edges</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">butterworth_order</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">print_transitions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_properties</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_filter</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/filt/filter.html#filter_signal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.filt.filter_signal" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="neurodsp.filt.filter_signal">
+<span class="sig-prename descclassname"><span class="pre">neurodsp.filt.</span></span><span class="sig-name descname"><span class="pre">filter_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pass_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fir'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">butterworth_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_transitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/filt/filter.html#filter_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.filt.filter_signal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -176,26 +177,22 @@ See input ‘N’ in scipy.signal.butter.</p>
 </div>
 </dd></dl>
 
-<div class="section" id="examples-using-neurodsp-filt-filter-signal">
+<section id="examples-using-neurodsp-filt-filter-signal">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.filt.filter_signal</span></code><a class="headerlink" href="#examples-using-neurodsp-filt-filter-signal" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters."><div class="figure align-default" id="id1">
-<img alt="Filtering" src="../_images/sphx_glr_plot_1_Filtering_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_1_Filtering.html#sphx-glr-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Filtering</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate FIR Filters."><div class="figure align-default" id="id2">
-<img alt="FIR Filters" src="../_images/sphx_glr_plot_2_FIR_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate IIR Filters."><div class="figure align-default" id="id3">
-<img alt="IIR Filters" src="../_images/sphx_glr_plot_3_IIR_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_3_IIR.html#sphx-glr-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">IIR Filters</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Strategies and approaches for proper filter design and application."><div class="figure align-default" id="id4">
-<img alt="Filter Checks" src="../_images/sphx_glr_plot_4_checks_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_4_checks.html#sphx-glr-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Filter Checks</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div><div style='clear:both'></div></div>
-</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters."><img alt="" src="../_images/sphx_glr_plot_1_Filtering_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_1_Filtering.html#sphx-glr-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Filtering</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Filtering</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate FIR Filters."><img alt="" src="../_images/sphx_glr_plot_2_FIR_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a></p>
+  <div class="sphx-glr-thumbnail-title">FIR Filters</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate IIR Filters."><img alt="" src="../_images/sphx_glr_plot_3_IIR_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_3_IIR.html#sphx-glr-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">IIR Filters</span></a></p>
+  <div class="sphx-glr-thumbnail-title">IIR Filters</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Strategies and approaches for proper filter design and application."><img alt="" src="../_images/sphx_glr_plot_4_checks_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_4_checks.html#sphx-glr-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Filter Checks</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Filter Checks</div>
+</div></div><div style='clear:both'></div></section>
+</section>
 
 
     </div>
@@ -209,8 +206,8 @@ See input ‘N’ in scipy.signal.butter.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neurodsp.sim.sim_powerlaw &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>neurodsp.sim.sim_powerlaw &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,11 +108,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neurodsp-sim-sim-powerlaw">
+  <section id="neurodsp-sim-sim-powerlaw">
 <h1>neurodsp.sim.sim_powerlaw<a class="headerlink" href="#neurodsp-sim-sim-powerlaw" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="neurodsp.sim.sim_powerlaw">
-<code class="sig-prename descclassname">neurodsp.sim.</code><code class="sig-name descname">sim_powerlaw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_seconds</span></em>, <em class="sig-param"><span class="n">fs</span></em>, <em class="sig-param"><span class="n">exponent</span><span class="o">=</span><span class="default_value">- 2.0</span></em>, <em class="sig-param"><span class="n">f_range</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">filter_kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_powerlaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.sim.sim_powerlaw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="neurodsp.sim.sim_powerlaw">
+<span class="sig-prename descclassname"><span class="pre">neurodsp.sim.</span></span><span class="sig-name descname"><span class="pre">sim_powerlaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">filter_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_powerlaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.sim_powerlaw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a power law time series, with a specified exponent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -157,34 +158,28 @@ Astronomy and Astrophysics, 300, 707–710.</p>
 </div>
 </dd></dl>
 
-<div class="section" id="examples-using-neurodsp-sim-sim-powerlaw">
+<section id="examples-using-neurodsp-sim-sim-powerlaw">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_powerlaw</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-powerlaw" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Apply autocorrelation measures to neural signals."><div class="figure align-default" id="id3">
-<img alt="Autocorrelation Measures" src="../_images/sphx_glr_plot_Autocorr_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/aperiodic/plot_Autocorr.html#sphx-glr-auto-tutorials-aperiodic-plot-autocorr-py"><span class="std std-ref">Autocorrelation Measures</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply fluctuation analyses, such as detrended fluctuation analysis (DFA) to neural signals."><div class="figure align-default" id="id4">
-<img alt="Fluctuation analyses" src="../_images/sphx_glr_plot_Fluctuations_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/aperiodic/plot_Fluctuations.html#sphx-glr-auto-tutorials-aperiodic-plot-fluctuations-py"><span class="std std-ref">Fluctuation analyses</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><div class="figure align-default" id="id5">
-<img alt="Lagged Coherence" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><div class="figure align-default" id="id6">
-<img alt="Simulating Aperiodic Signals" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate combined signals, with periodic and aperiodic components."><div class="figure align-default" id="id7">
-<img alt="Simulating Combined Signals" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply amplitude modulation to simulated signals."><div class="figure align-default" id="id8">
-<img alt="Modulating Signals" src="../_images/sphx_glr_plot_SimulateModulated_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
-</div><div style='clear:both'></div></div>
-</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Apply autocorrelation measures to neural signals."><img alt="" src="../_images/sphx_glr_plot_Autocorr_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/aperiodic/plot_Autocorr.html#sphx-glr-auto-tutorials-aperiodic-plot-autocorr-py"><span class="std std-ref">Autocorrelation Measures</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Autocorrelation Measures</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply fluctuation analyses, such as detrended fluctuation analysis (DFA) to neural signals."><img alt="" src="../_images/sphx_glr_plot_Fluctuations_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/aperiodic/plot_Fluctuations.html#sphx-glr-auto-tutorials-aperiodic-plot-fluctuations-py"><span class="std std-ref">Fluctuation analyses</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Fluctuation analyses</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><img alt="" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Lagged Coherence</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Aperiodic Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate combined signals, with periodic and aperiodic components."><img alt="" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Combined Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply amplitude modulation to simulated signals."><img alt="" src="../_images/sphx_glr_plot_SimulateModulated_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Modulating Signals</div>
+</div></div><div style='clear:both'></div></section>
+</section>
 
 
     </div>
@@ -198,8 +193,8 @@ Astronomy and Astrophysics, 300, 707–710.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

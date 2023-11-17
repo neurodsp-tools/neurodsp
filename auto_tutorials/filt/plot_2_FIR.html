@@ -3,22 +3,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIR Filters &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>FIR Filters &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +27,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +57,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +67,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +111,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="fir-filters">
+<section class="sphx-glr-example-title" id="fir-filters">
 <span id="sphx-glr-auto-tutorials-filt-plot-2-fir-py"></span><h1>FIR Filters<a class="headerlink" href="#fir-filters" title="Permalink to this headline">¶</a></h1>
 <p>Design, apply, and evaluate FIR Filters.</p>
 <p>This tutorial covers the design and application of Finite Impulse Response (FIR) filters,
@@ -129,7 +132,7 @@ available in <code class="docutils literal notranslate"><span class="pre">neurod
 <span class="kn">from</span> <span class="nn">neurodsp.plts</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_filter_properties.html#neurodsp.plts.plot_filter_properties" title="neurodsp.plts.plot_filter_properties" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_filter_properties</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
 </div>
-<div class="section" id="id1">
+<section id="id1">
 <h2>FIR Filters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Finite impulse response filters are filters for which the response to a single impulse is
 finite. FIR filters are common and useful, as they can be designed to have specified
@@ -167,8 +170,8 @@ see the scipy documentation.</p>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="design-an-fir-filter">
+</section>
+<section id="design-an-fir-filter">
 <h2>Design an FIR Filter<a class="headerlink" href="#design-an-fir-filter" title="Permalink to this headline">¶</a></h2>
 <p>First, let’s design an FIR filter, which means to generate the filter coefficients that
 will instantiate our filter, which we can do with the <a class="reference internal" href="../../generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter" title="neurodsp.filt.design_fir_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">design_fir_filter()</span></code></a> function.</p>
@@ -195,8 +198,7 @@ frequency response.</p>
 <a href="../../generated/neurodsp.plts.plot_filter_properties.html#neurodsp.plts.plot_filter_properties" title="neurodsp.plts.plot_filter_properties" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_filter_properties</span></a><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">filter_coefs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2_FIR_001.png" />
-<p>On the right is the impulse response, or the filter kernel. This is a visualization of our
+<img src="../../_images/sphx_glr_plot_2_FIR_001.png" srcset="../../_images/sphx_glr_plot_2_FIR_001.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><p>On the right is the impulse response, or the filter kernel. This is a visualization of our
 filter coefficients, which also demonstrates the activity of our filter for a single point
 (the impulse response).</p>
 <p>On the left, we can see the frequency response of our filter, which shows us how different
@@ -213,15 +215,14 @@ as the range between -20 dB and -3 dB attenuation, but you can also customize th
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transition band: </span><span class="si">{:4.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t_band</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition band: 3.00
 </pre></div>
 </div>
 <p>In the above, we have designed and evaluated an FIR filter. Note that the properties of the
 filter will depend on the passband and cutoff frequencies, and especially the filter length.</p>
 <p>You can explore changing these settings to see how they impact the filter properties.</p>
-</div>
-<div class="section" id="apply-an-fir-filter">
+</section>
+<section id="apply-an-fir-filter">
 <h2>Apply an FIR Filter<a class="headerlink" href="#apply-an-fir-filter" title="Permalink to this headline">¶</a></h2>
 <p>Next, we can apply our filter to the data. FIR filter can be applied to signals by
 convolution, which we can do with the <code class="xref py py-func docutils literal notranslate"><span class="pre">apply_fir_filter()</span></code> function.</p>
@@ -232,10 +233,9 @@ convolution, which we can do with the <code class="xref py py-func docutils lite
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 2 FIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2_FIR_002.png" />
-<p>In the above, we can see both the original signal, and the filtered version.</p>
+<img src="../../_images/sphx_glr_plot_2_FIR_002.png" srcset="../../_images/sphx_glr_plot_2_FIR_002.png" alt="plot 2 FIR" class = "sphx-glr-single-img"/><p>In the above, we can see both the original signal, and the filtered version.</p>
 <p>Note that inspecting the filtered signal together with the original signal is recommended.</p>
-<div class="section" id="using-filter-signal">
+<section id="using-filter-signal">
 <h3>Using filter_signal<a class="headerlink" href="#using-filter-signal" title="Permalink to this headline">¶</a></h3>
 <p>In the above, we did a step-by-step procedure of designing, evaluating, and applying our filter.</p>
 <p>Note that all of these elements can also be done directly through the
@@ -246,9 +246,7 @@ convolution, which we can do with the <code class="xref py py-func docutils lite
                                          <span class="n">plot_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response, Kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2_FIR_003.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition bandwidth is 3.0 Hz.
+<img src="../../_images/sphx_glr_plot_2_FIR_003.png" srcset="../../_images/sphx_glr_plot_2_FIR_003.png" alt="Frequency response, Kernel" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition bandwidth is 3.0 Hz.
 Pass/stop bandwidth is 5.0 Hz.
 </pre></div>
 </div>
@@ -256,15 +254,14 @@ Pass/stop bandwidth is 5.0 Hz.
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt2</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 2 FIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2_FIR_004.png" />
-<p>You might notice in the above plot, the edges of the filtered version have been removed.
+<img src="../../_images/sphx_glr_plot_2_FIR_004.png" srcset="../../_images/sphx_glr_plot_2_FIR_004.png" alt="plot 2 FIR" class = "sphx-glr-single-img"/><p>You might notice in the above plot, the edges of the filtered version have been removed.
 This is done to remove edge artifacts. Data points at the edge of the signal don’t get fully
 processed by the filter, and may contain some filtering artifacts.</p>
 <p>With FIR filters we exclude edge artifacts by removing edge points that do not get fully
 processed by the filter, based on the size of the filter.</p>
 <p>If you wish, you can turn off the edge removal by setting <cite>remove_edges</cite> to False.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.640 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-2-fir-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.488 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-2-fir-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4ffbe2536bcc2f5df0e8ee5c8d1fe89c/plot_2_FIR.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_2_FIR.py</span></code></a></p>
 </div>
@@ -273,9 +270,9 @@ processed by the filter, based on the size of the filter.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -289,8 +286,8 @@ processed by the filter, based on the size of the filter.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

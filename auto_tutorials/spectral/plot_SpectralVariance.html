@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectral Domain Analysis: Variance &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Spectral Domain Analysis: Variance &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,13 +110,14 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="spectral-domain-analysis-variance">
+<section class="sphx-glr-example-title" id="spectral-domain-analysis-variance">
 <span id="sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"></span><h1>Spectral Domain Analysis: Variance<a class="headerlink" href="#spectral-domain-analysis-variance" title="Permalink to this headline">¶</a></h1>
 <p>Apply spectral domain analyses, calculating variance measures.</p>
 <p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.spectral.variance</span></code> module.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This tutorial covers computing and displaying a spectral histogram, and
 computing the spectral coefficient of variation (SCV).</p>
@@ -133,7 +135,7 @@ computing the spectral coefficient of variation (SCV).</p>
                                     <a href="../../generated/neurodsp.plts.plot_scv_rs_lines.html#neurodsp.plts.plot_scv_rs_lines" title="neurodsp.plts.plot_scv_rs_lines" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_lines</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_matrix</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="load-example-neural-signal">
+<section id="load-example-neural-signal">
 <h3>Load example neural signal<a class="headerlink" href="#load-example-neural-signal" title="Permalink to this headline">¶</a></h3>
 <p>First, we load the sample data, which is a segment of rat hippocampal LFP
 taken from the publicly available database CRCNS (specifically, from the ‘hc2’ dataset).</p>
@@ -150,11 +152,10 @@ taken from the publicly available database CRCNS (specifically, from the ‘hc2�
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_001.png" />
-<p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz).</p>
-</div>
-</div>
-<div class="section" id="spectral-histogram">
+<img src="../../_images/sphx_glr_plot_SpectralVariance_001.png" srcset="../../_images/sphx_glr_plot_SpectralVariance_001.png" alt="plot SpectralVariance" class = "sphx-glr-single-img"/><p>Plotting the data, we observe a strong theta oscillation (~6-8 Hz).</p>
+</section>
+</section>
+<section id="spectral-histogram">
 <h2>Spectral histogram<a class="headerlink" href="#spectral-histogram" title="Permalink to this headline">¶</a></h2>
 <p>First, let’s look at computing spectral histograms, with
 <a class="reference internal" href="../../generated/neurodsp.spectral.compute_spectral_hist.html#neurodsp.spectral.compute_spectral_hist" title="neurodsp.spectral.compute_spectral_hist"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_spectral_hist()</span></code></a>.</p>
@@ -178,11 +179,10 @@ values across time, in a histogram, to observe the noise distribution at each fr
 <a href="../../generated/neurodsp.plts.plot_spectral_hist.html#neurodsp.plts.plot_spectral_hist" title="neurodsp.plts.plot_spectral_hist" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_spectral_hist</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">spect_hist</span><span class="p">,</span> <span class="n">freq_med</span><span class="p">,</span> <span class="n">psd_med</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_002.png" />
-<p>Notice in the plot that not only is theta power higher overall (shifted up),
+<img src="../../_images/sphx_glr_plot_SpectralVariance_002.png" srcset="../../_images/sphx_glr_plot_SpectralVariance_002.png" alt="plot SpectralVariance" class = "sphx-glr-single-img"/><p>Notice in the plot that not only is theta power higher overall (shifted up),
 it also has lower variance around its mean.</p>
-</div>
-<div class="section" id="spectral-coefficient-of-variation-scv">
+</section>
+<section id="spectral-coefficient-of-variation-scv">
 <h2>Spectral Coefficient of Variation (SCV)<a class="headerlink" href="#spectral-coefficient-of-variation-scv" title="Permalink to this headline">¶</a></h2>
 <p>Next, let’s look at computing the spectral coefficient of variation, with
 <a class="reference internal" href="../../generated/neurodsp.spectral.compute_scv.html#neurodsp.spectral.compute_scv" title="neurodsp.spectral.compute_scv"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_scv()</span></code></a>.</p>
@@ -200,8 +200,7 @@ normalized estimate of variance.</p>
 <a href="../../generated/neurodsp.plts.plot_scv.html#neurodsp.plts.plot_scv" title="neurodsp.plts.plot_scv" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_003.png" />
-<p>As shown above, SCV calculated from the entire segment of data is quite noisy due to the
+<img src="../../_images/sphx_glr_plot_SpectralVariance_003.png" srcset="../../_images/sphx_glr_plot_SpectralVariance_003.png" alt="plot SpectralVariance" class = "sphx-glr-single-img"/><p>As shown above, SCV calculated from the entire segment of data is quite noisy due to the
 single estimate of mean and standard deviation.</p>
 <p>To overcome this, we can compute a bootstrap-resampled estimate of SCV, by randomly drawing
 slices from the non-overlapping spectrogram and taking their average.</p>
@@ -216,8 +215,7 @@ slices from the non-overlapping spectrogram and taking their average.</p>
 <a href="../../generated/neurodsp.plts.plot_scv_rs_lines.html#neurodsp.plts.plot_scv_rs_lines" title="neurodsp.plts.plot_scv_rs_lines" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_lines</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_004.png" />
-<p>Another way to compute the resampled SCV is via a sliding window approach, essentially
+<img src="../../_images/sphx_glr_plot_SpectralVariance_004.png" srcset="../../_images/sphx_glr_plot_SpectralVariance_004.png" alt="plot SpectralVariance" class = "sphx-glr-single-img"/><p>Another way to compute the resampled SCV is via a sliding window approach, essentially
 smoothing over consecutive slices of the spectrogram to compute the mean and standard
 deviation estimates.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate SCV with the resampling method</span>
@@ -229,11 +227,10 @@ deviation estimates.</p>
 <a href="../../generated/neurodsp.plts.plot_scv_rs_matrix.html#neurodsp.plts.plot_scv_rs_matrix" title="neurodsp.plts.plot_scv_rs_matrix" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_scv_rs_matrix</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">t_inds</span><span class="p">,</span> <span class="n">scv_rs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SpectralVariance" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SpectralVariance_005.png" />
-<p>In the plot below, we see that the theta band (~7Hz) consistently has CV of less
+<img src="../../_images/sphx_glr_plot_SpectralVariance_005.png" srcset="../../_images/sphx_glr_plot_SpectralVariance_005.png" alt="plot SpectralVariance" class = "sphx-glr-single-img"/><p>In the plot below, we see that the theta band (~7Hz) consistently has CV of less
 than 1 (negative in log10).</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.991 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.802 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-spectral-plot-spectralvariance-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fd029ca29a991c389527f1fcc8af602c/plot_SpectralVariance.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SpectralVariance.py</span></code></a></p>
 </div>
@@ -242,8 +239,8 @@ than 1 (negative in log10).</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -257,8 +254,8 @@ than 1 (negative in log10).</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

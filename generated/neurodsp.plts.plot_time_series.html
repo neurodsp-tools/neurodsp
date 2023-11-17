@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neurodsp.plts.plot_time_series &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>neurodsp.plts.plot_time_series &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../glossary.html">Glossary</a></li>
                 <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,11 +108,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neurodsp-plts-plot-time-series">
+  <section id="neurodsp-plts-plot-time-series">
 <h1>neurodsp.plts.plot_time_series<a class="headerlink" href="#neurodsp-plts-plot-time-series" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="neurodsp.plts.plot_time_series">
-<code class="sig-prename descclassname">neurodsp.plts.</code><code class="sig-name descname">plot_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">times</span></em>, <em class="sig-param"><span class="n">sigs</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/plts/time_series.html#plot_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#neurodsp.plts.plot_time_series" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="neurodsp.plts.plot_time_series">
+<span class="sig-prename descclassname"><span class="pre">neurodsp.plts.</span></span><span class="sig-name descname"><span class="pre">plot_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/plts/time_series.html#plot_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.plts.plot_time_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -145,78 +146,61 @@ If None, time series will be plotted in terms of samples instead of time.</p>
 </div>
 </dd></dl>
 
-<div class="section" id="examples-using-neurodsp-plts-plot-time-series">
+<section id="examples-using-neurodsp-plts-plot-time-series">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.plts.plot_time_series</span></code><a class="headerlink" href="#examples-using-neurodsp-plts-plot-time-series" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><div class="figure align-default" id="id1">
-<img alt="Using NeuroDSP with MNE" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><div class="figure align-default" id="id2">
-<img alt="Burst Detection" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters."><div class="figure align-default" id="id3">
-<img alt="Filtering" src="../_images/sphx_glr_plot_1_Filtering_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_1_Filtering.html#sphx-glr-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Filtering</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate FIR Filters."><div class="figure align-default" id="id4">
-<img alt="FIR Filters" src="../_images/sphx_glr_plot_2_FIR_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate IIR Filters."><div class="figure align-default" id="id5">
-<img alt="IIR Filters" src="../_images/sphx_glr_plot_3_IIR_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_3_IIR.html#sphx-glr-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">IIR Filters</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Strategies and approaches for proper filter design and application."><div class="figure align-default" id="id6">
-<img alt="Filter Checks" src="../_images/sphx_glr_plot_4_checks_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/filt/plot_4_checks.html#sphx-glr-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Filter Checks</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><div class="figure align-default" id="id7">
-<img alt="Lagged Coherence" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Find recurring patterns in neural signals using Sliding Window Matching."><div class="figure align-default" id="id8">
-<img alt="Sliding Window Matching" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><div class="figure align-default" id="id9">
-<img alt="Simulating Aperiodic Signals" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate combined signals, with periodic and aperiodic components."><div class="figure align-default" id="id10">
-<img alt="Simulating Combined Signals" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply amplitude modulation to simulated signals."><div class="figure align-default" id="id11">
-<img alt="Modulating Signals" src="../_images/sphx_glr_plot_SimulateModulated_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic, or oscillatory, signals."><div class="figure align-default" id="id12">
-<img alt="Simulating Periodic Signals" src="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a></span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Simulating cycles and transient events."><div class="figure align-default" id="id13">
-<img alt="Simulating Cycles &amp; Transients" src="../_images/sphx_glr_plot_SimulateTransients_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateTransients.html#sphx-glr-auto-tutorials-sim-plot-simulatetransients-py"><span class="std std-ref">Simulating Cycles &amp; Transients</span></a></span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating power measures."><div class="figure align-default" id="id14">
-<img alt="Spectral Domain Analysis: Power" src="../_images/sphx_glr_plot_SpectralPower_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/spectral/plot_SpectralPower.html#sphx-glr-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">Spectral Domain Analysis: Power</span></a></span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating variance measures."><div class="figure align-default" id="id15">
-<img alt="Spectral Domain Analysis: Variance" src="../_images/sphx_glr_plot_SpectralVariance_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/spectral/plot_SpectralVariance.html#sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Spectral Domain Analysis: Variance</span></a></span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Estimate instantaneous measures of phase, amplitude, and frequency."><div class="figure align-default" id="id16">
-<img alt="Time-frequency analysis" src="../_images/sphx_glr_plot_InstantaneousMeasures_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/timefreq/plot_InstantaneousMeasures.html#sphx-glr-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">Time-frequency analysis</span></a></span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Perform time-frequency decomposition using wavelets."><div class="figure align-default" id="id17">
-<img alt="Morlet Wavelet Analysis" src="../_images/sphx_glr_plot_MorletWavelet_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_tutorials/timefreq/plot_MorletWavelet.html#sphx-glr-auto-tutorials-timefreq-plot-morletwavelet-py"><span class="std std-ref">Morlet Wavelet Analysis</span></a></span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
-</div>
-</div><div style='clear:both'></div></div>
-</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><img alt="" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
+<p><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Using NeuroDSP with MNE</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><img alt="" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Burst Detection</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters."><img alt="" src="../_images/sphx_glr_plot_1_Filtering_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_1_Filtering.html#sphx-glr-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Filtering</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Filtering</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate FIR Filters."><img alt="" src="../_images/sphx_glr_plot_2_FIR_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a></p>
+  <div class="sphx-glr-thumbnail-title">FIR Filters</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Design, apply, and evaluate IIR Filters."><img alt="" src="../_images/sphx_glr_plot_3_IIR_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_3_IIR.html#sphx-glr-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">IIR Filters</span></a></p>
+  <div class="sphx-glr-thumbnail-title">IIR Filters</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Strategies and approaches for proper filter design and application."><img alt="" src="../_images/sphx_glr_plot_4_checks_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/filt/plot_4_checks.html#sphx-glr-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Filter Checks</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Filter Checks</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Calculate the rhythmicity of neural signal with the lagged coherence algorithm."><img alt="" src="../_images/sphx_glr_plot_LaggedCoherence_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Lagged Coherence</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Find recurring patterns in neural signals using Sliding Window Matching."><img alt="" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Sliding Window Matching</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Aperiodic Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate combined signals, with periodic and aperiodic components."><img alt="" src="../_images/sphx_glr_plot_SimulateCombined_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Combined Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply amplitude modulation to simulated signals."><img alt="" src="../_images/sphx_glr_plot_SimulateModulated_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Modulating Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulate periodic, or oscillatory, signals."><img alt="" src="../_images/sphx_glr_plot_SimulatePeriodic_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Periodic Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Simulating cycles and transient events."><img alt="" src="../_images/sphx_glr_plot_SimulateTransients_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateTransients.html#sphx-glr-auto-tutorials-sim-plot-simulatetransients-py"><span class="std std-ref">Simulating Cycles &amp; Transients</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Simulating Cycles & Transients</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating power measures."><img alt="" src="../_images/sphx_glr_plot_SpectralPower_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/spectral/plot_SpectralPower.html#sphx-glr-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">Spectral Domain Analysis: Power</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Spectral Domain Analysis: Power</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Apply spectral domain analyses, calculating variance measures."><img alt="" src="../_images/sphx_glr_plot_SpectralVariance_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/spectral/plot_SpectralVariance.html#sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Spectral Domain Analysis: Variance</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Spectral Domain Analysis: Variance</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Estimate instantaneous measures of phase, amplitude, and frequency."><img alt="" src="../_images/sphx_glr_plot_InstantaneousMeasures_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/timefreq/plot_InstantaneousMeasures.html#sphx-glr-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">Time-frequency analysis</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Time-frequency analysis</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Perform time-frequency decomposition using wavelets."><img alt="" src="../_images/sphx_glr_plot_MorletWavelet_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/timefreq/plot_MorletWavelet.html#sphx-glr-auto-tutorials-timefreq-plot-morletwavelet-py"><span class="std std-ref">Morlet Wavelet Analysis</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Morlet Wavelet Analysis</div>
+</div></div><div style='clear:both'></div></section>
+</section>
 
 
     </div>
@@ -230,8 +214,8 @@ If None, time series will be plotted in terms of samples instead of time.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

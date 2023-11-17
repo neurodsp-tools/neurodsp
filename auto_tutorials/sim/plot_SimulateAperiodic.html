@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulating Aperiodic Signals &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Simulating Aperiodic Signals &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +110,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="simulating-aperiodic-signals">
+<section class="sphx-glr-example-title" id="simulating-aperiodic-signals">
 <span id="sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"></span><h1>Simulating Aperiodic Signals<a class="headerlink" href="#simulating-aperiodic-signals" title="Permalink to this headline">¶</a></h1>
 <p>Simulate aperiodic signals.</p>
 <p>This tutorial covers the the <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.aperiodic</span></code> module.</p>
@@ -140,7 +142,7 @@
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="simulate-1-f-activity">
+<section id="simulate-1-f-activity">
 <h2>Simulate 1/f Activity<a class="headerlink" href="#simulate-1-f-activity" title="Permalink to this headline">¶</a></h2>
 <p>Often, we want to simulate aperiodic activity similar to what we see in neural recordings.</p>
 <p>Neural signals display 1/f-like activity, whereby power decreases linearly across
@@ -160,14 +162,12 @@ for which the power spectrum is distributed as 1/f^2.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">br_noise</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Brown Noise&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Brown Noise" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_001.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_001.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_001.png" alt="Brown Noise" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">br_noise</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateAperiodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_002.png" />
-<div class="section" id="simulate-filtered-1-f-activity">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_002.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_002.png" alt="plot SimulateAperiodic" class = "sphx-glr-single-img"/><section id="simulate-filtered-1-f-activity">
 <h3>Simulate Filtered 1/f Activity<a class="headerlink" href="#simulate-filtered-1-f-activity" title="Permalink to this headline">¶</a></h3>
 <p>The power law simulation function is also integrated with a filter. This can be useful
 for filtering out some low frequencies, as is often done with neural signals,
@@ -185,18 +185,16 @@ low-frequency drift than the first one.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">brown_filt</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;High-Passed Brown Noise&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="High-Passed Brown Noise" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_003.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_003.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_003.png" alt="High-Passed Brown Noise" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">brown_filt</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot SimulateAperiodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" />
-<p>Note: the <a class="reference internal" href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code></a> function can simulate arbitrary
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_004.png" alt="plot SimulateAperiodic" class = "sphx-glr-single-img"/><p>Note: the <a class="reference internal" href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_powerlaw()</span></code></a> function can simulate arbitrary
 power law exponents, such as pink noise (-1), or any other exponent.</p>
-</div>
-</div>
-<div class="section" id="random-walk-activity">
+</section>
+</section>
+<section id="random-walk-activity">
 <h2>Random Walk Activity<a class="headerlink" href="#random-walk-activity" title="Permalink to this headline">¶</a></h2>
 <p>We can also simulate an Ornstein-Uhlenbeck process, which is a random walk process with memory.</p>
 <p>We can do this with the <a class="reference internal" href="../../generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk" title="neurodsp.sim.sim_random_walk"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_random_walk()</span></code></a> function.</p>
@@ -208,9 +206,8 @@ power law exponents, such as pink noise (-1), or any other exponent.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">rw_ap</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Random Walk&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Random Walk" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_005.png" />
-</div>
-<div class="section" id="simulate-synaptic-activity">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_005.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_005.png" alt="Random Walk" class = "sphx-glr-single-img"/></section>
+<section id="simulate-synaptic-activity">
 <h2>Simulate Synaptic Activity<a class="headerlink" href="#simulate-synaptic-activity" title="Permalink to this headline">¶</a></h2>
 <p>Another model for simulating aperiodic, neurally plausible activity, is to simulate
 synaptic current activity, as a Lorentzian function.</p>
@@ -227,8 +224,7 @@ that mimic the shape of post-synaptic potentials.</p>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">syn_ap</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Simulated Synaptic Activity&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Simulated Synaptic Activity" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_006.png" />
-<p>Both the random walk, and synaptic model produce 1/f scaling in higher frequencies with a
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_006.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_006.png" alt="Simulated Synaptic Activity" class = "sphx-glr-single-img"/><p>Both the random walk, and synaptic model produce 1/f scaling in higher frequencies with a
 fixed exponent of -2, as we can see in the power spectra plot below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated data, in the frequency domain</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">rw_psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">rw_ap</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
@@ -237,9 +233,8 @@ fixed exponent of -2, as we can see in the power spectra plot below.</p>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="p">[</span><span class="n">rw_psd</span><span class="p">,</span> <span class="n">syn_psd</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Random Walk&#39;</span><span class="p">,</span> <span class="s1">&#39;Synaptic&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SimulateAperiodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" />
-</div>
-<div class="section" id="simulate-knee-signal">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_007.png" alt="plot SimulateAperiodic" class = "sphx-glr-single-img"/></section>
+<section id="simulate-knee-signal">
 <h2>Simulate Knee Signal<a class="headerlink" href="#simulate-knee-signal" title="Permalink to this headline">¶</a></h2>
 <p>To simulate signals with a knee, being able to control both exponents, and the knee,
 use the <a class="reference internal" href="../../generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee" title="neurodsp.sim.sim_knee"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_knee()</span></code></a> function.</p>
@@ -250,16 +245,14 @@ use the <a class="reference internal" href="../../generated/neurodsp.sim.sim_kne
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">knee_ap1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Simulated Knee Signal&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Simulated Knee Signal" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_008.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate another knee signal, with different exponents &amp; knee</span>
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_008.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_008.png" alt="Simulated Knee Signal" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate another knee signal, with different exponents &amp; knee</span>
 <span class="n">knee_ap2</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee" title="neurodsp.sim.sim_knee" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_knee</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent1</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">exponent2</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">knee</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
 <span class="c1"># Plot the simulated data, in the time domain</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">knee_ap2</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Simulated Knee Signal&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Simulated Knee Signal" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_009.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute power spectra of the simulated knee signals</span>
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_009.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_009.png" alt="Simulated Knee Signal" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute power spectra of the simulated knee signals</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">knee_psd1</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">knee_ap1</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">knee_psd2</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">knee_ap2</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
@@ -267,9 +260,8 @@ use the <a class="reference internal" href="../../generated/neurodsp.sim.sim_kne
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="p">[</span><span class="n">knee_psd1</span><span class="p">,</span> <span class="n">knee_psd2</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Knee1&#39;</span><span class="p">,</span> <span class="s1">&#39;Knee2&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot SimulateAperiodic" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_010.png" />
-</div>
-<div class="section" id="simulate-fractional-noise">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_010.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_010.png" alt="plot SimulateAperiodic" class = "sphx-glr-single-img"/></section>
+<section id="simulate-fractional-noise">
 <h2>Simulate Fractional Noise<a class="headerlink" href="#simulate-fractional-noise" title="Permalink to this headline">¶</a></h2>
 <p>We also include methods from the field of statistics to simulate other forms
 of aperiodic signals.</p>
@@ -280,20 +272,19 @@ of aperiodic signals.</p>
 </ul>
 <p>Both of these signal types can be used to simulate aperiodic time series, with
 powerlaw spectral densities.</p>
-<div class="section" id="fractional-gaussian-noise">
+<section id="fractional-gaussian-noise">
 <h3>Fractional Gaussian Noise<a class="headerlink" href="#fractional-gaussian-noise" title="Permalink to this headline">¶</a></h3>
 <p>To simulate a fractional gaussian noise signal, use the
 the <a class="reference internal" href="../../generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise" title="neurodsp.sim.sim_frac_gaussian_noise"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_frac_gaussian_noise()</span></code></a> function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate fractional gaussian noise signal</span>
-<span class="n">gn_ap</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise" title="neurodsp.sim.sim_frac_gaussian_noise" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_frac_gaussian_noise</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-.</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">gn_ap</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise" title="neurodsp.sim.sim_frac_gaussian_noise" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_frac_gaussian_noise</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mf">.5</span><span class="p">)</span>
 
 <span class="c1"># Plot the simulated data, in the time domain</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">gn_ap</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Simulated Fractional Gaussian Noise&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Simulated Fractional Gaussian Noise" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_011.png" />
-</div>
-<div class="section" id="fractional-brownian-motion">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_011.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_011.png" alt="Simulated Fractional Gaussian Noise" class = "sphx-glr-single-img"/></section>
+<section id="fractional-brownian-motion">
 <h3>Fractional Brownian Motion<a class="headerlink" href="#fractional-brownian-motion" title="Permalink to this headline">¶</a></h3>
 <p>To simulate a fractional brownian motion signal, use the
 <a class="reference internal" href="../../generated/neurodsp.sim.sim_frac_brownian_motion.html#neurodsp.sim.sim_frac_brownian_motion" title="neurodsp.sim.sim_frac_brownian_motion"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_frac_brownian_motion()</span></code></a> function.</p>
@@ -304,9 +295,8 @@ the <a class="reference internal" href="../../generated/neurodsp.sim.sim_frac_ga
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">bm_ap</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Simulated Fractional Brownian Motion&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Simulated Fractional Brownian Motion" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_SimulateAperiodic_012.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  13.924 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py">
+<img src="../../_images/sphx_glr_plot_SimulateAperiodic_012.png" srcset="../../_images/sphx_glr_plot_SimulateAperiodic_012.png" alt="Simulated Fractional Brownian Motion" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.695 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-simulateaperiodic-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e1963e42ee9782dfbfb85eb2a6c87cb3/plot_SimulateAperiodic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_SimulateAperiodic.py</span></code></a></p>
 </div>
@@ -315,9 +305,9 @@ the <a class="reference internal" href="../../generated/neurodsp.sim.sim_frac_ga
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
     </div>
@@ -331,8 +321,8 @@ the <a class="reference internal" href="../../generated/neurodsp.sim.sim_frac_ga
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

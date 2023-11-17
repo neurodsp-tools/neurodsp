@@ -3,22 +3,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroDSP Glossary &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>NeuroDSP Glossary &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 
@@ -26,10 +27,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +57,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +67,7 @@
                 <li><a href="#">Glossary</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="auto_examples/index.html">Examples</a></li>
+                <li><a href="reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,20 +109,20 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neurodsp-glossary">
+  <section id="neurodsp-glossary">
 <h1>NeuroDSP Glossary<a class="headerlink" href="#neurodsp-glossary" title="Permalink to this headline">¶</a></h1>
 <p>The following is a glossary of neuroscience and digital processing related terms that are used
 in NeuroDSP, as well as links to some external resources for learning DSP.</p>
-<div class="section" id="general">
+<section id="general">
 <h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
 <dl class="glossary simple">
-<dt id="term-periodic">periodic</dt><dd><p>Properties or components of a signal that are rhythmic.</p>
+<dt id="term-periodic">periodic<a class="headerlink" href="#term-periodic" title="Permalink to this term">¶</a></dt><dd><p>Properties or components of a signal that are rhythmic.</p>
 </dd>
-<dt id="term-aperiodic">aperiodic</dt><dd><p>Properties or components of a signal that are arrhythmic, with no characteristic frequency.</p>
+<dt id="term-aperiodic">aperiodic<a class="headerlink" href="#term-aperiodic" title="Permalink to this term">¶</a></dt><dd><p>Properties or components of a signal that are arrhythmic, with no characteristic frequency.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="digital-signal-processing">
+</section>
+<section id="digital-signal-processing">
 <h2>Digital Signal Processing<a class="headerlink" href="#digital-signal-processing" title="Permalink to this headline">¶</a></h2>
 <p>Digital Signal Processing (DSP) is an area of science &amp; engineering related to the computational
 analysis of digital signals.</p>
@@ -131,32 +133,32 @@ analysis of digital signals.</p>
 or for more in-depth descriptions, check out
 <a class="reference external" href="http://www.dspguide.com/">The Scientist and Engineers Guide to Digital Signal Processing</a>.</p>
 <dl class="glossary simple">
-<dt id="term-time-domain">time domain</dt><dd><p>Signals that are represented as variations over time, and analyses of such signals.</p>
+<dt id="term-time-domain">time domain<a class="headerlink" href="#term-time-domain" title="Permalink to this term">¶</a></dt><dd><p>Signals that are represented as variations over time, and analyses of such signals.</p>
 </dd>
-<dt id="term-frequency-domain">frequency domain</dt><dd><p>Signals that are represented in terms of frequencies, and analyses of such signals.</p>
+<dt id="term-frequency-domain">frequency domain<a class="headerlink" href="#term-frequency-domain" title="Permalink to this term">¶</a></dt><dd><p>Signals that are represented in terms of frequencies, and analyses of such signals.</p>
 </dd>
-<dt id="term-sampling-rate">sampling rate</dt><dd><p>The rate at which samples are taken.</p>
+<dt id="term-sampling-rate">sampling rate<a class="headerlink" href="#term-sampling-rate" title="Permalink to this term">¶</a></dt><dd><p>The rate at which samples are taken.</p>
 </dd>
-<dt id="term-temporal-resolution">temporal resolution</dt><dd><p>The precision of a measurement, in the time domain.
+<dt id="term-temporal-resolution">temporal resolution<a class="headerlink" href="#term-temporal-resolution" title="Permalink to this term">¶</a></dt><dd><p>The precision of a measurement, in the time domain.
 This is set by the magnitude of time between successive measurements (e.g. 0.01 seconds between samples).</p>
 </dd>
-<dt id="term-frequency-resolution">frequency resolution</dt><dd><p>The precision of a measurement, in the frequency domain.
+<dt id="term-frequency-resolution">frequency resolution<a class="headerlink" href="#term-frequency-resolution" title="Permalink to this term">¶</a></dt><dd><p>The precision of a measurement, in the frequency domain.
 This is set by the magnitude of frequency between successive measurements (e.g. 0.5 Hz between measurements).</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="units">
+</section>
+<section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h2>
 <dl class="glossary simple">
-<dt id="term-Hertz-Hz">Hertz (Hz)</dt><dd><p>A unit of frequency, as the number of cycles per second.</p>
+<dt id="term-Hertz-Hz">Hertz (Hz)<a class="headerlink" href="#term-Hertz-Hz" title="Permalink to this term">¶</a></dt><dd><p>A unit of frequency, as the number of cycles per second.</p>
 </dd>
-<dt id="term-Decibels-dB">Decibels (dB)</dt><dd><p>A unit of intensity, on a logarithmic scale.</p>
+<dt id="term-Decibels-dB">Decibels (dB)<a class="headerlink" href="#term-Decibels-dB" title="Permalink to this term">¶</a></dt><dd><p>A unit of intensity, on a logarithmic scale.</p>
 </dd>
-<dt id="term-Volts-V">Volts (V)</dt><dd><p>A unit of voltage, typically in the microvolt (uV) range for neural time series.</p>
+<dt id="term-Volts-V">Volts (V)<a class="headerlink" href="#term-Volts-V" title="Permalink to this term">¶</a></dt><dd><p>A unit of voltage, typically in the microvolt (uV) range for neural time series.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="filters">
+</section>
+<section id="filters">
 <h2>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h2>
 <p>There are some available (pay-walled) articles that present overviews and guides to filters, including:</p>
 <ul class="simple">
@@ -166,17 +168,17 @@ This is set by the magnitude of frequency between successive measurements (e.g. 
 <p>For an open, in depth, and code-driven tutorial, check out the
 <a class="reference external" href="https://mne.tools/stable/auto_tutorials/discussions/plot_background_filtering.html">MNE Filtering Tutorial</a>.</p>
 <dl class="glossary simple">
-<dt id="term-Impulse-Response">Impulse Response</dt><dd><p>The response of a filter when presented with an impulse; a single, brief input.</p>
+<dt id="term-Impulse-Response">Impulse Response<a class="headerlink" href="#term-Impulse-Response" title="Permalink to this term">¶</a></dt><dd><p>The response of a filter when presented with an impulse; a single, brief input.</p>
 </dd>
-<dt id="term-FIR">FIR</dt><dd><p>A Finite Impulse Response filter, meaning its impulse response settles to zero in finite time.</p>
+<dt id="term-FIR">FIR<a class="headerlink" href="#term-FIR" title="Permalink to this term">¶</a></dt><dd><p>A Finite Impulse Response filter, meaning its impulse response settles to zero in finite time.</p>
 </dd>
-<dt id="term-IIR">IIR</dt><dd><p>An Infinite Impulse Response filter, meaning the filter is recursive, and its impulse response continues infinitely.</p>
+<dt id="term-IIR">IIR<a class="headerlink" href="#term-IIR" title="Permalink to this term">¶</a></dt><dd><p>An Infinite Impulse Response filter, meaning the filter is recursive, and its impulse response continues infinitely.</p>
 </dd>
-<dt id="term-passband">passband</dt><dd><p>The range (band) of frequencies that are unattenuated by a filter.</p>
+<dt id="term-passband">passband<a class="headerlink" href="#term-passband" title="Permalink to this term">¶</a></dt><dd><p>The range (band) of frequencies that are unattenuated by a filter.</p>
 </dd>
-<dt id="term-stopband">stopband</dt><dd><p>The range (band) of frequencies that are attenuated (stopped) by a filter.</p>
+<dt id="term-stopband">stopband<a class="headerlink" href="#term-stopband" title="Permalink to this term">¶</a></dt><dd><p>The range (band) of frequencies that are attenuated (stopped) by a filter.</p>
 </dd>
-<dt id="term-passtype">passtype</dt><dd><p>The type of filter, defined in terms of what frequency bands or ranges it passes through, or filters out.</p>
+<dt id="term-passtype">passtype<a class="headerlink" href="#term-passtype" title="Permalink to this term">¶</a></dt><dd><p>The type of filter, defined in terms of what frequency bands or ranges it passes through, or filters out.</p>
 <ul class="simple">
 <li><p>bandpass: a filter whose passband is a specific frequency band, bound by a low and high frequency point.</p></li>
 <li><p>bandstop: a filter that passes through all frequencies except a band region that is attenuated.</p></li>
@@ -184,20 +186,20 @@ This is set by the magnitude of frequency between successive measurements (e.g. 
 <li><p>highpass: a filter whose passband is all frequencies above a filter frequency (high frequencies pass through).</p></li>
 </ul>
 </dd>
-<dt id="term-transition-band">transition band</dt><dd><p>The range of frequencies that are in the transition region between the passband and the stopband.</p>
+<dt id="term-transition-band">transition band<a class="headerlink" href="#term-transition-band" title="Permalink to this term">¶</a></dt><dd><p>The range of frequencies that are in the transition region between the passband and the stopband.</p>
 </dd>
-<dt id="term-frequency-response">frequency response</dt><dd><p>The response profile of a filter, specifying the gain and phase shift applied by the filter at each frequency.</p>
+<dt id="term-frequency-response">frequency response<a class="headerlink" href="#term-frequency-response" title="Permalink to this term">¶</a></dt><dd><p>The response profile of a filter, specifying the gain and phase shift applied by the filter at each frequency.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="rhythms-bursts">
+</section>
+<section id="rhythms-bursts">
 <h2>Rhythms &amp; Bursts<a class="headerlink" href="#rhythms-bursts" title="Permalink to this headline">¶</a></h2>
 <dl class="glossary simple">
-<dt id="term-burst">burst</dt><dd><p>Periodic activity that lasts for a short or transient amount of time, as in a ‘burst of oscillatory activity’.</p>
+<dt id="term-burst">burst<a class="headerlink" href="#term-burst" title="Permalink to this term">¶</a></dt><dd><p>Periodic activity that lasts for a short or transient amount of time, as in a ‘burst of oscillatory activity’.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="time-frequency">
+</section>
+<section id="time-frequency">
 <h2>Time Frequency<a class="headerlink" href="#time-frequency" title="Permalink to this headline">¶</a></h2>
 <p>We currently have two general approaches to time frequency analyses:</p>
 <ul class="simple">
@@ -213,25 +215,25 @@ from VoytekLab member Richard Gao.</p></li>
 <li><p>wavelet based approaches</p></li>
 </ul>
 <dl class="glossary simple">
-<dt id="term-frequency">frequency</dt><dd><p>The number of occurrences over a unit of time, typically referred to as cycles per second, and measured in Hz.</p>
+<dt id="term-frequency">frequency<a class="headerlink" href="#term-frequency" title="Permalink to this term">¶</a></dt><dd><p>The number of occurrences over a unit of time, typically referred to as cycles per second, and measured in Hz.</p>
 </dd>
-<dt id="term-phase">phase</dt><dd><p>The position, at a point in time, on a waveform cycle.</p>
+<dt id="term-phase">phase<a class="headerlink" href="#term-phase" title="Permalink to this term">¶</a></dt><dd><p>The position, at a point in time, on a waveform cycle.</p>
 </dd>
-<dt id="term-amplitude">amplitude</dt><dd><p>The magnitude of a signal, as the peak-to-trough distance.</p>
+<dt id="term-amplitude">amplitude<a class="headerlink" href="#term-amplitude" title="Permalink to this term">¶</a></dt><dd><p>The magnitude of a signal, as the peak-to-trough distance.</p>
 </dd>
-<dt id="term-power">power</dt><dd><p>The squared magnitude of a signal.</p>
+<dt id="term-power">power<a class="headerlink" href="#term-power" title="Permalink to this term">¶</a></dt><dd><p>The squared magnitude of a signal.</p>
 </dd>
-<dt id="term-period">period</dt><dd><p>A single cycle of a rhythm, defined as the time between two consecutive troughs (or peaks).</p>
+<dt id="term-period">period<a class="headerlink" href="#term-period" title="Permalink to this term">¶</a></dt><dd><p>A single cycle of a rhythm, defined as the time between two consecutive troughs (or peaks).</p>
 </dd>
-<dt id="term-hilbert-transform">hilbert transform</dt><dd><p>A mathematical transform that computes the ‘analytic signal’, a complex-valued representation
+<dt id="term-hilbert-transform">hilbert transform<a class="headerlink" href="#term-hilbert-transform" title="Permalink to this term">¶</a></dt><dd><p>A mathematical transform that computes the ‘analytic signal’, a complex-valued representation
 of a time-series (signal) that can be used to find its analytic amplitude and phase.</p>
 </dd>
-<dt id="term-wavelet">wavelet</dt><dd><p>A wave-like signal, or ‘brief oscillation’, that starts at zero amplitude, increases
+<dt id="term-wavelet">wavelet<a class="headerlink" href="#term-wavelet" title="Permalink to this term">¶</a></dt><dd><p>A wave-like signal, or ‘brief oscillation’, that starts at zero amplitude, increases
 in amplitude to some value, and then decays back to zero.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="spectral">
+</section>
+<section id="spectral">
 <h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
 <p>Many of the spectral methods available are based on the Fourier transform, for which there is an
 <a class="reference external" href="https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/">interactive guide</a>
@@ -239,43 +241,43 @@ by Better Explained and an
 <a class="reference external" href="https://www.youtube.com/watch?v=spUNpyF58BY">explainer video</a>
 by 3Blue1Brown.</p>
 <dl class="glossary simple">
-<dt id="term-Fourier-transform">Fourier transform</dt><dd><p>A mathematical transformation to decompose a time series into a frequency representation.</p>
+<dt id="term-Fourier-transform">Fourier transform<a class="headerlink" href="#term-Fourier-transform" title="Permalink to this term">¶</a></dt><dd><p>A mathematical transformation to decompose a time series into a frequency representation.</p>
 </dd>
-<dt id="term-power-spectrum">power spectrum</dt><dd><p>A frequency domain representation, as an estimate of the power across frequencies in a signal.</p>
+<dt id="term-power-spectrum">power spectrum<a class="headerlink" href="#term-power-spectrum" title="Permalink to this term">¶</a></dt><dd><p>A frequency domain representation, as an estimate of the power across frequencies in a signal.</p>
 </dd>
-<dt id="term-median-filter">median filter</dt><dd><p>A smoothing approach to replace each value in a signal with the median of the neighboring entries.</p>
+<dt id="term-median-filter">median filter<a class="headerlink" href="#term-median-filter" title="Permalink to this term">¶</a></dt><dd><p>A smoothing approach to replace each value in a signal with the median of the neighboring entries.</p>
 </dd>
-<dt id="term-coefficient-of-variation">coefficient of variation</dt><dd><p>A standardized measure of dispersion, as the ratio of the standard deviation to the mean.</p>
+<dt id="term-coefficient-of-variation">coefficient of variation<a class="headerlink" href="#term-coefficient-of-variation" title="Permalink to this term">¶</a></dt><dd><p>A standardized measure of dispersion, as the ratio of the standard deviation to the mean.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="simulations">
+</section>
+<section id="simulations">
 <h2>Simulations<a class="headerlink" href="#simulations" title="Permalink to this headline">¶</a></h2>
 <p>For an overview of the aperiodic signals available in terms of their 1/f characteristics, check out this
 <a class="reference external" href="http://www.scholarpedia.org/article/1/f_noise">article</a>
 from scholarpedia.</p>
 <dl class="glossary simple">
-<dt id="term-noise-signal">noise signal</dt><dd><p>Formally, a noise signal is a signal produced by a stochastic (random) process.
+<dt id="term-noise-signal">noise signal<a class="headerlink" href="#term-noise-signal" title="Permalink to this term">¶</a></dt><dd><p>Formally, a noise signal is a signal produced by a stochastic (random) process.
 The aperiodic signals that are simulated in NeuroDSP are, technically, noise signals.</p>
 </dd>
-<dt id="term-powerlaw">powerlaw</dt><dd><p>A relationship between two quantities, whereby one quantity varies as a power of another.
+<dt id="term-powerlaw">powerlaw<a class="headerlink" href="#term-powerlaw" title="Permalink to this term">¶</a></dt><dd><p>A relationship between two quantities, whereby one quantity varies as a power of another.
 One-over-f relationships are powerlaw, as the spectral power varies by a power of the frequency.</p>
 </dd>
-<dt id="term-1-f-signal">1/f signal</dt><dd><p>A signal for which the power spectrum can be described by a powerlaw of the form <span class="math notranslate nohighlight">\(1/f^\chi\)</span>,
+<dt id="term-1-f-signal">1/f signal<a class="headerlink" href="#term-1-f-signal" title="Permalink to this term">¶</a></dt><dd><p>A signal for which the power spectrum can be described by a powerlaw of the form <span class="math notranslate nohighlight">\(1/f^\chi\)</span>,
 where <span class="math notranslate nohighlight">\(\chi\)</span> refers to the exponent of the powerlaw.</p>
 </dd>
-<dt id="term-colored-noise">colored noise</dt><dd><p>The ‘color’ of noise refers to the 1/f exponent of the power spectrum of a noise signal.</p>
+<dt id="term-colored-noise">colored noise<a class="headerlink" href="#term-colored-noise" title="Permalink to this term">¶</a></dt><dd><p>The ‘color’ of noise refers to the 1/f exponent of the power spectrum of a noise signal.</p>
 <ul class="simple">
 <li><p>white noise: a signal with a <span class="math notranslate nohighlight">\(1/f^0\)</span> power spectrum, which is flat with equal power across all frequencies</p></li>
 <li><p>pink noise: a signal with a <span class="math notranslate nohighlight">\(1/f^1\)</span> power spectrum</p></li>
 <li><p>brown noise: a signal with a <span class="math notranslate nohighlight">\(1/f^2\)</span> power spectrum, sometimes also known as red noise</p></li>
 </ul>
 </dd>
-<dt id="term-random-walk">random walk</dt><dd><p>A random process that describes a path of a succession of random steps.</p>
+<dt id="term-random-walk">random walk<a class="headerlink" href="#term-random-walk" title="Permalink to this term">¶</a></dt><dd><p>A random process that describes a path of a succession of random steps.</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -289,8 +291,8 @@ where <span class="math notranslate nohighlight">\(\chi\)</span> refers to the e
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

@@ -3,22 +3,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Neuro Digital Signal Processing Toolbox &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 
@@ -26,10 +26,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="#">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +66,7 @@
                 <li><a href="glossary.html">Glossary</a></li>
                 <li><a href="auto_tutorials/index.html">Tutorials</a></li>
                 <li><a href="auto_examples/index.html">Examples</a></li>
+                <li><a href="reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -107,11 +108,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="neuro-digital-signal-processing-toolbox">
+  <section id="neuro-digital-signal-processing-toolbox">
 <h1>Neuro Digital Signal Processing Toolbox<a class="headerlink" href="#neuro-digital-signal-processing-toolbox" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="ProjectStatus" src="https://www.repostatus.org/badges/latest/active.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="Version" src="https://img.shields.io/pypi/v/neurodsp.svg" /></a> <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml"><img alt="BuildStatus" src="https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/neurodsp-tools/neurodsp"><img alt="Coverage" src="https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg" /></a> <a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/pypi/l/neurodsp.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/neurodsp/"><img alt="PythonVersions" src="https://img.shields.io/pypi/pyversions/neurodsp.svg" /></a> <a class="reference external" href="https://doi.org/10.21105/joss.01272"><img alt="Publication" src="https://joss.theoj.org/papers/10.21105/joss.01272/status.svg" /></a></p>
 <p>Tools to analyze and simulate neural time series, using digital signal processing.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p><cite>neurodsp</cite> is a collection of approaches for applying digital signal processing, and
 related algorithms, to neural time series. It also includes simulation tools for generating
@@ -128,8 +129,8 @@ plausible simulations of neural time series.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">plts</span></code> : Plot neural time series and derived measures</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">utils</span></code> : Additional utilities for managing time series data</p></li>
 </ul>
-</div>
-<div class="section" id="documentation">
+</section>
+<section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Documentation for the <code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> module is available <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/">here</a>.</p>
 <p>The documentation includes:</p>
@@ -141,8 +142,8 @@ plausible simulations of neural time series.</p>
 </ul>
 <p>If you have a question about using NeuroDSP that doesn’t seem to be covered by the documentation, feel free to
 open an <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/issues">issue</a> and ask!</p>
-</div>
-<div class="section" id="dependencies">
+</section>
+<section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">NeuroDSP</span></code> is written in Python, and requires Python &gt;= 3.6 to run.</p>
 <p>It has the following dependencies:</p>
@@ -156,8 +157,8 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <li><p><a class="reference external" href="https://github.com/pytest-dev/pytest">pytest</a> is needed if you want to run the test suite locally</p></li>
 </ul>
 <p>We recommend using the <a class="reference external" href="https://www.anaconda.com/products/individual">Anaconda</a> distribution to manage these requirements.</p>
-</div>
-<div class="section" id="install">
+</section>
+<section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
 <p>The current major release of NeuroDSP is the 2.X.X series.</p>
 <p>See the <a class="reference external" href="https://neurodsp-tools.github.io/neurodsp/changelog.html">changelog</a> for notes on major version releases.</p>
@@ -184,8 +185,8 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
-</div>
-<div class="section" id="contribute">
+</section>
+<section id="contribute">
 <h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
 <p>This project welcomes and encourages contributions from the community!</p>
 <p>To file bug reports and/or ask questions about this project, please use the
@@ -199,8 +200,8 @@ open an <a class="reference external" href="https://github.com/neurodsp-tools/ne
 <a class="reference external" href="https://github.com/neurodsp-tools/fooof/blob/main/CONTRIBUTING.md">contribution guidelines</a>
 and follow the
 <a class="reference external" href="https://github.com/neurodsp-tools/neurodsp/blob/main/CODE_OF_CONDUCT.md">code of conduct</a>.</p>
-</div>
-<div class="section" id="reference">
+</section>
+<section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <p>If you use this code in your project, please cite:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Cole, S., Donoghue, T., Gao, R., &amp; Voytek, B. (2019). NeuroDSP: A package for
@@ -223,8 +224,8 @@ DOI: 10.21105/joss.01272
 }
 </pre></div>
 </div>
-</div>
-<div class="section" id="funding">
+</section>
+<section id="funding">
 <h2>Funding<a class="headerlink" href="#funding" title="Permalink to this headline">¶</a></h2>
 <p>Supported by NIH award R01 GM134363 from the
 <a class="reference external" href="https://www.nigms.nih.gov/">NIGMS</a>.</p>
@@ -232,8 +233,8 @@ DOI: 10.21105/joss.01272
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -247,8 +248,8 @@ DOI: 10.21105/joss.01272
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>

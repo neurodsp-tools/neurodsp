@@ -3,22 +3,23 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IIR Filters &#8212; neurodsp 2.2.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>IIR Filters &#8212; neurodsp 2.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -26,10 +27,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,7 +57,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -66,6 +67,7 @@
                 <li><a href="../../glossary.html">Glossary</a></li>
                 <li><a href="../index.html">Tutorials</a></li>
                 <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
                 <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
             
             
@@ -109,9 +111,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="iir-filters">
+<section class="sphx-glr-example-title" id="iir-filters">
 <span id="sphx-glr-auto-tutorials-filt-plot-3-iir-py"></span><h1>IIR Filters<a class="headerlink" href="#iir-filters" title="Permalink to this headline">¶</a></h1>
 <p>Design, apply, and evaluate IIR Filters.</p>
 <p>This tutorial covers the design and application of Infinite Impulse Response (IIR) filters,
@@ -129,7 +132,7 @@ available in <code class="docutils literal notranslate"><span class="pre">neurod
 <span class="kn">from</span> <span class="nn">neurodsp.plts</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response" title="neurodsp.plts.plot_frequency_response" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_frequency_response</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
 </div>
-<div class="section" id="id1">
+<section id="id1">
 <h2>IIR Filters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Infinite impulse response filters are filters for which the response to a single impulse
 is infinite. These filters are sometimes useful due to their efficiency.</p>
@@ -161,8 +164,8 @@ For more information on the specifics of these filters, see the scipy documentat
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="design">
+</section>
+<section id="design">
 <h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
 <p>Neurodsp supports Butterworth IIR filter, which we can design with
 the <a class="reference internal" href="../../generated/neurodsp.filt.design_iir_filter.html#neurodsp.filt.design_iir_filter" title="neurodsp.filt.design_iir_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">design_iir_filter()</span></code></a> function.</p>
@@ -187,9 +190,7 @@ the <a class="reference internal" href="../../generated/neurodsp.filt.design_iir
 <a href="../../generated/neurodsp.plts.plot_frequency_response.html#neurodsp.plts.plot_frequency_response" title="neurodsp.plts.plot_frequency_response" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_frequency_response</span></a><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
+<img src="../../_images/sphx_glr_plot_3_IIR_001.png" srcset="../../_images/sphx_glr_plot_3_IIR_001.png" alt="Frequency response" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
   db = 20 * np.log10(abs(h_vals))
 </pre></div>
 </div>
@@ -207,15 +208,14 @@ as the range between -20 dB and -3 dB attenuation, but you can also customize th
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Transition band: </span><span class="si">{:4.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t_band</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Transition band: 10.00
 </pre></div>
 </div>
 <p>In the above, we have designed and evaluated an IIR filter. Note that the properties of the
 filter will depend on the passband and cutoff frequencies, and especially the filter order.</p>
 <p>You can explore changing these settings to see how they impact the filter properties.</p>
-</div>
-<div class="section" id="apply">
+</section>
+<section id="apply">
 <h2>Apply<a class="headerlink" href="#apply" title="Permalink to this headline">¶</a></h2>
 <p>The filter we previously designed may now be applied to a signal, which can be done with
 the <code class="xref py py-func docutils literal notranslate"><span class="pre">apply_iir_filter()</span></code> function.</p>
@@ -226,10 +226,9 @@ the <code class="xref py py-func docutils literal notranslate"><span class="pre"
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 3 IIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_002.png" />
-<p>In the above, we can see both the original signal, and the filtered version.</p>
+<img src="../../_images/sphx_glr_plot_3_IIR_002.png" srcset="../../_images/sphx_glr_plot_3_IIR_002.png" alt="plot 3 IIR" class = "sphx-glr-single-img"/><p>In the above, we can see both the original signal, and the filtered version.</p>
 <p>Note that inspecting the filtered signal together with the original signal is recommended.</p>
-<div class="section" id="using-filter-signal">
+<section id="using-filter-signal">
 <h3>Using filter_signal<a class="headerlink" href="#using-filter-signal" title="Permalink to this headline">¶</a></h3>
 <p>In the above, we did a step-by-step procedure of designing, evaluating, and applying our filter.</p>
 <p>Note that all of these elements can also be done directly through the
@@ -240,19 +239,17 @@ the <code class="xref py py-func docutils literal notranslate"><span class="pre"
                               <span class="n">return_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Frequency response" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_003.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
+<img src="../../_images/sphx_glr_plot_3_IIR_003.png" srcset="../../_images/sphx_glr_plot_3_IIR_003.png" alt="Frequency response" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
   warn(&#39;Edge artifacts are not removed when using an IIR filter.&#39;)
-/home/rph/Projects/neurodsp/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
+/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/utils.py:90: RuntimeWarning: divide by zero encountered in log10
   db = 20 * np.log10(abs(h_vals))
 Transition bandwidth is 10.0 Hz.
 Pass/stop bandwidth is 49.0 Hz.
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="example-application-line-noise-removal">
+</section>
+</section>
+<section id="example-application-line-noise-removal">
 <h2>Example Application: Line Noise Removal<a class="headerlink" href="#example-application-line-noise-removal" title="Permalink to this headline">¶</a></h2>
 <p>A common application of IIR filters is for line noise removal.</p>
 <p>In this example, a 3rd order Butterworth filter is applied to remove 60Hz noise.</p>
@@ -271,8 +268,7 @@ Pass/stop bandwidth is 49.0 Hz.
                          <span class="n">filter_type</span><span class="o">=</span><span class="s1">&#39;iir&#39;</span><span class="p">,</span> <span class="n">butterworth_order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/rph/Projects/neurodsp/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/filter.py:98: UserWarning: Edge artifacts are not removed when using an IIR filter.
   warn(&#39;Edge artifacts are not removed when using an IIR filter.&#39;)
 </pre></div>
 </div>
@@ -280,8 +276,7 @@ Pass/stop bandwidth is 49.0 Hz.
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="plot 3 IIR" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_3_IIR_004.png" />
-<p>One thing you might notice in the plot above is that there are edge artifacts. The data
+<img src="../../_images/sphx_glr_plot_3_IIR_004.png" srcset="../../_images/sphx_glr_plot_3_IIR_004.png" alt="plot 3 IIR" class = "sphx-glr-single-img"/><p>One thing you might notice in the plot above is that there are edge artifacts. The data
 points at the edge of the signal don’t appear to the fully filtered, and some of the high
 frequency activity remains. This is because data points at the edge of a signal do not
 get fully processed by the filter.</p>
@@ -289,8 +284,8 @@ get fully processed by the filter.</p>
 these edges, since, due to the recursion of IIR filters, we can’t as easily define the
 extent of the edge effect. Because of this, edges are not automatically excluded, but as
 we can see edge effects can still be present, and may need to be considered.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.415 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-3-iir-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.325 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-3-iir-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0e340ad09646be3050e21b76ba9b4824/plot_3_IIR.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_3_IIR.py</span></code></a></p>
 </div>
@@ -299,8 +294,8 @@ we can see edge effects can still be present, and may need to be considered.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -314,8 +309,8 @@ we can see edge effects can still be present, and may need to be considered.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2022, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.1.<br/>
+        &copy; Copyright 2018-2023, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>
