@@ -198,7 +198,7 @@ def style_plot(func, *args, **kwargs):
         Axis          title, xlabel, ylabel, xlim, ylim, xticks, yticks, xticklabels, yticklabels, minorticks
         Line          alpha, lw, linewidth, ls, linestyle, marker, ms, markersize
         Collection    alpha, edgecolor
-        Custom        title_fontsize, label_size, tick_labelsize, legend_size, legend_loc
+        Custom        title_fontsize, label_size, tick_labelsize, legend_size, legend_loc, tight_layout
     """
 
     @wraps(func)
