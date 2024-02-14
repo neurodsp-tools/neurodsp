@@ -18,7 +18,7 @@ COLLECTION_STYLE_ARGS = ['alpha', 'edgecolor']
 
 # Custom style arguments are those that are custom-handled by the plot style function
 CUSTOM_STYLE_ARGS = ['title_fontsize', 'label_size', 'tick_labelsize',
-                     'legend_size', 'legend_loc']
+                     'legend_size', 'legend_loc', 'tight_layout']
 
 # Define list of available style functions - these can also be replaced by arguments
 STYLERS = ['axis_styler', 'line_styler', 'custom_styler']

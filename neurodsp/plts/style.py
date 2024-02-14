@@ -1,5 +1,6 @@
 """Functions and utilities to apply aesthetic styling to plots."""
 
+import warnings
 from itertools import cycle
 from functools import wraps
 
@@ -126,7 +127,10 @@ def apply_custom_style(ax, **kwargs):
         ax.legend(prop={'size': kwargs.pop('legend_size', LEGEND_SIZE)},
                   loc=kwargs.pop('legend_loc', LEGEND_LOC))
 
-    plt.tight_layout()
+    if kwargs.pop('tight_layout', True):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            plt.tight_layout()
 
 
 def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
