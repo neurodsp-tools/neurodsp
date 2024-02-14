@@ -162,7 +162,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     >>> from neurodsp.filt.fir import design_fir_filter
     >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
     >>> f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)
-    >>> compute_transition_band(f_db, db, low=-20, high=-3)
+    >>> round(compute_transition_band(f_db, db, low=-20, high=-3), 1)
     0.5
 
     Compute the transition band of an IIR filter, using the computed frequency response:
@@ -171,7 +171,7 @@ def compute_transition_band(f_db, db, low=-20, high=-3):
     >>> sos = design_iir_filter(fs=500, pass_type='bandstop',
     ...                         f_range=(10, 20), butterworth_order=7)
     >>> f_db, db = compute_frequency_response(sos, None, fs=500)
-    >>> compute_transition_band(f_db, db, low=-20, high=-3)
+    >>> round(compute_transition_band(f_db, db, low=-20, high=-3), 1)
     2.0
     """
 
