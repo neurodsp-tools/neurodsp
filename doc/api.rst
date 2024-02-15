@@ -395,7 +395,7 @@ Time Frequency
 Combined
 ~~~~~~~~
 
-.. currentmodule:: neurodsp.plts
+.. currentmodule:: neurodsp.plts.combined
 .. autosummary::
     :toctree: generated/
 
