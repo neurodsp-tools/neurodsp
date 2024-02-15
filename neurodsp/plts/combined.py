@@ -27,12 +27,12 @@ def plot_timeseries_and_spectrum(times, sig, fs, f_range=None, spectrum_kwargs=N
         Sampling rate, in Hz.
     f_range : list of [float, float], optional
         The frequency range to restrict the power spectrum to.
-    **spectrum_kwargs : dict, optional
+    spectrum_kwargs : dict, optional
         Keyword arguments for computing the power spectrum.
         See `compute_spectrum` for details.
-    **ts_kwargs : dict, optional
+    ts_kwargs : dict, optional
         Keyword arguments for customizing the time series plot.
-    **psd_kwargs : dict, optional
+    psd_kwargs : dict, optional
         Keyword arguments for customizing the power spectrum plot.
     **plt_kwargs
         Keyword arguments for customizing the plots.
