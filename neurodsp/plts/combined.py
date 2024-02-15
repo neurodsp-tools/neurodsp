@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 
 from neurodsp.spectral import compute_spectrum
+from neurodsp.utils.data import create_times
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
@@ -12,24 +13,27 @@ from neurodsp.plts.utils import savefig
 ###################################################################################################
 
 @savefig
-def plot_timeseries_and_spectrum(times, sig, fs, f_range=None, spectrum_kwargs=None,
-                                 ts_kwargs=None, psd_kwargs=None, **plt_kwargs):
+def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, spectrum_kwargs=None,
+                                 start_val=None, ts_kwargs=None, psd_kwargs=None, **plt_kwargs):
     """Plot a timeseries together with it's associated power spectrum.
 
     Parameters
     ----------
-    times : 1d array, or None
-        Time definition(s) for the time series to be plotted.
-        If None, time series will be plotted in terms of samples instead of time.
-    sigs : 1d array
+    sig : 1d array
         Time series to plot.
     fs : float
         Sampling rate, in Hz.
+    ts_range : list of [float, float], optional
+        The time range to restrict the time series to.
+        For visualization only - the power spectrum is computed over the entire time series.
     f_range : list of [float, float], optional
         The frequency range to restrict the power spectrum to.
     spectrum_kwargs : dict, optional
         Keyword arguments for computing the power spectrum.
         See `compute_spectrum` for details.
+    start_val : float, optional
+        The starting value for the time definition for the time series.
+        If not provided, defaults to zero.
     ts_kwargs : dict, optional
         Keyword arguments for customizing the time series plot.
     psd_kwargs : dict, optional
@@ -53,7 +57,8 @@ def plot_timeseries_and_spectrum(times, sig, fs, f_range=None, spectrum_kwargs=N
     ax1 = fig.add_axes([0.0, 0.6, 1.3, 0.5])
     ax2 = fig.add_axes([1.5, 0.6, 0.6, 0.5])
 
-    plot_time_series(times, sig, ax=ax1, **plt_kwargs,
+    times = create_times(len(sig) / fs, fs, start_val=start_val)
+    plot_time_series(times, sig, xlim=ts_range, ax=ax1, **plt_kwargs,
                      **ts_kwargs if ts_kwargs else {})
 
     freqs, psd = compute_spectrum(sig, fs, **spectrum_kwargs if spectrum_kwargs else {})
