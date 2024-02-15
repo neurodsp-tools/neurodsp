@@ -14,7 +14,7 @@ from neurodsp.plts.utils import savefig
 
 @savefig
 def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, spectrum_kwargs=None,
-                                 start_val=None, ts_kwargs=None, psd_kwargs=None, **plt_kwargs):
+                                 start_val=0., ts_kwargs=None, psd_kwargs=None, **plt_kwargs):
     """Plot a timeseries together with it's associated power spectrum.
 
     Parameters
@@ -57,8 +57,10 @@ def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, spectrum_
     ax1 = fig.add_axes([0.0, 0.6, 1.3, 0.5])
     ax2 = fig.add_axes([1.5, 0.6, 0.6, 0.5])
 
+    if ts_range:
+        ts_kwargs['xlim'] = ts_range
     times = create_times(len(sig) / fs, fs, start_val=start_val)
-    plot_time_series(times, sig, xlim=ts_range, ax=ax1, **plt_kwargs,
+    plot_time_series(times, sig, ax=ax1, **plt_kwargs,
                      **ts_kwargs if ts_kwargs else {})
 
     freqs, psd = compute_spectrum(sig, fs, **spectrum_kwargs if spectrum_kwargs else {})
