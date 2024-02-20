@@ -28,7 +28,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     labels : list of str, optional
         Labels for each time series.
     colors : str or list of str
-        Colors to use to plot lines.
+        Color(s) to use to plot lines.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     **kwargs
@@ -50,13 +50,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
     sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
-
-    xlabel = 'Time (s)'
-    if times is None:
-        times = create_samples(len(sigs[0]))
-        xlabel = 'Samples'
-
-    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+    times, xlabel = _check_times(times, sigs)
 
     if labels is not None:
         labels = [labels] if not isinstance(labels, list) else labels
@@ -158,3 +152,54 @@ def plot_bursts(times, sig, bursting, ax=None, **kwargs):
 
     bursts = np.ma.array(sig, mask=np.invert(bursting))
     plot_time_series(times, [sig, bursts], ax=ax, **kwargs)
+
+
+@savefig
+@style_plot
+def plot_multi_time_series(times, sigs, colors=None, ax=None, **plt_kwargs):
+    """Plot multiple time series, with a vertical offset.
+
+    Parameters
+    ----------
+    times : 1d or 2d array, or list of 1d array, or None
+        Time definition(s) for the time series to be plotted.
+        If None, time series will be plotted in terms of samples instead of time.
+    sigs : 2d array or list of 1d array
+        Time series to plot, each list or row of the array representing a different channel.
+    colors : str or list of str
+        Color(s) to use to plot lines.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot.
+    **kwargs
+        Keyword arguments for customizing the plot.
+    """
+
+    colors = 'black' if not colors else colors
+    colors = repeat(colors) if isinstance(colors, str) else iter(colors)
+
+    ax = check_ax(ax, figsize=plt_kwargs.pop('figsize',  (15, 5)))
+
+    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
+    times, xlabel = _check_times(times, sigs)
+
+    step = 0.8 * np.ptp(sigs[0])
+
+    for ind, (time, sig) in enumerate(zip(times, sigs)):
+        ax.plot(time, sig+step*ind, color=next(colors), **plt_kwargs)
+
+    ax.set(yticks=[])
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel('Channels')
+
+
+def _check_times(times, sigs):
+    """Helper function to check a times definition passed into a time series plot function."""
+
+    xlabel = 'Time (s)'
+    if times is None:
+        times = create_samples(len(sigs[0]))
+        xlabel = 'Samples'
+
+    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
+
+    return times, xlabel
