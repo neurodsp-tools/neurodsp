@@ -2,9 +2,7 @@
 
 import matplotlib.pyplot as plt
 
-from neurodsp.spectral import compute_spectrum
 from neurodsp.utils.data import create_times
-from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.plts.spectral import plot_power_spectra
 from neurodsp.plts.time_series import plot_time_series
 from neurodsp.plts.utils import savefig
@@ -42,6 +40,10 @@ def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, spectrum_
         Keyword arguments for customizing the plots.
         These arguments are passed to both plot axes.
     """
+
+    # Import spectal functions locally to avoid circular imports
+    from neurodsp.spectral import compute_spectrum
+    from neurodsp.spectral.utils import trim_spectrum
 
     # Allow for defining color as 'color' (since one line per plot), rather than 'colors'
     if 'color' in plt_kwargs:
