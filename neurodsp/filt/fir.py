@@ -39,7 +39,8 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float, optional
-        Length of filter, in seconds. This parameter overwrites `n_cycles`.
+        Length of filter, in seconds.
+        This parameter overwrites `n_cycles` if provided.
     remove_edges : bool, optional
         If True, replace samples within half the kernel length to be np.nan.
     print_transitions : bool, optional, default: False
@@ -157,7 +158,8 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
         This parameter is overwritten by `n_seconds`, if provided.
     n_seconds : float or None, optional
-        Length of filter, in seconds. This parameter overwrites `n_cycles`.
+        Length of filter, in seconds.
+        This parameter overwrites `n_cycles` if provided.
 
     Returns
     -------
@@ -204,6 +206,7 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
         Length of filter, in number of cycles, defined at the 'f_lo' frequency.
     n_seconds : float or None, optional
         Length of filter, in seconds.
+        If provided, this overwrites `n_cycles`, and is used to compute the filter length.
 
     Returns
     -------
