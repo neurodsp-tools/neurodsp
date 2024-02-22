@@ -10,7 +10,7 @@ from neurodsp.utils.checks import check_param_options
 ###################################################################################################
 
 def filter_signal(sig, fs, pass_type, f_range, filter_type=None,
-                  n_cycles=3, n_seconds=None, remove_edges=True, butterworth_order=None,
+                  n_cycles=None, n_seconds=None, remove_edges=True, butterworth_order=None,
                   print_transitions=False, plot_properties=False, return_filter=False):
     """Apply a bandpass, bandstop, highpass, or lowpass filter to a neural signal.
 
@@ -32,12 +32,13 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type=None,
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    n_cycles : float, optional, default: 3
-        Length of filter, in number of cycles, at the 'f_lo' frequency, if using an FIR filter.
-        This parameter is overwritten by `n_seconds`, if provided.
+    n_cycles : float, optional
+        Filter length, in number of cycles, defined at 'f_lo' frequency, if using an FIR filter.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
+        If not provided, and `n_seconds` is also not defined, defaults to 3.
     n_seconds : float, optional
-        Length of filter, in seconds, if using an FIR filter.
-        This parameter overwrites `n_cycles`.
+        Filter length, in seconds, if using an FIR filter.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
     filter_type : {'fir', 'iir'}, optional
         Whether to use an FIR or IIR filter. IIR option is a butterworth filter.
         If None, type is inferred from input parameters, and/or defaults to FIR.

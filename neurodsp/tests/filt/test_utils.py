@@ -19,7 +19,7 @@ def test_infer_passtype():
 
 def test_compute_frequency_response():
 
-    filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
+    filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12), n_cycles=3)
     f_db, db = compute_frequency_response(filter_coefs, 1, FS)
 
     with raises(ValueError):
@@ -33,7 +33,7 @@ def test_compute_pass_band():
 
 def test_compute_transition_band():
 
-    filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12))
+    filter_coefs = design_fir_filter(FS, 'bandpass', (8, 12), n_cycles=3)
     f_db, db = compute_frequency_response(filter_coefs, 1, FS)
     trans_band = compute_transition_band(f_db, db)
 
