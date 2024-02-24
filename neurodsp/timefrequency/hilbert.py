@@ -36,6 +36,22 @@ def compute_instantaneous_measure(sig, fs, measure, f_range=None,
     -------
     measure : 1d array
         Computed instantaneous measure.
+
+    Examples
+    --------
+    Simulate an example signal, with an alpha oscillation:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation': {'freq': 10}})
+
+    Compute the instantaneous phase of the signal:
+
+    >>> i_phase = compute_instantaneous_measure(sig, fs=500, measure='phase', f_range=(8, 12))
+
+    Compute the instantaneous amplitude of the signal:
+
+    >>> i_amp = compute_instantaneous_measure(sig, fs=500, measure='amp', f_range=(8, 12))
     """
 
     check_param_options(measure, 'measure', ['phase', 'amp', 'freq'])
