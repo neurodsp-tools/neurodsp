@@ -347,6 +347,7 @@ Time Series
     plot_time_series
     plot_instantaneous_measure
     plot_bursts
+    plot_multi_time_series
 
 Spectral
 ~~~~~~~~
@@ -390,6 +391,15 @@ Time Frequency
     :toctree: generated/
 
     plot_timefrequency
+
+Combined
+~~~~~~~~
+
+.. currentmodule:: neurodsp.plts.combined
+.. autosummary::
+    :toctree: generated/
+
+    plot_timeseries_and_spectrum
 
 Utilities
 ---------
