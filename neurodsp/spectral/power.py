@@ -21,7 +21,7 @@ from neurodsp.spectral.checks import check_spg_settings
 ###################################################################################################
 ###################################################################################################
 
-def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
+def compute_spectrum(sig, fs, method='welch', **kwargs):
     """Compute the power spectral density of a time series.
 
     Parameters
@@ -32,10 +32,9 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Sampling rate, in Hz.
     method : {'welch', 'wavelet', 'medfilt'}, optional
         Method to use to estimate the power spectrum.
-    avg_type : {'mean', 'median'}, optional
-        If relevant, the method to average across windows to create the spectrum.
     **kwargs
         Keyword arguments to pass through to the function that calculates the spectrum.
+        See `compute_spectrum_{welch, wavelet, medfilt}` for details.
 
     Returns
     -------
@@ -55,15 +54,31 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     """
 
     check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt'])
+    _spectrum_input_checks(method, kwargs)
 
     if method == 'welch':
-        return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
+        return compute_spectrum_welch(sig, fs, **kwargs)
 
     elif method == 'wavelet':
-        return compute_spectrum_wavelet(sig, fs, avg_type=avg_type, **kwargs)
+        return compute_spectrum_wavelet(sig, fs, **kwargs)
 
     elif method == 'medfilt':
         return compute_spectrum_medfilt(sig, fs, **kwargs)
+
+
+SPECTRUM_INPUTS = {
+    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'f_range', 'outlier_percent'],
+    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
+    'medfilt' : ['filt_len', 'f_range'],
+}
+
+
+def _spectrum_input_checks(method, kwargs):
+    """Check inputs to `compute_spectrum` match spectral estimation method."""
+
+    for param in kwargs.keys():
+        assert param in SPECTRUM_INPUTS[method], \
+            'Parameter {} not expected for {} estimation method'.format(param, method)
 
 
 @multidim(select=[0])
