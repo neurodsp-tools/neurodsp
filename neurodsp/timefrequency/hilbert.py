@@ -5,11 +5,50 @@ from scipy.signal import hilbert
 
 from neurodsp.filt import filter_signal
 from neurodsp.utils.decorators import multidim
+from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import remove_nans, restore_nans
 from neurodsp.filt.utils import infer_passtype, remove_filter_edges
 
 ###################################################################################################
 ###################################################################################################
+
+def compute_instantaneous_measure(sig, fs, measure, f_range=None,
+                                  remove_edges=True, **filter_kwargs):
+    """Compute an instantaneous measure.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    measure : {'phase', 'amp', 'freq'}
+        Which instantaneous measure to compute.
+    f_range : tuple of float or None, optional default: None
+        Filter range, in Hz, as (low, high). If None, no filtering is applied.
+    remove_edges : bool, optional, default: True
+        If True, replace samples that are within half of the filter's length to the edge with nan.
+        This removes edge artifacts from the filtered signal. Only used if `f_range` is defined.
+    **filter_kwargs
+        Keyword parameters to pass to `filter_signal`.
+
+    Returns
+    -------
+    measure : 1d array
+        Computed instantaneous measure.
+    """
+
+    check_param_options(measure, 'measure', ['phase', 'amp', 'freq'])
+
+    if measure == 'phase':
+        return phase_by_time(sig, fs, f_range, remove_edges, **filter_kwargs)
+
+    elif measure == 'amp':
+        return amp_by_time(sig, fs, f_range, remove_edges, **filter_kwargs)
+
+    elif measure == 'freq':
+        return freq_by_time(sig, fs, f_range, remove_edges, **filter_kwargs)
+
 
 @multidim()
 def robust_hilbert(sig):
