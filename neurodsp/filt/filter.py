@@ -42,21 +42,21 @@ def filter_signal(sig, fs, pass_type, f_range, filter_type=None,
     return_filter : bool, optional, default: False
         If True, return the filter coefficients.
     **filter_kwargs
-        For FIR filters:
-            n_cycles : float, optional
-                Filter length, in number of cycles, defined at 'f_lo' frequency, if using an FIR filter.
-                Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
-                If not provided, and `n_seconds` is also not defined, defaults to 3.
-            n_seconds : float, optional
-                Filter length, in seconds, if using an FIR filter.
-                Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
-            remove_edges : bool, optional, default: True
-                If True, replace samples within half the kernel length to be np.nan.
-                Only used for FIR filters.
-        For IIR filters:
-            butterworth_order : int, optional
-                Order of the butterworth filter, if using an IIR filter.
-                See input 'N' in scipy.signal.butter.
+        Additional parameters for the filtering function, specific to filtering type.
+
+        | For FIR filters, can include:
+        |    n_cycles : float, optional
+        |        Filter length, in number of cycles, defined at 'f_lo' frequency.
+        |        Either `n_cycles` or `n_seconds` can be set for the filter length, but not both.
+        |        If not provided, and `n_seconds` is also not defined, defaults to 3.
+        |    n_seconds : float, optional
+        |        Filter length, in seconds.
+        |        Either `n_cycles` or `n_seconds` can be set for the filter length, but not both.
+        |    remove_edges : bool, optional, default: True
+        |        If True, replace samples within half the kernel length to be np.nan.
+        | For IIR filters, can include:
+        |    butterworth_order : int, optional
+        |        Order of the butterworth filter. See input 'N' in scipy.signal.butter.
 
     Returns
     -------
