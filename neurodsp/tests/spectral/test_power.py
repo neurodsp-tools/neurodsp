@@ -1,10 +1,13 @@
 """Tests for neurodsp.spectral.power."""
 
+from pytest import raises
+
 import numpy as np
 
 from neurodsp.tests.settings import FS, FREQ_SINE, FREQS_LST, FREQS_ARR, EPS
 
 from neurodsp.spectral.power import *
+from neurodsp.spectral.power import _spectrum_input_checks
 
 ###################################################################################################
 ###################################################################################################
@@ -19,6 +22,24 @@ def test_compute_spectrum(tsig):
 
     freqs, spectrum = compute_spectrum(tsig, FS, method='medfilt')
     assert freqs.shape == spectrum.shape
+
+
+SPECTRUM_INPUTS = {
+    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'f_range', 'outlier_percent'],
+    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
+    'medfilt' : ['filt_len', 'f_range'],
+}
+
+def test_spectrum_input_checks():
+
+    # Test consistent examples
+    _spectrum_input_checks('welch', {'nperseg' : 500, 'noverlap' : 250})
+    _spectrum_input_checks('medfilt', {'filt_len' : 500})
+
+    # Test inconsistent examples
+    with raises(AssertionError):
+        _spectrum_input_checks('welch', {'filt_len' : 500})
+        _spectrum_input_checks('welch', {'nonsense' : 500})
 
 def test_compute_spectrum_2d(tsig2d):
 

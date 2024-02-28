@@ -82,6 +82,7 @@ Hilbert Methods
 .. autosummary::
     :toctree: generated/
 
+    compute_instantaneous_measure
     robust_hilbert
     phase_by_time
     amp_by_time
