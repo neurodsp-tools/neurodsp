@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from neurodsp.utils.data import create_times
 from neurodsp.plts.spectral import plot_power_spectra
-from neurodsp.plts.time_series import plot_time_series
+from neurodsp.plts.time_series import plot_time_series, plot_multi_time_series
 from neurodsp.plts.utils import savefig
 
 ###################################################################################################
@@ -18,7 +18,7 @@ def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, times=Non
 
     Parameters
     ----------
-    sig : 1d array
+    sig : 1d or 2d array
         Time series to plot.
     fs : float
         Sampling rate, in Hz.
@@ -64,11 +64,18 @@ def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, times=Non
     ax2 = fig.add_axes([1.5, 0.6, 0.6, 0.5])
 
     if not times:
-        times = create_times(len(sig) / fs, fs, start_val=start_val)
+        times = create_times(sig.shape[-1] / fs, fs, start_val=start_val)
     if ts_range:
         ts_kwargs['xlim'] = ts_range
-    plot_time_series(times, sig, ax=ax1, **plt_kwargs,
-                     **ts_kwargs if ts_kwargs else {})
+
+    if sig.ndim == 1:
+        plot_time_series(times, sig, ax=ax1, **plt_kwargs,
+                         **ts_kwargs if ts_kwargs else {})
+    elif sig.ndim == 2:
+        plot_multi_time_series(times, sig, ax=ax1, **plt_kwargs,
+                               **ts_kwargs if ts_kwargs else {})
+    else:
+        raise ValueError('Only 1d or 2d inputs are supported.')
 
     freqs, psd = compute_spectrum(sig, fs, **spectrum_kwargs if spectrum_kwargs else {})
     if f_range:

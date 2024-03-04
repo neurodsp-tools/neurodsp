@@ -1,5 +1,7 @@
 """Tests for neurodsp.plts.combined."""
 
+import numpy as np
+
 from neurodsp.tests.settings import TEST_PLOTS_PATH, N_SECONDS, FS
 from neurodsp.tests.tutils import plot_test
 
@@ -9,7 +11,7 @@ from neurodsp.plts.combined import *
 ###################################################################################################
 
 @plot_test
-def test_plot_timeseries_and_spectrum(tsig_comb):
+def test_plot_timeseries_and_spectrum(tsig, tsig_comb, tsig_burst):
 
     plot_timeseries_and_spectrum(tsig_comb, FS,
                                  save_fig=True, file_path=TEST_PLOTS_PATH,
@@ -23,3 +25,8 @@ def test_plot_timeseries_and_spectrum(tsig_comb):
                                  psd_kwargs={'lw' : 2},
                                  save_fig=True, file_path=TEST_PLOTS_PATH,
                                  file_name='test_plot_combined_ts_psd2.png')
+
+    # Test multi-signal input
+    plot_timeseries_and_spectrum(np.array([tsig, tsig_comb, tsig_burst]), FS,
+                                 save_fig=True, file_path=TEST_PLOTS_PATH,
+                                 file_name='test_plot_combined_ts_psd_multi.png')
