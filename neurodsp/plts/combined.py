@@ -11,14 +11,14 @@ from neurodsp.plts.utils import savefig
 ###################################################################################################
 
 @savefig
-def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, times=None, start_val=0.,
-                                 spectrum_kwargs=None, ts_kwargs=None, psd_kwargs=None,
-                                 **plt_kwargs):
-    """Plot a timeseries together with it's associated power spectrum.
+def plot_timeseries_and_spectra(sigs, fs, ts_range=None, f_range=None, times=None, start_val=0.,
+                                spectrum_kwargs=None, ts_kwargs=None, psd_kwargs=None,
+                                **plt_kwargs):
+    """Plot timeseries together with their associated power spectra.
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sigs : 1d or 2d array
         Time series to plot.
     fs : float
         Sampling rate, in Hz.
@@ -64,20 +64,21 @@ def plot_timeseries_and_spectrum(sig, fs, ts_range=None, f_range=None, times=Non
     ax2 = fig.add_axes([1.5, 0.6, 0.6, 0.5])
 
     if not times:
-        times = create_times(sig.shape[-1] / fs, fs, start_val=start_val)
+        times = create_times(sigs.shape[-1] / fs, fs, start_val=start_val)
     if ts_range:
+        ts_kwargs = {} if ts_kwargs is None else ts_kwargs
         ts_kwargs['xlim'] = ts_range
 
-    if sig.ndim == 1:
-        plot_time_series(times, sig, ax=ax1, **plt_kwargs,
+    if sigs.ndim == 1:
+        plot_time_series(times, sigs, ax=ax1, **plt_kwargs,
                          **ts_kwargs if ts_kwargs else {})
-    elif sig.ndim == 2:
-        plot_multi_time_series(times, sig, ax=ax1, **plt_kwargs,
+    elif sigs.ndim == 2:
+        plot_multi_time_series(times, sigs, ax=ax1, **plt_kwargs,
                                **ts_kwargs if ts_kwargs else {})
     else:
         raise ValueError('Only 1d or 2d inputs are supported.')
 
-    freqs, psd = compute_spectrum(sig, fs, **spectrum_kwargs if spectrum_kwargs else {})
+    freqs, psd = compute_spectrum(sigs, fs, **spectrum_kwargs if spectrum_kwargs else {})
     if f_range:
         freqs, psd = trim_spectrum(freqs, psd, f_range)
     plot_power_spectra(freqs, psd, ax=ax2, **plt_kwargs,
