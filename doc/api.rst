@@ -400,7 +400,7 @@ Combined
 .. autosummary::
     :toctree: generated/
 
-    plot_timeseries_and_spectrum
+    plot_timeseries_and_spectra
 
 Utilities
 ---------
