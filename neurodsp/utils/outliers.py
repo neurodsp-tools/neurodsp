@@ -43,7 +43,7 @@ def restore_nans(sig, sig_nans, dtype=float):
 
     Parameters
     ----------
-    sig : 1d or 2d array
+    sig : nd array
         Signal that has had NaN edges removed.
     sig_nans : 1d array
         Boolean array indicating where NaNs were in the original array.
