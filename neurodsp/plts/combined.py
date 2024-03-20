@@ -43,6 +43,7 @@ def plot_timeseries_and_spectra(sigs, fs, ts_range=None, f_range=None, times=Non
     **plt_kwargs
         Keyword arguments for customizing the plots.
         These arguments are passed to both plot axes.
+        Plot layout can be edited with: ['gap', 'height', 'bottom', 'ts_width', 'psd_width'].
     """
 
     # Import spectal functions locally to avoid circular imports
@@ -59,9 +60,15 @@ def plot_timeseries_and_spectra(sigs, fs, ts_range=None, f_range=None, times=Non
         if 'colors' not in psd_kwargs:
             psd_kwargs['colors'] = 'black'
 
+    gap = plt_kwargs.pop('gap', 0.2)
+    hgt = plt_kwargs.pop('height', 0.5)
+    bot = plt_kwargs.pop('bottom', 0.6)
+    tsw = plt_kwargs.pop('ts_width', 1.3)
+    psw = plt_kwargs.pop('psd_width', 0.6)
+
     fig = plt.figure(figsize=plt_kwargs.pop('figsize', None))
-    ax1 = fig.add_axes([0.0, 0.6, 1.3, 0.5])
-    ax2 = fig.add_axes([1.5, 0.6, 0.6, 0.5])
+    ax1 = fig.add_axes([0.0, bot, tsw, hgt])
+    ax2 = fig.add_axes([tsw + gap, bot, psw, hgt])
 
     if not times:
         times = create_times(sigs.shape[-1] / fs, fs, start_val=start_val)
