@@ -310,6 +310,7 @@ Combined Signals
 
     sim_combined
     sim_peak_oscillation
+    sim_combined_peak
     sim_modulated_signal
 
 Utilities
