@@ -46,6 +46,13 @@ def test_sim_iters():
     assert sis2['pl_exp']
     assert sis2['osc_freq']
 
+def test_sim_iters_params(tsim_params):
+
+    sim_iters = SimIters(sim_params=tsim_params)
+    assert sim_iters
+    assert sim_iters.base == tsim_params.base
+    assert sim_iters.params == tsim_params.params
+
 def test_sim_samplers():
 
     sss1 = SimSamplers(5, 250)
@@ -67,3 +74,11 @@ def test_sim_samplers():
     ])
     assert sss2['samp_exp'] is not None
     assert sss2['samp_freq'] is not None
+
+
+def test_sim_samplers_params(tsim_params):
+
+    sim_samplers = SimSamplers(sim_params=tsim_params)
+    assert sim_samplers
+    assert sim_samplers.base == tsim_params.base
+    assert sim_samplers.params == tsim_params.params
