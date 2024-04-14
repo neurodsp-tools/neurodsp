@@ -6,7 +6,7 @@ Notes:
 
 from copy import deepcopy
 
-from neurodsp.sim.update import create_param_iter, create_param_sampler
+from neurodsp.sim.update import ParamIter, ParamSampler
 
 ###################################################################################################
 ###################################################################################################
@@ -46,7 +46,6 @@ class SimParams():
         label : str
             Label to access simulation parameters from `params`.
         """
-
 
         return {**self.base, **self._params[label]}
 
@@ -328,7 +327,7 @@ class SimIters(SimParams):
 
         assert label in self._params.keys(), "Label for simulation parameters not found."
 
-        return create_param_iter(super().__getitem__(label), update, values, component)
+        return ParamIter(super().__getitem__(label), update, values, component)
 
 
     def register_iter(self, name, label, update, values, component=None):
@@ -490,8 +489,8 @@ class SimSamplers(SimParams):
             Generator object for sampling simulation parameters.
         """
 
-        return create_param_sampler(super().__getitem__(label), samplers,
-                                    n_samples if n_samples else self.n_samples)
+        return ParamSampler(super().__getitem__(label), samplers,
+                            n_samples if n_samples else self.n_samples)
 
 
     def register_sampler(self, name, label, samplers):
