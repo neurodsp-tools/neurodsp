@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from neurodsp.sim.sim import sig_yielder
+from neurodsp.sim.multi import sig_yielder
 from neurodsp.utils.core import counter
 
 ###################################################################################################
@@ -72,7 +72,7 @@ def create_updater(update, component=None):
     return updater
 
 
-## PARAM YIELDER
+## PARAM ITER
 
 def param_iter_yielder(sim_params, updater, values):
     """Parameter yielder.
@@ -98,8 +98,6 @@ def param_iter_yielder(sim_params, updater, values):
         updater(sim_params, value)
         yield deepcopy(sim_params)
 
-
-## PARAM ITER
 
 class ParamIter():
     """Object for iterating across parameter updates.
@@ -174,7 +172,7 @@ class ParamIter():
         self.yielder = param_iter_yielder(self.params, self._updater, self.values)
 
 
-def param_iter(params, update, values, component=None):
+def create_param_iter(params, update, values, component=None):
     """Wrapper function for the ParamIter object.
 
     Parameters
@@ -322,7 +320,7 @@ class ParamSampler():
         self.yielder = param_sample_yielder(self.params, self.samplers, self.n_samples)
 
 
-def param_sampler(sim_params, samplers, n_samples=None):
+def create_param_sampler(sim_params, samplers, n_samples=None):
     """Wrapper function for the ParamSampler object.
 
     Parameters
@@ -346,7 +344,7 @@ def param_sampler(sim_params, samplers, n_samples=None):
     return ParamSampler(sim_params, samplers, n_samples)
 
 
-## SIG YIELDER / ITER
+## SIG ITER
 
 class SigIter():
     """Object for iterating across sampled simulations.
@@ -410,7 +408,7 @@ class SigIter():
         self.yielder = sig_yielder(self.sim_func, self.sim_params, self.n_sims)
 
 
-def sig_iter(sim_func, sim_params, n_sims):
+def create_sig_iter(sim_func, sim_params, n_sims):
     """Wrapper function for the SigIter object.
 
     Parameters
@@ -425,7 +423,7 @@ def sig_iter(sim_func, sim_params, n_sims):
     Returns
     -------
     SigIter
-        Iterable object for sampling simulatons.
+        Iterable object for sampling simulations.
     """
 
     return SigIter(sim_func, sim_params, n_sims)

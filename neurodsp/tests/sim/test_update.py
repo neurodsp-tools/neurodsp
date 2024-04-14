@@ -61,14 +61,14 @@ def test_class_param_iter():
             assert el in params
         assert params['exponent'] == values[ind]
 
-def test_param_iter():
+def test_create_param_iter():
 
     sim_params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
     update = 'exponent'
     values = [-2, -1, 0]
 
     # Note: no accuracy checking here (done in `test_class_param_iter`)
-    piter = param_iter(sim_params, update, values)
+    piter = create_param_iter(sim_params, update, values)
     assert isinstance(piter, ParamIter)
     for params in piter:
         assert isinstance(params, dict)
@@ -134,14 +134,14 @@ def test_class_param_sampler():
         assert params[param] in values
     assert ind == 4
 
-def test_param_sampler():
+def test_create_param_sampler():
 
     # Note: no accuracy checking here (done in `test_class_param_sampler`)
     param = 'exponent'
     values = [-2, -1, 0]
     params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}
     samplers = {create_updater(param) : create_sampler(values)}
-    psampler = param_sampler(params, samplers, n_samples=5)
+    psampler = create_param_sampler(params, samplers, n_samples=5)
     for ind, params in enumerate(psampler):
         assert isinstance(params, dict)
 
@@ -154,11 +154,11 @@ def test_class_sig_iter():
         assert isinstance(sig, np.ndarray)
     assert ind == 4
 
-def test_sig_iter():
+def test_create_sig_iter():
 
     # Note: no accuracy checking here (done in `test_class_sig_iter`)
     params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
-    siter = sig_iter(sim_powerlaw, params, n_sims=5)
+    siter = create_sig_iter(sim_powerlaw, params, n_sims=5)
     for ind, sig in enumerate(siter):
         assert isinstance(sig, np.ndarray)
     assert ind == 4
