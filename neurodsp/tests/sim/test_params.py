@@ -1,8 +1,8 @@
-"""Tests for neurodsp.sim.objs."""
+"""Tests for neurodsp.sim.params."""
 
 from neurodsp.sim.update import create_updater, create_sampler
 
-from neurodsp.sim.objs import *
+from neurodsp.sim.params import *
 
 ###################################################################################################
 ###################################################################################################
