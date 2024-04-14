@@ -94,7 +94,7 @@ def sim_multiple(sim_func, sim_params, n_sims):
 
 
 def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
-    """Helper function to create a set of simulations across different parameter values.
+    """Simulate multiple signals across different parameter values.
 
     Parameters
     ----------

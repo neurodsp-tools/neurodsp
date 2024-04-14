@@ -247,7 +247,7 @@ class SimParams():
 
 
 class SimIters(SimParams):
-    """Class object for managing simulation iterators.
+    """Object for managing simulation iterators.
 
     Parameters
     ----------
