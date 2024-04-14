@@ -172,30 +172,6 @@ class ParamIter():
         self.yielder = param_iter_yielder(self.params, self._updater, self.values)
 
 
-def create_param_iter(params, update, values, component=None):
-    """Wrapper function for the ParamIter object.
-
-    Parameters
-    ----------
-    params : dict
-        Parameter definition to create iterator with.
-    update : str
-        Name of the parameter to update.
-    values : 1d array
-        Values to iterate across.
-    component : str, optional
-        Which component to update the parameter in.
-        Only used if the parameter definition is for a multi-component simulation.
-
-    Returns
-    -------
-    ParamIter
-        Iterable object for iterating across parameter definitions.
-    """
-
-    return ParamIter(params, update, values, component)
-
-
 ## PARAM SAMPLERS
 
 def create_sampler(values, probs=None, n_samples=None):
@@ -320,30 +296,6 @@ class ParamSampler():
         self.yielder = param_sample_yielder(self.params, self.samplers, self.n_samples)
 
 
-def create_param_sampler(sim_params, samplers, n_samples=None):
-    """Wrapper function for the ParamSampler object.
-
-    Parameters
-    ----------
-    params : dict
-        Parameter definition to create sampler with.
-    samplers : dict
-        Sampler definitions to update parameters with.
-        Each key should be a callable, a parameter updated function.
-        Each value should be a generator, to sample updated parameter values from.
-    n_samples : int, optional
-        The number of parameter iterations to set as max.
-        If None, creates an infinite generator.
-
-    Returns
-    -------
-    ParamSampler
-        Iterable object for sampling parameter definitions.
-    """
-
-    return ParamSampler(sim_params, samplers, n_samples)
-
-
 ## SIG ITER
 
 class SigIter():
@@ -406,24 +358,3 @@ class SigIter():
 
         self.index = 0
         self.yielder = sig_yielder(self.sim_func, self.sim_params, self.n_sims)
-
-
-def create_sig_iter(sim_func, sim_params, n_sims):
-    """Wrapper function for the SigIter object.
-
-    Parameters
-    ----------
-    sim_func : callable
-        Function to create simulations.
-    sim_params : dict
-        Simulation parameters.
-    n_sims : int
-        Number of simulations to create.
-
-    Returns
-    -------
-    SigIter
-        Iterable object for sampling simulations.
-    """
-
-    return SigIter(sim_func, sim_params, n_sims)
