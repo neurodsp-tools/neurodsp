@@ -116,7 +116,7 @@ sim_iters.base
 ###################################################################################################
 
 # Re-initialize a SimIters object, inheriting from the SimParams object
-sim_iters = SimIters(sim_params)
+sim_iters = SimIters(sim_params=sim_params)
 
 ###################################################################################################
 #
