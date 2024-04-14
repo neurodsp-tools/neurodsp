@@ -29,6 +29,7 @@ STYLE_ARGS = \
 
 ## Define default values for aesthetics
 # These are all custom style arguments
+SUPTITLE_FONTSIZE = 24
 TITLE_FONTSIZE = 20
 LABEL_SIZE = 16
 TICK_LABELSIZE = 16
