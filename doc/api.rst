@@ -313,6 +313,28 @@ Combined Signals
     sim_combined_peak
     sim_modulated_signal
 
+Multiple Signals
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.sim.multi
+.. autosummary::
+    :toctree: generated/
+
+    sim_multiple
+    sim_across_values
+    sim_from_sampler
+
+Simulation Parameters
+~~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.sim.params
+.. autosummary::
+    :toctree: generated/
+
+    SimParams
+    SimIters
+    SimSamplers
+
 Utilities
 ~~~~~~~~~
 
