@@ -13,8 +13,9 @@ from neurodsp.filt.checks import (check_filter_definition, check_filter_properti
 ###################################################################################################
 ###################################################################################################
 
-def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, remove_edges=True,
-                      print_transitions=False, plot_properties=False, return_filter=False):
+def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=None, n_seconds=None,
+                      remove_edges=True, print_transitions=False, plot_properties=False,
+                      return_filter=False):
     """Apply an FIR filter to a signal.
 
     Parameters
@@ -35,11 +36,13 @@ def filter_signal_fir(sig, fs, pass_type, f_range, n_cycles=3, n_seconds=None, r
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    n_cycles : float, optional, default: 3
-        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
-        This parameter is overwritten by `n_seconds`, if provided.
+    n_cycles : float, optional
+        Filter length, in number of cycles, defined at the 'f_lo' frequency.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
+        If not provided, and `n_seconds` is also not defined, defaults to 3.
     n_seconds : float, optional
-        Length of filter, in seconds. This parameter overwrites `n_cycles`.
+        Filter length, in seconds.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
     remove_edges : bool, optional
         If True, replace samples within half the kernel length to be np.nan.
     print_transitions : bool, optional, default: False
@@ -134,7 +137,7 @@ def apply_fir_filter(sig, filter_coefs):
     return convolve(sig, filter_coefs, mode='same')
 
 
-def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
+def design_fir_filter(fs, pass_type, f_range, n_cycles=None, n_seconds=None):
     """Design an FIR filter.
 
     Parameters
@@ -153,11 +156,13 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
         For 'bandpass' & 'bandstop', must be a tuple.
         For 'lowpass' or 'highpass', can be a float that specifies pass frequency, or can be
         a tuple and is assumed to be (None, f_hi) for 'lowpass', and (f_lo, None) for 'highpass'.
-    n_cycles : float, optional, default: 3
-        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
-        This parameter is overwritten by `n_seconds`, if provided.
-    n_seconds : float or None, optional
-        Length of filter, in seconds. This parameter overwrites `n_cycles`.
+    n_cycles : float, optional
+        Filter length, in number of cycles, defined at the 'f_lo' frequency.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
+        If not provided, and `n_seconds` is also not defined, defaults to 3.
+    n_seconds : float, optional
+        Filter length, in seconds.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
 
     Returns
     -------
@@ -171,8 +176,12 @@ def design_fir_filter(fs, pass_type, f_range, n_cycles=3, n_seconds=None):
     >>> filter_coefs = design_fir_filter(fs=500, pass_type='bandpass', f_range=(1, 25))
     """
 
-    # Check filter definition
     f_lo, f_hi = check_filter_definition(pass_type, f_range)
+
+    # Default to a filter length of `n_cycles` of 3, if nothing otherwise set
+    if n_cycles is None and n_seconds is None:
+        n_cycles = 3
+
     filt_len = compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles, n_seconds)
 
     if pass_type == 'bandpass':
@@ -200,15 +209,22 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
         The lower frequency range of the filter, specifying the highpass frequency, if specified.
     f_hi : float or None
         The higher frequency range of the filter, specifying the lowpass frequency, if specified.
-    n_cycles : float or None, optional
-        Length of filter, in number of cycles, defined at the 'f_lo' frequency.
-    n_seconds : float or None, optional
-        Length of filter, in seconds.
+    n_cycles : float, optional
+        Filter length, in number of cycles, defined at the 'f_lo' frequency.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
+    n_seconds : float, optional
+        Filter length, in seconds.
+        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.
 
     Returns
     -------
     filt_len : int
         The length of the specified filter.
+
+    Raises
+    ------
+    ValueError
+        If both `n_cycles` & `n_seconds` are defined, leading to a conflict in filter length.
 
     Examples
     --------
@@ -216,6 +232,10 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
 
     >>> filt_len = compute_filter_length(fs=500, pass_type='bandpass', f_lo=1, f_hi=25, n_cycles=3)
     """
+
+    # Check for a conflict in defining length from having both `n_cycles` & `n_seconds`
+    if n_cycles is not None and n_seconds is not None:
+        raise ValueError('Either `n_cycles` or `n_seconds` can be defined, but not both.')
 
     # Compute filter length if specified in seconds
     if n_seconds is not None:
@@ -229,7 +249,7 @@ def compute_filter_length(fs, pass_type, f_lo, f_hi, n_cycles=None, n_seconds=No
     else:
         raise ValueError('Either `n_cycles` or `n_seconds` needs to be defined.')
 
-    # Typecast filter length to an integer, rounding up & force length to be odd
+    # Typecast filter length to an integer, rounding up & forcing length to be odd
     filt_len = int(np.ceil(filt_len))
     if filt_len % 2 == 0:
         filt_len = filt_len + 1

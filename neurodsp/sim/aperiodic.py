@@ -436,7 +436,7 @@ def sim_frac_brownian_motion(n_seconds, fs, exponent=-2, hurst=None):
     The time series can be specified with either a desired power law exponent,
     or alternatively with a specified Hurst parameter.
 
-    Note that when specifying there can be some bias leading to a steeper than expected
+    Note that when specifying exponent there can be some bias leading to a steeper than expected
     spectrum of the simulated signal. This bias is higher for exponent values near to 1,
     and may be more severe in shorter signals.
 

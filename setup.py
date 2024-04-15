@@ -20,6 +20,7 @@ setup(
     version = __version__,
     description = 'Digital signal processing for neural time series.',
     long_description = long_description,
+    long_description_content_type = 'text/x-rst',
     python_requires = '>=3.6',
     author = 'The Voytek Lab',
     author_email = 'voyteklab@gmail.com',
@@ -49,6 +50,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         ],
     platforms = 'any',
     project_urls = {

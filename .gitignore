@@ -1,6 +1,6 @@
 # Ignore source release files
 /dist/*
-/neurodsp.egg-info/*
+/*.egg-info/*
 /build/*
 
 # Ignore notebook checkpoints

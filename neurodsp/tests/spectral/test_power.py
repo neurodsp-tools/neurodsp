@@ -1,10 +1,13 @@
 """Tests for neurodsp.spectral.power."""
 
+from pytest import raises
+
 import numpy as np
 
 from neurodsp.tests.settings import FS, FREQ_SINE, FREQS_LST, FREQS_ARR, EPS
 
 from neurodsp.spectral.power import *
+from neurodsp.spectral.power import _spectrum_input_checks
 
 ###################################################################################################
 ###################################################################################################
@@ -22,6 +25,17 @@ def test_compute_spectrum(tsig):
 
     freqs, spectrum = compute_spectrum(tsig, FS, method='multitaper')
     assert freqs.shape == spectrum.shape
+
+def test_spectrum_input_checks():
+
+    # Test consistent examples
+    _spectrum_input_checks('welch', {'nperseg' : 500, 'noverlap' : 250})
+    _spectrum_input_checks('medfilt', {'filt_len' : 500})
+
+    # Test inconsistent examples
+    with raises(AssertionError):
+        _spectrum_input_checks('welch', {'filt_len' : 500})
+        _spectrum_input_checks('welch', {'nonsense' : 500})
 
 def test_compute_spectrum_2d(tsig2d):
 

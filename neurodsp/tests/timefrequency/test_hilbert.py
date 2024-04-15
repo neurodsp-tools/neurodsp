@@ -11,6 +11,12 @@ from neurodsp.utils.data import create_times
 ###################################################################################################
 ###################################################################################################
 
+def test_compute_instantaneous_measure(tsig_sine):
+
+    for measure in ['phase', 'amp', 'freq']:
+        out = compute_instantaneous_measure(tsig_sine, FS, measure)
+        assert out.shape == tsig_sine.shape
+
 def test_robust_hilbert(tsig_sine):
 
     # Generate a signal with NaNs
