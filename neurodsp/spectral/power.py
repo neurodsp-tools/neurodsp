@@ -261,7 +261,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     return freqs, spectrum
 
 
-def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
+def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
                                 low_bias=True, eigenvalue_weighting=True):
     """Compute the power spectral density using the multi-taper method.
 
@@ -273,7 +273,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
         Sampling rate, in Hz.
     bandwidth : float
         Frequency bandwidth of multi-taper window function.
-    num_windows : int.
+    n_tapers : int.
         Number of slepian windows used to weight the signal.
     low_bias : bool
         If True, only use tapers with concentration ratio > 0.9. Default is 
@@ -296,10 +296,10 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
     sig_len = sig.shape[sig.ndim - 1]
 
     # check settings
-    nw, num_windows = check_mt_settings(sig_len, fs, bandwidth, num_windows)
+    nw, n_tapers = check_mt_settings(sig_len, fs, bandwidth, n_tapers)
 
     # Create slepian sequences
-    slepian_sequences, ratios = dpss(sig_len, nw, num_windows,
+    slepian_sequences, ratios = dpss(sig_len, nw, n_tapers,
                                      return_ratios=True)
 
     # Drop tapers with low concentration
