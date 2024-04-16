@@ -30,7 +30,7 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    method : {'welch', 'wavelet', 'medfilt'}, optional
+    method : {'welch', 'wavelet', 'medfilt', 'multitaper'}, optional
         Method to use to estimate the power spectrum.
     **kwargs
         Keyword arguments to pass through to the function that calculates the spectrum.
