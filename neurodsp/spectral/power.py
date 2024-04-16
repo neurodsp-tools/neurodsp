@@ -262,7 +262,7 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
 
 def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
-                                low_bias=True):
+                                low_bias=True, eigenvalue_weighting=True):
     """Compute the power spectral density using the multi-taper method.
 
     Parameters
@@ -276,7 +276,11 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
     num_windows : int.
         Number of slepian windows used to weight the signal.
     low_bias : bool
-        If True, only use tapers with concentration ratio > 0.9. Default is True.
+        If True, only use tapers with concentration ratio > 0.9. Default is 
+        True.
+    eigenvalue_weighting : bool
+        If True, weight spectral estimates by their concentration ratios before 
+        combining. Default is True.
 
     Returns
     -------
@@ -307,10 +311,17 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, num_windows=None,
 
     # Compute fourier on signal weighted by each slepian sequence
     freqs = np.fft.rfftfreq(sig_len, 1. /fs)
-    spectrums = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis]*sig))**2
+    spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis]*sig))**2
 
-    # Average spectrums of each sequence for final result
-    spectrum = spectrums.mean(axis=0)
+    # combine estimates to compute final spectrum
+    if eigenvalue_weighting:
+        # weight estimates by concentration ratios and combine
+        spectra_weighted = spectra * ratios[:, np.newaxis, np.newaxis]
+        spectrum = np.sum(spectra_weighted, axis=0) / np.sum(ratios)
+
+    else:
+        # Average spectral estimates
+        spectrum = spectra.mean(axis=0)
 
     # Convert output to 1d if necessary
     if sig.ndim == 1:
