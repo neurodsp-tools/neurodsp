@@ -271,16 +271,18 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
         Time series.
     fs : float
         Sampling rate, in Hz.
-    bandwidth : float
-        Frequency bandwidth of multi-taper window function.
-    n_tapers : int.
-        Number of slepian windows used to weight the signal.
-    low_bias : bool
+    bandwidth : float, optional
+        Frequency bandwidth of multi-taper window function. Default is
+        8 * fs / n_samples.
+    n_tapers : int, optional
+        Number of slepian windows used to compute the spectrum. Default is
+        bandwidth * n_samples / fs.
+    low_bias : bool, optional
         If True, only use tapers with concentration ratio > 0.9. Default is 
         True.
-    eigenvalue_weighting : bool
-        If True, weight spectral estimates by their concentration ratios before 
-        combining. Default is True.
+    eigenvalue_weighting : bool, optional
+        If True, weight spectral estimates by the concentration ratio of
+        their respective tapers before combining. Default is True.
 
     Returns
     -------

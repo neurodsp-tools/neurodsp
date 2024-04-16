@@ -45,7 +45,27 @@ def check_spg_settings(fs, window, nperseg, noverlap):
 
 
 def check_mt_settings(n_samples, fs, bandwidth, n_tapers):
-    """Check settings used for computing spectra using the multitaper method """ 
+    """Check settings used for computing spectra using the multitaper method.
+
+    Parameters
+    ----------
+    n_samples : int
+        Number of samples in the signal.
+    fs : float
+        Sampling rate, in Hz.
+    bandwidth : float or None
+        Bandwidth of the multitaper window, in Hz. If None, will use 
+        8 * fs / n_samples.
+    n_tapers : int or None
+        Number of tapers to use. If None, will use bandwidth * n_samples / fs
+
+    Returns
+    -------
+    nw : float
+        Standardized half bandwidth (used to compute DPSS)
+    n_tapers : int
+        Number of tapers.
+    """ 
 
     # set bandwidth
     if bandwidth is None:
