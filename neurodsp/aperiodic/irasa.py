@@ -8,16 +8,18 @@ from scipy import signal
 from scipy.optimize import curve_fit
 
 from neurodsp.spectral import compute_spectrum, trim_spectrum
+from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim(select=[0])
 def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwargs):
     """Separate aperiodic and periodic components using IRASA.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : nd array
         Time series.
     fs : float
         The sampling frequency of sig.
@@ -36,9 +38,9 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
     -------
     freqs : 1d array
         Frequency vector.
-    psd_aperiodic : 1d array
+    psd_aperiodic : nd array
         The aperiodic component of the power spectrum.
-    psd_periodic : 1d array
+    psd_periodic : nd array
         The periodic component of the power spectrum.
 
     Notes
