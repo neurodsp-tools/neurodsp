@@ -1,16 +1,18 @@
 """Autocorrelation analyses of time series."""
 
 import numpy as np
+from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim()
 def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     """Compute the signal autocorrelation (lagged correlation).
 
     Parameters
     ----------
-    sig : array 1D
+    sig : nd array
         Time series to compute autocorrelation over.
     max_lag : int, optional, default: 1000
         Maximum delay to compute autocorrelations for, in samples.
@@ -23,7 +25,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     -------
     timepoints : 1d array
         Time points, in samples, at which autocorrelations are computed.
-    autocorrs : 1d array
+    autocorrs : nd array
         Autocorrelation values, for across time lags.
 
     Examples
