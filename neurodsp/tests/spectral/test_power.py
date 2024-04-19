@@ -105,10 +105,16 @@ def test_compute_spectrum_medfilt(tsig, tsig_sine):
     _, psd_medfilt = compute_spectrum(tsig_sine, FS, method='medfilt', filt_len=0.1)
     assert np.allclose(psd, psd_medfilt, atol=EPS)
 
-def test_compute_spectrum_multitaper(tsig_sine):
-    # Shape test
+def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
+    # Shape test: 1D input
     freqs, spectrum = compute_spectrum_multitaper(tsig_sine, FS)
     assert freqs.shape == spectrum.shape
+
+    # Shape test: 2D input
+    freqs_2d, spectrum_2d = compute_spectrum_multitaper(tsig2d, FS)
+    assert spectrum_2d.ndim == 2
+    assert spectrum_2d.shape[0] == tsig2d.shape[0]
+    assert spectrum_2d.shape[1] == len(freqs_2d)
 
     # Accuracy test: peak at sine frequency
     idx_freq_sine = np.argmin(np.abs(freqs - FREQ_SINE))
