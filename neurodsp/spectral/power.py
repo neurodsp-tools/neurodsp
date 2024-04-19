@@ -299,7 +299,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
     ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
-    >>> freqs, spec = compute_spectrum_mulitaper(sig, fs=500)
+    >>> freqs, spec = compute_spectrum_multitaper(sig, fs=500)
     """
 
     from scipy.signal.windows import dpss
