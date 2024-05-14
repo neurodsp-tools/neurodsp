@@ -56,7 +56,6 @@ def multidim(select=[], pass_2d_input=False):
     This decorator assumes the wrapped function has the data input 'sig' as the first argument.
     """
 
-
     def decorator(func, *args, **kwargs):
 
         @wraps(func)
@@ -71,8 +70,7 @@ def multidim(select=[], pass_2d_input=False):
 
                 if isinstance(outs[0], tuple):
 
-                    # Collect together associated outputs from each,
-                    #   in case there are multiple outputs
+                    # Collect associated outputs from each, in case there are multiple outputs
                     out = [np.stack([data[n_out] for data in outs]) \
                         for n_out in range(len(outs[0]))]
 
@@ -93,19 +91,17 @@ def multidim(select=[], pass_2d_input=False):
 
                 # Reshape back to original shape
                 if isinstance(out, (tuple, list)):
-                    for i in range(len(out)):
-                        if i not in select:
-                            out[i] = out[i].reshape((*shape[:-1], -1))
-                            if out[i].shape[-1] == 1:
-                                # Last dim is extraneous, e.g. func returns a scalar
-                                #   so squeeze it out
-                                out[i] = out[i].reshape(list(out[i].shape)[:-1])
+                    for ind in range(len(out)):
+                        if ind not in select:
+                            out[ind] = out[ind].reshape((*shape[:-1], -1))
+                            if out[ind].shape[-1] == 1:
+                                # Last dim is extraneous (e.g. func returns a scalar) so squeeze
+                                out[ind] = out[ind].reshape(list(out[ind].shape)[:-1])
                 else:
                     out = out.reshape((*shape[:-1], -1))
 
                     if out.shape[-1] == 1:
-                        # Last dim is extraneous, e.g. func returns a scalar
-                        #   so squeeze it out
+                        # Last dim is extraneous (e.g. func returns a scalar) so squeeze
                         out = out.reshape(list(out.shape)[:-1])
 
             return out
