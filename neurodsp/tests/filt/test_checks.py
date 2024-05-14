@@ -54,7 +54,7 @@ def test_check_filter_properties():
 
     # Check failing filter - insufficient attenuation
     with warnings.catch_warnings(record=True) as warn:
-        filter_coefs = design_fir_filter(FS, 'bandstop', (8, 12))
+        filter_coefs = design_fir_filter(FS, 'bandstop', (8, 12), n_cycles=3)
         passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
     assert len(warn) == 1
@@ -62,7 +62,7 @@ def test_check_filter_properties():
 
     # Check failing filter - transition bandwidth
     with warnings.catch_warnings(record=True) as warn:
-        filter_coefs = design_fir_filter(FS, 'bandpass', (20, 21))
+        filter_coefs = design_fir_filter(FS, 'bandpass', (20, 21), n_cycles=3)
         passes = check_filter_properties(filter_coefs, 1, FS, 'bandpass', (8, 12))
     assert passes is False
     assert len(warn) == 1

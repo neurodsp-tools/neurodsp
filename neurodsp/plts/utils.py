@@ -1,12 +1,44 @@
 """Utility functions for plots."""
 
+from copy import deepcopy
 from functools import wraps
 from os.path import join as pjoin
 
 import matplotlib.pyplot as plt
 
+from neurodsp.plts.settings import SUPTITLE_FONTSIZE
+
 ###################################################################################################
 ###################################################################################################
+
+def subset_kwargs(kwargs, label):
+    """Subset a set of kwargs from a dictionary.
+
+    Parameters
+    ----------
+    kwargs : dict
+        Dictionary of keyword arguments.
+    label : str
+        Label to use to subset.
+        Any entries with label in the key will be subset from the kwargs dict.
+
+    Returns
+    -------
+    kwargs : dict
+        The kwargs dictionary, with subset items removed.
+    subset : dict
+        The collection of subset kwargs.
+    """
+
+    kwargs = deepcopy(kwargs)
+
+    subset = {}
+    for key in list(kwargs.keys()):
+        if label in key:
+            subset[key] = kwargs.pop(key)
+
+    return kwargs, subset
+
 
 def check_ax(ax, figsize=None):
     """Check whether a figure axes object is defined, define if not.
@@ -77,3 +109,49 @@ def save_figure(file_name, file_path=None, close=False, **save_kwargs):
 
     if close:
         plt.close()
+
+
+def make_axes(n_rows, n_cols, figsize=None, row_size=4, col_size=3.6,
+              wspace=None, hspace=None, title=None, **plt_kwargs):
+    """Make a subplot with multiple axes.
+
+    Parameters
+    ----------
+    n_rows, n_cols : int
+        The number of rows and columns axes to create in the figure.
+    figsize : tuple of float, optional
+        Size to make the overall figure.
+        If not given, is estimated from the number of axes.
+    row_size, col_size : float, optional
+        The size to use per row / column.
+        Only used if `figsize` is None.
+    wspace, hspace : float, optional
+        Parameters for spacing between subplots.
+        These get passed into `plt.subplots_adjust`.
+    title : str, optional
+        A super title to add to the figure.
+    **plt_kwargs
+        Extra arguments to pass to `plt.subplots`.
+
+    Returns
+    -------
+    axes : 1d array of AxesSubplot
+        Collection of axes objects.
+    """
+
+    if not figsize:
+        figsize = (n_cols * col_size, n_rows * row_size)
+
+    plt_kwargs, title_kwargs = subset_kwargs(plt_kwargs, 'title')
+
+    _, axes = plt.subplots(n_rows, n_cols, figsize=figsize, **plt_kwargs)
+
+    if wspace or hspace:
+        plt.subplots_adjust(wspace=wspace, hspace=hspace)
+
+    if title:
+        plt.suptitle(title,
+                     fontsize=title_kwargs.pop('title_fontsize', SUPTITLE_FONTSIZE),
+                     **title_kwargs)
+
+    return axes

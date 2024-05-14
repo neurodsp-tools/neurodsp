@@ -7,7 +7,7 @@ import numpy as np
 from neurodsp.tests.settings import FS, F_RANGE
 
 from neurodsp.filt.filter import *
-from neurodsp.filt.filter import _iir_checks
+from neurodsp.filt.filter import _filter_input_checks
 
 ###################################################################################################
 ###################################################################################################
@@ -25,16 +25,24 @@ def test_filter_signal(tsig):
     outs = filter_signal(sigs, FS, 'bandpass', F_RANGE, remove_edges=False)
     assert np.diff(outs, axis=0).sum() == 0
 
-def test_iir_checks():
+def test_filter_input_checks():
 
-    # Check catch for having n_seconds defined
-    with raises(ValueError):
-        _iir_checks(1, 3, None)
+    fir_inputs = {'n_cycles' : 5, 'remove_edges' : False}
+    _filter_input_checks('fir', fir_inputs)
 
-    # Check catch for not having butterworth_order defined
-    with raises(ValueError):
-        _iir_checks(None, None, None)
+    iir_inputs = {'butterworth_order' : 7}
+    _filter_input_checks('iir', iir_inputs)
 
-    # Check catch for having remove_edges defined
-    with warns(UserWarning):
-        _iir_checks(None, 3, True)
+    mixed_inputs = {'n_cycles' : 5, 'butterworth_order' : 7}
+    extra_inputs = {'n_cycles' : 5, 'nonsense_input' : True}
+
+    with raises(AssertionError):
+        _filter_input_checks('fir', iir_inputs)
+    with raises(AssertionError):
+        _filter_input_checks('iir', fir_inputs)
+    with raises(AssertionError):
+        _filter_input_checks('fir', mixed_inputs)
+    with raises(AssertionError):
+        _filter_input_checks('fir', mixed_inputs)
+    with raises(AssertionError):
+        _filter_input_checks('fir', extra_inputs)

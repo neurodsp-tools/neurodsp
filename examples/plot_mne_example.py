@@ -61,7 +61,10 @@ from neurodsp.plts import (plot_time_series, plot_power_spectra,
 ###################################################################################################
 
 # Get the data path for the MNE example data
-raw_fname = sample.data_path() + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
+sample_data = sample.data_path()
+raw_fname = str(sample_data) + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
+
+###################################################################################################
 
 # Load the file of example MNE data
 raw = io.read_raw_fif(raw_fname, preload=True, verbose=False)
@@ -226,26 +229,26 @@ for ind, ch_label in enumerate(raw.ch_names):
 ###################################################################################################
 
 # Plot locations with highest lagged coherence rhythmicity score
-vmin, vmax = np.min(max_score), np.max(max_score)
-plot_topomap(max_score, raw.info, cmap=cm.viridis, vmin=vmin, vmax=vmax, contours=0)
+vlim = [np.min(max_score), np.max(max_score)]
+plot_topomap(max_score, raw.info, cmap=cm.viridis, vlim=vlim, contours=0)
 
 # Add colorbar
 plt.figure(figsize=[2, 4])
-sm = cm.ScalarMappable(cmap='viridis', norm=colors.Normalize(vmin=vmin, vmax=vmax))
-sm.set_array(np.linspace(vmin, vmax))
+sm = cm.ScalarMappable(cmap='viridis', norm=colors.Normalize(vmin=vlim[0], vmax=vlim[1]))
+sm.set_array(np.linspace(*vlim))
 cbar = plt.colorbar(sm, orientation='vertical', label='Score')
 plt.gca().set_visible(False); plt.gcf().subplots_adjust(right=0.5)
 
 ###################################################################################################
 
 # Plot frequency with most dominant rhythmicity
-vmin, vmax = np.min(max_freq)-2, np.max(max_freq)+2
-plot_topomap(max_freq, raw.info, cmap=cm.viridis, vmin=vmin, vmax=vmax, contours=0)
+vlim = [np.min(max_freq) - 2, np.max(max_freq) + 2]
+plot_topomap(max_freq, raw.info, cmap=cm.viridis, vlim=vlim, contours=0)
 
 # Add colorbar
 plt.figure(figsize=[2, 4])
-sm = cm.ScalarMappable(cmap='viridis', norm=colors.Normalize(vmin=vmin, vmax=vmax))
-sm.set_array(np.linspace(vmin, vmax))
+sm = cm.ScalarMappable(cmap='viridis', norm=colors.Normalize(vmin=vlim[0], vmax=vlim[1]))
+sm.set_array(np.linspace(*vlim))
 cbar = plt.colorbar(sm, orientation='vertical', label='Frequency')
 plt.gca().set_visible(False); plt.gcf().subplots_adjust(right=0.5)
 

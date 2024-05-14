@@ -2,28 +2,35 @@
  Neuro Digital Signal Processing Toolbox
 ========================================
 
-|ProjectStatus|_ |Version|_ |BuildStatus|_ |Coverage|_ |License|_ |PythonVersions|_ |Publication|_
+|ProjectStatus| |Version| |BuildStatus| |Coverage| |License| |PythonVersions| |Publication|
 
 .. |ProjectStatus| image:: https://www.repostatus.org/badges/latest/active.svg
-.. _ProjectStatus: https://www.repostatus.org/#active
+   :target: https://www.repostatus.org/#active
+   :alt: build status
 
 .. |Version| image:: https://img.shields.io/pypi/v/neurodsp.svg
-.. _Version: https://pypi.python.org/pypi/neurodsp/
+   :target: https://pypi.python.org/pypi/neurodsp/
+   :alt: version
 
 .. |BuildStatus| image:: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg
-.. _BuildStatus: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml
+   :target: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml
+   :alt: build status
 
 .. |Coverage| image:: https://codecov.io/gh/neurodsp-tools/neurodsp/branch/main/graph/badge.svg
-.. _Coverage: https://codecov.io/gh/neurodsp-tools/neurodsp
+   :target: https://codecov.io/gh/neurodsp-tools/neurodsp
+   :alt: coverage
 
 .. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
-.. _License: https://opensource.org/licenses/Apache-2.0
+   :target: https://opensource.org/licenses/Apache-2.0
+   :alt: license
 
 .. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/neurodsp.svg
-.. _PythonVersions: https://pypi.python.org/pypi/neurodsp/
+   :target: https://pypi.python.org/pypi/neurodsp/
+   :alt: python versions
 
 .. |Publication| image:: https://joss.theoj.org/papers/10.21105/joss.01272/status.svg
-.. _Publication: https://doi.org/10.21105/joss.01272
+   :target: https://doi.org/10.21105/joss.01272
+   :alt: publication
 
 Tools to analyze and simulate neural time series, using digital signal processing.
 

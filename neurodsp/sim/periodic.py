@@ -24,8 +24,7 @@ def sim_oscillation(n_seconds, fs, freq, cycle='sine', phase=0, **cycle_params):
         Signal sampling rate, in Hz.
     freq : float
         Oscillation frequency.
-    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'exp_cos', 'asym_harmonic'}
-            or callable
+    cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'exp_cos', 'asym_harmonic'} or callable
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
     phase : float or {'min', 'max'}, optional, default: 0
@@ -93,19 +92,18 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     burst_params : dict
         Parameters for the burst definition approach.
 
-        For the `prob` approach:
+        | For the `prob` approach, should contain the following keys and values:
+        |     enter_burst : float, optional, default: 0.2
+        |         Probability of a cycle being oscillating given the last cycle is not oscillating.
+        |     leave_burst : float, optional, default: 0.2
+        |         Probability of a cycle not being oscillating given the last cycle is oscillating.
+        |
+        | For the `durations` approach, should contain the following keys and values:
+        |     n_cycles_burst : int
+        |         The number of cycles within each burst.
+        |     n_cycles_off : int
+        |         The number of non-bursting cycles, between bursts.
 
-            enter_burst : float, optional, default: 0.2
-                Probability of a cycle being oscillating given the last cycle is not oscillating.
-            leave_burst : float, optional, default: 0.2
-                Probability of a cycle not being oscillating given the last cycle is oscillating.
-
-        For the `durations` approach:
-
-            n_cycles_burst : int
-                The number of cycles within each burst.
-            n_cycles_off
-                The number of non-bursting cycles, between bursts.
     cycle : {'sine', 'asine', 'sawtooth', 'gaussian', 'exp', '2exp', 'exp_cos', 'asym_harmonic'}
         What type of oscillation cycle to simulate.
         See `sim_cycle` for details on cycle types and parameters.
