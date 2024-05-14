@@ -30,36 +30,35 @@ def test_multidim():
     def func(sig):
         return np.sum(sig)
 
-    # Test function gets applied normally to 1D input
+    # Test 1D inputs
     arr = np.array([[1, 2], [1, 2]])
     assert np.array_equal(func(arr), arr.sum(axis=-1))
 
     arr1d = np.array([1, 2, 3, 4])
     assert func(arr1d) == arr1d.sum()
 
-    # Test function gets applied across dimensions for 2D input
+    # Test 2D inputs
     arr2d = np.array([[1, 2], [1, 2]])
     assert np.array_equal(func(arr2d), arr2d.sum(axis=-1))
 
-    # 3d input
+    # Test 3D inputs
     arr3d = np.array([[[1, 2], [3, 4]], [[1, 2], [3, 4]]])
     assert np.array_equal(func(arr3d), arr3d.sum(axis=-1))
 
-    # 4d input
+    # Test 4D inputs
     arr4d = np.random.rand(2, 3, 4, 5)
     assert np.array_equal(func(arr4d), arr4d.sum(axis=-1))
 
-    # 2d return shape (e.g. compute_spectrum)
+    # Test 2d return shape (e.g. compute_spectrum)
     @multidim(select=[0])
-    def func(sig):
+    def func2(sig):
         return np.arange(3), np.random.rand(3)
 
-    freqs, powers = func(arr3d)
+    freqs, powers = func2(arr3d)
     assert np.array_equal(freqs, np.arange(3))
     assert powers.shape == (*arr3d.shape[:-1], 3)
 
-    # Accuracy test that assert multdim of ndarray
-    #   gives same results as looping 1d slices
+    # Accuracy test that assert multidim of ndarray gives same results as looping 1d slices
     fs = 1000
     funcs = [lambda sig : compute_spectrum(sig, fs), compute_autocorr]
     sigs = np.random.rand(2, 2, 2, 1, fs)
@@ -67,11 +66,11 @@ def test_multidim():
 
     funcs = [
         lambda x : filter_signal(x, fs, 'bandpass', (10, 20), remove_edges=False),
-        robust_hilbert
+        robust_hilbert,
     ]
-    for f in funcs:
-        out = f(sigs)
+    for cfunc in funcs:
+        out = cfunc(sigs)
         out2d = out.reshape(-1, out.shape[-1])
-        for i, s in enumerate(sigs2d):
-            out1d = f(s)
-            assert np.all(out1d == out2d[i])
+        for ind, csig in enumerate(sigs2d):
+            out1d = cfunc(csig)
+            assert np.all(out1d == out2d[ind])
