@@ -72,12 +72,12 @@ def robust_hilbert(sig):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
 
     Returns
     -------
-    sig_hilb : nd array
+    sig_hilb : array
         The analytic signal, of which the imaginary part is the Hilbert transform of the input.
 
     Examples
@@ -108,7 +108,7 @@ def phase_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -122,7 +122,7 @@ def phase_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Returns
     -------
-    pha : nd array
+    pha : array
         Instantaneous phase time series.
 
     Examples
@@ -154,7 +154,7 @@ def amp_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -168,7 +168,7 @@ def amp_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Returns
     -------
-    amp : nd array
+    amp : array
         Instantaneous amplitude time series.
 
     Examples
@@ -199,7 +199,7 @@ def freq_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -213,7 +213,7 @@ def freq_by_time(sig, fs, f_range=None, remove_edges=True, **filter_kwargs):
 
     Returns
     -------
-    i_f : nd array
+    i_f : array
         Instantaneous frequency time series.
 
     Notes

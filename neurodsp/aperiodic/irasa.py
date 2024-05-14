@@ -19,7 +19,7 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         The sampling frequency of sig.
@@ -38,9 +38,9 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
     -------
     freqs : 1d array
         Frequency vector.
-    psd_aperiodic : nd array
+    psd_aperiodic : array
         The aperiodic component of the power spectrum.
-    psd_periodic : nd array
+    psd_periodic : array
         The periodic component of the power spectrum.
 
     Notes

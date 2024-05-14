@@ -14,7 +14,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.

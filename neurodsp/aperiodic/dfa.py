@@ -15,7 +15,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -40,7 +40,7 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     -------
     t_scales : 1d array
         Time-scales over which fluctuation measures were computed.
-    fluctuations : nd array
+    fluctuations : array
         Average fluctuation at each scale.
     result : float or 1d array
         Slope of line in log-log when plotting time scales against fluctuations.
@@ -109,7 +109,7 @@ def compute_rescaled_range(sig, win_len):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     win_len : int
         Window length for each rescaled range computation, in samples.
@@ -148,7 +148,7 @@ def compute_detrended_fluctuation(sig, win_len, deg=1):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series.
     win_len : int
         Window length for each detrended fluctuation fit, in samples.

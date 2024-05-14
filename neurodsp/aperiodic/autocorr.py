@@ -12,7 +12,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series to compute autocorrelation over.
     max_lag : int, optional, default: 1000
         Maximum delay to compute autocorrelations for, in samples.
@@ -25,7 +25,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     -------
     timepoints : 1d array
         Time points, in samples, at which autocorrelations are computed.
-    autocorrs : nd array
+    autocorrs : array
         Autocorrelation values, for across time lags.
 
     Examples

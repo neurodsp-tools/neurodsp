@@ -113,14 +113,14 @@ def apply_fir_filter(sig, filter_coefs):
 
     Parameters
     ----------
-    sig : nd array
+    sig : array
         Time series to be filtered.
     filter_coefs : 1d array
         Filter coefficients of the FIR filter.
 
     Returns
     -------
-    nd array
+    array
         Filtered time series.
 
     Examples
