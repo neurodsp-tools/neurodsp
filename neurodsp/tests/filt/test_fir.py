@@ -44,7 +44,7 @@ def test_design_fir_filter():
                   'lowpass' : (None, 5), 'highpass' : (5, None)}
 
     for pass_type, f_range in test_filts.items():
-        filter_coefs = design_fir_filter(FS, pass_type, f_range)
+        filter_coefs = design_fir_filter(FS, pass_type, f_range, n_cycles=3)
 
 def test_apply_fir_filter(tsig):
 
@@ -61,22 +61,23 @@ def test_compute_filter_length():
     #   n_seconds here is chosen to create expected odd filt_len, without needing rounding up
     n_seconds = 1.75
     expected_filt_len = n_seconds * fs
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
-                                     n_cycles=None, n_seconds=n_seconds)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_seconds=n_seconds)
     assert filt_len == expected_filt_len
 
     # Check filt_len, if defined using n_cycles
     n_cycles = 5
     expected_filt_len = int(np.ceil(fs * n_cycles / f_lo))
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
-                                     n_cycles=n_cycles, n_seconds=None)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=n_cycles)
     assert filt_len == expected_filt_len
 
     # Check filt_len, if expected to be rounded up to be odd
     n_cycles = 4
     expected_filt_len = int(np.ceil(fs * n_cycles / f_lo)) + 1
-    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi,
-                                     n_cycles=n_cycles, n_seconds=None)
+    filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=n_cycles)
     assert filt_len == expected_filt_len
     with raises(ValueError):
         filt_len = compute_filter_length(fs, 'bandpass', f_lo, f_hi)
+
+    # Test error with inconsistent inputs
+    with raises(ValueError):
+        compute_filter_length(fs, 'bandpass', f_lo, f_hi, n_cycles=3, n_seconds=2.0)

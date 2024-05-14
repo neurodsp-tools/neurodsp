@@ -17,12 +17,12 @@ from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 from neurodsp.spectral.utils import trim_spectrum, window_pad
-from neurodsp.spectral.checks import check_spg_settings
+from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
 
 ###################################################################################################
 ###################################################################################################
 
-def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
+def compute_spectrum(sig, fs, method='welch', **kwargs):
     """Compute the power spectral density of a time series.
 
     Parameters
@@ -31,12 +31,11 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    method : {'welch', 'wavelet', 'medfilt'}, optional
+    method : {'welch', 'wavelet', 'medfilt', 'multitaper'}, optional
         Method to use to estimate the power spectrum.
-    avg_type : {'mean', 'median'}, optional
-        If relevant, the method to average across windows to create the spectrum.
     **kwargs
         Keyword arguments to pass through to the function that calculates the spectrum.
+        See `compute_spectrum_{welch, wavelet, medfilt}` for details.
 
     Returns
     -------
@@ -55,16 +54,35 @@ def compute_spectrum(sig, fs, method='welch', avg_type='mean', **kwargs):
     >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
-    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt'])
+    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt', 'multitaper'])
+    _spectrum_input_checks(method, kwargs)
 
     if method == 'welch':
-        return compute_spectrum_welch(sig, fs, avg_type=avg_type, **kwargs)
+        return compute_spectrum_welch(sig, fs, **kwargs)
 
     elif method == 'wavelet':
-        return compute_spectrum_wavelet(sig, fs, avg_type=avg_type, **kwargs)
+        return compute_spectrum_wavelet(sig, fs, **kwargs)
 
     elif method == 'medfilt':
         return compute_spectrum_medfilt(sig, fs, **kwargs)
+
+    elif method == 'multitaper':
+        return compute_spectrum_multitaper(sig, fs, **kwargs)
+
+
+SPECTRUM_INPUTS = {
+    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'f_range', 'outlier_percent'],
+    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
+    'medfilt' : ['filt_len', 'f_range'],
+}
+
+
+def _spectrum_input_checks(method, kwargs):
+    """Check inputs to `compute_spectrum` match spectral estimation method."""
+
+    for param in kwargs.keys():
+        assert param in SPECTRUM_INPUTS[method], \
+            'Parameter {} not expected for {} estimation method'.format(param, method)
 
 
 @multidim(select=[0])
@@ -258,5 +276,86 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
 
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
+
+    return freqs, spectrum
+
+
+def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
+                                low_bias=True, eigenvalue_weighting=True):
+    """Compute the power spectral density using the multi-taper method.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    bandwidth : float, optional
+        Frequency bandwidth of multi-taper window function. Default is
+        8 * fs / n_samples.
+    n_tapers : int, optional
+        Number of slepian windows used to compute the spectrum. Default is
+        bandwidth * n_samples / fs.
+    low_bias : bool, optional
+        If True, only use tapers with concentration ratio > 0.9. Default is 
+        True.
+    eigenvalue_weighting : bool, optional
+        If True, weight spectral estimates by the concentration ratio of
+        their respective tapers before combining. Default is True.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the measure was calculated.
+    spectrum : 1d or 2d array
+        Power spectral density using multi-taper method.
+
+    Examples
+    --------
+    Compute the power spectrum of a simulated time series using the 
+    multitaper method:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> sig = sim_combined(n_seconds=10, fs=500,
+    ...                    components={'sim_powerlaw': {}, 'sim_oscillation' : {'freq': 10}})
+    >>> freqs, spec = compute_spectrum_multitaper(sig, fs=500)
+    """
+
+    from scipy.signal.windows import dpss
+
+    # Compute signal length based on input shape
+    sig_len = sig.shape[sig.ndim - 1]
+
+    # check settings
+    nw, n_tapers = check_mt_settings(sig_len, fs, bandwidth, n_tapers)
+
+    # Create slepian sequences
+    slepian_sequences, ratios = dpss(sig_len, nw, n_tapers,
+                                     return_ratios=True)
+
+    # Drop tapers with low concentration
+    if low_bias:
+        slepian_sequences = slepian_sequences[ratios > 0.9]
+        ratios = ratios[ratios > 0.9]
+        if len(slepian_sequences) == 0:
+            raise ValueError('No tapers with concentration ratio > 0.9. Could not compute spectrum with low_bias=True.')
+
+    # Compute fourier on signal weighted by each slepian sequence
+    freqs = np.fft.rfftfreq(sig_len, 1. /fs)
+    spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis]*sig))**2
+
+    # combine estimates to compute final spectrum
+    if eigenvalue_weighting:
+        # weight estimates by concentration ratios and combine
+        spectra_weighted = spectra * ratios[:, np.newaxis, np.newaxis]
+        spectrum = np.sum(spectra_weighted, axis=0) / np.sum(ratios)
+
+    else:
+        # Average spectral estimates
+        spectrum = spectra.mean(axis=0)
+
+    # Convert output to 1d if necessary
+    if sig.ndim == 1:
+        spectrum = spectrum[0]
 
     return freqs, spectrum

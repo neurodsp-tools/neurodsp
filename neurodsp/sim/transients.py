@@ -89,7 +89,7 @@ def sim_action_potential(n_seconds, fs, centers, stds, alphas, heights):
     stds : array-like or float
         Standard deviations of the gaussian kernels, in seconds.
     alphas : array-like or float
-        Magnitiude and direction of the skew.
+        Magnitude and direction of the skew.
     heights : array-like or float
         Maximum value of the cycles.
 
@@ -171,7 +171,7 @@ def sim_damped_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
 
     Notes
     -----
-    This approach simulates simplified ERP complex as an exponentially decaying sine wave.
+    This approach simulates a simplified ERP complex as an exponentially decaying sine wave.
 
     Examples
     --------
@@ -183,8 +183,8 @@ def sim_damped_erp(n_seconds, fs, amp, freq, decay=0.05, time_start=0.):
 
     >>> erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)
 
-    Reference
-    ---------
+    References
+    ----------
     .. [1] van Diepen, R. M., & Mazaheri, A. (2018). The Caveats of observing
            Inter-Trial Phase-Coherence in Cognitive Neuroscience. Scientific Reports, 8(1).
            DOI: https://doi.org/10.1038/s41598-018-20423-z
