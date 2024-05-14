@@ -71,7 +71,8 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
 
 
 SPECTRUM_INPUTS = {
-    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'f_range', 'outlier_percent'],
+    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'nfft', \
+               'fast_len', 'f_range', 'outlier_percent'],
     'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
     'medfilt' : ['filt_len', 'f_range'],
 }
@@ -297,7 +298,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
         Number of slepian windows used to compute the spectrum. Default is
         bandwidth * n_samples / fs.
     low_bias : bool, optional
-        If True, only use tapers with concentration ratio > 0.9. Default is 
+        If True, only use tapers with concentration ratio > 0.9. Default is
         True.
     eigenvalue_weighting : bool, optional
         If True, weight spectral estimates by the concentration ratio of
@@ -312,7 +313,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
 
     Examples
     --------
-    Compute the power spectrum of a simulated time series using the 
+    Compute the power spectrum of a simulated time series using the
     multitaper method:
 
     >>> from neurodsp.sim import sim_combined
