@@ -54,27 +54,29 @@ def check_mt_settings(n_samples, fs, bandwidth, n_tapers):
     fs : float
         Sampling rate, in Hz.
     bandwidth : float or None
-        Bandwidth of the multitaper window, in Hz. If None, will use 
-        8 * fs / n_samples.
+        Bandwidth of the multitaper window, in Hz.
+        If None, will use 8 * fs / n_samples.
     n_tapers : int or None
-        Number of tapers to use. If None, will use bandwidth * n_samples / fs
+        Number of tapers to use.
+        If None, will use bandwidth * n_samples / fs.
 
     Returns
     -------
     nw : float
-        Standardized half bandwidth (used to compute DPSS)
+        Standardized half bandwidth (used to compute DPSS).
     n_tapers : int
         Number of tapers.
-    """ 
+    """
 
     # set bandwidth
     if bandwidth is None:
-        bandwidth = 8 * fs / n_samples # MNE default 
+        bandwidth = 8 * fs / n_samples # MNE default
 
     # check bandwidth - break if alpha < 1
     alpha = n_samples * bandwidth / (fs * 2)
     if alpha < 1:
-        raise ValueError("Bandwidth too narrow for signal length and sampling rate. Try increasing bandwidth. n_samples * bandwidth / (fs * 2) must be >1")
+        raise ValueError("Bandwidth too narrow for signal length and sampling rate. "
+                         "Try increasing bandwidth. n_samples * bandwidth / (fs * 2) must be >1.")
 
     # compute nw
     nw = bandwidth * n_samples / (fs * 2)
