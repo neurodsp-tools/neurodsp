@@ -292,14 +292,13 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
     fs : float
         Sampling rate, in Hz.
     bandwidth : float, optional
-        Frequency bandwidth of multi-taper window function. Default is
-        8 * fs / n_samples.
+        Frequency bandwidth of multi-taper window function.
+        If not provided, defaults to 8 * fs / n_samples.
     n_tapers : int, optional
-        Number of slepian windows used to compute the spectrum. Default is
-        bandwidth * n_samples / fs.
-    low_bias : bool, optional
-        If True, only use tapers with concentration ratio > 0.9. Default is
-        True.
+        Number of slepian windows used to compute the spectrum.
+        If not provided, defaults to bandwidth * n_samples / fs.
+    low_bias : bool, optional, default: True
+        If True, only use tapers with concentration ratio > 0.9.
     eigenvalue_weighting : bool, optional
         If True, weight spectral estimates by the concentration ratio of
         their respective tapers before combining. Default is True.
@@ -313,8 +312,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
 
     Examples
     --------
-    Compute the power spectrum of a simulated time series using the
-    multitaper method:
+    Compute the power spectrum of a simulated time series using the multitaper method:
 
     >>> from neurodsp.sim import sim_combined
     >>> sig = sim_combined(n_seconds=10, fs=500,
@@ -331,19 +329,19 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
     nw, n_tapers = check_mt_settings(sig_len, fs, bandwidth, n_tapers)
 
     # Create slepian sequences
-    slepian_sequences, ratios = dpss(sig_len, nw, n_tapers,
-                                     return_ratios=True)
+    slepian_sequences, ratios = dpss(sig_len, nw, n_tapers, return_ratios=True)
 
     # Drop tapers with low concentration
     if low_bias:
         slepian_sequences = slepian_sequences[ratios > 0.9]
         ratios = ratios[ratios > 0.9]
         if len(slepian_sequences) == 0:
-            raise ValueError('No tapers with concentration ratio > 0.9. Could not compute spectrum with low_bias=True.')
+            raise ValueError("No tapers with concentration ratio > 0.9. "
+                             "Could not compute spectrum with low_bias=True.")
 
-    # Compute fourier on signal weighted by each slepian sequence
+    # Compute Fourier transform on signal weighted by each slepian sequence
     freqs = np.fft.rfftfreq(sig_len, 1. /fs)
-    spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis]*sig))**2
+    spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis] * sig)) ** 2
 
     # combine estimates to compute final spectrum
     if eigenvalue_weighting:
