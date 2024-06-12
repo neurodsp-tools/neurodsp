@@ -1,4 +1,4 @@
-"""Utility function for neurodsp.spectral."""
+"""Utility function for neurodsp.sim."""
 
 import numpy as np
 
