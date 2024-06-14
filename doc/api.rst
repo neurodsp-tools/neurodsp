@@ -207,6 +207,8 @@ Auto-correlation Analyses
     :toctree: generated/
 
     compute_autocorr
+    compute_decay_time
+    fit_autocorr
 
 Fluctuation Analyses
 ~~~~~~~~~~~~~~~~~~~~
