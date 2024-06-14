@@ -18,7 +18,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
@@ -39,7 +39,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     -------
     freqs : 1d array
         Frequencies at which the measure was calculated.
-    scv : 1d array
+    scv : array
         Spectral coefficient of variation.
 
     Notes
@@ -75,7 +75,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
@@ -112,7 +112,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     t_inds : 1d array or None
         Time indices at which the measure was calculated.
         This is only returned for 'rolling' resampling. If 'bootstrap', t_inds = None.
-    scv_rs : 2d array
+    scv_rs : array
         Resampled spectral coefficient of variation.
 
     Notes
@@ -185,7 +185,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series of measurement values.
     fs : float
         Sampling rate, in Hz.
@@ -211,7 +211,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
         Frequencies at which the measure was calculated.
     power_bins : 1d array
         Histogram bins used to compute the distribution.
-    spectral_hist : 2d array
+    spectral_hist : array
         Power distribution at every frequency, as [n_bins, freqs].
 
     Notes

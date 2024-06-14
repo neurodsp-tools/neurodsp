@@ -14,7 +14,7 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -32,9 +32,9 @@ def sliding_window_matching(sig, fs, win_len, win_spacing, max_iterations=100,
 
     Returns
     -------
-    windows : 2d array
+    windows : n x 2d array
         Putative patterns discovered in the input signal.
-    window_starts : 1d array
+    window_starts : n x 1d array
         Indices at which each window begins for the final set of windows.
 
     Notes

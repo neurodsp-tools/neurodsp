@@ -217,14 +217,14 @@ def remove_filter_edges(sig, filt_len):
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Filtered signal to have edge artifacts removed from.
     filt_len : int
         Length of the filter that was applied.
 
     Returns
     -------
-    sig : 1d array
+    sig : array
         Filter signal with edge artifacts switched to NaNs.
 
     Examples

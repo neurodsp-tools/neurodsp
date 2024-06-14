@@ -4,16 +4,18 @@ import numpy as np
 
 from neurodsp.utils.data import split_signal
 from neurodsp.utils.checks import check_param_options
+from neurodsp.utils.decorators import multidim
 
 ###################################################################################################
 ###################################################################################################
 
+@multidim(select=[0])
 def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, deg=1, method='dfa'):
     """Compute a fluctuation analysis on a signal.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -38,9 +40,9 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
     -------
     t_scales : 1d array
         Time-scales over which fluctuation measures were computed.
-    fluctuations : 1d array
+    fluctuations : array
         Average fluctuation at each scale.
-    result : float
+    result : float or 1d array
         Slope of line in log-log when plotting time scales against fluctuations.
         This is the alpha value for DFA, or the Hurst exponent for rescaled range.
 
@@ -101,20 +103,20 @@ def compute_fluctuations(sig, fs, n_scales=10, min_scale=0.01, max_scale=1.0, de
 
     return t_scales, fluctuations, result
 
-
+@multidim()
 def compute_rescaled_range(sig, win_len):
     """Compute rescaled range of a given time series at a given scale.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series.
     win_len : int
         Window length for each rescaled range computation, in samples.
 
     Returns
     -------
-    rs : float
+    rs : float or 1d array
         Average rescaled range over windows.
 
     Notes
@@ -140,13 +142,13 @@ def compute_rescaled_range(sig, win_len):
 
     return rs
 
-
+@multidim()
 def compute_detrended_fluctuation(sig, win_len, deg=1):
     """Compute detrended fluctuation of a time series at the given window length.
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series.
     win_len : int
         Window length for each detrended fluctuation fit, in samples.
@@ -155,7 +157,7 @@ def compute_detrended_fluctuation(sig, win_len, deg=1):
 
     Returns
     -------
-    det_fluc : float
+    det_fluc : float or 1d array
         Measured detrended fluctuation, as the average error fits of the window.
 
     Notes
