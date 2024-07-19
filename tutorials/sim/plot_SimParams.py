@@ -199,7 +199,7 @@ exp_updater(params1, -1)
 
 ###################################################################################################
 #
-# Updater can also be used to update parameters defined within specified components.
+# An updater can also be used to update parameters defined within specified components.
 #
 
 ###################################################################################################

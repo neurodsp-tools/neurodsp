@@ -15,7 +15,7 @@ from neurodsp.plts.time_series import plot_time_series, plot_multi_time_series
 # Simulate Multiple Signals Together
 # ----------------------------------
 #
-# The :func:`~.sim_multiple` function can be used to simulate multiple simulations
+# The :func:`~.sim_multiple` function can be used to simulate multiple signals
 # from the same set of parameters.
 #
 
@@ -40,7 +40,7 @@ plot_multi_time_series(None, sigs)
 # simulation parameters. To do so, we can use the :class:`~.SigIter` class.
 #
 # Using this class, we can define an object that stores the simulation function, the
-# set of parameters, and optional a number of simulations to create, and use this object
+# set of parameters, and optionally a number of simulations to create, and use this object
 # to yield simulated signals.
 #
 

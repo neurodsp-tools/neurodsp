@@ -84,6 +84,14 @@ def sim_multiple(sim_func, sim_params, n_sims):
     -------
     sigs : 2d array
         Simulations, as [n_sims, sig length].
+
+    Examples
+    --------
+    Simulate multiple samples of a powerlaw signal:
+
+    >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    >>> sigs = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
     sigs = np.zeros([n_sims, sim_params['n_seconds'] * sim_params['fs']])
@@ -116,6 +124,15 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
             Each key is the simulation parameter value for the set of simulations.
             Each value is the set of simulations for that value, as [n_sims, sig_length].
         If array, is all signals collected together as [n_sims, sig_length].
+
+    Examples
+    --------
+    Simulate multiple powerlaw signals across a set of different simulation parameters:
+
+    >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
+    ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
+    >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
     """
 
     sims = {}
@@ -150,6 +167,17 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_params=False):
     all_params : list of dict
         Simulation parameters for each returned time series.
         Only returned if `return_params` is True.
+
+    Examples
+    --------
+    Simulate multiple powerlaw signals using a parameter sampler:
+
+    >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
+    >>> params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}
+    >>> samplers = {create_updater('exponent') : create_sampler([-2, -1, 0])}
+    >>> param_sampler = ParamSampler(params, samplers)
+    >>> sigs = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
     """
 
     all_params = [None] * n_sims

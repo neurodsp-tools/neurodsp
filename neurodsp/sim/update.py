@@ -53,7 +53,7 @@ def create_updater(update, component=None):
 
     Parameters
     ----------
-    parameter : str
+    update : str
         Name of the parameter to update.
     component : str
         Name of the component to update the parameter within.
