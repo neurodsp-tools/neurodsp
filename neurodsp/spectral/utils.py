@@ -1,6 +1,7 @@
 """Utility function for neurodsp.spectral."""
 
 import numpy as np
+from scipy.fft import next_fast_len
 
 # Alias a function that has moved, for backwards compatibility
 from neurodsp.sim.utils import rotate_spectrum as rotate_powerlaw
@@ -127,3 +128,119 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
         times_ext = times
 
     return freqs_ext, times_ext, spg_ext
+
+
+def window_pad(sig, nperseg, noverlap, npad, fast_len,
+               nwindows=None, nsamples=None, pad_left=None, pad_right=None):
+    """Pads windows (for Welch's PSD) with zeros.
+
+    Parameters
+    ----------
+    sig : 1d or 2d array
+        Time series.
+    nperseg : int
+        Length of each segment, in number of samples, at the beginning and end of each window.
+    noverlap : int
+        Number of points to overlap between segments, applied prior to zero padding.
+    npad : int
+        Number of samples to zero pad windows per side.
+    fast_len : bool, optional
+        Moves nperseg to the fastest length to reduce computation.
+        Adjusts zero-padding to account for the new nperseg.
+        See scipy.fft.next_fast_len for details.
+    nwindows, nsamples, pad_left, pad_right : int, optional, default: None
+        Prevents redundant computation when sig is 2d.
+
+    Returns
+    -------
+    sig_windowed : 1d or 2d array
+        Windowed signal, with zeros padded at the around each window.
+    """
+
+    if sig.ndim == 2:
+        # Determine the number of samples and padding once,
+        #   to prevent redundant computation in the loop
+        nwindows = int(np.ceil(len(sig[0])/nperseg))
+        if nsamples is None or pad_left is None or pad_right is None:
+            nsamples, pad_left, pad_right = _find_pad_size(
+                nperseg, npad, fast_len
+            )
+
+        # Recursively call window_pad on each signal
+        for sind, csig in enumerate(sig):
+
+            _sig_win, _nperseg, _noverlap = window_pad(
+                # Required arguments
+                csig, nperseg, noverlap, npad, fast_len,
+                # Optional arguments to prevent redundant computation
+                nwindows, nsamples, pad_left, pad_right,
+            )
+
+            if sind == 0:
+                # Initialize windowed array
+                sig_windowed = np.zeros((len(sig), len(_sig_win)))
+
+            sig_windowed[sind] = _sig_win
+
+        # Update nperseg and noverlap
+        nperseg, noverlap = _nperseg, _noverlap
+
+    else:
+
+        # Compute the number of windows, samples, and padding.
+        #   Do not recompute if called from the 2d case
+        if nwindows is None:
+            nwindows = int(np.ceil(len(sig) / nperseg))
+
+        if nsamples is None or pad_left is None or pad_right is None:
+            # Skipped if called from the 2d case
+            nsamples, pad_left, pad_right = _find_pad_size(
+                nperseg, npad, fast_len
+            )
+
+        # Window signal
+        sig_windowed = np.zeros((nwindows, nsamples))
+
+        for wind in range(nwindows):
+
+            # Signal indices
+            start = max(0, (wind * nperseg) - noverlap)
+            end = min(len(sig), start + nperseg)
+
+            if end - start != nperseg:
+                # Stop if a full window can't be created at end of signal
+                break
+
+            # Pad
+            sig_windowed[wind] = np.pad(sig[start:end], (pad_left, pad_right))
+
+        # Removed incomplete windows and flatten
+        sig_windowed = sig_windowed[:wind].flatten()
+
+        # Update nperseg
+        nperseg += (pad_left + pad_right)
+
+        # Overlap is zero since overlapping segments was applied prior to padding each window
+        noverlap = 0
+
+    return sig_windowed, nperseg, noverlap
+
+
+def _find_pad_size(nperseg, npad, fast_len):
+    """Determine pad size and number of samples required."""
+
+    nsamples = nperseg + npad
+
+    pad_left = npad // 2
+    pad_right = npad - pad_left
+
+    if fast_len:
+        # Increase nsamples to the next fastest length and update for zero-padding size
+        nsamples = next_fast_len(nsamples)
+
+        # New padding
+        npad = nsamples - nperseg
+        pad_left = npad // 2
+        pad_right = npad - pad_left
+
+    return nsamples, pad_left, pad_right

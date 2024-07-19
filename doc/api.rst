@@ -114,6 +114,7 @@ Spectral Power
     compute_spectrum_welch
     compute_spectrum_wavelet
     compute_spectrum_medfilt
+    compute_spectrum_multitaper
 
 Spectral Measures
 ~~~~~~~~~~~~~~~~~

@@ -23,12 +23,8 @@ def test_compute_spectrum(tsig):
     freqs, spectrum = compute_spectrum(tsig, FS, method='medfilt')
     assert freqs.shape == spectrum.shape
 
-
-SPECTRUM_INPUTS = {
-    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'f_range', 'outlier_percent'],
-    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
-    'medfilt' : ['filt_len', 'f_range'],
-}
+    freqs, spectrum = compute_spectrum(tsig, FS, method='multitaper')
+    assert freqs.shape == spectrum.shape
 
 def test_spectrum_input_checks():
 
@@ -52,6 +48,10 @@ def test_compute_spectrum_2d(tsig2d):
     assert spectrum.ndim == 2
 
     freqs, spectrum = compute_spectrum(tsig2d, FS, method='medfilt')
+    assert freqs.shape[-1] == spectrum.shape[-1]
+    assert spectrum.ndim == 2
+
+    freqs, spectrum = compute_spectrum(tsig2d, FS, method='multitaper')
     assert freqs.shape[-1] == spectrum.shape[-1]
     assert spectrum.ndim == 2
 
@@ -80,6 +80,12 @@ def test_compute_spectrum_welch(tsig, tsig_sine):
     expected_answer = np.zeros_like(psd_welch[0:FREQ_SINE])
     assert np.allclose(psd_welch[0:FREQ_SINE], expected_answer, atol=EPS)
 
+    # Test zero padding
+    freqs, spectrum = compute_spectrum(
+        np.tile(tsig, (2, 1)), FS, nperseg=100, noverlap=0, nfft=1000, f_range=(1, 200)
+    )
+    assert np.all(spectrum[0] == spectrum[1])
+
 def test_compute_spectrum_wavelet(tsig):
 
     freqs, spectrum = compute_spectrum_wavelet(tsig, FS, freqs=FREQS_ARR, avg_type='mean')
@@ -104,3 +110,20 @@ def test_compute_spectrum_medfilt(tsig, tsig_sine):
     #   Therefore, it should match the estimate of psd from above
     _, psd_medfilt = compute_spectrum(tsig_sine, FS, method='medfilt', filt_len=0.1)
     assert np.allclose(psd, psd_medfilt, atol=EPS)
+
+def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
+    # Shape test: 1D input
+    freqs, spectrum = compute_spectrum_multitaper(tsig_sine, FS)
+    assert freqs.shape == spectrum.shape
+
+    # Shape test: 2D input
+    freqs_2d, spectrum_2d = compute_spectrum_multitaper(tsig2d, FS)
+    assert spectrum_2d.ndim == 2
+    assert spectrum_2d.shape[0] == tsig2d.shape[0]
+    assert spectrum_2d.shape[1] == len(freqs_2d)
+
+    # Accuracy test: peak at sine frequency
+    idx_freq_sine = np.argmin(np.abs(freqs - FREQ_SINE))
+    idx_peak = np.argmax(spectrum)
+    assert idx_freq_sine == idx_peak
+
