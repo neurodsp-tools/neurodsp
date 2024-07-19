@@ -1,4 +1,4 @@
-"""Autocorrelation analyses of time series."""
+"""Autocorrelation related analyses of time series."""
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -28,7 +28,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     timepoints : 1d array
         Time points, in samples, at which autocorrelations are computed.
     autocorrs : array
-        Autocorrelation values, for across time lags.
+        Autocorrelation values, across time lags.
 
     Examples
     --------
@@ -69,12 +69,12 @@ def compute_decay_time(timepoints, autocorrs, fs, level=0):
     -------
     result : float
         Autocorrelation decay time.
-        If decay time value found, returns nan.
+        If decay time value not found, returns nan.
 
     Notes
     -----
-    The autocorrelation decay time is computed as the time delay for the autocorrelation
-    to drop to (or below) the decay time threshold.
+    The autocorrelation decay time is computed as the time delay for the
+    autocorrelation to drop to (or below) the decay time threshold.
     """
 
     val_checks = autocorrs <= level
@@ -141,14 +141,14 @@ def exp_decay_func(timepoints, tau, scale, offset):
     Returns
     -------
     ac_fit : 1d array
-        Results of fitting the function to the autocorrelation.
+        Result of fitting the function to the autocorrelation.
     """
 
     return scale * (np.exp(-timepoints / tau) + offset)
 
 
 def double_exp_decay_func(timepoints, tau1, tau2, scale1, scale2, offset):
-    """Exponential decay fit funtion with two timescales.
+    """Exponential decay fit function with two timescales.
 
     Parameters
     ----------
@@ -164,7 +164,7 @@ def double_exp_decay_func(timepoints, tau1, tau2, scale1, scale2, offset):
     Returns
     -------
     ac_fit : 1d array
-        Results of fitting the function to the autocorrelation.
+        Result of fitting the function to the autocorrelation.
     """
 
     return scale1 * np.exp(-timepoints / tau1) + scale2 * np.exp(-timepoints / tau2) + offset
@@ -186,7 +186,7 @@ def compute_ac_fit(timepoints, *popts, fit_function='single_exp'):
     *popts
         Fit parameters.
     fit_func : {'single_exp', 'double_exp'}
-        Which fitting function to use to fit the autocorrelation results.
+        Which fit function to use to fit the autocorrelation results.
 
     Returns
     -------
