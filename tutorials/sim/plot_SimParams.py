@@ -206,8 +206,8 @@ exp_updater(params1, -1)
 
 # Define another set of parameters, with multiple components
 params2 = {'n_seconds' : 5, 'fs' : 250,
-           'components' : [{'sim_powerlaw' : {'exponent' : None}},
-                           {'sim_oscillation' : {'freq' : 10}}]}
+           'components' : {'sim_powerlaw' : {'exponent' : None},
+                           'sim_oscillation' : {'freq' : 10}}}
 
 # Create an updater for the exponent, within the components
 exp_comp_updater = create_updater('exponent', 'sim_powerlaw')
