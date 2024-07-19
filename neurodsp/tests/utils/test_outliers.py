@@ -11,13 +11,13 @@ from neurodsp.utils.outliers import *
 def test_remove_nans():
 
     # Test with an equal number of NaNs on either edge
-    arr = np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN, np.NaN])
+    arr = np.array([np.nan, np.nan, 1, 2, 3, np.nan, np.nan])
     arr_no_nans, arr_nans = remove_nans(arr)
     assert_equal(arr_no_nans, np.array([1, 2, 3]))
     assert_equal(arr_nans, np.array([True, True, False, False, False, True, True]))
 
     # Test with a different number of NaNs on either edge
-    arr = np.array([np.NaN, np.NaN, 1, 2, 3, 4, np.NaN,])
+    arr = np.array([np.nan, np.nan, 1, 2, 3, 4, np.nan,])
     arr_no_nans, arr_nans = remove_nans(arr)
     assert_equal(arr_no_nans, np.array([1, 2, 3, 4]))
     assert_equal(arr_nans, np.array([True, True, False, False, False, False, True]))
@@ -28,7 +28,7 @@ def test_restore_nans():
     arr_nans = np.array([True, True, False, False, False, True])
 
     arr_restored = restore_nans(arr_no_nans, arr_nans)
-    assert_equal(arr_restored, np.array([np.NaN, np.NaN, 1, 2, 3, np.NaN]))
+    assert_equal(arr_restored, np.array([np.nan, np.nan, 1, 2, 3, np.nan]))
 
 def test_discard_outliers():
 
