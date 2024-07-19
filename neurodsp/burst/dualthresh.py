@@ -19,7 +19,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
 
     Parameters
     ----------
-    sig : 1d array
+    sig : array
         Time series.
     fs : float
         Sampling rate, in Hz.
@@ -44,7 +44,7 @@ def detect_bursts_dual_threshold(sig, fs, dual_thresh, f_range=None,
 
     Returns
     -------
-    is_burst : 1d array
+    is_burst : array
         Boolean indication of where bursts are present in the input signal.
         True indicates that a burst was detected at that sample, otherwise False.
 

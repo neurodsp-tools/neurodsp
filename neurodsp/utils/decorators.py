@@ -41,13 +41,15 @@ def normalize(func, **kwargs):
     return decorated
 
 
-def multidim(select=[]):
+def multidim(select=[], pass_2d_input=False):
     """Decorator function to apply the wrapped function across dimensions.
 
     Parameters
     ----------
     select : list of int, optional
         List of indices of outputs to sub-select a single instance from.
+    pass_2d_input : bool, optional, default: False
+        If True, passes 2d arrays to function being wrapped.
 
     Notes
     -----
@@ -61,16 +63,14 @@ def multidim(select=[]):
 
             if sig.ndim == 1:
                 out = func(sig, *args, **kwargs)
-
-            elif sig.ndim == 2:
+            elif sig.ndim == 2 and not pass_2d_input:
 
                 # Apply func across rows of the input data
                 outs = [func(data, *args, **kwargs) for data in sig]
 
                 if isinstance(outs[0], tuple):
 
-                    # Collect together associated outputs from each,
-                    #   in case there are multiple outputs
+                    # Collect associated outputs from each, in case there are multiple outputs
                     out = [np.stack([data[n_out] for data in outs]) \
                         for n_out in range(len(outs[0]))]
 
@@ -79,6 +79,30 @@ def multidim(select=[]):
 
                 else:
                     out = np.array(outs)
+
+            else:
+                # Reshape to 2d and run func
+                shape = sig.shape
+                sig_2d = sig.reshape(-1, shape[-1])
+                if pass_2d_input:
+                    out = func(sig_2d, *args, **kwargs)
+                else:
+                    out = wrapper(sig_2d, *args, **kwargs)
+
+                # Reshape back to original shape
+                if isinstance(out, (tuple, list)):
+                    for ind in range(len(out)):
+                        if ind not in select:
+                            out[ind] = out[ind].reshape((*shape[:-1], -1))
+                            if out[ind].shape[-1] == 1:
+                                # Last dim is extraneous (e.g. func returns a scalar) so squeeze
+                                out[ind] = out[ind].reshape(list(out[ind].shape)[:-1])
+                else:
+                    out = out.reshape((*shape[:-1], -1))
+
+                    if out.shape[-1] == 1:
+                        # Last dim is extraneous (e.g. func returns a scalar) so squeeze
+                        out = out.reshape(list(out.shape)[:-1])
 
             return out
 

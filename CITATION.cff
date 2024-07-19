@@ -1,24 +1,46 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: >-
+  If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'neurodsp: neuro digital signal processing'
+authors:
+- given-names: 'Thomas'
+  family-names: 'Donoghue'
+  orcid: 'https://orcid.org/0000-0001-5911-0472'
+- given-names: 'Ryan'
+  family-names: 'Hammonds'
+  orcid: 'https://orcid.org/0000-0002-5032-3241'
+- given-names: 'Scott'
+  family-names: 'Cole'
+  orcid: 'https://orcid.org/0000-0002-6168-9951'
+- given-names: 'Richard'
+  family-names: 'Gao'
+  orcid: 'https://orcid.org/0000-0001-5916-6433'
+- given-names: 'Bradley'
+  family-names: 'Voytek'
+  orcid: 'https://orcid.org/0000-0003-1640-2525'
+repository-code: 'https://github.com/neurodsp-tools/neurodsp'
+url: 'https://neurodsp-tools.github.io/'
+license: Apache-2.0
 preferred-citation:
   type: article
   authors:
-  - family-names: "Cole"
-    given-names: "Scott"
-    orcid: "https://orcid.org/0000-0002-6168-9951"
-  - family-names: "Donoghue"
-    given-names: "Thomas"
-    orcid: "https://orcid.org/0000-0001-5911-0472"
-  - family-names: "Gao"
-    given-names: "Richard"
-    orcid: "https://orcid.org/0000-0001-5916-6433"
-  - family-names: "Voytek"
-    given-names: "Bradley"
-    orcid: "https://orcid.org/0000-0003-1640-2525"
-  doi: "10.21105/joss.01272"
-  journal: "Journal of Open Source Software"
+  - given-names: 'Scott'
+    family-names: 'Cole'
+    orcid: 'https://orcid.org/0000-0002-6168-9951'
+  - given-names: 'Thomas'
+    family-names: 'Donoghue'
+    orcid: 'https://orcid.org/0000-0001-5911-0472'
+  - given-names: 'Richard'
+    family-names: 'Gao'
+    orcid: 'https://orcid.org/0000-0001-5916-6433'
+  - given-names: 'Bradley'
+    family-names: 'Voytek'
+    orcid: 'https://orcid.org/0000-0003-1640-2525'
+  doi: '10.21105/joss.01272'
+  journal: 'Journal of Open Source Software'
   month: 4
-  title: "NeuroDSP: A package for neural digital signal processing"
+  title: 'NeuroDSP: A package for neural digital signal processing'
   issue: 36
   volume: 4
   year: 2019
