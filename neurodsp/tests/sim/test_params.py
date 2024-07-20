@@ -13,32 +13,49 @@ def test_sim_params():
     sps1 = SimParams(5, 250)
     assert sps1
 
+    # Define components to add
+    comp1 = {'sim_powerlaw' : {'exponent' : -1}}
+    comp2 = {'sim_oscillation' : {'freq' : -1}}
+
     # Test registering new simulation parameter definition
-    sps1.register('pl', {'sim_powerlaw' : {'exponent' : -1}})
-    assert sps1['pl']
+    sps1.register('pl', comp1)
+    assert comp1.items() <= sps1['pl'].items()
 
     # Test registering a group of new simulation parameter definitions
     sps2 = SimParams(5, 250)
-    sps2.register_group({
-        'pl' : {'sim_powerlaw' : {'exponent' : -1}},
-        'osc' : {'sim_oscillation' : {'freq' : -1}},
-    })
-    assert sps2['pl']
-    assert sps2['osc']
+    sps2.register_group({'pl' : comp1, 'osc' : comp2})
+    assert comp1.items() <= sps2['pl'].items()
+    assert comp2.items() <= sps2['osc'].items()
+
+def test_sim_params_to():
+    # Test the SimParams `to_` extraction functions
+
+    sps = SimParams(5, 250)
+    comp = {'sim_powerlaw' : {'exponent' : -1}}
+    sps.register('pl', comp)
+
+    iters = sps.to_iters()
+    assert iters.base == sps.base
+    assert comp.items() <= iters.params['pl'].items()
+
+    samplers = sps.to_samplers(n_samples=10)
+    assert samplers.base == sps.base
+    assert comp.items() <= samplers.params['pl'].items()
 
 def test_sim_iters():
 
+    comp_plw = {'sim_powerlaw' : {'exponent' : -1}}
+    comp_osc = {'sim_oscillation' : {'freq' : -1}}
+
     sis1 = SimIters(5, 250)
-    sis1.register('pl', {'sim_powerlaw' : {'exponent' : -1}})
+    sis1.register('pl', comp_plw)
     sis1.register_iter('pl_exp', 'pl', 'exponent', [-2, -1, 0])
     assert sis1['pl_exp']
+    assert sis1['pl_exp'].values == [-2, -1, 0]
 
     # Test registering a group of new simulation iterator definitions
     sis2 = SimIters(5, 250)
-    sis2.register_group({
-        'pl' : {'sim_powerlaw' : {'exponent' : -1}},
-        'osc' : {'sim_oscillation' : {'freq' : -1}},
-    })
+    sis2.register_group({'pl' : comp_plw, 'osc' : comp_osc})
     sis2.register_group_iters([
         {'name' : 'pl_exp', 'label' : 'pl', 'update' : 'exponent', 'values' : [-2, -1 ,0]},
         {'name' : 'osc_freq', 'label' : 'osc', 'update' : 'freq', 'values' : [10, 20, 30]},
@@ -74,7 +91,6 @@ def test_sim_samplers():
     ])
     assert sss2['samp_exp'] is not None
     assert sss2['samp_freq'] is not None
-
 
 def test_sim_samplers_params(tsim_params):
 

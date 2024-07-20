@@ -198,6 +198,42 @@ class SimParams():
             self.update_base(None, None)
 
 
+    def to_iters(self):
+        """Convert to a SimIters object.
+
+        Returns
+        -------
+        iters : SimIters
+            A converted object, initialized with the current base parameters.
+        """
+
+        iters = SimIters(**self.base)
+        iters.register_group(self.params)
+
+        return iters
+
+
+    def to_samplers(self, n_samples=None):
+        """Convert to a SimSamplers object.
+
+        Parameters
+        ----------
+        n_samples : int, optional
+            The number of parameter iterations to set as max.
+            If None, samplers are created as infinite generators.
+
+        Returns
+        -------
+        samplers : SimSamplers
+            A converted object, initialized with the current base parameters.
+        """
+
+        samplers = SimSamplers(**self.base, n_samples=n_samples)
+        samplers.register_group(self.params)
+
+        return samplers
+
+
     def _make_params(self, parameters=None, **kwargs):
         """Sub-function for `make_params`."""
 
