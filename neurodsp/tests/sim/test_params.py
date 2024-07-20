@@ -27,20 +27,18 @@ def test_sim_params():
     assert comp1.items() <= sps2['pl'].items()
     assert comp2.items() <= sps2['osc'].items()
 
-def test_sim_params_to():
+def test_sim_params_to(tsim_params):
     # Test the SimParams `to_` extraction functions
 
-    sps = SimParams(5, 250)
-    comp = {'sim_powerlaw' : {'exponent' : -1}}
-    sps.register('pl', comp)
+    iters = tsim_params.to_iters()
+    assert iters.base == tsim_params.base
+    assert tsim_params['pl'] == iters.params['pl']
+    assert tsim_params['osc'] == iters.params['osc']
 
-    iters = sps.to_iters()
-    assert iters.base == sps.base
-    assert comp.items() <= iters.params['pl'].items()
-
-    samplers = sps.to_samplers(n_samples=10)
-    assert samplers.base == sps.base
-    assert comp.items() <= samplers.params['pl'].items()
+    samplers = tsim_params.to_samplers(n_samples=10)
+    assert samplers.base == tsim_params.base
+    assert tsim_params['pl'] == samplers.params['pl']
+    assert tsim_params['osc'] == samplers.params['osc']
 
 def test_sim_iters():
 
@@ -63,13 +61,6 @@ def test_sim_iters():
     assert sis2['pl_exp']
     assert sis2['osc_freq']
 
-def test_sim_iters_params(tsim_params):
-
-    sim_iters = SimIters(sim_params=tsim_params)
-    assert sim_iters
-    assert sim_iters.base == tsim_params.base
-    assert sim_iters.params == tsim_params.params
-
 def test_sim_samplers():
 
     sss1 = SimSamplers(5, 250)
@@ -91,10 +82,3 @@ def test_sim_samplers():
     ])
     assert sss2['samp_exp'] is not None
     assert sss2['samp_freq'] is not None
-
-def test_sim_samplers_params(tsim_params):
-
-    sim_samplers = SimSamplers(sim_params=tsim_params)
-    assert sim_samplers
-    assert sim_samplers.base == tsim_params.base
-    assert sim_samplers.params == tsim_params.params

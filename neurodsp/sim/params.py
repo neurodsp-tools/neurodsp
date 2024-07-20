@@ -291,20 +291,12 @@ class SimIters(SimParams):
         Simulation time, in seconds.
     fs : float
         Sampling rate of simulated signal, in Hz.
-    sim_params : SimParams
-        Predefined SimParams object.
-        If passed in, overides use of `n_seconds`, and `fs` parameters.
-        Base parameters and any registered parameter definitions are added to current object.
     """
 
-    def __init__(self, n_seconds=None, fs=None, sim_params=None):
+    def __init__(self, n_seconds=None, fs=None):
         """Initialize SimIters objects."""
 
-        if sim_params:
-            SimParams.__init__(self, **sim_params.base)
-            self.register_group(sim_params.params)
-        else:
-            SimParams.__init__(self, n_seconds, fs)
+        SimParams.__init__(self, n_seconds, fs)
 
         self._iters = {}
 
@@ -471,20 +463,12 @@ class SimSamplers(SimParams):
     n_samples : int, optional
         The number of parameter iterations to set as max.
         If None, samplers are created as infinite generators.
-    sim_params : SimParams
-        Predefined SimParams object.
-        If passed in, overides use of `n_seconds`, and `fs` parameters.
-        Base parameters and any registered parameter definitions are added to current object.
     """
 
-    def __init__(self, n_seconds=None, fs=None, n_samples=None, sim_params=None):
+    def __init__(self, n_seconds=None, fs=None, n_samples=None):
         """Initialize SimSamplers objects."""
 
-        if sim_params:
-            SimParams.__init__(self, **sim_params.base)
-            self.register_group(sim_params.params)
-        else:
-            SimParams.__init__(self, n_seconds, fs)
+        SimParams.__init__(self, n_seconds, fs)
 
         self.n_samples = n_samples
         self._samplers = {}
