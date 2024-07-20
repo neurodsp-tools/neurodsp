@@ -3,7 +3,6 @@ Modulating Signals
 ==================
 
 Apply amplitude modulation to simulated signals.
-
 """
 
 ###################################################################################################

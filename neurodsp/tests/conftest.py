@@ -8,6 +8,7 @@ import numpy as np
 
 from neurodsp.sim import sim_oscillation, sim_powerlaw, sim_combined
 from neurodsp.spectral import compute_spectrum
+from neurodsp.sim.params import SimParams
 from neurodsp.utils.sim import set_random_seed
 from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
@@ -54,6 +55,17 @@ def tspectrum(tsig_comb):
 
     freqs, powers = compute_spectrum(tsig_comb, FS)
     yield {'freqs' : freqs, 'powers' : powers}
+
+@pytest.fixture(scope='session')
+def tsim_params():
+
+    sim_params = SimParams(N_SECONDS, FS)
+    sim_params.register_group({
+        'pl' : {'sim_powerlaw' : {'exponent' : -1}},
+        'osc' : {'sim_oscillation' : {'freq' : -1}},
+    })
+
+    yield sim_params
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():

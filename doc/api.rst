@@ -311,7 +311,51 @@ Combined Signals
 
     sim_combined
     sim_peak_oscillation
+    sim_combined_peak
     sim_modulated_signal
+
+Multiple Signals
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: neurodsp.sim.multi
+.. autosummary::
+    :toctree: generated/
+
+    sim_multiple
+    sim_across_values
+    sim_from_sampler
+
+Simulation Parameters
+~~~~~~~~~~~~~~~~~~~~~
+
+The following objects can be used to manage simulation parameters:
+
+.. currentmodule:: neurodsp.sim.params
+.. autosummary::
+    :toctree: generated/
+
+    SimParams
+    SimIters
+    SimSamplers
+
+The following objects sample and iterate across parameters & simulations:
+
+.. currentmodule:: neurodsp.sim.update
+.. autosummary::
+    :toctree: generated/
+
+    ParamSampler
+    ParamIter
+    SigIter
+
+The following functions can be used to update simulation parameters:
+
+.. currentmodule:: neurodsp.sim.update
+.. autosummary::
+    :toctree: generated/
+
+    create_updater
+    create_sampler
 
 Utilities
 ~~~~~~~~~
