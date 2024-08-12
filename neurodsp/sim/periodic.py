@@ -149,28 +149,31 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     if isinstance(burst_def, str):
         check_param_options(burst_def, 'burst_def', ['prob', 'durations'])
 
-    # Consistency fix: catch old parameters, and remap into burst_params
-    #   This preserves the prior default values, and makes the old API work the same
-    burst_params = {} if not burst_params else burst_params
-    for burst_param in ['enter_burst', 'leave_burst']:
-        temp = cycle_params.pop(burst_param, 0.2)
-        if burst_def == 'prob' and burst_param not in burst_params:
-            burst_params[burst_param] = temp
-
     # Simulate a normalized cycle to use for bursts
     n_seconds_cycle = compute_cycle_nseconds(freq, fs)
     osc_cycle = sim_normalized_cycle(n_seconds_cycle, fs, cycle, phase=phase, **cycle_params)
 
-    # Calculate the number of cycles needed to tile the full signal
-    n_cycles = int(np.floor(n_seconds * freq))
+    if not isinstance(burst_def, np.ndarray):
 
-    # Determine which periods will be oscillating
-    if isinstance(burst_def, np.ndarray):
+        # Calculate the number of cycles needed to tile the full signal
+        n_cycles = int(np.floor(n_seconds * freq))
+
+        # Consistency fix: catch old parameters, and remap into burst_params
+        #   This preserves the prior default values, and makes the old API work the same
+        burst_params = {} if not burst_params else burst_params
+        for burst_param in ['enter_burst', 'leave_burst']:
+            temp = cycle_params.pop(burst_param, 0.2)
+            if burst_def == 'prob' and burst_param not in burst_params:
+                burst_params[burst_param] = temp
+
+        if burst_def == 'prob':
+            is_oscillating = make_is_osc_prob(n_cycles, **burst_params)
+        elif burst_def == 'durations':
+            is_oscillating = make_is_osc_durations(n_cycles, **burst_params)
+
+    else:
+        # Determine which periods will be oscillating
         is_oscillating = burst_def
-    elif burst_def == 'prob':
-        is_oscillating = make_is_osc_prob(n_cycles, **burst_params)
-    elif burst_def == 'durations':
-        is_oscillating = make_is_osc_durations(n_cycles, **burst_params)
 
     sig = make_bursts(n_seconds, fs, is_oscillating, osc_cycle)
 
