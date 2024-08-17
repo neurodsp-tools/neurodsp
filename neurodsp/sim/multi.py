@@ -113,7 +113,7 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
     ----------
     sim_func : callable
         Function to create the simulated time series.
-    sim_params : iterable or list of dict
+    sim_params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
     n_sims : int
         Number of simulations to create per parameter definition.
@@ -132,9 +132,16 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
 
     Examples
     --------
-    Simulate multiple powerlaw signals across a set of different simulation parameters:
+    Simulate multiple powerlaw signals using a ParamIter object:
 
     >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> from neurodsp.sim.params import ParamIter
+    >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
+    >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
+    >>> sigs = sim_across_values(sim_powerlaw, param_iter, n_sims=2)
+
+    Simulate multiple powerlaw signals from manually defined set of simulation parameters:
+
     >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
     ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
     >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
