@@ -234,6 +234,12 @@ class SimParams():
         return samplers
 
 
+    def copy(self):
+        """Return a copy of the current object."""
+
+        return deepcopy(self)
+
+
     def _make_params(self, parameters=None, **kwargs):
         """Sub-function for `make_params`."""
 
