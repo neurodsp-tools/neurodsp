@@ -246,7 +246,7 @@ def param_sample_yielder(sim_params, samplers, n_samples=None):
         Simulation parameter definition.
     """
 
-    for ind in counter(n_samples):
+    for _ in counter(n_samples):
         out_params = deepcopy(sim_params)
         for updater, sampler in samplers.items():
             updater(out_params, next(sampler))

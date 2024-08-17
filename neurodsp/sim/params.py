@@ -253,7 +253,7 @@ class SimParams():
             params = {**parameters, **kwargs}
 
         # If any base parameters were passed in, clear them
-        for bparam in self.base.keys():
+        for bparam in self.base:
             params.pop(bparam, None)
 
         return params
