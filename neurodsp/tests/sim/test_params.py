@@ -27,8 +27,53 @@ def test_sim_params():
     assert comp1.items() <= sps2['pl'].items()
     assert comp2.items() <= sps2['osc'].items()
 
+def test_sim_params_props(tsim_params):
+
+    # Test properties
+    assert tsim_params.labels
+    assert tsim_params.params
+
+    # Test copy and clear
+    ntsim = tsim_params.copy()
+    assert ntsim != tsim_params
+    ntsim.clear()
+
+def test_sim_params_make_params(tsim_params):
+    # Test the SimParams `make_` methods
+
+    # Operate on a copy
+    ntsim = tsim_params.copy()
+    ntsim.clear()
+
+    out1 = ntsim.make_params({'exponent' : -1})
+    assert isinstance(out1, dict)
+    assert out1['n_seconds'] == ntsim.n_seconds
+    assert out1['exponent'] == -1
+
+    out2 = ntsim.make_params({'exponent' : -1}, f_range=(1, 50))
+    assert out2['f_range'] == (1, 50)
+
+    comps = [{'sim_powerlaw' : {'exponent' : -1}, 'sim_oscillation' : {'freq' : 10}}]
+    out3 = ntsim.make_params(comps)
+    assert out3['components'] == comps[0]
+
+def test_sim_params_upd(tsim_params):
+    # Test the SimParams `update_` methods
+
+    # Operate on a copy
+    ntsim = tsim_params.copy()
+
+    # Update base
+    ntsim.update_base(123, 123)
+    assert ntsim.n_seconds == 123
+    assert ntsim.fs == 123
+
+    # Update param
+    ntsim.update_param('pl', 'sim_powerlaw', {'exponent' : -3})
+    assert ntsim.params['pl']['sim_powerlaw']['exponent'] == -3
+
 def test_sim_params_to(tsim_params):
-    # Test the SimParams `to_` extraction functions
+    # Test the SimParams `to_` extraction methods
 
     iters = tsim_params.to_iters()
     assert iters.base == tsim_params.base
@@ -61,11 +106,28 @@ def test_sim_iters():
     assert sis2['pl_exp']
     assert sis2['osc_freq']
 
+def test_sim_iters_props(tsim_iters):
+
+    # Test properties
+    assert tsim_iters.labels
+    assert tsim_iters.iters
+
+    # Test copy and clear
+    ntiter = tsim_iters.copy()
+    assert ntiter != tsim_iters
+    ntiter.clear()
+
+def test_sim_iters_upd(tsim_iters):
+
+    tsim_iters.update_iter('pl_exp', 'values', [-3, -2, -1])
+    assert tsim_iters.iters['pl_exp'].values == [-3, -2, -1]
+
 def test_sim_samplers():
 
     sss1 = SimSamplers(5, 250)
     sss1.register('pl', {'sim_powerlaw' : {'exponent' : -1}})
-    sss1.register_sampler('samp_exp', 'pl', {create_updater('exponent') : create_sampler([-2, -1, 0])})
+    sss1.register_sampler(\
+        'samp_exp', 'pl', {create_updater('exponent') : create_sampler([-2, -1, 0])})
     assert sss1['samp_exp'] is not None
 
     # Test registering a group of new simulation sampler definitions
@@ -82,3 +144,19 @@ def test_sim_samplers():
     ])
     assert sss2['samp_exp'] is not None
     assert sss2['samp_freq'] is not None
+
+def test_sim_samplers_props(tsim_samplers, tsim_params):
+
+    # Test properties
+    assert tsim_samplers.labels
+    assert tsim_samplers.samplers
+
+    # Can't directly copy object with generator - so regenerate
+    ntsim = tsim_params.copy()
+    ntsamp = ntsim.to_samplers()
+    ntsamp.clear()
+
+def test_sim_samplers_upd(tsim_samplers):
+
+    tsim_samplers.update_sampler('samp_exp', 'n_samples', 100)
+    assert tsim_samplers['samp_exp'].n_samples == 100
