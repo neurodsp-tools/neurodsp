@@ -62,6 +62,14 @@ def create_updater(update, component=None):
     -------
     callable
         Updater function which can update specified parameter in simulation parameters.
+
+    Examples
+    --------
+    Create an updater callable for a specified parameter:
+    >>> upd = create_updater('exponent')
+
+    Create an updater callable for a specified parameter within a specified component:
+    >>> upd = create_updater('exponent', 'sim_powerlaw')
     """
 
     if component is not None:
@@ -175,7 +183,7 @@ class ParamIter():
 ## PARAM SAMPLERS
 
 def create_sampler(values, probs=None, n_samples=None):
-    """Create a generator to sample from a parameter range.
+    """Create a generator to sample from a set of parameters.
 
     Parameters
     ----------
@@ -192,6 +200,16 @@ def create_sampler(values, probs=None, n_samples=None):
     ------
     generator
         Generator to sample parameter values from.
+
+    Examples
+    --------
+    Create a generator to sample parameter values from, for a specified number of samples:
+
+    >>> sampler = create_sampler([-2, -1, 0], n_samples=5)
+
+    Create a generator to sampler parameter values from, with specified probability:
+
+    >>> sampler = create_sampler([9, 10, 11], probs=[0.25, 0.5, 0.25])
     """
 
     # Check that length of values is same as length of probs, if provided
