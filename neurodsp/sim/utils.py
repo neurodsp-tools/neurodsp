@@ -163,3 +163,23 @@ def modulate_signal(sig, modulation, fs=None, mod_params=None):
     msig = sig * modulation
 
     return msig
+
+## Utilities for helping with parameter management
+
+BASE_PARAMS = ['n_seconds', 'fs']
+
+def drop_base_params(params):
+    """Drop base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict
+        Parameter definition.
+
+    Returns
+    -------
+    params : dict
+        Parameter definition, exluding base parameters.
+    """
+
+    return {key : value for key, value in params.items() if key not in BASE_PARAMS}
