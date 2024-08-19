@@ -160,3 +160,11 @@ def test_sim_samplers_upd(tsim_samplers):
 
     tsim_samplers.update_sampler('samp_exp', 'n_samples', 100)
     assert tsim_samplers['samp_exp'].n_samples == 100
+
+def test_drop_base_params():
+
+    params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    out1 = drop_base_params(params)
+    for bparam in BASE_PARAMS:
+        assert bparam not in out1
+    assert 'exponent' in params

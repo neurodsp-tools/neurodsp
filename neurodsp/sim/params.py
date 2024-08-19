@@ -11,6 +11,8 @@ from neurodsp.sim.update import ParamIter, ParamSampler
 ###################################################################################################
 ###################################################################################################
 
+BASE_PARAMS = ['n_seconds', 'fs']
+
 class SimParams():
     """Object for managing simulation parameters.
 
@@ -613,3 +615,22 @@ class SimSamplers(SimParams):
 
         if clear_params:
             super().clear(clear_base=clear_base)
+
+
+## Utilities for helping with parameter management
+
+def drop_base_params(params):
+    """Drop base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict
+        Parameter definition.
+
+    Returns
+    -------
+    params : dict
+        Parameter definition, exluding base parameters.
+    """
+
+    return {key : value for key, value in params.items() if key not in BASE_PARAMS}
