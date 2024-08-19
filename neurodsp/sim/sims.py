@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.sim.params import drop_base_params
+from neurodsp.sim.utils import drop_base_params
 
 ###################################################################################################
 ###################################################################################################

@@ -5,6 +5,7 @@ from collections.abc import Sized
 import numpy as np
 
 from neurodsp.utils.core import counter
+from neurodsp.sim.sims import Simulations
 
 ###################################################################################################
 ###################################################################################################
@@ -73,7 +74,7 @@ def sig_sampler(sim_func, sim_params, return_sim_params=False, n_sims=None):
             break
 
 
-def sim_multiple(sim_func, sim_params, n_sims):
+def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     """Simulate multiple samples of a specified simulation.
 
     Parameters
@@ -84,11 +85,16 @@ def sim_multiple(sim_func, sim_params, n_sims):
         The parameters for the simulated signal, passed into `sim_func`.
     n_sims : int
         Number of simulations to create.
+    return_type : {'object', 'array'}
+        Specifies the return type of the simulations.
+        If 'object', returns simulations and metadata in a 'Simulations' object.
+        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sigs : 2d array
-        Simulations, as [n_sims, sig length].
+    sigs : Simulations or 2d array
+        Simulations, return type depends on `return_type` argument.
+        Simulated time series are organized as [n_sims, sig length].
 
     Examples
     --------
@@ -103,7 +109,10 @@ def sim_multiple(sim_func, sim_params, n_sims):
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
         sigs[ind, :] = sig
 
-    return sigs
+    if return_type == 'object':
+        return Simulations(sigs, sim_func, sim_params)
+    else:
+        return sigs
 
 
 def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
@@ -151,7 +160,7 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
     for ind, cur_sim_params in enumerate(sim_params):
         label = sim_params.values[ind] if hasattr(sim_params, 'values') else ind
         label = label[-1] if isinstance(label, list) else label
-        sims[label] = sim_multiple(sim_func, cur_sim_params, n_sims)
+        sims[label] = sim_multiple(sim_func, cur_sim_params, n_sims, 'array')
     if output == 'array':
         sims = np.squeeze(np.array(list(sims.values())))
 

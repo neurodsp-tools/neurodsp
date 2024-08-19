@@ -3,6 +3,7 @@
 import numpy as np
 
 from neurodsp.sim.aperiodic import sim_powerlaw
+from neurodsp.sim.sims import Simulations
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
 
 from neurodsp.sim.multi import *
@@ -32,7 +33,13 @@ def test_sig_sampler():
 def test_sim_multiple():
 
     params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
-    sigs = sim_multiple(sim_powerlaw, params, 2)
+
+    sims = sim_multiple(sim_powerlaw, params, 2, 'object')
+    assert isinstance(sims, Simulations)
+    assert sims.signals.shape[0] == 2
+    assert sims.params == params
+
+    sigs = sim_multiple(sim_powerlaw, params, 2, 'array')
     assert sigs.shape[0] == 2
 
 def test_sim_across_values():
