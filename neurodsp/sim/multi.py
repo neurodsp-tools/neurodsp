@@ -5,7 +5,7 @@ from collections.abc import Sized
 import numpy as np
 
 from neurodsp.utils.core import counter
-from neurodsp.sim.sims import Simulations
+from neurodsp.sim.sims import Simulations, SampledSimulations
 
 ###################################################################################################
 ###################################################################################################
@@ -167,7 +167,7 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
     return sims
 
 
-def sim_from_sampler(sim_func, sim_sampler, n_sims, return_params=False):
+def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object', return_params=False):
     """Simulate a set of signals from a parameter sampler.
 
     Parameters
@@ -178,8 +178,11 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_params=False):
         Parameter definition to sample from.
     n_sims : int
         Number of simulations to create per parameter definition.
-    return_params : bool, default: False
-        Whether to collect and return the parameters of all the generated simulations.
+
+    return_type : {'object', 'array'}
+        XX
+    #return_params : bool, default: False
+    #    Whether to collect and return the parameters of all the generated simulations.
 
     Returns
     -------
@@ -205,11 +208,9 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_params=False):
     sigs = np.zeros([n_sims, sim_sampler.params['n_seconds'] * sim_sampler.params['fs']])
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
         sigs[ind, :] = sig
+        all_params[ind] = params
 
-        if return_params:
-            all_params[ind] = params
-
-    if return_params:
-        return sigs, all_params
+    if return_type == 'object':
+        return SampledSimulations(sigs, sim_func, all_params)
     else:
         return sigs
