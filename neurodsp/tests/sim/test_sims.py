@@ -24,6 +24,8 @@ def test_simulations():
     sims_data = Simulations(sigs)
     assert sims_data
     assert len(sims_data) == n_sigs
+    assert sims_data.n_seconds is None
+    assert sims_data.fs is None
 
     # Test initialization with metadata
     sims_full = Simulations(sigs, 'sim_func', params)
@@ -48,6 +50,8 @@ def test_sampled_simulations():
     sims_data = SampledSimulations(sigs)
     assert sims_data
     assert len(sims_data) == n_sigs
+    assert sims_data.n_seconds is None
+    assert sims_data.fs is None
 
     # Test initialization with metadata
     sims_full = SampledSimulations(sigs, 'sim_func', params)

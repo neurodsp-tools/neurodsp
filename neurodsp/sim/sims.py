@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.sim.utils import drop_base_params
+from neurodsp.sim.utils import get_base_params, drop_base_params
 
 ###################################################################################################
 ###################################################################################################
@@ -14,27 +14,25 @@ class Simulations():
     ----------
     signals : 1d or 2nd array
         The simulated signals, organized as [n_sims, sig_length].
-    func : str
+    sim_func : str
         The simulation function that was used to create the simulations.
     params : dict
-        The simulation parameters that was used to create the simulations.
+        The simulation parameters that were used to create the simulations.
 
     Notes
     -----
     This object stores a set of simulations generated from a shared parameter definition.
     """
 
-    def __init__(self, signals=None, func=None, parameters=None):
+    def __init__(self, signals=None, sim_func=None, params=None):
         """Initialize Simulations object."""
 
         self.signals = np.atleast_2d(signals) if signals is not None else np.array([])
-        self.func = func
+        self.sim_func = sim_func
 
-        self.n_seconds = None
-        self.fs = None
-        self._params = {}
-        if parameters is not None:
-            self.add_params(parameters)
+        self._base_params = None
+        self._params = None
+        self.add_params(params)
 
     def __iter__(self):
         """Define iteration as stepping across individual simulated signals."""
@@ -53,23 +51,81 @@ class Simulations():
         return len(self.signals)
 
     @property
+    def n_seconds(self):
+        return self._base_params['n_seconds'] if self.has_params else None
+
+    @property
+    def fs(self):
+        return self._base_params['fs'] if self.has_params else None
+
+    @property
     def params(self):
         """Define the full set of simulation parameters (base + additional parameters)."""
 
         return {**self._base_params, **self._params}
 
     @property
-    def _base_params(self):
-        """Define the base parameters."""
+    def has_params(self):
+        """Indicator for if the object has parameters."""
 
-        return {'n_seconds' : self.n_seconds, 'fs' : self.fs}
+        return bool(self._params)
 
-    def add_params(self, parameters):
-        """Add parameter definition to object."""
+    @property
+    def has_signals(self):
+        """Indicator for if the object has signals."""
 
-        self.n_seconds = parameters['n_seconds']
-        self.fs = parameters['fs']
-        self._params = drop_base_params(parameters)
+        return bool(len(self))
+
+    def add_params(self, params):
+        """Add parameter definition to object.
+
+        Parameters
+        ----------
+        params : dict, optional
+            The simulation parameter definition(s).
+        """
+
+        if params:
+            self._base_params = get_base_params(params)
+            self._params = drop_base_params(params)
+
+
+## TEMP
+
+
+from collections.abc import Iterable
+
+def listify(param, index=False):
+    """Check and embed a parameter into a list, if is not already in a list.
+
+    Parameters
+    ----------
+    param : object
+        Parameter to check and embed in a list, if it is not already.
+    index : bool, optional
+        If True, indexes into `param` to check the 0th element, instead of `param` itself.
+        This can be used for checking and embedding a list into a list.
+
+    Returns
+    -------
+    list
+        Parameter embedded in a list.
+    """
+
+    check = param[0] if index else param
+
+    # Embed all non-iterable parameters into a list
+    #   Note: deal with str as a special case of iterable that we want to embed
+    if not isinstance(check, Iterable) or isinstance(check, str):
+        out = [param]
+    # Deal with special case of multi dimensional numpy arrays - want to embed without flattening
+    elif isinstance(check, np.ndarray) and np.ndim(check) > 1:
+        out = [param]
+    # If is iterable (e.g. tuple or numpy array), typecast to list
+    else:
+        out = list(param)
+
+    return out
 
 
 class SampledSimulations(Simulations):
@@ -79,9 +135,9 @@ class SampledSimulations(Simulations):
     ----------
     signals : 2nd array
         The simulated signals, organized as [n_sims, sig_length].
-    func : str
+    sim_func : str
         The simulation function that was used to create the simulations.
-    params : list dict
+    params : list of dict
         The simulation parameters for each of the simulations.
 
     Notes
@@ -89,27 +145,60 @@ class SampledSimulations(Simulations):
     This object stores a set of simulations with different parameter definitions per signal.
     """
 
-    def __init__(self, signals=None, func=None, parameters=None):
-        """Initialize VSims object."""
+    def __init__(self, signals=None, sim_func=None, params=None):
+        """Initialize SampledSimulations object."""
 
-        self._params = []
-        Simulations.__init__(self, signals, func, parameters)
+        Simulations.__init__(self, signals, sim_func, params)
 
-    def add_params(self, parameters):
-        """Add parameter definitions to object."""
+    @property
+    def n_seconds(self):
+        """Alias n_seconds as a property."""
 
-        self.n_seconds = parameters[0]['n_seconds']
-        self.fs = parameters[0]['fs']
+        return self.params[0].n_seconds if self.has_params else None
 
-        self._params = []
-        for cparams in parameters:
-            self._params.append(drop_base_params(cparams))
+    @property
+    def fs(self):
+        """Alias fs as a property."""
+
+        return self.params[0].fs if self.has_params else None
 
     @property
     def params(self):
         """Define simulation parameters (base + additional parameters) for each simulation."""
 
-        return [{**self._base_params, **self._params[ind]} for ind in range(len(self))]
+        if self.has_params:
+            params = [{**self._base_params, **self._params[ind]} for ind in range(len(self))]
+        else:
+            params = None
+
+        return params
+
+    def add_params(self, params):
+        """Add parameter definition(s) to object.
+
+        Parameters
+        ----------
+        params : dict or list of dict, optional
+            The simulation parameter definition(s).
+        """
+
+        if params:
+
+            params = listify(params)
+            base_params = get_base_params(params[0])
+            cparams = [drop_base_params(el) for el in params]
+
+            if not self.has_params:
+                self._base_params = base_params
+                self._params = cparams
+
+            else:
+                assert get_base_params(params[0]) == self._base_params, \
+                    'Base parameters must match the existing simulations in the object.'
+                self._params.extend(cparams)
+
+        else:
+            assert not self._params, 'Must add parameters if object already has them.'
 
     def add_signal(self, sig, params=None):
         """Add a signal to the current object.
@@ -125,7 +214,4 @@ class SampledSimulations(Simulations):
         """
 
         self.signals = np.vstack([self.signals, sig])
-        if parameters:
-            self._params.append(drop_base(parameters))
-        else:
-            assert len(self._params) == 0, 'Must add parameters if object already has them.'
+        self.add_params(params)
