@@ -1,6 +1,7 @@
 """Core / internal utility functions."""
 
 from itertools import count
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -50,3 +51,31 @@ def counter(value):
     """
 
     return range(value) if value else count()
+
+
+def listify(arg):
+    """Check and embed an argument into a list, if is not already in a list.
+
+    Parameters
+    ----------
+    arg : object
+        Argument to check and embed in a list, if it is not already.
+
+    Returns
+    -------
+    list
+        Argument embedded in a list.
+    """
+
+    # Embed all non-iterable parameters into a list
+    #   Note: deal with str as a special case of iterable that we want to embed
+    if not isinstance(arg, Iterable) or isinstance(arg, str):
+        out = [arg]
+    # Deal with special case of multi dimensional numpy arrays - want to embed without flattening
+    elif isinstance(arg, np.ndarray) and np.ndim(arg) > 1:
+        out = [arg]
+    # If is iterable (e.g. tuple or numpy array), typecast to list
+    else:
+        out = list(arg)
+
+    return out

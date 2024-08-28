@@ -2,6 +2,7 @@
 
 import numpy as np
 
+from neurodsp.utils.core import listify
 from neurodsp.sim.utils import get_base_params, drop_base_params
 
 ###################################################################################################
@@ -88,44 +89,6 @@ class Simulations():
         if params:
             self._base_params = get_base_params(params)
             self._params = drop_base_params(params)
-
-
-## TEMP
-
-
-from collections.abc import Iterable
-
-def listify(param, index=False):
-    """Check and embed a parameter into a list, if is not already in a list.
-
-    Parameters
-    ----------
-    param : object
-        Parameter to check and embed in a list, if it is not already.
-    index : bool, optional
-        If True, indexes into `param` to check the 0th element, instead of `param` itself.
-        This can be used for checking and embedding a list into a list.
-
-    Returns
-    -------
-    list
-        Parameter embedded in a list.
-    """
-
-    check = param[0] if index else param
-
-    # Embed all non-iterable parameters into a list
-    #   Note: deal with str as a special case of iterable that we want to embed
-    if not isinstance(check, Iterable) or isinstance(check, str):
-        out = [param]
-    # Deal with special case of multi dimensional numpy arrays - want to embed without flattening
-    elif isinstance(check, np.ndarray) and np.ndim(check) > 1:
-        out = [param]
-    # If is iterable (e.g. tuple or numpy array), typecast to list
-    else:
-        out = list(param)
-
-    return out
 
 
 class SampledSimulations(Simulations):

@@ -34,3 +34,14 @@ def test_counter():
         if ind == 5:
             break
     assert ind == 5
+
+def test_listify():
+
+    a1 = 1
+    out1 = listify(a1)
+    assert isinstance(out1, list)
+
+    a2 = [1]
+    out2 = listify(a2)
+    assert isinstance(out2, list)
+    assert not isinstance(out2[0], list)
