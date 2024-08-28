@@ -110,7 +110,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
         sigs[ind, :] = sig
 
     if return_type == 'object':
-        return Simulations(sigs, sim_func, sim_params)
+        return Simulations(sigs, sim_params, sim_func)
     else:
         return sigs
 
@@ -211,6 +211,6 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object', return
         all_params[ind] = params
 
     if return_type == 'object':
-        return SampledSimulations(sigs, sim_func, all_params)
+        return SampledSimulations(sigs, all_params, sim_func)
     else:
         return sigs

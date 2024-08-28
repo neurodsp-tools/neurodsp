@@ -37,11 +37,16 @@ def test_counter():
 
 def test_listify():
 
-    a1 = 1
-    out1 = listify(a1)
+    arg1 = 1
+    out1 = listify(arg1)
     assert isinstance(out1, list)
 
-    a2 = [1]
-    out2 = listify(a2)
+    arg2 = [1]
+    out2 = listify(arg2)
     assert isinstance(out2, list)
     assert not isinstance(out2[0], list)
+
+    arg3 = {'a' : 1, 'b' : 2}
+    out3 = listify(arg3)
+    assert isinstance(out3, list)
+    assert out3[0] == arg3

@@ -69,7 +69,7 @@ def listify(arg):
 
     # Embed all non-iterable parameters into a list
     #   Note: deal with str as a special case of iterable that we want to embed
-    if not isinstance(arg, Iterable) or isinstance(arg, str):
+    if not isinstance(arg, Iterable) or isinstance(arg, str) or isinstance(arg, dict):
         out = [arg]
     # Deal with special case of multi dimensional numpy arrays - want to embed without flattening
     elif isinstance(arg, np.ndarray) and np.ndim(arg) > 1:

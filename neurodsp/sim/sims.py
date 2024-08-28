@@ -13,27 +13,26 @@ class Simulations():
 
     Parameters
     ----------
-    signals : 1d or 2nd array
+    signals : 1d or 2nd array, optional
         The simulated signals, organized as [n_sims, sig_length].
-    sim_func : str
-        The simulation function that was used to create the simulations.
-    params : dict
+    params : dict, optional
         The simulation parameters that were used to create the simulations.
+    sim_func : str, optional
+        The simulation function that was used to create the simulations.
 
     Notes
     -----
     This object stores a set of simulations generated from a shared parameter definition.
     """
 
-    def __init__(self, signals=None, sim_func=None, params=None):
+    def __init__(self, signals=None, params=None, sim_func=None):
         """Initialize Simulations object."""
 
         self.signals = np.atleast_2d(signals) if signals is not None else np.array([])
-        self.sim_func = sim_func
-
         self._base_params = None
         self._params = None
         self.add_params(params)
+        self.sim_func = sim_func
 
     def __iter__(self):
         """Define iteration as stepping across individual simulated signals."""
@@ -53,10 +52,14 @@ class Simulations():
 
     @property
     def n_seconds(self):
+        """Alias n_seconds as a property attribute from base parameters."""
+
         return self._base_params['n_seconds'] if self.has_params else None
 
     @property
     def fs(self):
+        """Alias fs as a property attribute from base parameters."""
+
         return self._base_params['fs'] if self.has_params else None
 
     @property
@@ -96,22 +99,22 @@ class SampledSimulations(Simulations):
 
     Parameters
     ----------
-    signals : 2nd array
+    signals : 2nd array, optional
         The simulated signals, organized as [n_sims, sig_length].
-    sim_func : str
-        The simulation function that was used to create the simulations.
-    params : list of dict
+    params : list of dict, optional
         The simulation parameters for each of the simulations.
+    sim_func : str, optional
+        The simulation function that was used to create the simulations.
 
     Notes
     -----
     This object stores a set of simulations with different parameter definitions per signal.
     """
 
-    def __init__(self, signals=None, sim_func=None, params=None):
+    def __init__(self, signals=None, params=None, sim_func=None):
         """Initialize SampledSimulations object."""
 
-        Simulations.__init__(self, signals, sim_func, params)
+        Simulations.__init__(self, signals, params, sim_func)
 
     @property
     def n_seconds(self):
@@ -152,23 +155,25 @@ class SampledSimulations(Simulations):
             cparams = [drop_base_params(el) for el in params]
 
             if not self.has_params:
+                if len(self) > len(cparams):
+                   msg = 'Cannot add parameters to object without existing parameter values.'
+                   raise ValueError(msg)
                 self._base_params = base_params
                 self._params = cparams
 
             else:
-                assert get_base_params(params[0]) == self._base_params, \
-                    'Base parameters must match the existing simulations in the object.'
                 self._params.extend(cparams)
 
         else:
-            assert not self._params, 'Must add parameters if object already has them.'
+            if self.has_params:
+                raise ValueError('Must add parameters if object already has them.')
 
-    def add_signal(self, sig, params=None):
+    def add_signal(self, signal, params=None):
         """Add a signal to the current object.
 
         Parameters
         ----------
-        sig : 1d array
+        signal : 1d array
             A simulated signal to add to the object.
         params : dict, optional
             Parameter definition for the added signal.
@@ -176,5 +181,8 @@ class SampledSimulations(Simulations):
             If current object does include parameters, this input is required.
         """
 
-        self.signals = np.vstack([self.signals, sig])
+        try:
+            self.signals = np.vstack([self.signals, signal])
+        except ValueError:
+            raise ValueError('Size of the added signal is not consistent with existing signals.')
         self.add_params(params)
