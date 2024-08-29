@@ -19,8 +19,9 @@ class Simulations():
         The simulated signals, organized as [n_sims, sig_length].
     params : dict, optional
         The simulation parameters that were used to create the simulations.
-    sim_func : str, optional
+    sim_func : str or callable, optional
         The simulation function that was used to create the simulations.
+        If callable, the name of the function is taken to be added to the object.
 
     Notes
     -----
@@ -34,7 +35,7 @@ class Simulations():
         self._base_params = None
         self._params = None
         self.add_params(params)
-        self.sim_func = sim_func
+        self.sim_func = sim_func.__name__ if callable(sim_func) else sim_func
 
     def __iter__(self):
         """Define iteration as stepping across individual simulated signals."""
