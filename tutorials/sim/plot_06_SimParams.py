@@ -36,7 +36,7 @@ sim_params.make_params({'exponent' : -1})
 
 ###################################################################################################
 #
-# The object can also be used to 'register' (:method:`~.SimParams.register`) a set of
+# The object can also be used to 'register' (:func:`~.SimParams.register`) a set of
 # simulation parameters, meaning they can be defined and stored in the object,
 # with an associated label to access them.
 #
@@ -73,7 +73,7 @@ sim_params.base
 #
 # To manage multiple parameters, they can all be registered to the object.
 # For convenience, multiple definitions can be registered together with the
-# (:method:`~.SimParams.register_group`) method.
+# (:func:`~.SimParams.register_group`) method.
 #
 
 ###################################################################################################
@@ -115,8 +115,8 @@ sim_iters.base
 
 ###################################################################################################
 
-# Re-initialize a SimIters object, inheriting from the SimParams object
-sim_iters = SimIters(sim_params=sim_params)
+# Re-initialize a SimIters object, exporting from existing SimParams object
+sim_iters = sim_params.to_iters()
 
 ###################################################################################################
 #
@@ -251,8 +251,8 @@ exp_upd_sampler = {create_updater('exponent') : create_sampler([-2, -1, 0])}
 
 ###################################################################################################
 
-# Initialize base set of simulation parameters
-sim_samplers = SimSamplers(sim_params=sim_params, n_samples=3)
+# Initialize simulation samplers, from pre-initialized SimParams object
+sim_samplers = sim_params.to_samplers(n_samples=3)
 
 ###################################################################################################
 #

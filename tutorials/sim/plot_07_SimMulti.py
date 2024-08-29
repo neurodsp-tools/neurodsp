@@ -28,6 +28,17 @@ params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : -1, 'f_range' : [0.5, None]}
 sigs = sim_multiple(sim_powerlaw, params, 3)
 
 ###################################################################################################
+#
+# The output the above function is a :class:~.Simulations object that stores multiple simulated
+# signals along with relevant metadata.
+#
+
+###################################################################################################
+
+# Check the metadata stored in the simulations object
+print(sigs.sim_func, ':', sigs.params)
+
+###################################################################################################
 
 # Plot the simulated signals
 plot_multi_time_series(None, sigs)
@@ -79,6 +90,18 @@ sims_across_params = sim_across_values(sim_powerlaw, multi_params, 3)
 
 ###################################################################################################
 #
+# The output of the above is a :class:~.MultiSimulations object that stores sets of simulations
+# across different parameters, and relevant metadata. Each set of simulations is stored within
+# this object as a :class:~.Simulations object.
+#
+
+###################################################################################################
+
+# The length of the object is the number of parameter sets
+print('# of sets of signals:', len(sims_across_params))
+
+###################################################################################################
+#
 # In the above, we created a set of parameters per definition, which by default are returned
 # in a dictionary.
 #
@@ -113,6 +136,20 @@ sampler = ParamSampler(params, exp_sampler)
 
 # Simulate a set of signals from the defined sampler
 sampled_sims = sim_from_sampler(sim_powerlaw, sampler, 3)
+
+###################################################################################################
+#
+# The output of the above is a :class:~.SampledSimulations object that stores simulations
+# created from sampled simulations, as well as the metadata, including the simulation
+# parameters for each simulated signal.
+#
+
+###################################################################################################
+
+# Check some of the metadata stored in the SampledSimulations object
+print(sampled_sims.sim_func)
+for paramdef in sampled_sims.params:
+    print(paramdef)
 
 ###################################################################################################
 
