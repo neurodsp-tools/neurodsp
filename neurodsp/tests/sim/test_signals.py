@@ -1,10 +1,10 @@
-"""Tests for neurodsp.sim.sims."""
+"""Tests for neurodsp.sim.signals."""
 
 from pytest import raises
 
 import numpy as np
 
-from neurodsp.sim.sims import *
+from neurodsp.sim.signals import *
 
 ###################################################################################################
 ###################################################################################################

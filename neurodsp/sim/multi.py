@@ -5,7 +5,7 @@ from collections.abc import Sized
 import numpy as np
 
 from neurodsp.utils.core import counter
-from neurodsp.sim.sims import Simulations, SampledSimulations, MultiSimulations
+from neurodsp.sim.signals import Simulations, SampledSimulations, MultiSimulations
 
 ###################################################################################################
 ###################################################################################################

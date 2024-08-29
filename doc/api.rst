@@ -357,6 +357,19 @@ The following functions can be used to update simulation parameters:
     create_updater
     create_sampler
 
+Simulated Signals
+~~~~~~~~~~~~~~~~~
+
+The following objects can be used to manage groups of simulated signals:
+
+.. currentmodule:: neurodsp.sim.signals
+.. autosummary::
+    :toctree: generated/
+
+    Simulations
+    SampledSimulations
+    MultiSimulations
+
 Utilities
 ~~~~~~~~~
 

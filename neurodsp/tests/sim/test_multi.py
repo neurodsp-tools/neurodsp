@@ -3,8 +3,8 @@
 import numpy as np
 
 from neurodsp.sim.aperiodic import sim_powerlaw
-from neurodsp.sim.sims import Simulations, SampledSimulations, MultiSimulations
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
+from neurodsp.sim.signals import Simulations, SampledSimulations, MultiSimulations
 
 from neurodsp.sim.multi import *
 
