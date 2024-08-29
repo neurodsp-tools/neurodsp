@@ -5,7 +5,7 @@ from collections.abc import Sized
 import numpy as np
 
 from neurodsp.utils.core import counter
-from neurodsp.sim.sims import Simulations, SampledSimulations
+from neurodsp.sim.sims import Simulations, SampledSimulations, MultiSimulations
 
 ###################################################################################################
 ###################################################################################################
@@ -115,7 +115,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
         return sigs
 
 
-def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
+def sim_across_values(sim_func, sim_params, n_sims, output='object'):
     """Simulate multiple signals across different parameter values.
 
     Parameters
@@ -126,18 +126,16 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
         Simulation parameters for `sim_func`.
     n_sims : int
         Number of simulations to create per parameter definition.
-    output : {'dict', 'array'}
-        Organization of the output for the sims.
-        If 'dict', stored in a dictionary, organized by simulation parameter.
-        If 'array', all sims are organized into a 2D array.
+    return_type : {'object', 'array'}
+        Specifies the return type of the simulations.
+        If 'object', returns simulations and metadata in a 'MultiSimulations' object.
+        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sims : dict of {float : array} or array
-        If dict, dictionary of simulated signals, where:
-            Each key is the simulation parameter value for the set of simulations.
-            Each value is the set of simulations for that value, as [n_sims, sig_length].
-        If array, is all signals collected together as [n_sims, sig_length].
+    sims : MultiSimulations or array
+        Simulations, return type depends on `return_type` argument.
+        If array, signals are collected together as [n_sets, n_sims, sig_length].
 
     Examples
     --------
@@ -156,18 +154,20 @@ def sim_across_values(sim_func, sim_params, n_sims, output='dict'):
     >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
     """
 
-    sims = {}
+    update = sim_params.update if \
+        not isinstance(sim_params, dict) and hasattr(sim_params, 'update') else None
+
+    sims = MultiSimulations(update=update)
     for ind, cur_sim_params in enumerate(sim_params):
-        label = sim_params.values[ind] if hasattr(sim_params, 'values') else ind
-        label = label[-1] if isinstance(label, list) else label
-        sims[label] = sim_multiple(sim_func, cur_sim_params, n_sims, 'array')
+        sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
+
     if output == 'array':
-        sims = np.squeeze(np.array(list(sims.values())))
+        sims = np.array([el.signals for el in sims])
 
     return sims
 
 
-def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object', return_params=False):
+def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     """Simulate a set of signals from a parameter sampler.
 
     Parameters
@@ -178,19 +178,16 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object', return
         Parameter definition to sample from.
     n_sims : int
         Number of simulations to create per parameter definition.
-
     return_type : {'object', 'array'}
-        XX
-    #return_params : bool, default: False
-    #    Whether to collect and return the parameters of all the generated simulations.
+        Specifies the return type of the simulations.
+        If 'object', returns simulations and metadata in a 'SampledSimulations' object.
+        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sigs : 2d array
-        Simulations, as [n_sims, sig length].
-    all_params : list of dict
-        Simulation parameters for each returned time series.
-        Only returned if `return_params` is True.
+    sigs : SampledSimulations or 2d array
+        Simulations, return type depends on `return_type` argument.
+        If array, simulations are organized as [n_sims, sig length].
 
     Examples
     --------

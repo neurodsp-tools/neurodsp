@@ -3,7 +3,7 @@
 import numpy as np
 
 from neurodsp.sim.aperiodic import sim_powerlaw
-from neurodsp.sim.sims import Simulations, SampledSimulations
+from neurodsp.sim.sims import Simulations, SampledSimulations, MultiSimulations
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
 
 from neurodsp.sim.multi import *
@@ -46,16 +46,20 @@ def test_sim_multiple():
 
 def test_sim_across_values():
 
+    n_sims = 3
     params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
               {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
-    sigs = sim_across_values(sim_powerlaw, params, 2)
-    assert isinstance(sigs, dict)
-    for val in [0, 1]:
-        assert isinstance(sigs[0], np.ndarray)
-        assert sigs[0].shape[0] == 2
-    sigs_arr = sim_across_values(sim_powerlaw, params, 3, 'array')
+
+    sims_obj = sim_across_values(sim_powerlaw, params, n_sims, 'object')
+    assert isinstance(sims_obj, MultiSimulations)
+    for sigs, cparams in zip(sims_obj, params):
+        assert isinstance(sigs, Simulations)
+        assert len(sigs) == n_sims
+        assert sigs.params == cparams
+
+    sigs_arr = sim_across_values(sim_powerlaw, params, n_sims, 'array')
     assert isinstance(sigs_arr, np.ndarray)
-    assert sigs_arr.shape[0:2] == (2, 3)
+    assert sigs_arr.shape[0:2] == (len(params), n_sims)
 
 def test_sim_from_sampler():
 
