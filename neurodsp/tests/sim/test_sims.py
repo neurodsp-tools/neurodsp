@@ -123,9 +123,9 @@ def test_multi_simulations():
     # Demo data
     n_seconds = 2
     fs = 100
-    n_sigs = 2
+    n_sigs = 3
     n_sets = 2
-    sigs = np.ones([2, n_seconds * fs])
+    sigs = np.ones([n_sigs, n_seconds * fs])
     all_sigs = [sigs] * n_sets
     params = [{'n_seconds' : n_seconds, 'fs' : fs, 'exponent' : -2},
               {'n_seconds' : n_seconds, 'fs' : fs, 'exponent' : -1}]
@@ -144,6 +144,7 @@ def test_multi_simulations():
     # Test dunders - iter & getitem & indicators
     for el in sims_data:
         assert isinstance(el, Simulations)
+        assert len(el) == n_sigs
     assert isinstance(sims_data[0], Simulations)
 
     # Test initialization with metadata
@@ -168,3 +169,12 @@ def test_multi_simulations_add():
     sims_data2.add_signals(sigs, params)
     assert sims_data2.has_signals
     assert len(sims_data2) == len(sims_data2.params)
+
+    sims_data3 = MultiSimulations(sigs, params)
+    sims_add = Simulations(sigs, params)
+    sims_data3.add_signals(sims_add)
+    assert sims_data3.has_signals
+
+    sims_data4 = MultiSimulations(sigs, params)
+    sims_data4.add_signals([sims_add, sims_add])
+    assert sims_data4.has_signals

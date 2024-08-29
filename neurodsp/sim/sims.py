@@ -292,7 +292,7 @@ class MultiSimulations():
 
         Parameters
         ----------
-        signals : 2d array or list of 2d array
+        signals : 2d array or list of 2d array or Simulations
             A set of simulated signals, organized as [n_sims, sig_length].
         params : dict or list of dict, optional
             The simulation parameters that were used to create the set of simulations.
@@ -303,12 +303,17 @@ class MultiSimulations():
         if signals is None:
             return
 
-        params = repeat(params) if not isinstance(params, list) else params
-        sim_func = repeat(sim_func) if not isinstance(sim_func, list) else sim_func
-        for csigs, cparams, cfunc in zip(signals, params, sim_func):
-            self._add_simulations(csigs, cparams, cfunc)
+        if isinstance(signals, Simulations):
+            self.signals.append(signals)
 
-    def _add_simulations(self, signals, params, sim_func):
-        """Sub-function a adding a Simulations object to current object."""
+        if isinstance(signals, list):
 
-        self.signals.append(Simulations(signals, params=params, sim_func=sim_func))
+            if isinstance(signals[0], Simulations):
+                self.signals.extend(signals)
+
+            else:
+                params = repeat(params) if not isinstance(params, list) else params
+                sim_func = repeat(sim_func) if not isinstance(sim_func, list) else sim_func
+                for csigs, cparams, cfunc in zip(signals, params, sim_func):
+                    signals = Simulations(csigs, params=cparams, sim_func=cfunc)
+                    self.signals.append(signals)
