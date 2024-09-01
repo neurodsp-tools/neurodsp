@@ -88,13 +88,13 @@ def compute_decay_time(timepoints, autocorrs, fs, level=0):
     return result
 
 
-def fit_autocorr(timepoints, autocorrs, fs=None, fit_function='single_exp'):
+def fit_autocorr(timepoints, autocorrs, fit_function='single_exp'):
     """Fit autocorrelation function, returning timescale estimate.
 
     Parameters
     ----------
     timepoints : 1d array
-        Timepoints for the computed autocorrelations.
+        Timepoints for the computed autocorrelations, in samples or seconds.
     autocorrs : 1d array
         Autocorrelation values.
     fs : int, optional
@@ -107,15 +107,17 @@ def fit_autocorr(timepoints, autocorrs, fs=None, fit_function='single_exp'):
     -------
     popts
         Fit parameters.
+
+    Notes
+    -----
+    The values / units of the returned parameters are dependent on the units of samples.
+    For example, if the timepoints input is in samples, the fit tau value is too.
     """
 
-    if fs:
-        timepoints = timepoints / fs
-
     if fit_function == 'single_exp':
-        p_bounds =([0, 0, 0], [10, np.inf, np.inf])
+        p_bounds = ([0, 0, 0], [np.inf, np.inf, np.inf])
     elif fit_function == 'double_exp':
-        p_bounds =([0, 0, 0, 0, 0], [10, np.inf, np.inf, np.inf, np.inf])
+        p_bounds = ([0, 0, 0, 0, 0], [np.inf, np.inf, np.inf, np.inf, np.inf])
 
     popts, _ = curve_fit(AC_FIT_FUNCS[fit_function], timepoints, autocorrs, bounds=p_bounds)
 
@@ -182,7 +184,7 @@ def compute_ac_fit(timepoints, *popts, fit_function='single_exp'):
     Parameters
     ----------
     timepoints : 1d array
-        Time values.
+        Time values, in samples or seconds.
     *popts
         Fit parameters.
     fit_func : {'single_exp', 'double_exp'}
