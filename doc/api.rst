@@ -209,6 +209,7 @@ Auto-correlation Analyses
     compute_autocorr
     compute_decay_time
     fit_autocorr
+    compute_ac_fit
 
 Fluctuation Analyses
 ~~~~~~~~~~~~~~~~~~~~
