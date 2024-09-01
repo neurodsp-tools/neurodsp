@@ -123,11 +123,11 @@ def fit_autocorr(timepoints, autocorrs, fit_function='single_exp', bounds=None):
 
     if not bounds:
         if fit_function == 'single_exp':
-            p_bounds = ([0, 0, 0], [np.inf, np.inf, np.inf])
+            bounds = ([0, 0, 0], [np.inf, np.inf, np.inf])
         elif fit_function == 'double_exp':
-            p_bounds = ([0, 0, 0, 0, 0], [np.inf, np.inf, np.inf, np.inf, np.inf])
+            bounds = ([0, 0, 0, 0, 0], [np.inf, np.inf, np.inf, np.inf, np.inf])
 
-    popts, _ = curve_fit(AC_FIT_FUNCS[fit_function], timepoints, autocorrs, bounds=p_bounds)
+    popts, _ = curve_fit(AC_FIT_FUNCS[fit_function], timepoints, autocorrs, bounds=bounds)
 
     return popts
 

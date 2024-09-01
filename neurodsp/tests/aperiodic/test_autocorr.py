@@ -27,6 +27,12 @@ def test_fit_autocorr(tsig):
     fit_vals1 = compute_ac_fit(timepoints, *popts1, fit_function='single_exp')
     assert np.all(fit_vals1)
 
+    # Test with bounds passed in
+    bounds = ([0, 0, 0], [10, np.inf, np.inf])
+    popts1 = fit_autocorr(timepoints, autocorrs, 'single_exp', bounds)
+    fit_vals1 = compute_ac_fit(timepoints, *popts1, fit_function='single_exp')
+    assert np.all(fit_vals1)
+
     popts2 = fit_autocorr(timepoints, autocorrs, fit_function='double_exp')
     fit_vals2 = compute_ac_fit(timepoints, *popts2, fit_function='double_exp')
     assert np.all(fit_vals2)
