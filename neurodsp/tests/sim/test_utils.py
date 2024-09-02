@@ -34,3 +34,18 @@ def test_modulate_signal(tsig):
     # Check modulation passing in a 1d array directly
     msig2 = modulate_signal(tsig, tsig)
     check_sim_output(msig2)
+
+def test_get_base_params():
+
+    params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    out1 = get_base_params(params)
+    for bparam in out1:
+        assert bparam in BASE_PARAMS
+
+def test_drop_base_params():
+
+    params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    out1 = drop_base_params(params)
+    for bparam in BASE_PARAMS:
+        assert bparam not in out1
+    assert 'exponent' in params

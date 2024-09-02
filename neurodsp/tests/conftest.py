@@ -7,6 +7,8 @@ import pytest
 import numpy as np
 
 from neurodsp.sim import sim_oscillation, sim_powerlaw, sim_combined
+from neurodsp.sim.update import create_updater, create_sampler
+from neurodsp.sim.params import SimParams
 from neurodsp.spectral import compute_spectrum
 from neurodsp.utils.sim import set_random_seed
 from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
@@ -54,6 +56,34 @@ def tspectrum(tsig_comb):
 
     freqs, powers = compute_spectrum(tsig_comb, FS)
     yield {'freqs' : freqs, 'powers' : powers}
+
+@pytest.fixture(scope='session')
+def tsim_params():
+
+    sim_params = SimParams(N_SECONDS, FS)
+    sim_params.register_group({
+        'pl' : {'sim_powerlaw' : {'exponent' : -1}},
+        'osc' : {'sim_oscillation' : {'freq' : -1}},
+    })
+
+    yield sim_params
+
+@pytest.fixture(scope='session')
+def tsim_iters(tsim_params):
+
+    sim_iters = tsim_params.to_iters()
+    sim_iters.register_iter('pl_exp', 'pl', 'exponent', [-2, -1, 0])
+
+    yield sim_iters
+
+@pytest.fixture(scope='session')
+def tsim_samplers(tsim_params):
+
+    sim_samplers = tsim_params.to_samplers()
+    sim_samplers.register_sampler(\
+        'samp_exp', 'pl', {create_updater('exponent') : create_sampler([-2, -1, 0])})
+
+    yield sim_samplers
 
 @pytest.fixture(scope='session', autouse=True)
 def check_dir():

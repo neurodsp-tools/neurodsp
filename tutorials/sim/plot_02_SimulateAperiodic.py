@@ -4,7 +4,7 @@ Simulating Aperiodic Signals
 
 Simulate aperiodic signals.
 
-This tutorial covers the the ``neurodsp.sim.aperiodic`` module.
+This tutorial covers the ``neurodsp.sim.aperiodic`` module.
 """
 
 ###################################################################################################

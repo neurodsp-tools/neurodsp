@@ -1,4 +1,4 @@
-"""Utility function for neurodsp.spectral."""
+"""Utility function for neurodsp.sim."""
 
 import numpy as np
 
@@ -163,3 +163,40 @@ def modulate_signal(sig, modulation, fs=None, mod_params=None):
     msig = sig * modulation
 
     return msig
+
+## Utilities for helping with parameter management
+
+BASE_PARAMS = ['n_seconds', 'fs']
+
+def get_base_params(params):
+    """Get base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict
+        Parameter definition.
+
+    Returns
+    -------
+    params : dict
+        Base parameters.
+    """
+
+    return {key : value for key, value in params.items() if key in BASE_PARAMS}
+
+
+def drop_base_params(params):
+    """Drop base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict
+        Parameter definition.
+
+    Returns
+    -------
+    params : dict
+        Parameter definition, exluding base parameters.
+    """
+
+    return {key : value for key, value in params.items() if key not in BASE_PARAMS}
