@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.data import compute_nseconds
+from neurodsp.sim.info import get_sim_func
 
 ###################################################################################################
 ###################################################################################################
