@@ -4,7 +4,7 @@ import numpy as np
 
 from neurodsp.sim.aperiodic import sim_powerlaw
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
-from neurodsp.sim.signals import Simulations, SampledSimulations, MultiSimulations
+from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 
 from neurodsp.sim.multi import *
 
@@ -69,7 +69,7 @@ def test_sim_from_sampler():
     psampler = ParamSampler(params, samplers)
 
     sims_obj = sim_from_sampler(sim_powerlaw, psampler, n_sims, 'object')
-    assert isinstance(sims_obj, SampledSimulations)
+    assert isinstance(sims_obj, VariableSimulations)
     assert sims_obj.signals.shape[0] == n_sims
     assert len(sims_obj.params) == n_sims
 

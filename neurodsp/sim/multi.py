@@ -5,7 +5,7 @@ from collections.abc import Sized
 import numpy as np
 
 from neurodsp.utils.core import counter
-from neurodsp.sim.signals import Simulations, SampledSimulations, MultiSimulations
+from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 
 ###################################################################################################
 ###################################################################################################
@@ -180,12 +180,12 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
         Number of simulations to create per parameter definition.
     return_type : {'object', 'array'}
         Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'SampledSimulations' object.
+        If 'object', returns simulations and metadata in a 'VariableSimulations' object.
         If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sigs : SampledSimulations or 2d array
+    sigs : VariableSimulations or 2d array
         Simulations, return type depends on `return_type` argument.
         If array, simulations are organized as [n_sims, sig length].
 
@@ -208,6 +208,6 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
         all_params[ind] = params
 
     if return_type == 'object':
-        return SampledSimulations(sigs, all_params, sim_func)
+        return VariableSimulations(sigs, all_params, sim_func)
     else:
         return sigs

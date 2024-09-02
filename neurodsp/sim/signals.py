@@ -102,8 +102,8 @@ class Simulations():
             self._params = drop_base_params(params)
 
 
-class SampledSimulations(Simulations):
-    """Data object for a set of simulated signals with sampled (variable) parameter definitions.
+class VariableSimulations(Simulations):
+    """Data object for a set of simulated signals with variable parameter definitions.
 
     Parameters
     ----------
@@ -189,11 +189,14 @@ class SampledSimulations(Simulations):
             If current object does include parameters, this input is required.
         """
 
-        try:
-            self.signals = np.vstack([self.signals, signal])
-        except ValueError as array_value_error:
-            msg = 'Size of the added signal is not consistent with existing signals.'
-            raise ValueError(msg) from array_value_error
+        if not self.signals.size:
+            self.signals = signal
+        else:
+            try:
+                self.signals = np.vstack([self.signals, signal])
+            except ValueError as array_value_error:
+                msg = 'Size of the added signal is not consistent with existing signals.'
+                raise ValueError(msg) from array_value_error
         self.add_params(params)
 
 

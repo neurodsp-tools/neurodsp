@@ -370,7 +370,7 @@ The following objects can be used to manage groups of simulated signals:
     :toctree: generated/
 
     Simulations
-    SampledSimulations
+    VariableSimulations
     MultiSimulations
 
 Utilities
