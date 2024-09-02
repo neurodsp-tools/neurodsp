@@ -4,6 +4,7 @@ import numpy as np
 
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
+from neurodsp.sim.update import ParamIter
 
 ###################################################################################################
 ###################################################################################################
@@ -39,7 +40,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     >>> sigs = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sigs = np.zeros([n_sims, sim_params['n_seconds'] * sim_params['fs']])
+    sigs = np.zeros([n_sims, int(sim_params['n_seconds'] * sim_params['fs'])])
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
         sigs[ind, :] = sig
 
@@ -88,8 +89,9 @@ def sim_across_values(sim_func, sim_params, n_sims, output='object'):
     >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
     """
 
-    update = sim_params.update if \
-        not isinstance(sim_params, dict) and hasattr(sim_params, 'update') else None
+    update = None
+    if isinstance(sim_params, ParamIter):
+        update = sim_params.update
 
     sims = MultiSimulations(update=update)
     for ind, cur_sim_params in enumerate(sim_params):

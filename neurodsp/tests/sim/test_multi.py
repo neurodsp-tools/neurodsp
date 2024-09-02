@@ -25,7 +25,7 @@ def test_sim_multiple():
     assert isinstance(sims_arr, np.ndarray)
     assert sims_arr.shape[0] == n_sims
 
-def test_sim_across_values():
+def test_sim_across_values(tsim_iters):
 
     n_sims = 3
     params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
@@ -41,6 +41,13 @@ def test_sim_across_values():
     sigs_arr = sim_across_values(sim_powerlaw, params, n_sims, 'array')
     assert isinstance(sigs_arr, np.ndarray)
     assert sigs_arr.shape[0:2] == (len(params), n_sims)
+
+    # Test with ParamIter input
+    siter = tsim_iters['pl_exp']
+    sims_iter = sim_across_values(sim_powerlaw, siter, n_sims)
+    assert isinstance(sims_iter, MultiSimulations)
+    assert sims_iter.update == siter.update
+    assert sims_iter.values == siter.values
 
 def test_sim_from_sampler():
 
