@@ -162,7 +162,7 @@ def sim_across_values(sim_func, sim_params, n_sims, output='object'):
         sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
 
     if output == 'array':
-        sims = np.array([el.signals for el in sims])
+        sims = np.squeeze(np.array([el.signals for el in sims]))
 
     return sims
 
