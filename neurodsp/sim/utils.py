@@ -209,7 +209,7 @@ def get_param_values(params, extract=None, component=None):
     ----------
     params : list of dict
         Parameter definitions for multiple simulations.
-    update : str
+    extract : str
         Name of the parameter to extract.
     component : str, optional
         Which component to extract the parameter from.
@@ -222,9 +222,9 @@ def get_param_values(params, extract=None, component=None):
     """
 
     if component:
-        values =[cparams['components'][component][update] for cparams in params]
-    elif update:
-        values = [cparams[update] for cparams in params]
+        values =[cparams['components'][component][extract] for cparams in params]
+    elif extract:
+        values = [cparams[extract] for cparams in params]
     else:
         values = None
 
