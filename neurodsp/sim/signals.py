@@ -5,7 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.core import listify
-from neurodsp.sim.utils import get_base_params, drop_base_params
+from neurodsp.sim.utils import get_base_params, drop_base_params, get_param_values
 
 ###################################################################################################
 ###################################################################################################
@@ -113,16 +113,23 @@ class VariableSimulations(Simulations):
         The simulation parameters for each of the simulations.
     sim_func : str, optional
         The simulation function that was used to create the simulations.
+    update : str
+        The name of the parameter that is updated across simulations.
+    component : str
+        Which component the updated parameter is part of.
+        Only used if the parameter definition is for a multi-component simulation.
 
     Notes
     -----
     This object stores a set of simulations with different parameter definitions per signal.
     """
 
-    def __init__(self, signals=None, params=None, sim_func=None):
+    def __init__(self, signals=None, params=None, sim_func=None, update=None, component=None):
         """Initialize SampledSimulations object."""
 
         Simulations.__init__(self, signals, params, sim_func)
+        self.update = update
+        self.component = component
 
     @property
     def n_seconds(self):
@@ -147,6 +154,12 @@ class VariableSimulations(Simulations):
 
         return params
 
+    @property
+    def values(self):
+        """Alias in the parameter definition of the parameter that varies across the sets."""
+
+        return get_param_values(self.params, self.update, self.component)
+
     def add_params(self, params):
         """Add parameter definition(s) to object.
 
@@ -163,7 +176,7 @@ class VariableSimulations(Simulations):
             cparams = [drop_base_params(el) for el in params]
 
             if not self.has_params:
-                if len(self) > len(cparams):
+                if len(self) > 1 and len(self) > len(cparams):
                     msg = 'Cannot add parameters to object without existing parameter values.'
                     raise ValueError(msg)
                 self._base_params = base_params
@@ -190,7 +203,7 @@ class VariableSimulations(Simulations):
         """
 
         if not self.signals.size:
-            self.signals = signal
+            self.signals = np.atleast_2d(signal)
         else:
             try:
                 self.signals = np.vstack([self.signals, signal])
@@ -213,18 +226,22 @@ class MultiSimulations():
         The simulation function(s) that were used to create the simulations.
     update : str
         The name of the parameter that is updated across sets of simulations.
+    component : str
+        Which component the updated parameter is part of.
+        Only used if the parameter definition is for a multi-component simulation.
 
     Notes
     -----
     This object stores a set of simulations with multiple instances per parameter definition.
     """
 
-    def __init__(self, signals=None, params=None, sim_func=None, update=None):
+    def __init__(self, signals=None, params=None, sim_func=None, update=None, component=None):
         """Initialize MultiSimulations object."""
 
         self.signals = []
         self.add_signals(signals, params, sim_func)
         self.update = update
+        self.component = component
 
     def __iter__(self):
         """Define iteration as stepping across sets of simulated signals."""
@@ -272,12 +289,7 @@ class MultiSimulations():
     def values(self):
         """Alias in the parameter definition of the parameter that varies across the sets."""
 
-        if self.update:
-            values = [params[self.update] for params in self.params]
-        else:
-            values = None
-
-        return values
+        return get_param_values(self.params, self.update, self.component)
 
     @property
     def _base_params(self):

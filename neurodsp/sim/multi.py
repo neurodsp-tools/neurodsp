@@ -89,11 +89,11 @@ def sim_across_values(sim_func, sim_params, n_sims, output='object'):
     >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
     """
 
-    update = None
+    oparams = {'update' : None, 'component' : None}
     if isinstance(sim_params, ParamIter):
-        update = sim_params.update
+        oparams = {'update' : sim_params.update, 'component' : sim_params.component}
 
-    sims = MultiSimulations(update=update)
+    sims = MultiSimulations(**oparams)
     for ind, cur_sim_params in enumerate(sim_params):
         sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
 
