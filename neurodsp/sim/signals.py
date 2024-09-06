@@ -37,21 +37,25 @@ class Simulations():
         self.add_params(params)
         self.sim_func = sim_func.__name__ if callable(sim_func) else sim_func
 
+
     def __iter__(self):
         """Define iteration as stepping across individual simulated signals."""
 
         for sig in self.signals:
             yield sig
 
+
     def __getitem__(self, ind):
         """Define indexing as accessing simulated signals."""
 
         return self.signals[ind, :]
 
+
     def __len__(self):
         """Define the length of the object as the number of signals."""
 
         return len(self.signals)
+
 
     @property
     def n_seconds(self):
@@ -59,11 +63,13 @@ class Simulations():
 
         return self._base_params['n_seconds'] if self.has_params else None
 
+
     @property
     def fs(self):
         """Alias fs as a property attribute from base parameters."""
 
         return self._base_params['fs'] if self.has_params else None
+
 
     @property
     def params(self):
@@ -76,17 +82,20 @@ class Simulations():
 
         return params
 
+
     @property
     def has_params(self):
         """Indicator for if the object has parameters."""
 
         return bool(self._params)
 
+
     @property
     def has_signals(self):
         """Indicator for if the object has signals."""
 
         return bool(len(self))
+
 
     def add_params(self, params):
         """Add parameter definition to object.
@@ -131,17 +140,20 @@ class VariableSimulations(Simulations):
         self.update = update
         self.component = component
 
+
     @property
     def n_seconds(self):
         """Alias n_seconds as a property."""
 
         return self.params[0].n_seconds if self.has_params else None
 
+
     @property
     def fs(self):
         """Alias fs as a property."""
 
         return self.params[0].fs if self.has_params else None
+
 
     @property
     def params(self):
@@ -154,11 +166,13 @@ class VariableSimulations(Simulations):
 
         return params
 
+
     @property
     def values(self):
         """Alias in the parameter definition of the parameter that varies across the sets."""
 
         return get_param_values(self.params, self.update, self.component)
+
 
     def add_params(self, params):
         """Add parameter definition(s) to object.
@@ -188,6 +202,7 @@ class VariableSimulations(Simulations):
         else:
             if self.has_params:
                 raise ValueError('Must add parameters if object already has them.')
+
 
     def add_signal(self, signal, params=None):
         """Add a signal to the current object.
@@ -243,21 +258,25 @@ class MultiSimulations():
         self.update = update
         self.component = component
 
+
     def __iter__(self):
         """Define iteration as stepping across sets of simulated signals."""
 
         for sigs in self.signals:
             yield sigs
 
+
     def __getitem__(self, index):
         """Define indexing as accessing sets of simulated signals."""
 
         return self.signals[index]
 
+
     def __len__(self):
         """Define the length of the object as the number of sets of signals."""
 
         return len(self.signals)
+
 
     @property
     def n_seconds(self):
@@ -265,17 +284,20 @@ class MultiSimulations():
 
         return self.signals[0].n_seconds if self else None
 
+
     @property
     def fs(self):
         """Alias fs as a property."""
 
         return self.signals[0].fs if self else None
 
+
     @property
     def sim_func(self):
         """Alias func as property."""
 
         return self.signals[0].sim_func if self else None
+
 
     @property
     def params(self):
@@ -285,11 +307,13 @@ class MultiSimulations():
 
         return params
 
+
     @property
     def values(self):
         """Alias in the parameter definition of the parameter that varies across the sets."""
 
         return get_param_values(self.params, self.update, self.component)
+
 
     @property
     def _base_params(self):
@@ -297,11 +321,13 @@ class MultiSimulations():
 
         return self.signals[0]._base_params if self else None
 
+
     @property
     def has_signals(self):
         """Indicator for if the object has signals."""
 
         return bool(len(self))
+
 
     def add_signals(self, signals, params=None, sim_func=None):
         """Add a set of signals to the current object.

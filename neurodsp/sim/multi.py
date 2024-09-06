@@ -4,7 +4,6 @@ import numpy as np
 
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
-from neurodsp.sim.update import ParamIter
 from neurodsp.utils.data import compute_nsamples
 
 ###################################################################################################
@@ -28,7 +27,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
 
     Returns
     -------
-    sigs : Simulations or 2d array
+    sims : Simulations or 2d array
         Simulations, return type depends on `return_type` argument.
         Simulated time series are organized as [n_sims, sig length].
 
@@ -38,17 +37,17 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
 
     >>> from neurodsp.sim.aperiodic import sim_powerlaw
     >>> params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
-    >>> sigs = sim_multiple(sim_powerlaw, params, n_sims=3)
+    >>> sims = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sigs = np.zeros([n_sims, compute_nsamples(sim_params['n_seconds'], sim_params['fs'])])
+    sims = np.zeros([n_sims, compute_nsamples(sim_params['n_seconds'], sim_params['fs'])])
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
-        sigs[ind, :] = sig
+        sims[ind, :] = sig
 
     if return_type == 'object':
-        return Simulations(sigs, sim_params, sim_func)
-    else:
-        return sigs
+        sims = Simulations(sims, sim_params, sim_func)
+
+    return sims
 
 
 def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
@@ -78,7 +77,7 @@ def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
     Simulate multiple powerlaw signals using a ParamIter object:
 
     >>> from neurodsp.sim.aperiodic import sim_powerlaw
-    >>> from neurodsp.sim.params import ParamIter
+    >>> from neurodsp.sim.update import ParamIter
     >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
     >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
     >>> sigs = sim_across_values(sim_powerlaw, param_iter, n_sims=2)
@@ -92,7 +91,7 @@ def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
 
     sims = MultiSimulations(update=getattr(sim_params, 'update', None),
                             component=getattr(sim_params, 'component', None))
-    for ind, cur_sim_params in enumerate(sim_params):
+    for cur_sim_params in sim_params:
         sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
 
     if return_type == 'array':
@@ -119,7 +118,7 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
 
     Returns
     -------
-    sigs : VariableSimulations or 2d array
+    sims : VariableSimulations or 2d array
         Simulations, return type depends on `return_type` argument.
         If array, simulations are organized as [n_sims, sig length].
 
@@ -132,17 +131,17 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     >>> params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}
     >>> samplers = {create_updater('exponent') : create_sampler([-2, -1, 0])}
     >>> param_sampler = ParamSampler(params, samplers)
-    >>> sigs = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
+    >>> sims = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
     """
 
     all_params = [None] * n_sims
     n_samples = compute_nsamples(sim_sampler.params['n_seconds'], sim_sampler.params['fs'])
-    sigs = np.zeros([n_sims, n_samples])
+    sims = np.zeros([n_sims, n_samples])
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
-        sigs[ind, :] = sig
+        sims[ind, :] = sig
         all_params[ind] = params
 
     if return_type == 'object':
-        return VariableSimulations(sigs, all_params, sim_func)
-    else:
-        return sigs
+        sims = VariableSimulations(sims, all_params, sim_func)
+
+    return sims
