@@ -373,10 +373,10 @@ The following objects can be used to manage groups of simulated signals:
     VariableSimulations
     MultiSimulations
 
-Utilities
-~~~~~~~~~
+Modulate Signals
+~~~~~~~~~~~~~~~~
 
-.. currentmodule:: neurodsp.sim.utils
+.. currentmodule:: neurodsp.sim.modulate
 .. autosummary::
     :toctree: generated/
 

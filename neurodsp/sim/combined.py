@@ -6,9 +6,9 @@ import numpy as np
 from scipy.linalg import norm
 
 from neurodsp.sim.info import get_sim_func
-from neurodsp.sim.utils import modulate_signal
-from neurodsp.utils.decorators import normalize
+from neurodsp.sim.modulate import modulate_signal
 from neurodsp.utils.data import create_times
+from neurodsp.utils.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################

@@ -5,6 +5,7 @@ import numpy as np
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
 from neurodsp.sim.update import ParamIter
+from neurodsp.utils.data import compute_nsamples
 
 ###################################################################################################
 ###################################################################################################
@@ -40,7 +41,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     >>> sigs = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sigs = np.zeros([n_sims, int(sim_params['n_seconds'] * sim_params['fs'])])
+    sigs = np.zeros([n_sims, compute_nsamples(sim_params['n_seconds'], sim_params['fs'])])
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
         sigs[ind, :] = sig
 
@@ -50,7 +51,7 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
         return sigs
 
 
-def sim_across_values(sim_func, sim_params, n_sims, output='object'):
+def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
     """Simulate multiple signals across different parameter values.
 
     Parameters
@@ -89,15 +90,12 @@ def sim_across_values(sim_func, sim_params, n_sims, output='object'):
     >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
     """
 
-    oparams = {'update' : None, 'component' : None}
-    if isinstance(sim_params, ParamIter):
-        oparams = {'update' : sim_params.update, 'component' : sim_params.component}
-
-    sims = MultiSimulations(**oparams)
+    sims = MultiSimulations(update=getattr(sim_params, 'update', None),
+                            component=getattr(sim_params, 'component', None))
     for ind, cur_sim_params in enumerate(sim_params):
         sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
 
-    if output == 'array':
+    if return_type == 'array':
         sims = np.squeeze(np.array([el.signals for el in sims]))
 
     return sims
@@ -138,7 +136,8 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     """
 
     all_params = [None] * n_sims
-    sigs = np.zeros([n_sims, sim_sampler.params['n_seconds'] * sim_sampler.params['fs']])
+    n_samples = compute_nsamples(sim_sampler.params['n_seconds'], sim_sampler.params['fs'])
+    sigs = np.zeros([n_sims, n_samples])
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
         sigs[ind, :] = sig
         all_params[ind] = params

@@ -5,7 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.core import listify
-from neurodsp.sim.utils import get_base_params, drop_base_params, get_param_values
+from neurodsp.sim.params import get_base_params, drop_base_params, get_param_values
 
 ###################################################################################################
 ###################################################################################################

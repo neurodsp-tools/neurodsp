@@ -1,11 +1,11 @@
-"""Tests for neurodsp.sim.utils."""
+"""Tests for neurodsp.sim.modulate."""
 
 import numpy as np
 
 from neurodsp.tests.tutils import check_sim_output
 from neurodsp.tests.settings import FS
 
-from neurodsp.sim.utils import *
+from neurodsp.sim.modulate import *
 
 ###################################################################################################
 ###################################################################################################

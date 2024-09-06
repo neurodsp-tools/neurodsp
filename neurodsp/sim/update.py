@@ -5,7 +5,7 @@ from copy import deepcopy
 import numpy as np
 
 from neurodsp.sim.generators import sig_yielder
-from neurodsp.sim.utils import get_base_params
+from neurodsp.sim.params import get_base_params
 from neurodsp.utils.core import counter
 
 ###################################################################################################

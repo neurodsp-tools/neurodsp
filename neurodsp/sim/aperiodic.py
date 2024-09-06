@@ -7,12 +7,12 @@ from scipy.linalg import toeplitz, cholesky
 from neurodsp.filt import filter_signal, infer_passtype
 from neurodsp.filt.fir import compute_filter_length
 from neurodsp.filt.checks import check_filter_definition
-from neurodsp.utils import remove_nans
+from neurodsp.utils.norm import normalize_sig
+from neurodsp.utils.outliers import remove_nans
+from neurodsp.utils.decorators import normalize
 from neurodsp.utils.checks import check_param_range
 from neurodsp.utils.data import create_times, compute_nsamples
-from neurodsp.utils.decorators import normalize
-from neurodsp.utils.norm import normalize_sig
-from neurodsp.sim.utils import rotate_timeseries
+from neurodsp.sim.modulate import rotate_timeseries
 from neurodsp.sim.transients import sim_synaptic_kernel
 
 ###################################################################################################
