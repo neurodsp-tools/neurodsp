@@ -7,6 +7,13 @@ from neurodsp.sim.update import *
 ###################################################################################################
 ###################################################################################################
 
+def test_class_base_updater():
+
+    params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}
+    obj = BaseUpdater(params)
+    assert obj
+    assert obj.base
+
 def test_param_updater():
 
     params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}

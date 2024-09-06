@@ -4,11 +4,36 @@ from copy import deepcopy
 
 import numpy as np
 
-from neurodsp.sim.multi import sig_yielder
+from neurodsp.sim.generators import sig_yielder
+from neurodsp.sim.utils import get_base_params
 from neurodsp.utils.core import counter
 
 ###################################################################################################
 ###################################################################################################
+
+## BASE OBJECTS
+
+class BaseUpdater():
+    """Base object for managing parameter and signal update objects.
+
+    Parameters
+    ----------
+    params : dict
+        Parameter definition.
+    """
+
+    def __init__(self, params):
+        """Initialize BaseUpdater object."""
+
+        self.params = deepcopy(params)
+
+
+    @property
+    def base(self):
+        """Alias in base parameters as property attribute."""
+
+        return get_base_params(self.params)
+
 
 ## PARAM UPDATERS
 
@@ -107,7 +132,7 @@ def param_iter_yielder(sim_params, updater, values):
         yield deepcopy(sim_params)
 
 
-class ParamIter():
+class ParamIter(BaseUpdater):
     """Object for iterating across parameter updates.
 
     Parameters
@@ -133,14 +158,13 @@ class ParamIter():
     def __init__(self, params, update, values, component=None):
         """Initialize parameter iteration object."""
 
-        params = deepcopy(params)
+        BaseUpdater.__init__(self, params)
 
         if component is not None:
             params['components'][component][update] = None
         else:
             params[update] = None
 
-        self.params = params
         self.update = update
         self.values = values
         self.component = component
@@ -254,7 +278,7 @@ def param_sample_yielder(sim_params, samplers, n_samples=None):
         yield out_params
 
 
-class ParamSampler():
+class ParamSampler(BaseUpdater):
     """Object for sampling parameter definitions.
 
     Parameters
@@ -280,7 +304,8 @@ class ParamSampler():
     def __init__(self, params, samplers, n_samples=None):
         """Initialize parameter sampler object."""
 
-        self.params = deepcopy(params)
+        BaseUpdater.__init__(self, params)
+
         self.samplers = samplers
         self.n_samples = n_samples
 
@@ -314,16 +339,23 @@ class ParamSampler():
         self.yielder = param_sample_yielder(self.params, self.samplers, self.n_samples)
 
 
+    @property
+    def base(self):
+        """Alias in base parameters as property attribute."""
+
+        return get_base_params(self.params)
+
+
 ## SIG ITER
 
-class SigIter():
+class SigIter(BaseUpdater):
     """Object for iterating across sampled simulations.
 
     Parameters
     ----------
     sim_func : callable
         Function to create simulations.
-    sim_params : dict
+    params : dict
         Simulation parameters.
     n_sims : int, optional
         Number of simulations to create.
@@ -337,11 +369,12 @@ class SigIter():
         Generator for sampling the sig iterations.
     """
 
-    def __init__(self, sim_func, sim_params, n_sims=None):
+    def __init__(self, sim_func, params, n_sims=None):
         """Initialize signal iteration object."""
 
+        BaseUpdater.__init__(self, params)
+
         self.sim_func = sim_func
-        self.sim_params = deepcopy(sim_params)
         self.n_sims = n_sims
 
         self.index = 0
@@ -375,4 +408,4 @@ class SigIter():
         """Reset the object yielder."""
 
         self.index = 0
-        self.yielder = sig_yielder(self.sim_func, self.sim_params, self.n_sims)
+        self.yielder = sig_yielder(self.sim_func, self.params, self.n_sims)
