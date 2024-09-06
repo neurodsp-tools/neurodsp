@@ -196,7 +196,36 @@ def drop_base_params(params):
     Returns
     -------
     params : dict
-        Parameter definition, exluding base parameters.
+        Parameter definition, excluding base parameters.
     """
 
     return {key : value for key, value in params.items() if key not in BASE_PARAMS}
+
+
+def get_param_values(params, extract=None, component=None):
+    """Get a set of parameter values from a set of parameter definitions.
+
+    Parameters
+    ----------
+    params : list of dict
+        Parameter definitions for multiple simulations.
+    update : str
+        Name of the parameter to extract.
+    component : str, optional
+        Which component to extract the parameter from.
+        Only used if the parameter definition is for a multi-component simulation.
+
+    Returns
+    -------
+    values : list
+        Extracted parameter values.
+    """
+
+    if component:
+        values =[cparams['components'][component][update] for cparams in params]
+    elif update:
+        values = [cparams[update] for cparams in params]
+    else:
+        values = None
+
+    return values
