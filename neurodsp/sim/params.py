@@ -6,10 +6,107 @@ Notes:
 
 from copy import deepcopy
 
-from neurodsp.sim.update import ParamIter, ParamSampler
+###################################################################################################
+###################################################################################################
 
-###################################################################################################
-###################################################################################################
+BASE_PARAMS = ['n_seconds', 'fs']
+
+## SIMULATION PARAMETER FUNCTIONS
+
+def get_base_params(params):
+    """Get base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict or list of dict or Object
+        Parameter definition.
+
+    Returns
+    -------
+    base : dict
+        Base parameters.
+    """
+
+    from neurodsp.sim.update import BaseUpdater
+
+    if isinstance(params, dict):
+        base = _get_base_params(params)
+    elif isinstance(params, list):
+        base = _get_base_params(params[0])
+    elif isinstance(params, BaseUpdater):
+        base = getattr(params, 'base')
+    else:
+        raise ValueError('Parameter definition not understood.')
+
+    return base
+
+
+def _get_base_params(params):
+    """Sub-function to get base parameters from a dictionary of parameters."""
+
+    return {key : value for key, value in params.items() if key in BASE_PARAMS}
+
+
+def drop_base_params(params):
+    """Drop base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict or list of dict
+        Parameter definition.
+
+    Returns
+    -------
+    params : dict
+        Parameter definition, excluding base parameters.
+    """
+
+    if isinstance(params, dict):
+        params = _drop_base_params(params)
+    elif isinstance(params, list):
+        params = [_get_base_params(cparams) for cparams in params]
+    else:
+        raise ValueError('Parameter definition not understood.')
+
+    return params
+
+
+def _drop_base_params(params):
+    """Sub-function to drop base parameters from a dictionary of parameters."""
+
+    return {key : value for key, value in params.items() if key not in BASE_PARAMS}
+
+
+def get_param_values(params, extract=None, component=None):
+    """Get a set of parameter values from a set of parameter definitions.
+
+    Parameters
+    ----------
+    params : list of dict
+        Parameter definitions for multiple simulations.
+    extract : str
+        Name of the parameter to extract.
+    component : str, optional
+        Which component to extract the parameter from.
+        Only used if the parameter definition is for a multi-component simulation.
+
+    Returns
+    -------
+    values : list
+        Extracted parameter values.
+    """
+
+    if component:
+        values =[cparams['components'][component][extract] for cparams in params]
+    elif extract:
+        values = [cparams[extract] for cparams in params]
+    else:
+        values = None
+
+    return values
+
+
+## SIMULATION PARAMETER OBJECTS
 
 class SimParams():
     """Object for managing simulation parameters.
@@ -368,6 +465,8 @@ class SimIters(SimParams):
             Generator object for iterating across simulation parameters.
         """
 
+        from neurodsp.sim.update import ParamIter
+
         assert label in self._params.keys(), "Label for simulation parameters not found."
 
         return ParamIter(super().__getitem__(label), update, values, component)
@@ -531,6 +630,8 @@ class SimSamplers(SimParams):
         ParamSampler
             Generator object for sampling simulation parameters.
         """
+
+        from neurodsp.sim.update import ParamSampler
 
         return ParamSampler(super().__getitem__(label), samplers,
                             n_samples if n_samples else self.n_samples)

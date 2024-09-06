@@ -7,6 +7,54 @@ from neurodsp.sim.params import *
 ###################################################################################################
 ###################################################################################################
 
+## FUNCTION TESTS
+
+def test_get_base_params(tsim_iters):
+
+    params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    out1 = get_base_params(params)
+    for bparam in out1:
+        assert bparam in BASE_PARAMS
+
+    params_lst = [params, params]
+    out2 = get_base_params(params)
+    for bparam in out2:
+        assert bparam in BASE_PARAMS
+
+    out3 = get_base_params(tsim_iters['pl_exp'])
+    for bparam in out3:
+        assert bparam in BASE_PARAMS
+
+def test_drop_base_params():
+
+    params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
+    out1 = drop_base_params(params)
+    for bparam in BASE_PARAMS:
+        assert bparam not in out1
+    assert 'exponent' in out1
+
+    params_lst = [params, params]
+    out2 = drop_base_params(params)
+    for bparam in BASE_PARAMS:
+        assert bparam not in out2
+    assert 'exponent' in out2
+
+def test_get_param_values():
+
+    params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
+              {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
+    assert get_param_values(params, 'exponent') == [-2, -1]
+    assert get_param_values(params, 'n_seconds') == [2, 2]
+
+    params = [{'n_seconds' : 2, 'fs' : 250, 'components' : \
+                {'sim_powerlaw' : {'exponent' : -2}, 'sim_oscillation' : {'freq' : 10}}},
+              {'n_seconds' : 2, 'fs' : 250, 'components' : \
+                {'sim_powerlaw' : {'exponent' : -1}, 'sim_oscillation' : {'freq' : 10}}}]
+    assert get_param_values(params, 'exponent', 'sim_powerlaw') == [-2, -1]
+    assert get_param_values(params, 'freq', 'sim_oscillation') == [10, 10]
+
+## CLASS TESTS
+
 def test_sim_params():
 
     # Test initialization
