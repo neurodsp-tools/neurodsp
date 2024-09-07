@@ -4,6 +4,8 @@ from pytest import raises
 
 import numpy as np
 
+from neurodsp.sim.params import get_base_params
+
 from neurodsp.sim.signals import *
 
 ###################################################################################################
@@ -44,6 +46,16 @@ def test_simulations():
     assert sims_full.has_signals
     assert sims_full.has_params
 
+    # Test pre-initialization
+    sims_pre = Simulations(n_sigs, params, 'sim_func')
+    assert len(sims_pre) == n_sigs
+    assert np.sum(sims_pre.signals) == 0
+    assert sims_pre.has_signals and sims_pre.has_params
+    for ind, sig in enumerate(sigs):
+        sims_pre.add_signal(sig, ind)
+    assert len(sims_pre) == n_sigs
+    assert np.sum(sims_pre.signals) != 0
+
 def test_variable_simulations():
 
     # Test empty initialization
@@ -79,6 +91,16 @@ def test_variable_simulations():
     assert sims_full.params == params
     assert sims_full.has_signals
     assert sims_full.has_params
+
+    # Test pre-initialization
+    sims_pre = VariableSimulations(n_sigs, get_base_params(params), 'sim_func')
+    assert len(sims_pre) == n_sigs
+    assert np.sum(sims_pre.signals) == 0
+    assert sims_pre.has_signals and sims_pre.has_params
+    for ind, (sig, cparams) in enumerate(zip(sigs, params)):
+        sims_pre.add_signal(sig, cparams, ind)
+    assert len(sims_pre) == n_sigs
+    assert np.sum(sims_pre.signals) != 0
 
 def test_variable_simulations_add():
 
