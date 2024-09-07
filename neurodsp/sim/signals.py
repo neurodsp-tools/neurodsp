@@ -171,6 +171,8 @@ class VariableSimulations(Simulations):
         """Initialize SampledSimulations object."""
 
         Simulations.__init__(self, signals, params, sim_func)
+        if isinstance(signals, int):
+            self._params = [{}] * signals
         self.update = update
         self.component = component
 
@@ -208,13 +210,15 @@ class VariableSimulations(Simulations):
         return get_param_values(self.params, self.update, self.component)
 
 
-    def add_params(self, params):
+    def add_params(self, params, index=None):
         """Add parameter definition(s) to object.
 
         Parameters
         ----------
         params : dict or list of dict, optional
             The simulation parameter definition(s).
+        index : int
+            Index to insert the new parameter definition.
         """
 
         if params:
@@ -236,7 +240,10 @@ class VariableSimulations(Simulations):
                         raise ValueError(msg)
                     self._params = cparams
                 else:
-                    self._params.extend(cparams)
+                    if index is not None:
+                        self._params[index] = cparams[0]
+                    else:
+                        self._params.extend(cparams)
 
         else:
             if self.has_params:
@@ -259,7 +266,7 @@ class VariableSimulations(Simulations):
         """
 
         super().add_signal(signal, index=index)
-        self.add_params(params)
+        self.add_params(params, index=index)
 
 
 class MultiSimulations():

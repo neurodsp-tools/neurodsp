@@ -41,12 +41,12 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     >>> sims = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sims = np.zeros([n_sims, compute_nsamples(sim_params['n_seconds'], sim_params['fs'])])
+    sims = Simulations(n_sims, sim_params, sim_func)
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
-        sims[ind, :] = sig
+        sims.add_signal(sig, index=ind)
 
-    if return_type == 'object':
-        sims = Simulations(sims, sim_params, sim_func)
+    if return_type == 'array':
+        sims = sims.signals
 
     return sims
 
@@ -88,18 +88,15 @@ def sim_across_values(sim_func, sim_params, return_type='object'):
     >>> sims = sim_across_values(sim_powerlaw, params)
     """
 
-    base = get_base_params(sim_params)
+    sims = VariableSimulations(len(sim_params), get_base_params(sim_params), sim_func,
+                               update=getattr(sim_params, 'update', None),
+                               component=getattr(sim_params, 'component', None))
 
-    all_params = [None] * len(sim_params)
-    sims = np.zeros([len(sim_params), compute_nsamples(base['n_seconds'], base['fs'])])
     for ind, cur_sim_params in enumerate(sim_params):
-        sims[ind, :] = sim_func(**cur_sim_params)
-        all_params[ind] = cur_sim_params
+        sims.add_signal(sim_func(**cur_sim_params), cur_sim_params, index=ind)
 
-    if return_type == 'object':
-        sims = VariableSimulations(sims, all_params, sim_func,
-                                   update=getattr(sim_params, 'update', None),
-                                   component=getattr(sim_params, 'component', None))
+    if return_type == 'array':
+        sims = sims.signals
 
     return sims
 
@@ -188,14 +185,11 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     >>> sims = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
     """
 
-    all_params = [None] * n_sims
-    n_samples = compute_nsamples(sim_sampler.params['n_seconds'], sim_sampler.params['fs'])
-    sims = np.zeros([n_sims, n_samples])
+    sims = VariableSimulations(n_sims, get_base_params(sim_sampler), sim_func)
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
-        sims[ind, :] = sig
-        all_params[ind] = params
+        sims.add_signal(sim_func(**params), params, index=ind)
 
-    if return_type == 'object':
-        sims = VariableSimulations(sims, all_params, sim_func)
+    if return_type == 'array':
+        sims = sims.signals
 
     return sims
