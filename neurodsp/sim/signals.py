@@ -5,6 +5,7 @@ from itertools import repeat
 import numpy as np
 
 from neurodsp.utils.core import listify
+from neurodsp.utils.data import compute_nsamples
 from neurodsp.sim.params import get_base_params, drop_base_params, get_param_values
 
 ###################################################################################################
@@ -15,8 +16,9 @@ class Simulations():
 
     Parameters
     ----------
-    signals : 1d or 2nd array, optional
-        The simulated signals, organized as [n_sims, sig_length].
+    signals : 1d or 2nd array or int, optional
+        If array, the simulated signals, organized as [n_sims, sig_length].
+        If int, the number of expected simulations, used to pre-initialize array.
     params : dict, optional
         The simulation parameters that were used to create the simulations.
     sim_func : str or callable, optional
@@ -31,10 +33,17 @@ class Simulations():
     def __init__(self, signals=None, params=None, sim_func=None):
         """Initialize Simulations object."""
 
-        self.signals = np.atleast_2d(signals) if signals is not None else np.array([])
+        if signals is None:
+            signals = np.array([])
+        elif isinstance(signals, int):
+            n_samples = compute_nsamples(params['n_seconds'], params['fs'])
+            signals = np.zeros((signals, n_samples))
+        self.signals = np.atleast_2d(signals)
+
         self._base_params = None
         self._params = None
         self.add_params(params)
+
         self.sim_func = sim_func.__name__ if callable(sim_func) else sim_func
 
 
@@ -102,7 +111,7 @@ class Simulations():
 
         Parameters
         ----------
-        params : dict, optional
+        params : dict or None
             The simulation parameter definition(s).
         """
 
@@ -111,13 +120,38 @@ class Simulations():
             self._params = drop_base_params(params)
 
 
+    def add_signal(self, signal, index=None):
+        """Add a signal to the current object.
+
+        Parameters
+        ----------
+        signal : 1d array
+            A simulated signal to add to the object.
+        index : int
+            Index to insert the new signal in the signals attribute.
+        """
+
+        if index is not None:
+            self.signals[index, :] = signal
+        else:
+            if not self.signals.size:
+                self.signals = np.atleast_2d(signal)
+            else:
+                try:
+                    self.signals = np.vstack([self.signals, signal])
+                except ValueError as array_value_error:
+                    msg = 'Size of the added signal is not consistent with existing signals.'
+                    raise ValueError(msg) from array_value_error
+
+
 class VariableSimulations(Simulations):
     """Data object for a set of simulated signals with variable parameter definitions.
 
     Parameters
     ----------
-    signals : 2nd array, optional
-        The simulated signals, organized as [n_sims, sig_length].
+    signals : 2nd array or int, optional
+        If array, the simulated signals, organized as [n_sims, sig_length].
+        If int, the number of expected simulations, used to pre-initialize array.
     params : list of dict, optional
         The simulation parameters for each of the simulations.
     sim_func : str, optional
@@ -186,25 +220,30 @@ class VariableSimulations(Simulations):
         if params:
 
             params = listify(params)
+
             base_params = get_base_params(params[0])
-            cparams = [drop_base_params(el) for el in params]
-
-            if not self.has_params:
-                if len(self) > 1 and len(self) > len(cparams):
-                    msg = 'Cannot add parameters to object without existing parameter values.'
-                    raise ValueError(msg)
+            if not self._base_params:
                 self._base_params = base_params
-                self._params = cparams
-
             else:
-                self._params.extend(cparams)
+                msg = 'Base params have to match existing parameters.'
+                assert base_params == self._base_params, msg
+
+            cparams = [drop_base_params(el) for el in params]
+            if cparams[0]:
+                if not self.has_params:
+                    if len(self) > 1 and len(self) > len(cparams):
+                        msg = 'Cannot add parameters to object without existing parameter values.'
+                        raise ValueError(msg)
+                    self._params = cparams
+                else:
+                    self._params.extend(cparams)
 
         else:
             if self.has_params:
                 raise ValueError('Must add parameters if object already has them.')
 
 
-    def add_signal(self, signal, params=None):
+    def add_signal(self, signal, params=None, index=None):
         """Add a signal to the current object.
 
         Parameters
@@ -215,16 +254,11 @@ class VariableSimulations(Simulations):
             Parameter definition for the added signal.
             If current object does not include parameters, should be empty.
             If current object does include parameters, this input is required.
+        index : int
+            Index to insert the new signal in the signals attribute.
         """
 
-        if not self.signals.size:
-            self.signals = np.atleast_2d(signal)
-        else:
-            try:
-                self.signals = np.vstack([self.signals, signal])
-            except ValueError as array_value_error:
-                msg = 'Size of the added signal is not consistent with existing signals.'
-                raise ValueError(msg) from array_value_error
+        super().add_signal(signal, index=index)
         self.add_params(params)
 
 

@@ -79,13 +79,13 @@ def sim_across_values(sim_func, sim_params, return_type='object'):
     >>> from neurodsp.sim.update import ParamIter
     >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
     >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
-    >>> sims = sim_multi_across_values(sim_powerlaw, param_iter)
+    >>> sims = sim_across_values(sim_powerlaw, param_iter)
 
     Simulate multiple powerlaw signals from manually defined set of simulation parameters:
 
     >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
     ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
-    >>> sims = sim_multi_across_values(sim_powerlaw, params)
+    >>> sims = sim_across_values(sim_powerlaw, params)
     """
 
     base = get_base_params(sim_params)
