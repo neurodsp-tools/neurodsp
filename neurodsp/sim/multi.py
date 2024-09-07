@@ -4,6 +4,7 @@ import numpy as np
 
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
+from neurodsp.sim.params import get_base_params
 from neurodsp.utils.data import compute_nsamples
 
 ###################################################################################################
@@ -50,7 +51,60 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     return sims
 
 
-def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
+def sim_across_values(sim_func, sim_params, return_type='object'):
+    """Simulate signals across different parameter values.
+
+    Parameters
+    ----------
+    sim_func : callable
+        Function to create the simulated time series.
+    sim_params : ParamIter or iterable or list of dict
+        Simulation parameters for `sim_func`.
+    return_type : {'object', 'array'}
+        Specifies the return type of the simulations.
+        If 'object', returns simulations and metadata in a 'VariableSimulations' object.
+        If 'array', returns the simulations (no metadata) in an array.
+
+    Returns
+    -------
+    sims : VariableSimulations or array
+        Simulations, return type depends on `return_type` argument.
+        If array, signals are collected together as [n_sims, sig_length].
+
+    Examples
+    --------
+    Simulate multiple powerlaw signals using a ParamIter object:
+
+    >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> from neurodsp.sim.update import ParamIter
+    >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
+    >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
+    >>> sims = sim_multi_across_values(sim_powerlaw, param_iter)
+
+    Simulate multiple powerlaw signals from manually defined set of simulation parameters:
+
+    >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
+    ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
+    >>> sims = sim_multi_across_values(sim_powerlaw, params)
+    """
+
+    base = get_base_params(sim_params)
+
+    all_params = [None] * len(sim_params)
+    sims = np.zeros([len(sim_params), compute_nsamples(base['n_seconds'], base['fs'])])
+    for ind, cur_sim_params in enumerate(sim_params):
+        sims[ind, :] = sim_func(**cur_sim_params)
+        all_params[ind] = cur_sim_params
+
+    if return_type == 'object':
+        sims = VariableSimulations(sims, all_params, sim_func,
+                                   update=getattr(sim_params, 'update', None),
+                                   component=getattr(sim_params, 'component', None))
+
+    return sims
+
+
+def sim_multi_across_values(sim_func, sim_params, n_sims, return_type='object'):
     """Simulate multiple signals across different parameter values.
 
     Parameters
@@ -80,13 +134,13 @@ def sim_across_values(sim_func, sim_params, n_sims, return_type='object'):
     >>> from neurodsp.sim.update import ParamIter
     >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
     >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
-    >>> sigs = sim_across_values(sim_powerlaw, param_iter, n_sims=2)
+    >>> sims = sim_multi_across_values(sim_powerlaw, param_iter, n_sims=2)
 
     Simulate multiple powerlaw signals from manually defined set of simulation parameters:
 
     >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
     ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
-    >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
+    >>> sims = sim_multi_across_values(sim_powerlaw, params, n_sims=2)
     """
 
     sims = MultiSimulations(update=getattr(sim_params, 'update', None),

@@ -27,24 +27,47 @@ def test_sim_multiple():
 
 def test_sim_across_values(tsim_iters):
 
+    params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
+              {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
+
+    sims_obj = sim_across_values(sim_powerlaw, params, 'object')
+    assert isinstance(sims_obj, VariableSimulations)
+    assert len(sims_obj) == len(params)
+    for csim, cparams, oparams in zip(sims_obj, sims_obj.params, params):
+        assert isinstance(csim, np.ndarray)
+        assert cparams == oparams
+
+    sims_arr = sim_across_values(sim_powerlaw, params, 'array')
+    assert isinstance(sims_arr, np.ndarray)
+    assert sims_arr.shape[0] == len(params)
+
+    # Test with ParamIter input
+    siter = tsim_iters['pl_exp']
+    sims_iter = sim_across_values(sim_powerlaw, siter)
+    assert isinstance(sims_iter, VariableSimulations)
+    assert sims_iter.update == siter.update
+    assert sims_iter.values == siter.values
+
+def test_sim_multi_across_values(tsim_iters):
+
     n_sims = 3
     params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
               {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
 
-    sims_obj = sim_across_values(sim_powerlaw, params, n_sims, 'object')
+    sims_obj = sim_multi_across_values(sim_powerlaw, params, n_sims, 'object')
     assert isinstance(sims_obj, MultiSimulations)
-    for sigs, cparams in zip(sims_obj, params):
-        assert isinstance(sigs, Simulations)
-        assert len(sigs) == n_sims
-        assert sigs.params == cparams
+    for sims, cparams in zip(sims_obj, params):
+        assert isinstance(sims, Simulations)
+        assert len(sims) == n_sims
+        assert sims.params == cparams
 
-    sigs_arr = sim_across_values(sim_powerlaw, params, n_sims, 'array')
-    assert isinstance(sigs_arr, np.ndarray)
-    assert sigs_arr.shape[0:2] == (len(params), n_sims)
+    sims_arr = sim_multi_across_values(sim_powerlaw, params, n_sims, 'array')
+    assert isinstance(sims_arr, np.ndarray)
+    assert sims_arr.shape[0:2] == (len(params), n_sims)
 
     # Test with ParamIter input
     siter = tsim_iters['pl_exp']
-    sims_iter = sim_across_values(sim_powerlaw, siter, n_sims)
+    sims_iter = sim_multi_across_values(sim_powerlaw, siter, n_sims)
     assert isinstance(sims_iter, MultiSimulations)
     assert sims_iter.update == siter.update
     assert sims_iter.values == siter.values

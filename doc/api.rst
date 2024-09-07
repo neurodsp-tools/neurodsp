@@ -326,6 +326,7 @@ Multiple Signals
 
     sim_multiple
     sim_across_values
+    sim_multi_across_values
     sim_from_sampler
 
 Simulation Parameters
