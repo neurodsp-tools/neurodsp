@@ -10,7 +10,7 @@ from neurodsp.utils.data import compute_nsamples
 ###################################################################################################
 ###################################################################################################
 
-def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
+def sim_multiple(sim_func, sim_params, n_sims):
     """Simulate multiple samples of a specified simulation.
 
     Parameters
@@ -21,16 +21,12 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
         The parameters for the simulated signal, passed into `sim_func`.
     n_sims : int
         Number of simulations to create.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'Simulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sims : Simulations or 2d array
-        Simulations, return type depends on `return_type` argument.
-        Simulated time series are organized as [n_sims, sig length].
+    sims : Simulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
@@ -45,13 +41,10 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
     for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
         sims.add_signal(sig, index=ind)
 
-    if return_type == 'array':
-        sims = sims.signals
-
     return sims
 
 
-def sim_across_values(sim_func, sim_params, return_type='object'):
+def sim_across_values(sim_func, sim_params):
     """Simulate signals across different parameter values.
 
     Parameters
@@ -60,16 +53,12 @@ def sim_across_values(sim_func, sim_params, return_type='object'):
         Function to create the simulated time series.
     sim_params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'VariableSimulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sims : VariableSimulations or array
-        Simulations, return type depends on `return_type` argument.
-        If array, signals are collected together as [n_sims, sig_length].
+    sims : VariableSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
@@ -95,13 +84,10 @@ def sim_across_values(sim_func, sim_params, return_type='object'):
     for ind, cur_sim_params in enumerate(sim_params):
         sims.add_signal(sim_func(**cur_sim_params), cur_sim_params, index=ind)
 
-    if return_type == 'array':
-        sims = sims.signals
-
     return sims
 
 
-def sim_multi_across_values(sim_func, sim_params, n_sims, return_type='object'):
+def sim_multi_across_values(sim_func, sim_params, n_sims):
     """Simulate multiple signals across different parameter values.
 
     Parameters
@@ -112,16 +98,12 @@ def sim_multi_across_values(sim_func, sim_params, n_sims, return_type='object'):
         Simulation parameters for `sim_func`.
     n_sims : int
         Number of simulations to create per parameter definition.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'MultiSimulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sims : MultiSimulations or array
-        Simulations, return type depends on `return_type` argument.
-        If array, signals are collected together as [n_sets, n_sims, sig_length].
+    sims : MultiSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sets, n_sims, sig_length].
 
     Examples
     --------
@@ -143,15 +125,12 @@ def sim_multi_across_values(sim_func, sim_params, n_sims, return_type='object'):
     sims = MultiSimulations(update=getattr(sim_params, 'update', None),
                             component=getattr(sim_params, 'component', None))
     for cur_sim_params in sim_params:
-        sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
-
-    if return_type == 'array':
-        sims = np.squeeze(np.array([el.signals for el in sims]))
+        sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims))
 
     return sims
 
 
-def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
+def sim_from_sampler(sim_func, sim_sampler, n_sims):
     """Simulate a set of signals from a parameter sampler.
 
     Parameters
@@ -162,16 +141,12 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
         Parameter definition to sample from.
     n_sims : int
         Number of simulations to create per parameter definition.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'VariableSimulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sims : VariableSimulations or 2d array
-        Simulations, return type depends on `return_type` argument.
-        If array, simulations are organized as [n_sims, sig length].
+    sims : VariableSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
@@ -188,8 +163,5 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     sims = VariableSimulations(n_sims, get_base_params(sim_sampler), sim_func)
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
         sims.add_signal(sim_func(**params), params, index=ind)
-
-    if return_type == 'array':
-        sims = sims.signals
 
     return sims
