@@ -8,16 +8,16 @@ from neurodsp.utils.core import counter
 ###################################################################################################
 ###################################################################################################
 
-def sig_yielder(sim_func, params, n_sims):
+def sig_yielder(function, params, n_sims):
     """Generator to yield simulated signals from a given simulation function and parameters.
 
     Parameters
     ----------
-    sim_func : str or callable
+    function : str or callable
         Function to create the simulated time series.
         If string, should be the name of the desired simulation function.
     params : dict
-        The parameters for the simulated signal, passed into `sim_func`.
+        The parameters for the simulated signal, passed into `function`.
     n_sims : int, optional
         Number of simulations to set as the max.
         If None, creates an infinite generator.
@@ -28,21 +28,21 @@ def sig_yielder(sim_func, params, n_sims):
         Simulated time series.
     """
 
-    sim_func = get_sim_func(sim_func)
+    function = get_sim_func(function)
     for _ in counter(n_sims):
-        yield sim_func(**params)
+        yield function(**params)
 
 
-def sig_sampler(sim_func, params, return_params=False, n_sims=None):
+def sig_sampler(function, params, return_params=False, n_sims=None):
     """Generator to yield simulated signals from a parameter sampler.
 
     Parameters
     ----------
-    sim_func : str or callable
+    function : str or callable
         Function to create the simulated time series.
         If string, should be the name of the desired simulation function.
     params : iterable
-        The parameters for the simulated signal, passed into `sim_func`.
+        The parameters for the simulated signal, passed into `function`.
     return_params : bool, optional, default: False
         Whether to yield the simulation parameters as well as the simulated time series.
     n_sims : int, optional
@@ -58,7 +58,7 @@ def sig_sampler(sim_func, params, return_params=False, n_sims=None):
         Only returned if `return_params` is True.
     """
 
-    sim_func = get_sim_func(sim_func)
+    function = get_sim_func(function)
 
     # If `params` has a size, and `n_sims` is defined, check that they are compatible
     #   To do so, we first check if the iterable has a __len__ attr, and if so check values
@@ -69,9 +69,9 @@ def sig_sampler(sim_func, params, return_params=False, n_sims=None):
     for ind, sample_params in zip(counter(n_sims), params):
 
         if return_params:
-            yield sim_func(**sample_params), sample_params
+            yield function(**sample_params), sample_params
         else:
-            yield sim_func(**sample_params)
+            yield function(**sample_params)
 
         if n_sims and ind >= n_sims:
             break

@@ -6,6 +6,7 @@ import numpy as np
 
 from neurodsp.sim.generators import sig_yielder
 from neurodsp.sim.params import get_base_params
+from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.core import counter
 
 ###################################################################################################
@@ -353,8 +354,9 @@ class SigIter(BaseUpdater):
 
     Parameters
     ----------
-    sim_func : callable
+    function : str or callable
         Function to create simulations.
+        If string, should be the name of the desired simulation function.
     params : dict
         Simulation parameters.
     n_sims : int, optional
@@ -369,12 +371,12 @@ class SigIter(BaseUpdater):
         Generator for sampling the sig iterations.
     """
 
-    def __init__(self, sim_func, params, n_sims=None):
+    def __init__(self, function, params, n_sims=None):
         """Initialize signal iteration object."""
 
         BaseUpdater.__init__(self, params)
 
-        self.sim_func = sim_func
+        self.function = get_sim_func(function)
         self.n_sims = n_sims
 
         self.index = 0
@@ -408,4 +410,4 @@ class SigIter(BaseUpdater):
         """Reset the object yielder."""
 
         self.index = 0
-        self.yielder = sig_yielder(self.sim_func, self.params, self.n_sims)
+        self.yielder = sig_yielder(self.function, self.params, self.n_sims)

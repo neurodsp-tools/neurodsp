@@ -51,7 +51,7 @@ def test_load_jsonlines():
 def test_save_sims_sim(tsims):
 
     label = 'tsims'
-    folder = '_'.join([tsims.sim_func, label])
+    folder = '_'.join([tsims.function, label])
 
     save_sims(tsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)
@@ -63,13 +63,13 @@ def test_load_sims_sim(tsims):
 
     loaded_sims = load_sims('tsims', TEST_FILES_PATH)
     assert np.array_equal(loaded_sims.signals, tsims.signals)
-    assert loaded_sims.sim_func == tsims.sim_func
+    assert loaded_sims.function == tsims.function
     assert loaded_sims.params == tsims.params
 
 def test_save_sims_vsim(tvsims):
 
     label = 'tvsims'
-    folder = '_'.join([tvsims.sim_func, tvsims.update, label])
+    folder = '_'.join([tvsims.function, tvsims.update, label])
 
     save_sims(tvsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)
@@ -81,7 +81,7 @@ def test_load_sims_vsim(tvsims):
 
     loaded_sims = load_sims('tvsims', TEST_FILES_PATH)
     assert np.array_equal(loaded_sims.signals, tvsims.signals)
-    assert loaded_sims.sim_func == tvsims.sim_func
+    assert loaded_sims.function == tvsims.function
     assert loaded_sims.params == tvsims.params
     assert loaded_sims.update == tvsims.update
     assert loaded_sims.component == tvsims.component
@@ -89,8 +89,8 @@ def test_load_sims_vsim(tvsims):
 def test_save_sims_msim(tmsims):
 
     label = 'tmsims'
-    folder = '_'.join([tmsims.sim_func, tmsims.update, label])
-    sub_folder = '_'.join([tmsims.sim_func, 'set'])
+    folder = '_'.join([tmsims.function, tmsims.update, label])
+    sub_folder = '_'.join([tmsims.function, 'set'])
 
     save_sims(tmsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)
@@ -104,7 +104,7 @@ def test_load_sims_msim(tmsims):
 
     label = 'tmsims'
     loaded_sims = load_sims(label, TEST_FILES_PATH)
-    assert loaded_sims.sim_func == tmsims.sim_func
+    assert loaded_sims.function == tmsims.function
     #assert loaded_sims.params == tmsims.params
     assert loaded_sims.update == tmsims.update
     assert loaded_sims.component == tmsims.component

@@ -6,6 +6,7 @@ import numpy as np
 
 from neurodsp.utils.core import listify
 from neurodsp.utils.data import compute_nsamples
+from neurodsp.sim.info import get_sim_func_name
 from neurodsp.sim.params import get_base_params, drop_base_params, get_param_values
 
 ###################################################################################################
@@ -21,7 +22,7 @@ class Simulations():
         If int, the number of expected simulations, used to pre-initialize array.
     params : dict, optional
         The simulation parameters that were used to create the simulations.
-    sim_func : str or callable, optional
+    function : str or callable, optional
         The simulation function that was used to create the simulations.
         If callable, the name of the function is taken to be added to the object.
 
@@ -30,7 +31,7 @@ class Simulations():
     This object stores a set of simulations generated from a shared parameter definition.
     """
 
-    def __init__(self, signals=None, params=None, sim_func=None):
+    def __init__(self, signals=None, params=None, function=None):
         """Initialize Simulations object."""
 
         if signals is None:
@@ -44,7 +45,7 @@ class Simulations():
         self._params = None
         self.add_params(params)
 
-        self.sim_func = sim_func.__name__ if callable(sim_func) else sim_func
+        self.function = get_sim_func_name(function)
 
 
     def __iter__(self):
@@ -154,7 +155,7 @@ class VariableSimulations(Simulations):
         If int, the number of expected simulations, used to pre-initialize array.
     params : list of dict, optional
         The simulation parameters for each of the simulations.
-    sim_func : str, optional
+    function : str, optional
         The simulation function that was used to create the simulations.
     update : str
         The name of the parameter that is updated across simulations.
@@ -167,10 +168,10 @@ class VariableSimulations(Simulations):
     This object stores a set of simulations with different parameter definitions per signal.
     """
 
-    def __init__(self, signals=None, params=None, sim_func=None, update=None, component=None):
+    def __init__(self, signals=None, params=None, function=None, update=None, component=None):
         """Initialize SampledSimulations object."""
 
-        Simulations.__init__(self, signals, params, sim_func)
+        Simulations.__init__(self, signals, params, function)
         if isinstance(signals, int):
             self._params = [{}] * signals
         self.update = update
@@ -278,7 +279,7 @@ class MultiSimulations():
         Sets of simulated signals, with each array organized as [n_sims, sig_length].
     params : list of dict
         The simulation parameters that were used to create the simulations.
-    sim_func : str or list of str
+    function : str or list of str
         The simulation function(s) that were used to create the simulations.
     update : str
         The name of the parameter that is updated across sets of simulations.
@@ -291,11 +292,11 @@ class MultiSimulations():
     This object stores a set of simulations with multiple instances per parameter definition.
     """
 
-    def __init__(self, signals=None, params=None, sim_func=None, update=None, component=None):
+    def __init__(self, signals=None, params=None, function=None, update=None, component=None):
         """Initialize MultiSimulations object."""
 
         self.signals = []
-        self.add_signals(signals, params, sim_func)
+        self.add_signals(signals, params, function)
         self.update = update
         self.component = component
 
@@ -334,10 +335,10 @@ class MultiSimulations():
 
 
     @property
-    def sim_func(self):
+    def function(self):
         """Alias func as property."""
 
-        return self.signals[0].sim_func if self else None
+        return self.signals[0].function if self else None
 
 
     @property
@@ -370,7 +371,7 @@ class MultiSimulations():
         return bool(len(self))
 
 
-    def add_signals(self, signals, params=None, sim_func=None):
+    def add_signals(self, signals, params=None, function=None):
         """Add a set of signals to the current object.
 
         Parameters
@@ -379,7 +380,7 @@ class MultiSimulations():
             A set of simulated signals, organized as [n_sims, sig_length].
         params : dict or list of dict, optional
             The simulation parameters that were used to create the set of simulations.
-        sim_func : str, optional
+        function : str, optional
             The simulation function that was used to create the set of simulations.
         """
 
@@ -396,7 +397,7 @@ class MultiSimulations():
 
             else:
                 params = repeat(params) if not isinstance(params, list) else params
-                sim_func = repeat(sim_func) if not isinstance(sim_func, list) else sim_func
-                for csigs, cparams, cfunc in zip(signals, params, sim_func):
-                    signals = Simulations(csigs, params=cparams, sim_func=cfunc)
+                function = repeat(function) if not isinstance(function, list) else function
+                for csigs, cparams, cfunc in zip(signals, params, function):
+                    signals = Simulations(csigs, params=cparams, function=cfunc)
                     self.signals.append(signals)

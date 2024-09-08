@@ -9,39 +9,40 @@ from neurodsp.utils.checks import check_param_options
 
 SIM_MODULES = ['periodic', 'aperiodic', 'cycles', 'transients', 'combined']
 
-def get_sim_funcs(module_name):
+def get_sim_funcs(module):
     """Get the available sim functions from a specified sub-module.
 
     Parameters
     ----------
-    module_name : {'periodic', 'aperiodic', 'cycles', 'transients', 'combined'}
+    module : {'periodic', 'aperiodic', 'cycles', 'transients', 'combined'}
         Simulation sub-module to get sim functions from.
 
     Returns
     -------
-    funcs : dictionary
+    functions : dictionary
         A dictionary containing the available sim functions from the requested sub-module.
     """
 
-    check_param_options(module_name, 'module_name', SIM_MODULES)
+    check_param_options(module, 'module', SIM_MODULES)
 
     # Note: imports done within function to avoid circular import
     from neurodsp.sim import periodic, aperiodic, transients, combined, cycles
 
-    module = eval(module_name)
+    module = eval(module)
 
-    funcs = {name : func for name, func in getmembers(module, isfunction) \
-        if name[0:4] == 'sim_' and func.__module__.split('.')[-1] == module.__name__.split('.')[-1]}
+    module_name = module.__name__.split('.')[-1]
+    functions = {name : function for name, function in getmembers(module, isfunction) \
+        if name[0:4] == 'sim_' and function.__module__.split('.')[-1] == module_name}
 
-    return funcs
+    return functions
 
 
-def get_sim_names(module_name):
+def get_sim_names(module):
     """Get the names of the available sim functions from a specified sub-module.
 
     Parameters
     ----------
-    module_name : {'periodic', 'aperiodic', 'transients', 'combined'}
+    module : {'periodic', 'aperiodic', 'transients', 'combined'}
         Simulation sub-module to get sim functions from.
 
     Returns
@@ -50,15 +51,15 @@ def get_sim_names(module_name):
         The names of the available functions in the requested sub-module.
     """
 
-    return list(get_sim_funcs(module_name).keys())
+    return list(get_sim_funcs(module).keys())
 
 
-def get_sim_func(function_name, modules=SIM_MODULES):
+def get_sim_func(function, modules=SIM_MODULES):
     """Get a specified sim function.
 
     Parameters
     ----------
-    function_name : str or callabe
+    function : str or callabe
         Name of the sim function to retrieve.
         If callable, returns input.
         If string searches for corresponding callable sim function.
@@ -67,16 +68,16 @@ def get_sim_func(function_name, modules=SIM_MODULES):
 
     Returns
     -------
-    func : callable
+    function : callable
         Requested sim function.
     """
 
-    if callable(function_name):
-        return function_name
+    if callable(function):
+        return function
 
     for module in modules:
         try:
-            func = get_sim_funcs(module)[function_name]
+            function = get_sim_funcs(module)[function]
             break
         except KeyError:
             continue
@@ -84,4 +85,23 @@ def get_sim_func(function_name, modules=SIM_MODULES):
     else:
         raise ValueError('Requested simulation function not found.') from None
 
-    return func
+    return function
+
+
+def get_sim_func_name(function):
+    """Get the name of a simulation function.
+
+    Parameters
+    ----------
+    function : str or callabe
+        Function to get name for.
+
+    Returns
+    -------
+    name : str
+        Name of the function.
+    """
+
+    name = function.__name__ if callable(function) else function
+
+    return name

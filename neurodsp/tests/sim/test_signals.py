@@ -32,7 +32,7 @@ def test_simulations():
     assert sims_data.fs is None
     assert sims_data.has_signals
     assert sims_data.params is None
-    assert sims_data.sim_func is None
+    assert sims_data.function is None
 
     # Test dunders - iter & getitem & indicators
     for el in sims_data:
@@ -78,7 +78,7 @@ def test_variable_simulations():
     assert sims_data.fs is None
     assert sims_data.has_signals
     assert sims_data.params is None
-    assert sims_data.sim_func is None
+    assert sims_data.function is None
 
     # Test dunders - iter & getitem
     for el in sims_data:
@@ -160,7 +160,7 @@ def test_multi_simulations():
     assert sims_data.fs is None
     assert sims_data.has_signals
     assert sims_data.params == [None] * n_sets
-    assert sims_data.sim_func is None
+    assert sims_data.function is None
     assert sims_data.values is None
 
     # Test dunders - iter & getitem & indicators
@@ -175,7 +175,7 @@ def test_multi_simulations():
     assert sims_full.has_signals
     for params_obj, params_org in zip(sims_full.params, params):
         assert params_obj == params_org
-    assert sims_full.sim_func
+    assert sims_full.function
     assert sims_full.values
     assert sims_full._base_params
 

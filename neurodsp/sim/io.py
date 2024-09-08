@@ -125,7 +125,7 @@ def save_sims(sims, label, file_path=None, replace=False):
 
     assert '_' not in label, 'Cannot have underscores in simulation label.'
 
-    save_path_items = ['sim_unknown' if not sims.sim_func else sims.sim_func]
+    save_path_items = ['sim_unknown' if not sims.function else sims.function]
     if isinstance(sims, (VariableSimulations, MultiSimulations)):
         if sims.component:
             save_path_items.append(sims.component)
@@ -178,7 +178,7 @@ def load_sims(load_name, file_path=None):
         load_name = matches[0]
 
     splits = load_name.split('_')
-    sim_func = '_'.join(splits[0:2]) if splits[1] != 'unknown' else None
+    function = '_'.join(splits[0:2]) if splits[1] != 'unknown' else None
 
     update, component = None, None
     if len(splits) > 3:
@@ -192,7 +192,7 @@ def load_sims(load_name, file_path=None):
     if 'signals.npy' not in load_files:
 
         msims = [load_sims(load_file, load_folder) for load_file in load_files]
-        sims = MultiSimulations(msims, None, sim_func, update, component)
+        sims = MultiSimulations(msims, None, function, update, component)
 
     else:
 
@@ -200,10 +200,10 @@ def load_sims(load_name, file_path=None):
 
         if 'params.json' in load_files:
             params = load_json(load_folder / 'params.json')
-            sims = Simulations(sigs, params, sim_func)
+            sims = Simulations(sigs, params, function)
 
         elif 'params.jsonlines' in load_files:
             params = load_jsonlines(load_folder / 'params.jsonlines')
-            sims = VariableSimulations(sigs, params, sim_func, update, component)
+            sims = VariableSimulations(sigs, params, function, update, component)
 
     return sims
