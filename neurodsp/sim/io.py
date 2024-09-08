@@ -6,6 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
+from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
+
 ###################################################################################################
 ###################################################################################################
 
@@ -185,11 +187,11 @@ def load_sims(load_name, file_path=None):
         component = '_'.join(splits) if splits else None
 
     load_folder = fpath(file_path, load_name)
-    load_files = os.listdir(load_folder)
+    load_files = [file for file in os.listdir(load_folder) if file[0] != '.']
 
     if 'signals.npy' not in load_files:
 
-        msims = [load_sims(str(load_folder / load_file)) for load_file in load_files]
+        msims = [load_sims(load_file, load_folder) for load_file in load_files]
         sims = MultiSimulations(msims, None, sim_func, update, component)
 
     else:
