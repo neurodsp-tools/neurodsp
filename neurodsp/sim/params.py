@@ -147,6 +147,18 @@ class SimParams():
         return {**self.base, **self._params[label]}
 
 
+    def __contains__(self, label):
+        """Define object contents as whether label exists in object.
+
+        Parameters
+        ----------
+        label : str
+            Label to check whether it exists in object.
+        """
+
+        return label in self.labels
+
+
     @property
     def base(self):
         """Get the base parameters, common across all simulations.

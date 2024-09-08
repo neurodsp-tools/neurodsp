@@ -76,11 +76,14 @@ def test_sim_params():
 
     # Test registering new simulation parameter definition
     sps1.register('pl', comp1)
+    assert 'pl' in sps1
     assert comp1.items() <= sps1['pl'].items()
 
     # Test registering a group of new simulation parameter definitions
     sps2 = SimParams(5, 250)
     sps2.register_group({'pl' : comp1, 'osc' : comp2})
+    for label in ['pl', 'osc']:
+        assert label in sps2
     assert comp1.items() <= sps2['pl'].items()
     assert comp2.items() <= sps2['osc'].items()
 
@@ -89,6 +92,8 @@ def test_sim_params():
     for old_label in ['pl', 'osc']:
         with raises(KeyError):
             sps2[old_label]
+    for label in ['pl2', 'osc2']:
+        assert label in sps2
     assert comp1.items() <= sps2['pl2'].items()
     assert comp2.items() <= sps2['osc2'].items()
 
@@ -160,7 +165,7 @@ def test_sim_iters():
     sis1 = SimIters(5, 250)
     sis1.register('pl', comp_plw)
     sis1.register_iter('pl_exp', 'pl', 'exponent', [-2, -1, 0])
-    assert sis1['pl_exp']
+    assert 'pl_exp' in sis1
     assert sis1['pl_exp'].values == [-2, -1, 0]
 
     # Test registering a group of new simulation iterator definitions
@@ -170,8 +175,8 @@ def test_sim_iters():
         {'name' : 'pl_exp', 'label' : 'pl', 'update' : 'exponent', 'values' : [-2, -1 ,0]},
         {'name' : 'osc_freq', 'label' : 'osc', 'update' : 'freq', 'values' : [10, 20, 30]},
     ])
-    assert sis2['pl_exp']
-    assert sis2['osc_freq']
+    for label in ['pl_exp', 'osc_freq']:
+        assert label in sis2
 
     # Test clearing and re-registering group with list inputs
     sis2.register_group_iters([
@@ -181,8 +186,8 @@ def test_sim_iters():
     for old_label in ['pl_exp', 'osc_freq']:
         with raises(KeyError):
             sis2[old_label]
-    assert sis2['pl_exp2'] is not None
-    assert sis2['osc_freq2'] is not None
+    for label in ['pl_exp2', 'osc_freq2']:
+        assert label in sis2
 
 def test_sim_iters_props(tsim_iters):
 
@@ -209,7 +214,7 @@ def test_sim_samplers():
     sss1.register('pl', {'sim_powerlaw' : {'exponent' : -1}})
     sss1.register_sampler(\
         'samp_exp', 'pl', {create_updater('exponent') : create_sampler([-2, -1, 0])})
-    assert sss1['samp_exp'] is not None
+    assert 'samp_exp' in sss1
 
     # Test registering a group of new simulation sampler definitions
     sss2 = SimSamplers(5, 250)
@@ -223,8 +228,8 @@ def test_sim_samplers():
         {'name' : 'samp_freq', 'label' : 'osc',
          'samplers' : {create_updater('freq') : create_sampler([10, 20, 30])}},
     ])
-    assert sss2['samp_exp'] is not None
-    assert sss2['samp_freq'] is not None
+    for label in ['samp_exp', 'samp_freq']:
+        assert label in sss2
 
     # Test clearing and re-registering group with list inputs
     sss2.register_group_samplers([
@@ -234,8 +239,8 @@ def test_sim_samplers():
     for old_label in ['samp_exp', 'samp_freq']:
         with raises(KeyError):
             sss2[old_label]
-    assert sss2['samp_exp2'] is not None
-    assert sss2['samp_freq2'] is not None
+    for label in ['samp_exp2', 'samp_freq2']:
+        assert label in sss2
 
 def test_sim_samplers_props(tsim_samplers, tsim_params):
 
