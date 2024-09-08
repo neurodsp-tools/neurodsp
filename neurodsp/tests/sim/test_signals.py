@@ -177,6 +177,7 @@ def test_multi_simulations():
         assert params_obj == params_org
     assert sims_full.sim_func
     assert sims_full.values
+    assert sims_full._base_params
 
 def test_multi_simulations_add():
 

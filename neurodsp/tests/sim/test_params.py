@@ -1,5 +1,7 @@
 """Tests for neurodsp.sim.params."""
 
+from pytest import raises
+
 from neurodsp.sim.update import create_updater, create_sampler
 
 from neurodsp.sim.params import *
@@ -25,6 +27,9 @@ def test_get_base_params(tsim_iters):
     for bparam in out3:
         assert bparam in BASE_PARAMS
 
+    with raises(ValueError):
+        get_base_params('parameters')
+
 def test_drop_base_params():
 
     params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
@@ -34,10 +39,14 @@ def test_drop_base_params():
     assert 'exponent' in out1
 
     params_lst = [params, params]
-    out2 = drop_base_params(params)
-    for bparam in BASE_PARAMS:
-        assert bparam not in out2
-    assert 'exponent' in out2
+    out2 = drop_base_params(params_lst)
+    for cparams in out2:
+        for bparam in BASE_PARAMS:
+            assert bparam not in cparams
+        assert 'exponent' in cparams
+
+    with raises(ValueError):
+        drop_base_params('parameters')
 
 def test_get_param_values():
 
@@ -75,6 +84,14 @@ def test_sim_params():
     assert comp1.items() <= sps2['pl'].items()
     assert comp2.items() <= sps2['osc'].items()
 
+    # Test clearing and re-registering
+    sps2.register_group({'pl2' : comp1, 'osc2' : comp2}, clear=True)
+    for old_label in ['pl', 'osc']:
+        with raises(KeyError):
+            sps2[old_label]
+    assert comp1.items() <= sps2['pl2'].items()
+    assert comp2.items() <= sps2['osc2'].items()
+
 def test_sim_params_props(tsim_params):
 
     # Test properties
@@ -84,7 +101,9 @@ def test_sim_params_props(tsim_params):
     # Test copy and clear
     ntsim = tsim_params.copy()
     assert ntsim != tsim_params
-    ntsim.clear()
+    ntsim.clear(True)
+    assert ntsim.params == {}
+    assert ntsim.base == {'n_seconds': None, 'fs': None}
 
 def test_sim_params_make_params(tsim_params):
     # Test the SimParams `make_` methods
@@ -154,6 +173,17 @@ def test_sim_iters():
     assert sis2['pl_exp']
     assert sis2['osc_freq']
 
+    # Test clearing and re-registering group with list inputs
+    sis2.register_group_iters([
+        ['pl_exp2', 'pl', 'exponent', [-2, -1 ,0]],
+        ['osc_freq2', 'osc', 'freq', [10, 20, 30]],
+    ], clear=True)
+    for old_label in ['pl_exp', 'osc_freq']:
+        with raises(KeyError):
+            sis2[old_label]
+    assert sis2['pl_exp2'] is not None
+    assert sis2['osc_freq2'] is not None
+
 def test_sim_iters_props(tsim_iters):
 
     # Test properties
@@ -163,7 +193,10 @@ def test_sim_iters_props(tsim_iters):
     # Test copy and clear
     ntiter = tsim_iters.copy()
     assert ntiter != tsim_iters
-    ntiter.clear()
+    ntiter.clear(True, True, True)
+    assert ntiter.iters == {}
+    assert ntiter.params == {}
+    assert ntiter.base == {'n_seconds': None, 'fs': None}
 
 def test_sim_iters_upd(tsim_iters):
 
@@ -193,16 +226,30 @@ def test_sim_samplers():
     assert sss2['samp_exp'] is not None
     assert sss2['samp_freq'] is not None
 
+    # Test clearing and re-registering group with list inputs
+    sss2.register_group_samplers([
+        ['samp_exp2', 'pl', {create_updater('exponent') : create_sampler([-2, -1, 0])}],
+        ['samp_freq2', 'osc', {create_updater('freq') : create_sampler([10, 20, 30])}],
+    ], clear=True)
+    for old_label in ['samp_exp', 'samp_freq']:
+        with raises(KeyError):
+            sss2[old_label]
+    assert sss2['samp_exp2'] is not None
+    assert sss2['samp_freq2'] is not None
+
 def test_sim_samplers_props(tsim_samplers, tsim_params):
 
     # Test properties
     assert tsim_samplers.labels
     assert tsim_samplers.samplers
 
-    # Can't directly copy object with generator - so regenerate
+    # Can't directly copy object with generator - so regenerate, and test clear
     ntsim = tsim_params.copy()
     ntsamp = ntsim.to_samplers()
-    ntsamp.clear()
+    ntsamp.clear(True, True, True)
+    assert ntsamp.samplers == {}
+    assert ntsamp.params == {}
+    assert ntsamp.base == {'n_seconds': None, 'fs': None}
 
 def test_sim_samplers_upd(tsim_samplers):
 

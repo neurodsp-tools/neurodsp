@@ -53,18 +53,18 @@ def drop_base_params(params):
     Parameters
     ----------
     params : dict or list of dict
-        Parameter definition.
+        Parameter definition(s).
 
     Returns
     -------
-    params : dict
-        Parameter definition, excluding base parameters.
+    params : dict or list of dict
+        Parameter definition(s), excluding base parameters.
     """
 
     if isinstance(params, dict):
         params = _drop_base_params(params)
     elif isinstance(params, list):
-        params = [_get_base_params(cparams) for cparams in params]
+        params = [_drop_base_params(cparams) for cparams in params]
     else:
         raise ValueError('Parameter definition not understood.')
 
