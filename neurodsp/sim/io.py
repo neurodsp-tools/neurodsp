@@ -187,7 +187,7 @@ def load_sims(load_name, file_path=None):
         component = '_'.join(splits) if splits else None
 
     load_folder = fpath(file_path, load_name)
-    load_files = [file for file in os.listdir(load_folder) if file[0] != '.']
+    load_files = sorted([file for file in os.listdir(load_folder) if file[0] != '.'])
 
     if 'signals.npy' not in load_files:
 

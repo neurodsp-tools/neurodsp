@@ -105,7 +105,7 @@ def test_load_sims_msim(tmsims):
     label = 'tmsims'
     loaded_sims = load_sims(label, TEST_FILES_PATH)
     assert loaded_sims.function == tmsims.function
-    #assert loaded_sims.params == tmsims.params
+    assert loaded_sims.params == tmsims.params
     assert loaded_sims.update == tmsims.update
     assert loaded_sims.component == tmsims.component
     for lsig, csig in zip(loaded_sims.signals, tmsims.signals):
