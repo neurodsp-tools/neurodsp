@@ -9,4 +9,4 @@ from .aperiodic import (sim_powerlaw, sim_random_walk, sim_synaptic_current, sim
 from .cycles import sim_cycle
 from .transients import sim_synaptic_kernel, sim_action_potential
 from .combined import sim_combined, sim_peak_oscillation, sim_modulated_signal, sim_combined_peak
-from .multi import sim_multiple, sim_across_values, sim_from_sampler
+from .multi import sim_multiple, sim_across_values, sim_multi_across_values, sim_from_sampler

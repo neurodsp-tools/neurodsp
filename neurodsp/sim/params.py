@@ -200,12 +200,12 @@ class SimParams():
         return {label : {**self.base, **params} for label, params in self._params.items()}
 
 
-    def make_params(self, parameters=None, **kwargs):
+    def make_params(self, params=None, **kwargs):
         """Make a simulation parameter definition from given parameters.
 
         Parameters
         ----------
-        parameters : dict or list of dict
+        params : dict or list of dict
             Parameter definition(s) to create simulation parameter definition.
         **kwargs
             Additional keyword arguments to create the simulation definition.
@@ -216,23 +216,23 @@ class SimParams():
             Parameter definition.
         """
 
-        return {**self.base, **self._make_params(parameters, **kwargs)}
+        return {**self.base, **self._make_params(params, **kwargs)}
 
 
-    def register(self, label, parameters=None, **kwargs):
+    def register(self, label, params=None, **kwargs):
         """Register a new simulation parameter definition.
 
         Parameters
         ----------
         label : str
             Label to set simulation parameters under in `params`.
-        parameters : dict or list of dict
+        params : dict or list of dict
             Parameter definition(s) to create simulation parameter definition.
         **kwargs
             Additional keyword arguments to create the simulation definition.
         """
 
-        self._params[label] = self._make_params(parameters, **kwargs)
+        self._params[label] = self._make_params(params, **kwargs)
 
 
     def register_group(self, group, clear=False):
@@ -250,8 +250,8 @@ class SimParams():
         if clear:
             self.clear()
 
-        for label, parameters in group.items():
-            self.register(label, parameters)
+        for label, params in group.items():
+            self.register(label, params)
 
 
     def update_base(self, n_seconds=False, fs=False):
@@ -349,27 +349,39 @@ class SimParams():
         return deepcopy(self)
 
 
-    def _make_params(self, parameters=None, **kwargs):
-        """Sub-function for `make_params`."""
+    def _make_params(self, params=None, **kwargs):
+        """Sub-function to make parameter definition.
 
-        parameters = {} if not parameters else deepcopy(parameters)
+        Parameters
+        ----------
+        params : dict or list of dict
+            Parameter definition(s) to create simulation parameter definition.
+        **kwargs
+            Additional keyword arguments to create the simulation definition.
 
-        if isinstance(parameters, list):
-            comps = [parameters.pop(0)]
-            kwargs = {**kwargs, **parameters[0]} if parameters else kwargs
-            params = self._make_combined_params(comps, **kwargs)
+        Returns
+        -------
+        params : dict
+            Parameter definition.
+        """
+
+        params = {} if not params else deepcopy(params)
+
+        if isinstance(params, list):
+            comps = [params.pop(0)]
+            kwargs = {**kwargs, **params[0]} if params else kwargs
+            out_params = self._make_combined_params(comps, **kwargs)
         else:
-            params = {**parameters, **kwargs}
+            out_params = {**params, **kwargs}
 
         # If any base parameters were passed in, clear them
-        for bparam in self.base:
-            params.pop(bparam, None)
+        out_params = drop_base_params(out_params)
 
-        return params
+        return out_params
 
 
     def _make_combined_params(self, components, component_variances=None):
-        """Make parameters for combined simulations, specifying multiple components.
+        """Sub-function to make parameters for combined simulations, specifying multiple components.
 
         Parameters
         ----------
@@ -384,17 +396,17 @@ class SimParams():
             Parameter definition.
         """
 
-        parameters = {}
+        out_params = {}
 
         comps = {}
         for comp in components:
             comps.update(**deepcopy(comp))
-        parameters['components'] = comps
+        out_params['components'] = comps
 
         if component_variances:
-            parameters['component_variances'] = component_variances
+            out_params['component_variances'] = component_variances
 
-        return parameters
+        return out_params
 
 
 class SimIters(SimParams):

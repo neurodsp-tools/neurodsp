@@ -37,12 +37,12 @@ class BaseUpdater():
 
 ## PARAM UPDATERS
 
-def param_updater(parameter):
+def param_updater(param):
     """Create a lambda updater function to update a specified parameter.
 
     Parameters
     ----------
-    parameter : str
+    param : str
         Name of the parameter to update.
 
     Returns
@@ -51,15 +51,15 @@ def param_updater(parameter):
         Updater function which can update specified parameter in simulation parameters.
     """
 
-    return lambda params, value : params.update({parameter : value})
+    return lambda params, value : params.update({param : value})
 
 
-def component_updater(parameter, component):
+def component_updater(param, component):
     """Create a lambda updater function to update a parameter within a simulation component.
 
     Parameters
     ----------
-    parameter : str
+    param : str
         Name of the parameter to update.
     component : str
         Name of the component to update the parameter within.
@@ -70,7 +70,7 @@ def component_updater(parameter, component):
         Updater function which can update specified parameter in simulation parameters.
     """
 
-    return lambda params, value : params['components'][component].update({parameter : value})
+    return lambda params, value : params['components'][component].update({param : value})
 
 
 def create_updater(update, component=None):
