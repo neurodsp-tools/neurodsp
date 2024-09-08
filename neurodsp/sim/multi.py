@@ -7,14 +7,14 @@ from neurodsp.sim.params import get_base_params
 ###################################################################################################
 ###################################################################################################
 
-def sim_multiple(sim_func, sim_params, n_sims):
+def sim_multiple(sim_func, params, n_sims):
     """Simulate multiple samples of a specified simulation.
 
     Parameters
     ----------
     sim_func : callable
         Function to create the simulated time series.
-    sim_params : dict
+    params : dict
         The parameters for the simulated signal, passed into `sim_func`.
     n_sims : int
         Number of simulations to create.
@@ -34,21 +34,21 @@ def sim_multiple(sim_func, sim_params, n_sims):
     >>> sims = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sims = Simulations(n_sims, sim_params, sim_func)
-    for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
+    sims = Simulations(n_sims, params, sim_func)
+    for ind, sig in enumerate(sig_yielder(sim_func, params, n_sims)):
         sims.add_signal(sig, index=ind)
 
     return sims
 
 
-def sim_across_values(sim_func, sim_params):
+def sim_across_values(sim_func, params):
     """Simulate signals across different parameter values.
 
     Parameters
     ----------
     sim_func : callable
         Function to create the simulated time series.
-    sim_params : ParamIter or iterable or list of dict
+    params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
 
     Returns
@@ -74,24 +74,24 @@ def sim_across_values(sim_func, sim_params):
     >>> sims = sim_across_values(sim_powerlaw, params)
     """
 
-    sims = VariableSimulations(len(sim_params), get_base_params(sim_params), sim_func,
-                               update=getattr(sim_params, 'update', None),
-                               component=getattr(sim_params, 'component', None))
+    sims = VariableSimulations(len(params), get_base_params(params), sim_func,
+                               update=getattr(params, 'update', None),
+                               component=getattr(params, 'component', None))
 
-    for ind, cur_sim_params in enumerate(sim_params):
-        sims.add_signal(sim_func(**cur_sim_params), cur_sim_params, index=ind)
+    for ind, cur_params in enumerate(params):
+        sims.add_signal(sim_func(**cur_params), cur_params, index=ind)
 
     return sims
 
 
-def sim_multi_across_values(sim_func, sim_params, n_sims):
+def sim_multi_across_values(sim_func, params, n_sims):
     """Simulate multiple signals across different parameter values.
 
     Parameters
     ----------
     sim_func : callable
         Function to create the simulated time series.
-    sim_params : ParamIter or iterable or list of dict
+    params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
     n_sims : int
         Number of simulations to create per parameter definition.
@@ -119,22 +119,22 @@ def sim_multi_across_values(sim_func, sim_params, n_sims):
     >>> sims = sim_multi_across_values(sim_powerlaw, params, n_sims=2)
     """
 
-    sims = MultiSimulations(update=getattr(sim_params, 'update', None),
-                            component=getattr(sim_params, 'component', None))
-    for cur_sim_params in sim_params:
-        sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims))
+    sims = MultiSimulations(update=getattr(params, 'update', None),
+                            component=getattr(params, 'component', None))
+    for cur_params in params:
+        sims.add_signals(sim_multiple(sim_func, cur_params, n_sims))
 
     return sims
 
 
-def sim_from_sampler(sim_func, sim_sampler, n_sims):
+def sim_from_sampler(sim_func, sampler, n_sims):
     """Simulate a set of signals from a parameter sampler.
 
     Parameters
     ----------
     sim_func : callable
         Function to create the simulated time series.
-    sim_sampler : ParamSampler
+    sampler : ParamSampler
         Parameter definition to sample from.
     n_sims : int
         Number of simulations to create per parameter definition.
@@ -157,8 +157,8 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims):
     >>> sims = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
     """
 
-    sims = VariableSimulations(n_sims, get_base_params(sim_sampler), sim_func)
-    for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
+    sims = VariableSimulations(n_sims, get_base_params(sampler), sim_func)
+    for ind, (sig, params) in enumerate(sig_sampler(sim_func, sampler, True, n_sims)):
         sims.add_signal(sig, params, index=ind)
 
     return sims

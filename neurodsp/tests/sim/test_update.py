@@ -43,11 +43,11 @@ def test_create_updater():
 
 def test_param_iter_yielder():
 
-    sim_params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
+    params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
     updater = create_updater('exponent')
     values = [-2, -1, 0]
 
-    iter_yielder = param_iter_yielder(sim_params, updater, values)
+    iter_yielder = param_iter_yielder(params, updater, values)
     for ind, params in enumerate(iter_yielder):
         assert isinstance(params, dict)
         for el in ['n_seconds', 'fs', 'exponent']:
@@ -56,11 +56,11 @@ def test_param_iter_yielder():
 
 def test_class_param_iter():
 
-    sim_params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
+    params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
     update = 'exponent'
     values = [-2, -1, 0]
 
-    piter = ParamIter(sim_params, update, values)
+    piter = ParamIter(params, update, values)
     assert piter
     for ind, params in enumerate(piter):
         assert isinstance(params, dict)

@@ -107,12 +107,12 @@ def create_updater(update, component=None):
 
 ## PARAM ITER
 
-def param_iter_yielder(sim_params, updater, values):
+def param_iter_yielder(params, updater, values):
     """Parameter yielder.
 
     Parameters
     ----------
-    sim_params : dict
+    params : dict
         Parameter definition.
     updater : callable
         Updater function to update parameter definition.
@@ -121,15 +121,15 @@ def param_iter_yielder(sim_params, updater, values):
 
     Yields
     ------
-    sim_params : dict
+    params : dict
         Simulation parameter definition.
     """
 
-    sim_params = deepcopy(sim_params)
+    params = deepcopy(params)
 
     for value in values:
-        updater(sim_params, value)
-        yield deepcopy(sim_params)
+        updater(params, value)
+        yield deepcopy(params)
 
 
 class ParamIter(BaseUpdater):
@@ -249,12 +249,12 @@ def create_sampler(values, probs=None, n_samples=None):
             yield np.random.choice(values, p=probs)
 
 
-def param_sample_yielder(sim_params, samplers, n_samples=None):
+def param_sample_yielder(params, samplers, n_samples=None):
     """Generator to yield randomly sampled parameter definitions.
 
     Parameters
     ----------
-    sim_params : dict
+    params : dict
         The parameters for the simulated signal.
     samplers : dict
         Sampler definitions to update parameters with.
@@ -266,12 +266,12 @@ def param_sample_yielder(sim_params, samplers, n_samples=None):
 
     Yields
     ------
-    sim_params : dict
+    params : dict
         Simulation parameter definition.
     """
 
     for _ in counter(n_samples):
-        out_params = deepcopy(sim_params)
+        out_params = deepcopy(params)
         for updater, sampler in samplers.items():
             updater(out_params, next(sampler))
 
