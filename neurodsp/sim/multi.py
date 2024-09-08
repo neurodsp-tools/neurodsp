@@ -1,11 +1,8 @@
 """Simulation functions that return multiple instances."""
 
-import numpy as np
-
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
 from neurodsp.sim.params import get_base_params
-from neurodsp.utils.data import compute_nsamples
 
 ###################################################################################################
 ###################################################################################################
@@ -162,6 +159,6 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims):
 
     sims = VariableSimulations(n_sims, get_base_params(sim_sampler), sim_func)
     for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
-        sims.add_signal(sim_func(**params), params, index=ind)
+        sims.add_signal(sig, params, index=ind)
 
     return sims
