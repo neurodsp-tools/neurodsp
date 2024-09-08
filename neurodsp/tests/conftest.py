@@ -12,7 +12,7 @@ from neurodsp.sim.params import SimParams
 from neurodsp.spectral import compute_spectrum
 from neurodsp.utils.sim import set_random_seed
 from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
-                                     BASE_TEST_FILE_PATH, TEST_PLOTS_PATH)
+                                     BASE_TEST_FILE_PATH, TEST_PLOTS_PATH, TEST_FILES_PATH)
 
 ###################################################################################################
 ###################################################################################################
@@ -96,3 +96,4 @@ def check_dir():
     # Remake (empty) directories
     os.mkdir(BASE_TEST_FILE_PATH)
     os.mkdir(TEST_PLOTS_PATH)
+    os.mkdir(TEST_FILES_PATH)
