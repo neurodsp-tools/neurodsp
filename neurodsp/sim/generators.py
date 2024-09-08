@@ -2,6 +2,7 @@
 
 from collections.abc import Sized
 
+from neurodsp.sim.info import get_sim_func
 from neurodsp.utils.core import counter
 
 ###################################################################################################
@@ -12,8 +13,9 @@ def sig_yielder(sim_func, params, n_sims):
 
     Parameters
     ----------
-    sim_func : callable
+    sim_func : str or callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     params : dict
         The parameters for the simulated signal, passed into `sim_func`.
     n_sims : int, optional
@@ -26,6 +28,7 @@ def sig_yielder(sim_func, params, n_sims):
         Simulated time series.
     """
 
+    sim_func = get_sim_func(sim_func)
     for _ in counter(n_sims):
         yield sim_func(**params)
 
@@ -35,8 +38,9 @@ def sig_sampler(sim_func, params, return_params=False, n_sims=None):
 
     Parameters
     ----------
-    sim_func : callable
+    sim_func : str or callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     params : iterable
         The parameters for the simulated signal, passed into `sim_func`.
     return_params : bool, optional, default: False
@@ -53,6 +57,8 @@ def sig_sampler(sim_func, params, return_params=False, n_sims=None):
         Simulation parameters for the yielded time series.
         Only returned if `return_params` is True.
     """
+
+    sim_func = get_sim_func(sim_func)
 
     # If `params` has a size, and `n_sims` is defined, check that they are compatible
     #   To do so, we first check if the iterable has a __len__ attr, and if so check values

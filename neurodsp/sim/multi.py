@@ -3,6 +3,7 @@
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.sim.generators import sig_yielder, sig_sampler
 from neurodsp.sim.params import get_base_params
+from neurodsp.sim.info import get_sim_func
 
 ###################################################################################################
 ###################################################################################################
@@ -14,6 +15,7 @@ def sim_multiple(sim_func, params, n_sims):
     ----------
     sim_func : callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     params : dict
         The parameters for the simulated signal, passed into `sim_func`.
     n_sims : int
@@ -48,6 +50,7 @@ def sim_across_values(sim_func, params):
     ----------
     sim_func : callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
 
@@ -78,6 +81,8 @@ def sim_across_values(sim_func, params):
                                update=getattr(params, 'update', None),
                                component=getattr(params, 'component', None))
 
+    sim_func = get_sim_func(sim_func)
+
     for ind, cur_params in enumerate(params):
         sims.add_signal(sim_func(**cur_params), cur_params, index=ind)
 
@@ -91,6 +96,7 @@ def sim_multi_across_values(sim_func, params, n_sims):
     ----------
     sim_func : callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     params : ParamIter or iterable or list of dict
         Simulation parameters for `sim_func`.
     n_sims : int
@@ -132,8 +138,9 @@ def sim_from_sampler(sim_func, sampler, n_sims):
 
     Parameters
     ----------
-    sim_func : callable
+    sim_func : str callable
         Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
     sampler : ParamSampler
         Parameter definition to sample from.
     n_sims : int

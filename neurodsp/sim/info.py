@@ -58,8 +58,10 @@ def get_sim_func(function_name, modules=SIM_MODULES):
 
     Parameters
     ----------
-    function_name : str
+    function_name : str or callabe
         Name of the sim function to retrieve.
+        If callable, returns input.
+        If string searches for corresponding callable sim function.
     modules : list of str, optional
         Which sim modules to look for the function in.
 
@@ -68,6 +70,9 @@ def get_sim_func(function_name, modules=SIM_MODULES):
     func : callable
         Requested sim function.
     """
+
+    if callable(function_name):
+        return function_name
 
     for module in modules:
         try:
