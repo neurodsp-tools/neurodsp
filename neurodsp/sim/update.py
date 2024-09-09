@@ -159,12 +159,13 @@ class ParamIter(BaseUpdater):
     def __init__(self, params, update, values, component=None):
         """Initialize parameter iteration object."""
 
-        BaseUpdater.__init__(self, params)
-
+        params = deepcopy(params)
         if component is not None:
             params['components'][component][update] = None
         else:
             params[update] = None
+
+        BaseUpdater.__init__(self, params)
 
         self.update = update
         self.values = values
