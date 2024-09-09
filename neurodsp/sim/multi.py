@@ -1,100 +1,31 @@
 """Simulation functions that return multiple instances."""
 
-from collections.abc import Sized
-
-import numpy as np
-
-from neurodsp.utils.core import counter
-from neurodsp.sim.signals import Simulations, SampledSimulations, MultiSimulations
+from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
+from neurodsp.sim.generators import sig_yielder, sig_sampler
+from neurodsp.sim.params import get_base_params
+from neurodsp.sim.info import get_sim_func
 
 ###################################################################################################
 ###################################################################################################
 
-def sig_yielder(sim_func, sim_params, n_sims):
-    """Generator to yield simulated signals from a given simulation function and parameters.
-
-    Parameters
-    ----------
-    sim_func : callable
-        Function to create the simulated time series.
-    sim_params : dict
-        The parameters for the simulated signal, passed into `sim_func`.
-    n_sims : int, optional
-        Number of simulations to set as the max.
-        If None, creates an infinite generator.
-
-    Yields
-    ------
-    sig : 1d array
-        Simulated time series.
-    """
-
-    for _ in counter(n_sims):
-        yield sim_func(**sim_params)
-
-
-def sig_sampler(sim_func, sim_params, return_sim_params=False, n_sims=None):
-    """Generator to yield simulated signals from a parameter sampler.
-
-    Parameters
-    ----------
-    sim_func : callable
-        Function to create the simulated time series.
-    sim_params : iterable
-        The parameters for the simulated signal, passed into `sim_func`.
-    return_sim_params : bool, optional, default: False
-        Whether to yield the simulation parameters as well as the simulated time series.
-    n_sims : int, optional
-        Number of simulations to set as the max.
-        If None, length is defined by the length of `sim_params`, and could be infinite.
-
-    Yields
-    ------
-    sig : 1d array
-        Simulated time series.
-    sample_params : dict
-        Simulation parameters for the yielded time series.
-        Only returned if `return_sim_params` is True.
-    """
-
-    # If `sim_params` has a size, and `n_sims` is defined, check that they are compatible
-    #   To do so, we first check if the iterable has a __len__ attr, and if so check values
-    if isinstance(sim_params, Sized) and len(sim_params) and n_sims and n_sims > len(sim_params):
-        msg = 'Cannot simulate the requested number of sims with the given parameters.'
-        raise ValueError(msg)
-
-    for ind, sample_params in zip(counter(n_sims), sim_params):
-
-        if return_sim_params:
-            yield sim_func(**sample_params), sample_params
-        else:
-            yield sim_func(**sample_params)
-
-        if n_sims and ind >= n_sims:
-            break
-
-
-def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
+def sim_multiple(function, params, n_sims):
     """Simulate multiple samples of a specified simulation.
 
     Parameters
     ----------
-    sim_func : callable
+    function : str or callable
         Function to create the simulated time series.
-    sim_params : dict
-        The parameters for the simulated signal, passed into `sim_func`.
+        If string, should be the name of the desired simulation function.
+    params : dict
+        The parameters for the simulated signal, passed into `function`.
     n_sims : int
         Number of simulations to create.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'Simulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sigs : Simulations or 2d array
-        Simulations, return type depends on `return_type` argument.
-        Simulated time series are organized as [n_sims, sig length].
+    sims : Simulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
@@ -102,92 +33,124 @@ def sim_multiple(sim_func, sim_params, n_sims, return_type='object'):
 
     >>> from neurodsp.sim.aperiodic import sim_powerlaw
     >>> params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}
-    >>> sigs = sim_multiple(sim_powerlaw, params, n_sims=3)
+    >>> sims = sim_multiple(sim_powerlaw, params, n_sims=3)
     """
 
-    sigs = np.zeros([n_sims, sim_params['n_seconds'] * sim_params['fs']])
-    for ind, sig in enumerate(sig_yielder(sim_func, sim_params, n_sims)):
-        sigs[ind, :] = sig
+    sims = Simulations(n_sims, params, function)
+    for ind, sig in enumerate(sig_yielder(function, params, n_sims)):
+        sims.add_signal(sig, index=ind)
 
-    if return_type == 'object':
-        return Simulations(sigs, sim_params, sim_func)
-    else:
-        return sigs
+    return sims
 
 
-def sim_across_values(sim_func, sim_params, n_sims, output='object'):
-    """Simulate multiple signals across different parameter values.
+def sim_across_values(function, params):
+    """Simulate signals across different parameter values.
 
     Parameters
     ----------
-    sim_func : callable
+    function : str or callable
         Function to create the simulated time series.
-    sim_params : ParamIter or iterable or list of dict
-        Simulation parameters for `sim_func`.
-    n_sims : int
-        Number of simulations to create per parameter definition.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'MultiSimulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
+        If string, should be the name of the desired simulation function.
+    params : ParamIter or iterable or list of dict
+        Simulation parameters for `function`.
 
     Returns
     -------
-    sims : MultiSimulations or array
-        Simulations, return type depends on `return_type` argument.
-        If array, signals are collected together as [n_sets, n_sims, sig_length].
+    sims : VariableSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
     Simulate multiple powerlaw signals using a ParamIter object:
 
     >>> from neurodsp.sim.aperiodic import sim_powerlaw
-    >>> from neurodsp.sim.params import ParamIter
+    >>> from neurodsp.sim.update import ParamIter
     >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
     >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
-    >>> sigs = sim_across_values(sim_powerlaw, param_iter, n_sims=2)
+    >>> sims = sim_across_values(sim_powerlaw, param_iter)
 
     Simulate multiple powerlaw signals from manually defined set of simulation parameters:
 
     >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
     ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
-    >>> sigs = sim_across_values(sim_powerlaw, params, n_sims=2)
+    >>> sims = sim_across_values(sim_powerlaw, params)
     """
 
-    update = sim_params.update if \
-        not isinstance(sim_params, dict) and hasattr(sim_params, 'update') else None
+    sims = VariableSimulations(len(params), get_base_params(params), function,
+                               update=getattr(params, 'update', None),
+                               component=getattr(params, 'component', None))
 
-    sims = MultiSimulations(update=update)
-    for ind, cur_sim_params in enumerate(sim_params):
-        sims.add_signals(sim_multiple(sim_func, cur_sim_params, n_sims, 'object'))
+    function = get_sim_func(function)
 
-    if output == 'array':
-        sims = np.squeeze(np.array([el.signals for el in sims]))
+    for ind, cur_params in enumerate(params):
+        sims.add_signal(function(**cur_params), cur_params, index=ind)
 
     return sims
 
 
-def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
+def sim_multi_across_values(function, params, n_sims):
+    """Simulate multiple signals across different parameter values.
+
+    Parameters
+    ----------
+    function : str or callable
+        Function to create the simulated time series.
+        If string, should be the name of the desired simulation function.
+    params : ParamIter or iterable or list of dict
+        Simulation parameters for `function`.
+    n_sims : int
+        Number of simulations to create per parameter definition.
+
+    Returns
+    -------
+    sims : MultiSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sets, n_sims, sig_length].
+
+    Examples
+    --------
+    Simulate multiple powerlaw signals using a ParamIter object:
+
+    >>> from neurodsp.sim.aperiodic import sim_powerlaw
+    >>> from neurodsp.sim.update import ParamIter
+    >>> base_params = {'n_seconds' : 2, 'fs' : 250, 'exponent' : None}
+    >>> param_iter = ParamIter(base_params, 'exponent', [-2, 1, 0])
+    >>> sims = sim_multi_across_values(sim_powerlaw, param_iter, n_sims=2)
+
+    Simulate multiple powerlaw signals from manually defined set of simulation parameters:
+
+    >>> params = [{'n_seconds' : 2, 'fs' : 250, 'exponent' : -2},
+    ...           {'n_seconds' : 2, 'fs' : 250, 'exponent' : -1}]
+    >>> sims = sim_multi_across_values(sim_powerlaw, params, n_sims=2)
+    """
+
+    sims = MultiSimulations(update=getattr(params, 'update', None),
+                            component=getattr(params, 'component', None))
+    for cur_params in params:
+        sims.add_signals(sim_multiple(function, cur_params, n_sims))
+
+    return sims
+
+
+def sim_from_sampler(function, sampler, n_sims):
     """Simulate a set of signals from a parameter sampler.
 
     Parameters
     ----------
-    sim_func : callable
+    function : str or callable
         Function to create the simulated time series.
-    sim_sampler : ParamSampler
+        If string, should be the name of the desired simulation function.
+    sampler : ParamSampler
         Parameter definition to sample from.
     n_sims : int
         Number of simulations to create per parameter definition.
-    return_type : {'object', 'array'}
-        Specifies the return type of the simulations.
-        If 'object', returns simulations and metadata in a 'SampledSimulations' object.
-        If 'array', returns the simulations (no metadata) in an array.
 
     Returns
     -------
-    sigs : SampledSimulations or 2d array
-        Simulations, return type depends on `return_type` argument.
-        If array, simulations are organized as [n_sims, sig length].
+    sims : VariableSimulations
+        Simulations object with simulated time series and metadata.
+        Simulated signals are in the 'signals' attribute with shape [n_sims, sig_length].
 
     Examples
     --------
@@ -198,16 +161,11 @@ def sim_from_sampler(sim_func, sim_sampler, n_sims, return_type='object'):
     >>> params = {'n_seconds' : 10, 'fs' : 250, 'exponent' : None}
     >>> samplers = {create_updater('exponent') : create_sampler([-2, -1, 0])}
     >>> param_sampler = ParamSampler(params, samplers)
-    >>> sigs = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
+    >>> sims = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)
     """
 
-    all_params = [None] * n_sims
-    sigs = np.zeros([n_sims, sim_sampler.params['n_seconds'] * sim_sampler.params['fs']])
-    for ind, (sig, params) in enumerate(sig_sampler(sim_func, sim_sampler, True, n_sims)):
-        sigs[ind, :] = sig
-        all_params[ind] = params
+    sims = VariableSimulations(n_sims, get_base_params(sampler), function)
+    for ind, (sig, params) in enumerate(sig_sampler(function, sampler, True, n_sims)):
+        sims.add_signal(sig, params, index=ind)
 
-    if return_type == 'object':
-        return SampledSimulations(sigs, all_params, sim_func)
-    else:
-        return sigs
+    return sims

@@ -2,6 +2,8 @@
 
 from pytest import raises
 
+from neurodsp.sim.aperiodic import sim_powerlaw
+
 from neurodsp.sim.info import *
 
 ###################################################################################################
@@ -31,3 +33,12 @@ def test_get_sim_func():
     # Check the error for requesting non-existing function
     with raises(ValueError):
         get_sim_func('bad_func')
+
+def test_get_sim_func_name():
+
+    in_name = 'sim_oscillation'
+    name1 = get_sim_func_name(in_name)
+    assert name1 == in_name
+
+    name2 = get_sim_func_name(sim_powerlaw)
+    assert name2 == 'sim_powerlaw'

@@ -7,7 +7,8 @@ Simulate multiple signals together.
 
 from neurodsp.sim.update import SigIter
 from neurodsp.sim.aperiodic import sim_powerlaw
-from neurodsp.sim.multi import sim_multiple, sim_across_values, sim_from_sampler
+from neurodsp.sim.multi import (sim_multiple, sim_from_sampler,
+                                sim_across_values, sim_multi_across_values)
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
 from neurodsp.plts.time_series import plot_time_series, plot_multi_time_series
 
@@ -29,14 +30,14 @@ sigs = sim_multiple(sim_powerlaw, params, 3)
 
 ###################################################################################################
 #
-# The output the above function is a :class:~.Simulations object that stores multiple simulated
-# signals along with relevant metadata.
+# The output the above function is a :class:~.Simulations object that stores multiple
+# simulated signals along with relevant metadata.
 #
 
 ###################################################################################################
 
 # Check the metadata stored in the simulations object
-print(sigs.sim_func, ':', sigs.params)
+print(sigs.function, ':', sigs.params)
 
 ###################################################################################################
 
@@ -67,13 +68,56 @@ for tsig in sig_iter:
     plot_time_series(None, tsig)
 
 ###################################################################################################
+# Simulate From Sampler
+# ---------------------
+#
+# We can also use the :func:`~.sim_from_sampler` function to simulate signals,
+# sampling parameter values from a sampler definition.
+#
+
+###################################################################################################
+
+# Define base set of parameters
+params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
+
+# Create an updater and sampler to sample from
+exp_sampler = {create_updater('exponent') : create_sampler([-2, -1, 0])}
+
+# Create a ParamSampler object
+sampler = ParamSampler(params, exp_sampler)
+
+###################################################################################################
+
+# Simulate a set of signals from the defined sampler
+sampled_sims = sim_from_sampler(sim_powerlaw, sampler, 3)
+
+###################################################################################################
+#
+# The output of the above is a :class:~.VariableSimulations object that stores simulations
+# across variable simulation parameters, storing the simulated time series as well as the
+# simulation parameters for each simulated signal.
+#
+
+###################################################################################################
+
+# Check some of the metadata stored in the VariableSimulations object
+print(sampled_sims.function)
+for paramdef in sampled_sims.params:
+    print(paramdef)
+
+###################################################################################################
+
+# Plot the set of sampled simulations
+plot_multi_time_series(None, sampled_sims)
+
+###################################################################################################
 # Simulate Across Values
 # ----------------------
 #
-# Sometimes we may want to simulate signals across a set of parameter values.
+# Sometimes we may want to simulate signals across a set defined range of parameter values.
 #
-# To do so, we can use the :func:`~.sim_across_values` function. In doing so, we can define
-# a set of parameter definitions and a number of simulations to create per definition.
+# To do so, we can use the :func:`~.sim_across_values` function, which takes a definition of
+# parameter values to simulate across.
 #
 
 ###################################################################################################
@@ -86,7 +130,33 @@ multi_params = [
 ]
 
 # Simulate a set of signals
-sims_across_params = sim_across_values(sim_powerlaw, multi_params, 3)
+sims_across_params = sim_across_values(sim_powerlaw, multi_params)
+
+###################################################################################################
+#
+# The output of the above is a :class:~.VariableSimulations object that stores simulations
+# across varying simulation parameters (same as with the sampled simulations).
+#
+
+###################################################################################################
+
+plot_multi_time_series(None, sims_across_params)
+
+###################################################################################################
+# Simulate Multiple Instances Across Values
+# -----------------------------------------
+#
+# Finally, we may want to simulate multiple instances across a set of parameter definitions.
+#
+# To do so, we can use the :func:`~.sim_multi_across_values` function, which takes a set of
+# parameter definitions and a number of simulations to create per definition.
+#
+
+###################################################################################################
+
+# Simulate a set of signals
+n_sims = 3
+sims_multi_across_params = sim_multi_across_values(sim_powerlaw, multi_params, n_sims)
 
 ###################################################################################################
 #
@@ -112,46 +182,3 @@ print('# of sets of signals:', len(sims_across_params))
 plot_multi_time_series(None, sims_across_params[0])
 plot_multi_time_series(None, sims_across_params[1])
 plot_multi_time_series(None, sims_across_params[2])
-
-###################################################################################################
-# Simulate From Sampler
-# ---------------------
-#
-# Finally, we can use the :func:`~.sim_from_sampler` function to simulate signals, sampling
-# parameter values from a sampler definition.
-#
-
-###################################################################################################
-
-# Define base set of parameters
-params = {'n_seconds' : 5, 'fs' : 250, 'exponent' : None}
-
-# Create an updater and sampler to sample from
-exp_sampler = {create_updater('exponent') : create_sampler([-2, -1, 0])}
-
-# Create a ParamSampler object
-sampler = ParamSampler(params, exp_sampler)
-
-###################################################################################################
-
-# Simulate a set of signals from the defined sampler
-sampled_sims = sim_from_sampler(sim_powerlaw, sampler, 3)
-
-###################################################################################################
-#
-# The output of the above is a :class:~.SampledSimulations object that stores simulations
-# created from sampled simulations, as well as the metadata, including the simulation
-# parameters for each simulated signal.
-#
-
-###################################################################################################
-
-# Check some of the metadata stored in the SampledSimulations object
-print(sampled_sims.sim_func)
-for paramdef in sampled_sims.params:
-    print(paramdef)
-
-###################################################################################################
-
-# Plot the set of sampled simulations
-plot_multi_time_series(None, sampled_sims)

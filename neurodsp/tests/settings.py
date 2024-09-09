@@ -37,4 +37,5 @@ EPS_FILT = 10**(-3)
 # Set paths for test files
 TESTS_PATH = Path(os.path.abspath(os.path.dirname(__file__)))
 BASE_TEST_FILE_PATH = TESTS_PATH / 'test_files'
-TEST_PLOTS_PATH = os.path.join(BASE_TEST_FILE_PATH, 'plots')
+TEST_PLOTS_PATH = BASE_TEST_FILE_PATH / 'plots'
+TEST_FILES_PATH = BASE_TEST_FILE_PATH / 'files'

@@ -4,7 +4,7 @@ import numpy as np
 from scipy.fft import next_fast_len
 
 # Alias a function that has moved, for backwards compatibility
-from neurodsp.sim.utils import rotate_spectrum as rotate_powerlaw
+from neurodsp.sim.modulate import rotate_spectrum as rotate_powerlaw
 
 ###################################################################################################
 ###################################################################################################

@@ -298,7 +298,7 @@ osc_upd_sampler = {create_updater('freq') : create_sampler([10, 20, 30])}
 # Register a group of samplers to the object
 sim_samplers.register_group_samplers([
     ['exp_sampler', 'ap', exp_upd_sampler],
-    ['osc_sampler', 'osc', osc_upd_sampler]
+    ['osc_sampler', 'osc', osc_upd_sampler],
 ])
 
 ###################################################################################################

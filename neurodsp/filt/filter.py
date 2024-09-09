@@ -1,7 +1,5 @@
 """Filter time series."""
 
-from warnings import warn
-
 from neurodsp.filt.fir import filter_signal_fir
 from neurodsp.filt.iir import filter_signal_iir
 from neurodsp.utils.checks import check_param_options
