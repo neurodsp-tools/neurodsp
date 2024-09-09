@@ -51,7 +51,7 @@ def test_load_jsonlines():
 def test_save_sims_sim(tsims):
 
     label = 'tsims'
-    folder = '_'.join([tsims.function, label])
+    folder = '_'.join([tsims.function.replace('_', '-'), label])
 
     save_sims(tsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)
@@ -69,7 +69,7 @@ def test_load_sims_sim(tsims):
 def test_save_sims_vsim(tvsims):
 
     label = 'tvsims'
-    folder = '_'.join([tvsims.function, tvsims.update, label])
+    folder = '_'.join([tvsims.function.replace('_', '-'), tvsims.update, label])
 
     save_sims(tvsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)
@@ -89,8 +89,8 @@ def test_load_sims_vsim(tvsims):
 def test_save_sims_msim(tmsims):
 
     label = 'tmsims'
-    folder = '_'.join([tmsims.function, tmsims.update, label])
-    sub_folder = '_'.join([tmsims.function, 'set'])
+    folder = '_'.join([tmsims.function.replace('_', '-'), tmsims.update, label])
+    sub_folder = '_'.join([tmsims.function.replace('_', '-'), 'set'])
 
     save_sims(tmsims, label, TEST_FILES_PATH)
     assert os.path.exists(TEST_FILES_PATH / folder)

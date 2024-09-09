@@ -125,10 +125,10 @@ def save_sims(sims, label, file_path=None, replace=False):
 
     assert '_' not in label, 'Cannot have underscores in simulation label.'
 
-    save_path_items = ['sim_unknown' if not sims.function else sims.function]
+    save_path_items = ['sim-unknown' if not sims.function else sims.function.replace('_', '-')]
     if isinstance(sims, (VariableSimulations, MultiSimulations)):
         if sims.component:
-            save_path_items.append(sims.component)
+            save_path_items.append(sims.component.replace('_', '-'))
         if sims.update:
             save_path_items.append(sims.update)
     save_path_items.append(label)
@@ -178,13 +178,13 @@ def load_sims(load_name, file_path=None):
         load_name = matches[0]
 
     splits = load_name.split('_')
-    function = '_'.join(splits[0:2]) if splits[1] != 'unknown' else None
+    function = splits[0].replace('-', '_') if 'unknown' not in splits[0] else None
 
     update, component = None, None
-    if len(splits) > 3:
-        splits = splits[2:-1]
+    if len(splits) > 2:
+        splits = splits[1:-1]
         update = splits.pop()
-        component = '_'.join(splits) if splits else None
+        component = splits[0].replace('-', '_') if splits else None
 
     load_folder = fpath(file_path, load_name)
     load_files = sorted([file for file in os.listdir(load_folder) if file[0] != '.'])
