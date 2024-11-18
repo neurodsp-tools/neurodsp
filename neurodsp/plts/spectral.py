@@ -61,7 +61,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
         ax.loglog(freq, power, color=color, label=label)
 
     ax.set_xlabel('Frequency (Hz)')
-    ax.set_ylabel('Power (V^2/Hz)')
+    ax.set_ylabel('Power ($V^2/Hz$)')
 
 
 @savefig
