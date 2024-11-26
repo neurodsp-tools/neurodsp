@@ -6,10 +6,107 @@ Notes:
 
 from copy import deepcopy
 
-from neurodsp.sim.update import ParamIter, ParamSampler
+###################################################################################################
+###################################################################################################
 
-###################################################################################################
-###################################################################################################
+BASE_PARAMS = ['n_seconds', 'fs']
+
+## SIMULATION PARAMETER FUNCTIONS
+
+def get_base_params(params):
+    """Get base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict or list of dict or Object
+        Parameter definition.
+
+    Returns
+    -------
+    base : dict
+        Base parameters.
+    """
+
+    from neurodsp.sim.update import BaseUpdater
+
+    if isinstance(params, dict):
+        base = _get_base_params(params)
+    elif isinstance(params, list):
+        base = _get_base_params(params[0])
+    elif isinstance(params, BaseUpdater):
+        base = getattr(params, 'base')
+    else:
+        raise ValueError('Parameter definition not understood.')
+
+    return base
+
+
+def _get_base_params(params):
+    """Sub-function to get base parameters from a dictionary of parameters."""
+
+    return {key : value for key, value in params.items() if key in BASE_PARAMS}
+
+
+def drop_base_params(params):
+    """Drop base parameters from a parameter definition.
+
+    Parameters
+    ----------
+    params : dict or list of dict
+        Parameter definition(s).
+
+    Returns
+    -------
+    params : dict or list of dict
+        Parameter definition(s), excluding base parameters.
+    """
+
+    if isinstance(params, dict):
+        params = _drop_base_params(params)
+    elif isinstance(params, list):
+        params = [_drop_base_params(cparams) for cparams in params]
+    else:
+        raise ValueError('Parameter definition not understood.')
+
+    return params
+
+
+def _drop_base_params(params):
+    """Sub-function to drop base parameters from a dictionary of parameters."""
+
+    return {key : value for key, value in params.items() if key not in BASE_PARAMS}
+
+
+def get_param_values(params, extract=None, component=None):
+    """Get a set of parameter values from a set of parameter definitions.
+
+    Parameters
+    ----------
+    params : list of dict
+        Parameter definitions for multiple simulations.
+    extract : str
+        Name of the parameter to extract.
+    component : str, optional
+        Which component to extract the parameter from.
+        Only used if the parameter definition is for a multi-component simulation.
+
+    Returns
+    -------
+    values : list
+        Extracted parameter values.
+    """
+
+    if component:
+        values =[cparams['components'][component][extract] for cparams in params]
+    elif extract:
+        values = [cparams[extract] for cparams in params]
+    else:
+        values = None
+
+    return values
+
+
+## SIMULATION PARAMETER OBJECTS
 
 class SimParams():
     """Object for managing simulation parameters.
@@ -48,6 +145,18 @@ class SimParams():
         """
 
         return {**self.base, **self._params[label]}
+
+
+    def __contains__(self, label):
+        """Define object contents as whether label exists in object.
+
+        Parameters
+        ----------
+        label : str
+            Label to check whether it exists in object.
+        """
+
+        return label in self.labels
 
 
     @property
@@ -91,12 +200,12 @@ class SimParams():
         return {label : {**self.base, **params} for label, params in self._params.items()}
 
 
-    def make_params(self, parameters=None, **kwargs):
+    def make_params(self, params=None, **kwargs):
         """Make a simulation parameter definition from given parameters.
 
         Parameters
         ----------
-        parameters : dict or list of dict
+        params : dict or list of dict
             Parameter definition(s) to create simulation parameter definition.
         **kwargs
             Additional keyword arguments to create the simulation definition.
@@ -107,23 +216,23 @@ class SimParams():
             Parameter definition.
         """
 
-        return {**self.base, **self._make_params(parameters, **kwargs)}
+        return {**self.base, **self._make_params(params, **kwargs)}
 
 
-    def register(self, label, parameters=None, **kwargs):
+    def register(self, label, params=None, **kwargs):
         """Register a new simulation parameter definition.
 
         Parameters
         ----------
         label : str
             Label to set simulation parameters under in `params`.
-        parameters : dict or list of dict
+        params : dict or list of dict
             Parameter definition(s) to create simulation parameter definition.
         **kwargs
             Additional keyword arguments to create the simulation definition.
         """
 
-        self._params[label] = self._make_params(parameters, **kwargs)
+        self._params[label] = self._make_params(params, **kwargs)
 
 
     def register_group(self, group, clear=False):
@@ -141,8 +250,8 @@ class SimParams():
         if clear:
             self.clear()
 
-        for label, parameters in group.items():
-            self.register(label, parameters)
+        for label, params in group.items():
+            self.register(label, params)
 
 
     def update_base(self, n_seconds=False, fs=False):
@@ -240,27 +349,39 @@ class SimParams():
         return deepcopy(self)
 
 
-    def _make_params(self, parameters=None, **kwargs):
-        """Sub-function for `make_params`."""
+    def _make_params(self, params=None, **kwargs):
+        """Sub-function to make parameter definition.
 
-        parameters = {} if not parameters else deepcopy(parameters)
+        Parameters
+        ----------
+        params : dict or list of dict
+            Parameter definition(s) to create simulation parameter definition.
+        **kwargs
+            Additional keyword arguments to create the simulation definition.
 
-        if isinstance(parameters, list):
-            comps = [parameters.pop(0)]
-            kwargs = {**kwargs, **parameters[0]} if parameters else kwargs
-            params = self._make_combined_params(comps, **kwargs)
+        Returns
+        -------
+        params : dict
+            Parameter definition.
+        """
+
+        params = {} if not params else deepcopy(params)
+
+        if isinstance(params, list):
+            comps = [params.pop(0)]
+            kwargs = {**kwargs, **params[0]} if params else kwargs
+            out_params = self._make_combined_params(comps, **kwargs)
         else:
-            params = {**parameters, **kwargs}
+            out_params = {**params, **kwargs}
 
         # If any base parameters were passed in, clear them
-        for bparam in self.base:
-            params.pop(bparam, None)
+        out_params = drop_base_params(out_params)
 
-        return params
+        return out_params
 
 
     def _make_combined_params(self, components, component_variances=None):
-        """Make parameters for combined simulations, specifying multiple components.
+        """Sub-function to make parameters for combined simulations, specifying multiple components.
 
         Parameters
         ----------
@@ -275,17 +396,17 @@ class SimParams():
             Parameter definition.
         """
 
-        parameters = {}
+        out_params = {}
 
         comps = {}
         for comp in components:
             comps.update(**deepcopy(comp))
-        parameters['components'] = comps
+        out_params['components'] = comps
 
         if component_variances:
-            parameters['component_variances'] = component_variances
+            out_params['component_variances'] = component_variances
 
-        return parameters
+        return out_params
 
 
 class SimIters(SimParams):
@@ -367,6 +488,8 @@ class SimIters(SimParams):
         ParamIter
             Generator object for iterating across simulation parameters.
         """
+
+        from neurodsp.sim.update import ParamIter
 
         assert label in self._params.keys(), "Label for simulation parameters not found."
 
@@ -531,6 +654,8 @@ class SimSamplers(SimParams):
         ParamSampler
             Generator object for sampling simulation parameters.
         """
+
+        from neurodsp.sim.update import ParamSampler
 
         return ParamSampler(super().__getitem__(label), samplers,
                             n_samples if n_samples else self.n_samples)

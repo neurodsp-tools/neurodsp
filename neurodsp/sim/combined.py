@@ -6,9 +6,9 @@ import numpy as np
 from scipy.linalg import norm
 
 from neurodsp.sim.info import get_sim_func
-from neurodsp.sim.utils import modulate_signal
-from neurodsp.utils.decorators import normalize
+from neurodsp.sim.modulate import modulate_signal
 from neurodsp.utils.data import create_times
+from neurodsp.utils.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################
@@ -63,8 +63,7 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
         raise ValueError('Signal components and variances lengths do not match.')
 
     # Collect the sim function to use, and repeat variance if is single number
-    components = {(get_sim_func(name) if isinstance(name, str) else name) : params \
-                   for name, params in components.items()}
+    components = {get_sim_func(name) : params for name, params in components.items()}
     variances = repeat(component_variances) if \
         isinstance(component_variances, (int, float, np.number)) else iter(component_variances)
 
