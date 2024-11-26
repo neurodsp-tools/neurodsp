@@ -11,6 +11,7 @@ from neurodsp.sim.multi import (sim_multiple, sim_from_sampler,
                                 sim_across_values, sim_multi_across_values)
 from neurodsp.sim.update import create_updater, create_sampler, ParamSampler
 from neurodsp.plts.time_series import plot_time_series, plot_multi_time_series
+from neurodsp.utils.data import create_times
 
 ###################################################################################################
 # Simulate Multiple Signals Together
@@ -41,8 +42,11 @@ print(sigs.function, ':', sigs.params)
 
 ###################################################################################################
 
+# Create a times definition corresponding to the simulations
+times = create_times(params['n_seconds'], params['fs'])
+
 # Plot the simulated signals
-plot_multi_time_series(None, sigs)
+plot_multi_time_series(times, sigs)
 
 ###################################################################################################
 # SigIter
@@ -65,7 +69,7 @@ sig_iter = SigIter(sim_powerlaw, params, 3)
 
 # Iterate with the object to create simulations
 for tsig in sig_iter:
-    plot_time_series(None, tsig)
+    plot_time_series(times, tsig)
 
 ###################################################################################################
 # Simulate From Sampler
@@ -108,7 +112,7 @@ for paramdef in sampled_sims.params:
 ###################################################################################################
 
 # Plot the set of sampled simulations
-plot_multi_time_series(None, sampled_sims)
+plot_multi_time_series(times, sampled_sims)
 
 ###################################################################################################
 # Simulate Across Values
@@ -140,7 +144,8 @@ sims_across_params = sim_across_values(sim_powerlaw, multi_params)
 
 ###################################################################################################
 
-plot_multi_time_series(None, sims_across_params)
+# Plot the simulated time series from sampled parameters
+plot_multi_time_series(times, sims_across_params)
 
 ###################################################################################################
 # Simulate Multiple Instances Across Values
