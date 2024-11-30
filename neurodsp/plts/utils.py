@@ -3,7 +3,9 @@
 from copy import deepcopy
 from functools import wraps
 from os.path import join as pjoin
+from itertools import repeat, cycle
 
+import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.settings import SUPTITLE_FONTSIZE
@@ -155,3 +157,43 @@ def make_axes(n_rows, n_cols, figsize=None, row_size=4, col_size=3.6,
                      **title_kwargs)
 
     return axes
+
+
+def prepare_multi_plot_elements(xs, ys, labels=None, colors=None):
+    """Prepare inputs for plotting one or more elements in a loop.
+
+    Parameters
+    ----------
+    xs, ys : 1d or 2d array
+        Plot data.
+    labels : str or list
+        Label(s) for the plot input(s).
+    colors : str or iterable
+        Color(s) to plot input(s).
+
+    Returns
+    -------
+    xs, ys : iterable
+        Plot data.
+    labels : iterable
+        Label(s) for the plot input(s).
+    colors : iterable
+        Color(s) to plot input(s).
+
+    Notes
+    -----
+    This function takes inputs that can reflect one or more plot elements, and
+    prepares the inputs to be iterable for plotting in a loop.
+    """
+
+    xs = repeat(xs) if isinstance(xs, np.ndarray) and xs.ndim == 1 else xs
+    ys = [ys] if isinstance(ys, np.ndarray) and ys.ndim == 1 else ys
+
+    if labels is not None:
+        labels = [labels] if not isinstance(labels, list) else labels
+    else:
+        labels = repeat(labels)
+
+    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
+
+    return xs, ys, labels, colors
