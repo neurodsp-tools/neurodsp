@@ -465,6 +465,15 @@ Time Frequency
 
     plot_timefrequency
 
+Aperiodic
+~~~~~~~~~
+
+.. currentmodule:: neurodsp.plts
+.. autosummary::
+    :toctree: generated/
+
+    plot_autocorr
+
 Combined
 ~~~~~~~~
 
