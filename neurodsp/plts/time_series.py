@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
-from neurodsp.plts.utils import check_ax, savefig
+from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot_elements
 from neurodsp.utils.data import create_samples
 from neurodsp.utils.checks import check_param_options
 
@@ -49,18 +49,13 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
-    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
     times, xlabel = _check_times(times, sigs)
 
-    if labels is not None:
-        labels = [labels] if not isinstance(labels, list) else labels
-    else:
-        labels = repeat(labels)
+    times, sigs, colors, labels = prepare_multi_plot_elements(times, sigs, colors, labels)
 
     # If not provided, default colors for up to two signals to be black & red
-    if not colors and len(sigs) <= 2:
+    if isinstance(colors, repeat) and next(colors) is None and len(sigs) <= 2:
         colors = ['k', 'r']
-    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
 
     for time, sig, color, label in zip(times, sigs, colors, labels):
         ax.plot(time, sig, color=color, label=label)
@@ -174,22 +169,19 @@ def plot_multi_time_series(times, sigs, colors=None, ax=None, **plt_kwargs):
         Keyword arguments for customizing the plot.
     """
 
+    times, xlabel = _check_times(times, sigs)
     colors = 'black' if not colors else colors
-    colors = repeat(colors) if isinstance(colors, str) else iter(colors)
 
     ax = check_ax(ax, figsize=plt_kwargs.pop('figsize',  (15, 5)))
 
-    sigs = [sigs] if (isinstance(sigs, np.ndarray) and sigs.ndim == 1) else sigs
-    times, xlabel = _check_times(times, sigs)
+    times, sigs, _, colors = prepare_multi_plot_elements(times, sigs, None, colors)
 
     step = 0.8 * np.ptp(sigs[0])
 
     for ind, (time, sig) in enumerate(zip(times, sigs)):
         ax.plot(time, sig+step*ind, color=next(colors), **plt_kwargs)
 
-    ax.set(yticks=[])
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel('Channels')
+    ax.set(xlabel=xlabel, ylabel='Channels', yticks=[])
 
 
 def _check_times(times, sigs):
@@ -199,7 +191,5 @@ def _check_times(times, sigs):
     if times is None:
         times = create_samples(len(sigs[0]))
         xlabel = 'Samples'
-
-    times = repeat(times) if (isinstance(times, np.ndarray) and times.ndim == 1) else times
 
     return times, xlabel
