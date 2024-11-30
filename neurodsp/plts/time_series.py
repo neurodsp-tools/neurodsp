@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
-from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot_elements
+from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot
 from neurodsp.utils.data import create_samples
 from neurodsp.utils.checks import check_param_options
 
@@ -51,7 +51,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
 
     times, xlabel = _check_times(times, sigs)
 
-    times, sigs, colors, labels = prepare_multi_plot_elements(times, sigs, colors, labels)
+    times, sigs, colors, labels = prepare_multi_plot(times, sigs, colors, labels)
 
     # If not provided, default colors for up to two signals to be black & red
     if isinstance(colors, repeat) and next(colors) is None and len(sigs) <= 2:
@@ -174,7 +174,7 @@ def plot_multi_time_series(times, sigs, colors=None, ax=None, **plt_kwargs):
 
     ax = check_ax(ax, figsize=plt_kwargs.pop('figsize',  (15, 5)))
 
-    times, sigs, _, colors = prepare_multi_plot_elements(times, sigs, None, colors)
+    times, sigs, _, colors = prepare_multi_plot(times, sigs, None, colors)
 
     step = 0.8 * np.ptp(sigs[0])
 

@@ -159,7 +159,7 @@ def make_axes(n_rows, n_cols, figsize=None, row_size=4, col_size=3.6,
     return axes
 
 
-def prepare_multi_plot_elements(xs, ys, labels=None, colors=None):
+def prepare_multi_plot(xs, ys, labels=None, colors=None):
     """Prepare inputs for plotting one or more elements in a loop.
 
     Parameters

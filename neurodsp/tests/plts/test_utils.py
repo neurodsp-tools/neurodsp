@@ -77,7 +77,7 @@ def test_make_axes():
     assert axes.shape == (2, 2)
     assert isinstance(axes[0, 0], mpl.axes._axes.Axes)
 
-def test_prepare_multi_plot_elements():
+def test_prepare_multi_plot():
 
     xs1 = np.array([1, 2, 3])
     ys1 = np.array([1, 2, 3])
@@ -85,7 +85,7 @@ def test_prepare_multi_plot_elements():
     colors1 = None
 
     # 1 input
-    xs1o, ys1o, labels1o, colors1o = prepare_multi_plot_elements(xs1, ys1, labels1, colors1)
+    xs1o, ys1o, labels1o, colors1o = prepare_multi_plot(xs1, ys1, labels1, colors1)
     assert isinstance(xs1o, itertools.repeat)
     assert isinstance(ys1o, list)
     assert isinstance(labels1o, itertools.repeat)
@@ -96,7 +96,7 @@ def test_prepare_multi_plot_elements():
     ys2 = [np.array([1, 2, 3]), np.array([4, 5, 6])]
     labels2 = ['A', 'B']
     colors2 = ['blue', 'red']
-    xs2o, ys2o, labels2o, colors2o = prepare_multi_plot_elements(xs2, ys2, labels2, colors2)
+    xs2o, ys2o, labels2o, colors2o = prepare_multi_plot(xs2, ys2, labels2, colors2)
     assert isinstance(xs2o, list)
     assert isinstance(ys2o, list)
     assert isinstance(labels2o, list)

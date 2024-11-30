@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
-from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot_elements
+from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot
 
 ###################################################################################################
 ###################################################################################################
@@ -47,7 +47,7 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
 
     ax = check_ax(ax, figsize=kwargs.pop('figsize', (6, 6)))
 
-    for freq, power, label, color in zip(*prepare_multi_plot_elements(freqs, powers, labels, colors)):
+    for freq, power, label, color in zip(*prepare_multi_plot(freqs, powers, labels, colors)):
         ax.loglog(freq, power, label=label, color=color)
 
     ax.set_xlabel('Frequency (Hz)')
