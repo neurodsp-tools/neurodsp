@@ -1,6 +1,6 @@
 """Plots for time series."""
 
-from itertools import repeat, cycle
+from itertools import repeat
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -50,7 +50,6 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
     times, xlabel = _check_times(times, sigs)
-
     times, sigs, colors, labels = prepare_multi_plot(times, sigs, colors, labels)
 
     # If not provided, default colors for up to two signals to be black & red
@@ -169,11 +168,11 @@ def plot_multi_time_series(times, sigs, colors=None, ax=None, **plt_kwargs):
         Keyword arguments for customizing the plot.
     """
 
-    times, xlabel = _check_times(times, sigs)
-    colors = 'black' if not colors else colors
-
     ax = check_ax(ax, figsize=plt_kwargs.pop('figsize',  (15, 5)))
 
+    colors = 'black' if not colors else colors
+
+    times, xlabel = _check_times(times, sigs)
     times, sigs, _, colors = prepare_multi_plot(times, sigs, None, colors)
 
     step = 0.8 * np.ptp(sigs[0])
@@ -189,7 +188,8 @@ def _check_times(times, sigs):
 
     xlabel = 'Time (s)'
     if times is None:
-        times = create_samples(len(sigs[0]))
+        n_samples = len(sigs[0]) if isinstance(sigs, np.ndarray) and sigs.ndim == 2 else len(sigs)
+        times = create_samples(n_samples)
         xlabel = 'Samples'
 
     return times, xlabel
