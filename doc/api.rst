@@ -430,6 +430,7 @@ Spectral
     :toctree: generated/
 
     plot_power_spectra
+    plot_spectra_3D
     plot_scv
     plot_scv_rs_lines
     plot_scv_rs_matrix
