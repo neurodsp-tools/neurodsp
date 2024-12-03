@@ -1,6 +1,7 @@
 """Plotting functions for neurodsp.timefrequency."""
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
 from neurodsp.plts.utils import check_ax, savefig
@@ -10,7 +11,8 @@ from neurodsp.plts.utils import check_ax, savefig
 
 @savefig
 @style_plot
-def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5, ax=None, **kwargs):
+def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5,
+                       colorbar=True, ax=None, **kwargs):
     """Plot a time-frequency representation of data.
 
     Parameters
@@ -26,6 +28,8 @@ def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5, ax=None, **kw
         Defines the tick labels to add to the plot.
         If int, is the number of evenly sampled labels to add to the plot.
         If array_like, is a set of labels to add to the plot.
+    colorbar : bool, optional, default: True
+        Whether to add a colorbar to the plot.
     ax : matplotlib.Axes, optional
         Figure axes upon which to plot.
     **kwargs
@@ -70,3 +74,6 @@ def plot_timefrequency(times, freqs, powers, x_ticks=5, y_ticks=5, ax=None, **kw
     else:
         y_ticks_pos = [np.argmin(np.abs(freqs - val)) for val in y_ticks]
     ax.set(yticks=y_ticks_pos, yticklabels=y_ticks)
+
+    if colorbar:
+        plt.colorbar(ax.images[0])

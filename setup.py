@@ -1,4 +1,4 @@
-"""NeuroDSP setup script."""
+"""Setup script for neurodsp."""
 
 import os
 from setuptools import setup, find_packages
@@ -51,11 +51,12 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         ],
     platforms = 'any',
     project_urls = {
         'Documentation' : 'https://neurodsp-tools.github.io/',
         'Bug Reports' : 'https://github.com/neurodsp-tools/neurodsp/issues',
-        'Source' : 'https://github.com/neurodsp-tools/neurodsp'
+        'Source' : 'https://github.com/neurodsp-tools/neurodsp',
     },
 )
