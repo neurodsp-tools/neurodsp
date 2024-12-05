@@ -188,7 +188,10 @@ def _check_times(times, sigs):
 
     xlabel = 'Time (s)'
     if times is None:
-        n_samples = len(sigs[0]) if isinstance(sigs, np.ndarray) and sigs.ndim == 2 else len(sigs)
+        if isinstance(sigs, list) or (isinstance(sigs, np.ndarray) and sigs.ndim == 2):
+            n_samples = len(sigs[0])
+        else:
+            n_samples = len(sigs)
         times = create_samples(n_samples)
         xlabel = 'Samples'
 
