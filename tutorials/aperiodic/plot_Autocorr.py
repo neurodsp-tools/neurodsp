@@ -15,12 +15,12 @@ This tutorial covers ``neurodsp.aperiodic.autocorr``.
 # sphinx_gallery_thumbnail_number = 1
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from neurodsp.sim import sim_powerlaw, sim_oscillation
 
 # Import the function for computing autocorrelation
 from neurodsp.aperiodic import compute_autocorr
+from neurodsp.plts import plot_autocorr
 
 ###################################################################################################
 # Autocorrelation Measures
@@ -92,9 +92,7 @@ timepoints_osc2, autocorrs_osc2 = compute_autocorr(sig_osc2)
 ###################################################################################################
 
 # Plot autocorrelations
-_, ax = plt.subplots(figsize=(6, 4))
-ax.plot(timepoints_osc1, autocorrs_osc1)
-ax.set(xlabel='lag (samples)', ylabel='autocorrelation');
+plot_autocorr(timepoints_osc1, autocorrs_osc1)
 
 ###################################################################################################
 #
@@ -109,11 +107,9 @@ ax.set(xlabel='lag (samples)', ylabel='autocorrelation');
 ###################################################################################################
 
 # Plot autocorrelations for two different sinusoids
-_, ax = plt.subplots(figsize=(6, 4))
-ax.plot(timepoints_osc1, autocorrs_osc1, alpha=0.75, label='10 Hz')
-ax.plot(timepoints_osc2, autocorrs_osc2, alpha=0.75, label='20 Hz')
-ax.set(xlabel='lag (samples)', ylabel='autocorrelation')
-plt.legend(loc='upper right')
+plot_autocorr([timepoints_osc1, timepoints_osc2],
+              [autocorrs_osc1, autocorrs_osc2],
+              labels=['10 Hz', '20 Hz'])
 
 ###################################################################################################
 #
@@ -152,11 +148,9 @@ timepoints_pn, autocorrs_pn = compute_autocorr(sig_pn)
 ###################################################################################################
 
 # Plot the autocorrelations of the aperiodic signals
-_, ax = plt.subplots(figsize=(5, 4))
-ax.plot(timepoints_wn, autocorrs_wn, label='White Noise')
-ax.plot(timepoints_pn, autocorrs_pn, label='Pink Noise')
-ax.set(xlabel="lag (samples)", ylabel="autocorrelation")
-plt.legend()
+plot_autocorr([timepoints_wn, timepoints_pn],
+              [autocorrs_wn, autocorrs_pn],
+              labels=['White Noise', 'Pink Noise'])
 
 ###################################################################################################
 #
