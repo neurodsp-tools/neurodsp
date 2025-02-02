@@ -1,8 +1,6 @@
 """Time-frequency decompositions using wavelets."""
 
 import numpy as np
-from scipy.signal import morlet
-
 from neurodsp.utils.data import create_freqs
 from neurodsp.utils.checks import check_n_cycles, check_param_options
 from neurodsp.utils.decorators import multidim
@@ -130,3 +128,32 @@ def convolve_wavelet(sig, fs, freq, n_cycles=7, scaling=0.5, wavelet_len=None, n
     mwt_imag = np.convolve(sig, np.imag(morlet_f), mode='same')
 
     return mwt_real + 1j * mwt_imag
+
+
+def morlet(M, w=5.0, s=1.0, complete=True):
+    """Complex Morlet wavelet, adapted from scipy.
+
+    Parameters
+    ----------
+    M : int
+        Length of the wavelet.
+    w : float, optional
+        Omega0. Default is 5
+    s : float, optional
+        Scaling factor, windowed from ``-s*2*pi`` to ``+s*2*pi``. Default is 1.
+    complete : bool, optional
+        Whether to use the complete or the standard version.
+
+    Returns
+    -------
+    morlet : (M,) ndarray
+    """
+    x = np.linspace(-s * 2 * np.pi, s * 2 * np.pi, M)
+    output = np.exp(1j * w * x)
+
+    if complete:
+        output -= np.exp(-0.5 * (w**2))
+
+    output *= np.exp(-0.5 * (x**2)) * np.pi**(-0.25)
+
+    return output
