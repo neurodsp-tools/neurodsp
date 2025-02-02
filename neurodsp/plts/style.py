@@ -113,10 +113,12 @@ def apply_custom_style(ax, **kwargs):
     if ax.get_title():
         ax.title.set_size(kwargs.pop('title_fontsize', TITLE_FONTSIZE))
 
-    # Settings for the axis labels
+    # Settings for the axis labels, including checking & setting for 3D axis
     label_size = kwargs.pop('label_size', LABEL_SIZE)
     ax.xaxis.label.set_size(label_size)
     ax.yaxis.label.set_size(label_size)
+    if hasattr(ax, 'zaxis'):
+        ax.zaxis.label.set_size(label_size)
 
     # Settings for the axis ticks
     ax.tick_params(axis='both', which='major',

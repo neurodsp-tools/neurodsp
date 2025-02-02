@@ -189,11 +189,14 @@ def prepare_multi_plot(xs, ys, labels=None, colors=None):
     xs = repeat(xs) if isinstance(xs, np.ndarray) and xs.ndim == 1 else xs
     ys = [ys] if isinstance(ys, np.ndarray) and ys.ndim == 1 else ys
 
+    # Collect definition of collection items considered iterables to check against
+    iterables = (list, tuple, np.ndarray)
+
     if labels is not None:
-        labels = [labels] if not isinstance(labels, list) else labels
+        labels = [labels] if not isinstance(labels, iterables) else labels
     else:
         labels = repeat(labels)
 
-    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
+    colors = repeat(colors) if not isinstance(colors, iterables) else cycle(colors)
 
     return xs, ys, labels, colors
