@@ -227,7 +227,7 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
 
 @savefig
 @style_plot
-def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True, colors=None,
+def plot_spectra_3d(freqs, powers, log_freqs=False, log_powers=True, colors=None,
                     orientation=(20, -50), zoom=1.0, ax=None, **kwargs):
     """Plot a series of power spectra in a 3D plot.
 
