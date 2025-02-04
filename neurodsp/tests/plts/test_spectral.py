@@ -68,3 +68,18 @@ def test_plot_spectral_hist(tsig_comb):
                        spectrum=spectrum, spectrum_freqs=spectrum_freqs,
                        save_fig=True, file_path=TEST_PLOTS_PATH,
                        file_name='test_plot_spectral_hist.png')
+
+@plot_test
+def test_plot_spectra_3d(tsig_comb, tsig_burst):
+
+    freqs1, powers1 = compute_spectrum(tsig_comb, FS)
+    freqs2, powers2 = compute_spectrum(tsig_burst, FS)
+
+    plot_spectra_3d([freqs1, freqs2], [powers1, powers2],
+                    save_fig=True, file_path=TEST_PLOTS_PATH,
+                    file_name='test_plot_spectral3D_1.png')
+
+    plot_spectra_3d(freqs1, [powers1, powers2, powers1, powers2],
+                    colors=['r', 'y', 'b', 'g'],
+                    save_fig=True, file_path=TEST_PLOTS_PATH,
+                    file_name='test_plot_spectral3D_2.png')

@@ -1,12 +1,10 @@
 """Plotting functions for neurodsp.spectral."""
 
-from itertools import repeat, cycle
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
-from neurodsp.plts.utils import check_ax, savefig
+from neurodsp.plts.utils import check_ax, check_ax_3d, savefig, prepare_multi_plot
 
 ###################################################################################################
 ###################################################################################################
@@ -47,18 +45,8 @@ def plot_power_spectra(freqs, powers, labels=None, colors=None, ax=None, **kwarg
 
     ax = check_ax(ax, figsize=kwargs.pop('figsize', (6, 6)))
 
-    freqs = repeat(freqs) if isinstance(freqs, np.ndarray) and freqs.ndim == 1 else freqs
-    powers = [powers] if isinstance(powers, np.ndarray) and powers.ndim == 1 else powers
-
-    if labels is not None:
-        labels = [labels] if not isinstance(labels, list) else labels
-    else:
-        labels = repeat(labels)
-
-    colors = repeat(colors) if not isinstance(colors, list) else cycle(colors)
-
-    for freq, power, color, label in zip(freqs, powers, colors, labels):
-        ax.loglog(freq, power, color=color, label=label)
+    for freq, power, label, color in zip(*prepare_multi_plot(freqs, powers, labels, colors)):
+        ax.loglog(freq, power, label=label, color=color)
 
     ax.set_xlabel('Frequency (Hz)')
     ax.set_ylabel('Power ($V^2/Hz$)')
@@ -235,3 +223,73 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
     if spectrum is not None:
         plt_inds = np.logical_and(spectrum_freqs >= freqs[0], spectrum_freqs <= freqs[-1])
         ax.plot(spectrum_freqs[plt_inds], np.log10(spectrum[plt_inds]), color='w', alpha=0.8)
+
+
+@savefig
+@style_plot
+def plot_spectra_3d(freqs, powers, log_freqs=False, log_powers=True, colors=None,
+                    orientation=(20, -50), zoom=1.0, ax=None, **kwargs):
+    """Plot a series of power spectra in a 3D plot.
+
+    Parameters
+    ----------
+    freqs : 1d or 2d array or list of 1d array
+        Frequency vector.
+    powers : 2d array or list of 1d array
+        Power values.
+    log_freqs : bool, optional, default: False
+        Whether to plot the frequency values in log10 space.
+    log_powers : bool, optional, default: True
+        Whether to plot the power values in log10 space.
+    colors : str or list of str, optional
+        Colors to use to plot lines.
+    orientation : tuple of int, optional, default: (20, -50)
+        Orientation to set the 3D plot. See `Axes3D.view_init` for more information.
+    zoom : float, optional, default: 1.0
+        Zoom scaling for the figure axis. See `Axes3D.set_box_aspect` for more information.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot. Must be a 3D axis.
+    **kwargs
+        Keyword arguments for customizing the plot.
+
+    Examples
+    --------
+    Plot power spectra in 3D:
+
+    >>> from neurodsp.sim import sim_combined
+    >>> from neurodsp.spectral import compute_spectrum
+    >>> sig1 = sim_combined(n_seconds=10, fs=500,
+    ...                     components={'sim_powerlaw': {'exponent' : -1},
+    ...                                 'sim_bursty_oscillation' : {'freq': 10}})
+    >>> sig2 = sim_combined(n_seconds=10, fs=500,
+    ...                     components={'sim_powerlaw': {'exponent' : -1.5},
+    ...                                 'sim_bursty_oscillation' : {'freq': 10}})
+    >>> freqs1, powers1 = compute_spectrum(sig1, fs=500)
+    >>> freqs2, powers2 = compute_spectrum(sig2, fs=500)
+    >>> plot_spectra_3d([freqs1, freqs2], [powers1, powers2])
+    """
+
+    ax = check_ax_3d(ax)
+
+    n_spectra = len(powers)
+
+    for ind, (freq, power, _, color) in \
+        enumerate(zip(*prepare_multi_plot(freqs, powers, None, colors))):
+        ax.plot(xs=np.log10(freq) if log_freqs else freq,
+                ys=[ind] * len(freq),
+                zs=np.log10(power) if log_powers else power,
+                color=color,
+                **kwargs)
+
+    ax.set(
+        xlabel='Frequency (Hz)',
+        ylabel='Channels',
+        zlabel='Power',
+        ylim=[0, n_spectra - 1],
+    )
+
+    yticks = list(range(n_spectra))
+    ax.set_yticks(yticks, yticks)
+
+    ax.view_init(*orientation)
+    ax.set_box_aspect(None, zoom=zoom)

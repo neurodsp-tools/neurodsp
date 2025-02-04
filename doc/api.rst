@@ -430,6 +430,7 @@ Spectral
     :toctree: generated/
 
     plot_power_spectra
+    plot_spectra_3d
     plot_scv
     plot_scv_rs_lines
     plot_scv_rs_matrix
@@ -464,6 +465,15 @@ Time Frequency
     :toctree: generated/
 
     plot_timefrequency
+
+Aperiodic
+~~~~~~~~~
+
+.. currentmodule:: neurodsp.plts
+.. autosummary::
+    :toctree: generated/
+
+    plot_autocorr
 
 Combined
 ~~~~~~~~
