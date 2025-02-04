@@ -266,7 +266,7 @@ def plot_spectra_3d(freqs, powers, log_freqs=False, log_powers=True, colors=None
     ...                                 'sim_bursty_oscillation' : {'freq': 10}})
     >>> freqs1, powers1 = compute_spectrum(sig1, fs=500)
     >>> freqs2, powers2 = compute_spectrum(sig2, fs=500)
-    >>> plot_spectra_3D([freqs1, freqs2], [powers1, powers2])
+    >>> plot_spectra_3d([freqs1, freqs2], [powers1, powers2])
     """
 
     ax = check_ax_3d(ax)
