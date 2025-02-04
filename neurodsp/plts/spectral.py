@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.style import style_plot
-from neurodsp.plts.utils import check_ax, savefig, prepare_multi_plot
+from neurodsp.plts.utils import check_ax, check_ax_3d, savefig, prepare_multi_plot
 
 ###################################################################################################
 ###################################################################################################
@@ -227,8 +227,8 @@ def plot_spectral_hist(freqs, power_bins, spectral_hist, spectrum_freqs=None,
 
 @savefig
 @style_plot
-def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True,
-                    colors=None, orientation=(20, -50), **kwargs):
+def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True, colors=None,
+                    orientation=(20, -50), zoom=1.0, ax=None, **kwargs):
     """Plot a series of power spectra in a 3D plot.
 
     Parameters
@@ -241,10 +241,14 @@ def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True,
         Whether to plot the frequency values in log10 space.
     log_powers : bool, optional, default: True
         Whether to plot the power values in log10 space.
-    colors : str or list of str
+    colors : str or list of str, optional
         Colors to use to plot lines.
-    orientation : tuple of int
-        Orientation to set the 3D plot.
+    orientation : tuple of int, optional, default: (20, -50)
+        Orientation to set the 3D plot. See `Axes3D.view_init` for more information.
+    zoom : float, optional, default: 1.0
+        Zoom scaling for the figure axis. See `Axes3D.set_box_aspect` for more information.
+    ax : matplotlib.Axes, optional
+        Figure axes upon which to plot. Must be a 3D axis.
     **kwargs
         Keyword arguments for customizing the plot.
 
@@ -265,8 +269,7 @@ def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True,
     >>> plot_spectra_3D([freqs1, freqs2], [powers1, powers2])
     """
 
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
+    ax = check_ax_3d(ax)
 
     n_spectra = len(powers)
 
@@ -287,4 +290,6 @@ def plot_spectra_3D(freqs, powers, log_freqs=False, log_powers=True,
 
     yticks = list(range(n_spectra))
     ax.set_yticks(yticks, yticks)
+
     ax.view_init(*orientation)
+    ax.set_box_aspect(None, zoom=zoom)
