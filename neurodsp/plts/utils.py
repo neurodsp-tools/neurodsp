@@ -62,6 +62,36 @@ def check_ax(ax, figsize=None):
     return ax
 
 
+def check_ax_3d(ax, figsize=None):
+    """Check whether a 3D figure axes object is defined, define if not.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes or None
+        Axes object to check if is defined. Must be 3D.
+
+    Returns
+    -------
+    ax : matplotlib.Axes
+        Figure axes object to use.
+
+    Raises
+    ------
+    ValueError
+        If the ax input is a defined axis, but is not 3D.
+    """
+
+    if ax and '3d' not in ax.name:
+        raise ValueError('Provided axis is not 3D.')
+
+    if not ax:
+
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(projection='3d')
+
+    return ax
+
+
 def savefig(func):
     """Decorator function to save out figures."""
 

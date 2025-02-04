@@ -1,5 +1,7 @@
 """Tests for neurodsp.plts.utils."""
 
+from pytest import raises
+
 import os
 import itertools
 
@@ -41,6 +43,22 @@ def test_check_ax():
     ax = check_ax(None, figsize=figsize)
     fig = plt.gcf()
     assert list(fig.get_size_inches()) == figsize
+
+def test_check_ax_3d():
+
+    # Check running with None Input
+    ax = check_ax(None)
+
+    # Check error if given a non 3D axis
+    with raises(ValueError):
+        _, ax = plt.subplots()
+        nax = check_ax_3d(ax)
+
+    # Check running with pre-created axis
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    nax = check_ax(ax)
+    assert nax == ax
 
 def test_savefig():
 
