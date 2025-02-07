@@ -6,9 +6,9 @@ import numpy as np
 from scipy.linalg import norm
 
 from neurodsp.sim.info import get_sim_func
-from neurodsp.sim.utils import modulate_signal
-from neurodsp.utils.decorators import normalize
+from neurodsp.sim.modulate import modulate_signal
 from neurodsp.utils.data import create_times
+from neurodsp.utils.decorators import normalize
 
 ###################################################################################################
 ###################################################################################################
@@ -63,8 +63,7 @@ def sim_combined(n_seconds, fs, components, component_variances=1):
         raise ValueError('Signal components and variances lengths do not match.')
 
     # Collect the sim function to use, and repeat variance if is single number
-    components = {(get_sim_func(name) if isinstance(name, str) else name) : params \
-                   for name, params in components.items()}
+    components = {get_sim_func(name) : params for name, params in components.items()}
     variances = repeat(component_variances) if \
         isinstance(component_variances, (int, float, np.number)) else iter(component_variances)
 
@@ -157,6 +156,38 @@ def sim_peak_oscillation(sig_ap, fs, freq, bw, height):
 
     # Create the combined signal by summing periodic & aperiodic
     sig = sig_ap + sig_periodic
+
+    return sig
+
+
+@normalize
+def sim_combined_peak(n_seconds, fs, components):
+    """Simulate a combined signal with an aperiodic component and a peak.
+
+    Parameters
+    ----------
+    n_seconds : float
+        Simulation time, in seconds.
+    fs : float
+        Sampling rate of simulated signal, in Hz.
+    components : dict
+        A dictionary of simulation functions to run, with their desired parameters.
+
+    Returns
+    -------
+    sig : 1d array
+        Simulated combined peak signal.
+    """
+
+    sim_names = list(components.keys())
+    assert len(sim_names) == 2, 'Expected only 2 components.'
+    assert sim_names[1] == 'sim_peak_oscillation', \
+        'Expected `sim_peak_oscillation` as the second key.'
+
+    ap_func = get_sim_func(sim_names[0]) if isinstance(sim_names[0], str) else sim_names[0]
+
+    sig = sim_peak_oscillation(\
+        ap_func(n_seconds, fs, **components[sim_names[0]]), fs, **components[sim_names[1]])
 
     return sig
 

@@ -3,7 +3,9 @@
 from copy import deepcopy
 from functools import wraps
 from os.path import join as pjoin
+from itertools import repeat, cycle
 
+import numpy as np
 import matplotlib.pyplot as plt
 
 from neurodsp.plts.settings import SUPTITLE_FONTSIZE
@@ -56,6 +58,36 @@ def check_ax(ax, figsize=None):
 
     if not ax:
         _, ax = plt.subplots(figsize=figsize)
+
+    return ax
+
+
+def check_ax_3d(ax, figsize=None):
+    """Check whether a 3D figure axes object is defined, define if not.
+
+    Parameters
+    ----------
+    ax : matplotlib.Axes or None
+        Axes object to check if is defined. Must be 3D.
+
+    Returns
+    -------
+    ax : matplotlib.Axes
+        Figure axes object to use.
+
+    Raises
+    ------
+    ValueError
+        If the ax input is a defined axis, but is not 3D.
+    """
+
+    if ax and '3d' not in ax.name:
+        raise ValueError('Provided axis is not 3D.')
+
+    if not ax:
+
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(projection='3d')
 
     return ax
 
@@ -155,3 +187,46 @@ def make_axes(n_rows, n_cols, figsize=None, row_size=4, col_size=3.6,
                      **title_kwargs)
 
     return axes
+
+
+def prepare_multi_plot(xs, ys, labels=None, colors=None):
+    """Prepare inputs for plotting one or more elements in a loop.
+
+    Parameters
+    ----------
+    xs, ys : 1d or 2d array
+        Plot data.
+    labels : str or list
+        Label(s) for the plot input(s).
+    colors : str or iterable
+        Color(s) to plot input(s).
+
+    Returns
+    -------
+    xs, ys : iterable
+        Plot data.
+    labels : iterable
+        Label(s) for the plot input(s).
+    colors : iterable
+        Color(s) to plot input(s).
+
+    Notes
+    -----
+    This function takes inputs that can reflect one or more plot elements, and
+    prepares the inputs to be iterable for plotting in a loop.
+    """
+
+    xs = repeat(xs) if isinstance(xs, np.ndarray) and xs.ndim == 1 else xs
+    ys = [ys] if isinstance(ys, np.ndarray) and ys.ndim == 1 else ys
+
+    # Collect definition of collection items considered iterables to check against
+    iterables = (list, tuple, np.ndarray)
+
+    if labels is not None:
+        labels = [labels] if not isinstance(labels, iterables) else labels
+    else:
+        labels = repeat(labels)
+
+    colors = repeat(colors) if not isinstance(colors, iterables) else cycle(colors)
+
+    return xs, ys, labels, colors
