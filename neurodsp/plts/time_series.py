@@ -50,7 +50,7 @@ def plot_time_series(times, sigs, labels=None, colors=None, ax=None, **kwargs):
     ax = check_ax(ax, kwargs.pop('figsize', (15, 3)))
 
     times, xlabel = _check_times(times, sigs)
-    times, sigs, colors, labels = prepare_multi_plot(times, sigs, colors, labels)
+    times, sigs, labels, colors = prepare_multi_plot(times, sigs, labels, colors)
 
     # If not provided, default colors for up to two signals to be black & red
     if isinstance(colors, repeat) and next(colors) is None and len(sigs) <= 2:
