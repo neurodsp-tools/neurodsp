@@ -175,7 +175,8 @@ def plot_multi_time_series(times, sigs, colors=None, ax=None, **plt_kwargs):
     times, xlabel = _check_times(times, sigs)
     times, sigs, _, colors = prepare_multi_plot(times, sigs, None, colors)
 
-    step = 0.8 * np.ptp(sigs[0])
+    # Calculate scaling to offset plots by, based on signal range, excluding nans for ptp
+    step = 0.8 * np.ptp(sigs[0][~np.isnan(sigs[0])])
 
     for ind, (time, sig) in enumerate(zip(times, sigs)):
         ax.plot(time, sig+step*ind, color=next(colors), **plt_kwargs)
