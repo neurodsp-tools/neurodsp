@@ -142,7 +142,7 @@ To see and get involved in discussions about the module, check out:
 - the `development page <https://github.com/neurodsp-tools/Development>`_ for discussion of potential major updates to the module
 
 When interacting with this project, please use the
-`contribution guidelines <https://github.com/neurodsp-tools/fooof/blob/main/CONTRIBUTING.md>`_
+`contribution guidelines <https://github.com/neurodsp-tools/neurodsp/blob/main/CONTRIBUTING.md>`_
 and follow the
 `code of conduct <https://github.com/neurodsp-tools/neurodsp/blob/main/CODE_OF_CONDUCT.md>`_.
 
