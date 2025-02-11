@@ -59,11 +59,11 @@ def compute_lagged_coherence(sig, fs, freqs, n_cycles=3, return_spectrum=False):
     Compute lagged coherence for a simulated signal with beta oscillations:
 
     >>> from neurodsp.sim import sim_combined
-    >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation': {'freq': 20,
-    ...                                                           'enter_burst': .50,
-    ...                                                           'leave_burst': .25}})
+    >>> sim_components = {'sim_synaptic_current': {},
+    ...                   'sim_bursty_oscillation': {'freq': 20,
+    ...                                              'burst_params': {'enter_burst' : 0.50,
+    ...                                                               'leave_burst' : 0.25}}}
+    >>> sig = sim_combined(n_seconds=10, fs=500, components=sim_components)
     >>> lag_cohs = compute_lagged_coherence(sig, fs=500, freqs=(5, 35))
     """
 

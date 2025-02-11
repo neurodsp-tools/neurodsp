@@ -27,11 +27,11 @@ def plot_swm_pattern(pattern, ax=None, **kwargs):
     >>> import numpy as np
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.rhythm import sliding_window_matching
-    >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_powerlaw': {'f_range': (2, None)},
-    ...                                'sim_bursty_oscillation': {'freq': 20,
-    ...                                                           'enter_burst': .25,
-    ...                                                           'leave_burst': .25}})
+    >>> sim_components = {'sim_powerlaw': {'f_range': (2, None)},
+    ...                   'sim_bursty_oscillation': {'freq': 20,
+    ...                                              'burst_params': {'enter_burst' : 0.25,
+    ...                                                               'leave_burst' : 0.25}}}
+    >>> sig = sim_combined(n_seconds=10, fs=500, components=sim_components)
     >>> windows, _ = sliding_window_matching(sig, fs=500, win_len=0.05, win_spacing=0.5)
     >>> avg_window = np.mean(windows)
     >>> plot_swm_pattern(avg_window)
@@ -68,11 +68,11 @@ def plot_lagged_coherence(freqs, lcs, ax=None, **kwargs):
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.rhythm import compute_lagged_coherence
-    >>> sig = sim_combined(n_seconds=10, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation': {'freq': 20,
-    ...                                                           'enter_burst': .50,
-    ...                                                           'leave_burst': .25}})
+    >>> sim_components = {'sim_synaptic_current': {},
+    ...                   'sim_bursty_oscillation': {'freq': 20,
+    ...                                              'burst_params': {'enter_burst' : 0.50,
+    ...                                                               'leave_burst' : 0.25}}}
+    >>> sig = sim_combined(n_seconds=10, fs=500, components=sim_components)
     >>> lag_cohs, freqs = compute_lagged_coherence(sig, fs=500, freqs=(5, 35),
     ...                                            return_spectrum=True)
     >>> plot_lagged_coherence(freqs, lag_cohs)
