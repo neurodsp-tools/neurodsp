@@ -13,6 +13,9 @@ This tutorial primarily covers the ``neurodsp.timefrequency`` module.
 
 import matplotlib.pyplot as plt
 
+# Import filter function
+from neurodsp.filt import filter_signal
+
 # Import time-frequency functions
 from neurodsp.timefrequency import amp_by_time, freq_by_time, phase_by_time
 
@@ -32,7 +35,6 @@ from neurodsp.plts.time_series import plot_time_series, plot_instantaneous_measu
 
 # Load a neural signal, as well as a filtered version of the same signal
 sig = load_ndsp_data('sample_data_1.npy', folder='data')
-sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
 # Set sampling rate, and create a times vector for plotting
 fs = 1000
@@ -49,8 +51,26 @@ f_range = (13, 30)
 
 ###################################################################################################
 
-# Plot signal
+# Plot original signal
 plot_time_series(times, sig)
+
+###################################################################################################
+#
+# Throughout this example, we will be examining instantaneous measures computed on the beta band.
+#
+# Here, we first compute a filtered version of our signal in the beta band, which we can
+# use for visualization purposes.
+#
+
+###################################################################################################
+
+# Filter the signal into the range of interest, to use for plotting
+sig_filt = filter_signal(sig, fs, 'bandpass', f_range)
+
+###################################################################################################
+
+# Plot filtered signal
+plot_time_series(times, sig_filt)
 
 ###################################################################################################
 # Instantaneous Phase
@@ -60,6 +80,11 @@ plot_time_series(times, sig)
 #
 # Instantaneous phase can be analyzed with the :func:`~.phase_by_time` function.
 #
+# Note that here we are passing in the original, unfiltered signal as well as the frequency
+# range of interest. In doing so, the signal will be filtered prior to the instantaneous
+# measure being computed. You can also pass in a pre-filtered signal - if so, a frequency
+# range is not needed.
+#
 
 ###################################################################################################
 
@@ -68,9 +93,9 @@ pha = phase_by_time(sig, fs, f_range)
 
 ###################################################################################################
 
-# Plot example signal
+# Plot example signal, comparing filtered trace and estimated instantaneous phase
 _, axs = plt.subplots(2, 1, figsize=(15, 6))
-plot_time_series(times, sig, xlim=[4, 5], xlabel=None, ax=axs[0])
+plot_time_series(times, sig_filt, xlim=[4, 5], xlabel=None, ax=axs[0])
 plot_instantaneous_measure(times, pha, colors='r', xlim=[4, 5], ax=axs[1])
 
 ###################################################################################################
@@ -94,7 +119,7 @@ _, axs = plt.subplots(2, 1, figsize=(15, 6))
 plot_instantaneous_measure(times, [sig, amp], 'amplitude',
                            labels=['Raw Signal', 'Amplitude'],
                            xlim=[4, 5], xlabel=None, ax=axs[0])
-plot_instantaneous_measure(times, [sig_filt_true, amp], 'amplitude',
+plot_instantaneous_measure(times, [sig_filt, amp], 'amplitude',
                            labels=['Filtered Signal', 'Amplitude'], colors=['b', 'r'],
                            xlim=[4, 5], ax=axs[1])
 
@@ -124,7 +149,7 @@ i_f = freq_by_time(sig, fs, f_range)
 # Plot example signal
 _, axs = plt.subplots(3, 1, figsize=(15, 9))
 plot_time_series(times, sig, 'Raw Signal', xlim=[4, 5], xlabel=None, ax=axs[0])
-plot_time_series(times, sig_filt_true, labels='Beta Filtered Signal',
+plot_time_series(times, sig_filt, labels='Beta Filtered Signal',
                  colors='b', xlim=[4, 5], xlabel=None, ax=axs[1])
 plot_instantaneous_measure(times, i_f, 'frequency', label='Instantaneous Frequency',
                            colors='r', xlim=[4, 5], ylim=[10, 30], ax=axs[2])
