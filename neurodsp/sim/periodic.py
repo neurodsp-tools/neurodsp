@@ -154,7 +154,7 @@ def sim_bursty_oscillation(n_seconds, fs, freq, burst_def='prob', burst_params=N
     burst_params = {} if not burst_params else burst_params
     for burst_param in ['enter_burst', 'leave_burst']:
         temp = cycle_params.pop(burst_param, 0.2)
-        if burst_def == 'prob' and burst_param not in burst_params:
+        if isinstance(burst_def, str) and burst_def == 'prob' and burst_param not in burst_params:
             burst_params[burst_param] = temp
 
     # Simulate a normalized cycle to use for bursts
