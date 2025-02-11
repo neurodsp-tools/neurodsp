@@ -67,6 +67,10 @@ def test_sim_bursty_oscillation():
         burst_def='durations', burst_params={'n_cycles_burst' : 2, 'n_cycles_off' : 2})
     check_sim_output(sig3)
 
+    # Check passing in burst definition directly
+    burst_def = np.array([True, False, True, False, True, False, True, False, True, False])
+    sig4 = sim_bursty_oscillation(1, FS, FREQ1, burst_def=burst_def)
+    check_sim_output(sig4, n_seconds=1)
 
 def test_sim_variable_oscillation():
 

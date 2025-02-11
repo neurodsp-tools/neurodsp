@@ -151,9 +151,10 @@ def plot_scv_rs_matrix(freqs, t_inds, scv_rs, ax=None, **kwargs):
 
     >>> from neurodsp.sim import sim_combined
     >>> from neurodsp.spectral import compute_scv_rs
-    >>> sig = sim_combined(n_seconds=100, fs=500,
-    ...                    components={'sim_synaptic_current': {},
-    ...                                'sim_bursty_oscillation': {'freq': 10, 'enter_burst':0.75}})
+    >>> sim_components = {'sim_synaptic_current': {},
+    ...                   'sim_bursty_oscillation': {'freq': 10,
+    ...                                              'burst_params': {'enter_burst' : 0.75}}}
+    >>> sig = sim_combined(n_seconds=100, fs=500, components=sim_components)
     >>> freqs, t_inds, scv_rs = compute_scv_rs(sig, fs=500, method='rolling', rs_params=(10, 2))
     >>> # Plot the computed scv, plotting frequencies up to 20 Hz (index of 21)
     >>> plot_scv_rs_matrix(freqs[:21], t_inds, scv_rs[:21])
