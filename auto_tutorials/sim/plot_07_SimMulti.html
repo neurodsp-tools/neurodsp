@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Simulating Multiple Signals &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-07-simmulti-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="simulating-multiple-signals">
+<span id="sphx-glr-auto-tutorials-sim-plot-07-simmulti-py"></span><h1>Simulating Multiple Signals<a class="headerlink" href="#simulating-multiple-signals" title="Permalink to this heading">¶</a></h1>
+<p>Simulate multiple signals together.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter" title="neurodsp.sim.update.SigIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class"><span class="n">SigIter</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.aperiodic</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.multi</span> <span class="kn">import</span> <span class="p">(</span><span class="n">sim_multiple</span><span class="p">,</span> <span class="n">sim_from_sampler</span><span class="p">,</span>
+                                <span class="n">sim_across_values</span><span class="p">,</span> <span class="n">sim_multi_across_values</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class"><span class="n">ParamSampler</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">,</span> <a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span>
+</pre></div>
+</div>
+<section id="simulate-multiple-signals-together">
+<h2>Simulate Multiple Signals Together<a class="headerlink" href="#simulate-multiple-signals-together" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../../generated/neurodsp.sim.multi.sim_multiple.html#neurodsp.sim.multi.sim_multiple" title="neurodsp.sim.multi.sim_multiple"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_multiple()</span></code></a> function can be used to simulate multiple signals
+from the same set of parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a set of simulation parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;f_range&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="kc">None</span><span class="p">]}</span>
+
+<span class="c1"># Simulate multiple iterations from the same parameter definition</span>
+<a href="../../generated/neurodsp.sim.signals.Simulations.html#neurodsp.sim.signals.Simulations" title="neurodsp.sim.signals.Simulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sigs</span></a> <span class="o">=</span> <span class="n">sim_multiple</span><span class="p">(</span><a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output the above function is a :class:~.Simulations object that stores multiple
+simulated signals along with relevant metadata.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the metadata stored in the simulations object</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.signals.Simulations.html#neurodsp.sim.signals.Simulations" title="neurodsp.sim.signals.Simulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sigs</span></a><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.Simulations.html#neurodsp.sim.signals.Simulations.params" title="neurodsp.sim.signals.Simulations.params" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-property"><span class="n">sigs</span><span class="o">.</span><span class="n">params</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>sim_powerlaw : {&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: -1, &#39;f_range&#39;: [0.5, None]}
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a times definition corresponding to the simulations</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;n_seconds&#39;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;fs&#39;</span><span class="p">])</span>
+
+<span class="c1"># Plot the simulated signals</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.Simulations.html#neurodsp.sim.signals.Simulations" title="neurodsp.sim.signals.Simulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sigs</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_07_SimMulti_001.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_001.png" alt="plot 07 SimMulti" class = "sphx-glr-single-img"/></section>
+<section id="sigiter">
+<h2>SigIter<a class="headerlink" href="#sigiter" title="Permalink to this heading">¶</a></h2>
+<p>In some cases, it may be useful to define a way to sample iterations from the same set of
+simulation parameters. To do so, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter" title="neurodsp.sim.update.SigIter"><code class="xref py py-class docutils literal notranslate"><span class="pre">SigIter</span></code></a> class.</p>
+<p>Using this class, we can define an object that stores the simulation function, the
+set of parameters, and optionally a number of simulations to create, and use this object
+to yield simulated signals.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize a SigIter object</span>
+<a href="../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter" title="neurodsp.sim.update.SigIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sig_iter</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter" title="neurodsp.sim.update.SigIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class"><span class="n">SigIter</span></a><span class="p">(</span><a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Iterate with the object to create simulations</span>
+<span class="k">for</span> <span class="n">tsig</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter" title="neurodsp.sim.update.SigIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sig_iter</span></a><span class="p">:</span>
+    <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">tsig</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_002.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_002.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_003.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_003.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_004.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_004.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+</ul>
+</section>
+<section id="simulate-from-sampler">
+<h2>Simulate From Sampler<a class="headerlink" href="#simulate-from-sampler" title="Permalink to this heading">¶</a></h2>
+<p>We can also use the <a class="reference internal" href="../../generated/neurodsp.sim.multi.sim_from_sampler.html#neurodsp.sim.multi.sim_from_sampler" title="neurodsp.sim.multi.sim_from_sampler"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_from_sampler()</span></code></a> function to simulate signals,
+sampling parameter values from a sampler definition.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define base set of parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+<span class="c1"># Create an updater and sampler to sample from</span>
+<span class="n">exp_sampler</span> <span class="o">=</span> <span class="p">{</span><a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">(</span><span class="s1">&#39;exponent&#39;</span><span class="p">)</span> <span class="p">:</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])}</span>
+
+<span class="c1"># Create a ParamSampler object</span>
+<a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sampler</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class"><span class="n">ParamSampler</span></a><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">exp_sampler</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a set of signals from the defined sampler</span>
+<a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sampled_sims</span></a> <span class="o">=</span> <span class="n">sim_from_sampler</span><span class="p">(</span><a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sampler</span></a><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output of the above is a :class:~.VariableSimulations object that stores simulations
+across variable simulation parameters, storing the simulated time series as well as the
+simulation parameters for each simulated signal.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check some of the metadata stored in the VariableSimulations object</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sampled_sims</span></a><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">paramdef</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations.params" title="neurodsp.sim.signals.VariableSimulations.params" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-property"><span class="n">sampled_sims</span><span class="o">.</span><span class="n">params</span></a><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">paramdef</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>sim_powerlaw
+{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: 0}
+{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: -2}
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the set of sampled simulations</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sampled_sims</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_07_SimMulti_005.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_005.png" alt="plot 07 SimMulti" class = "sphx-glr-single-img"/></section>
+<section id="simulate-across-values">
+<h2>Simulate Across Values<a class="headerlink" href="#simulate-across-values" title="Permalink to this heading">¶</a></h2>
+<p>Sometimes we may want to simulate signals across a set defined range of parameter values.</p>
+<p>To do so, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.multi.sim_across_values.html#neurodsp.sim.multi.sim_across_values" title="neurodsp.sim.multi.sim_across_values"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_across_values()</span></code></a> function, which takes a definition of
+parameter values to simulate across.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a set of parameters, stepping across exponent values</span>
+<span class="n">multi_params</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">0</span><span class="p">},</span>
+<span class="p">]</span>
+
+<span class="c1"># Simulate a set of signals</span>
+<a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a> <span class="o">=</span> <span class="n">sim_across_values</span><span class="p">(</span><a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <span class="n">multi_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output of the above is a :class:~.VariableSimulations object that stores simulations
+across varying simulation parameters (same as with the sampled simulations).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated time series from sampled parameters</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_07_SimMulti_006.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_006.png" alt="plot 07 SimMulti" class = "sphx-glr-single-img"/></section>
+<section id="simulate-multiple-instances-across-values">
+<h2>Simulate Multiple Instances Across Values<a class="headerlink" href="#simulate-multiple-instances-across-values" title="Permalink to this heading">¶</a></h2>
+<p>Finally, we may want to simulate multiple instances across a set of parameter definitions.</p>
+<p>To do so, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.multi.sim_multi_across_values.html#neurodsp.sim.multi.sim_multi_across_values" title="neurodsp.sim.multi.sim_multi_across_values"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_multi_across_values()</span></code></a> function, which takes a set of
+parameter definitions and a number of simulations to create per definition.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate a set of signals</span>
+<span class="n">n_sims</span> <span class="o">=</span> <span class="mi">3</span>
+<a href="../../generated/neurodsp.sim.signals.MultiSimulations.html#neurodsp.sim.signals.MultiSimulations" title="neurodsp.sim.signals.MultiSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_multi_across_params</span></a> <span class="o">=</span> <span class="n">sim_multi_across_values</span><span class="p">(</span><a href="../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw" title="neurodsp.sim.sim_powerlaw" class="sphx-glr-backref-module-neurodsp-sim sphx-glr-backref-type-py-function"><span class="n">sim_powerlaw</span></a><span class="p">,</span> <span class="n">multi_params</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output of the above is a :class:~.MultiSimulations object that stores sets of simulations
+across different parameters, and relevant metadata. Each set of simulations is stored within
+this object as a :class:~.Simulations object.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The length of the object is the number of parameter sets</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# of sets of signals:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span># of sets of signals: 3
+</pre></div>
+</div>
+<p>In the above, we created a set of parameters per definition, which by default are returned
+in a dictionary.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the simulated signals, accessing signals from each simulation definition</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<a href="../../generated/neurodsp.plts.plot_multi_time_series.html#neurodsp.plts.plot_multi_time_series" title="neurodsp.plts.plot_multi_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_multi_time_series</span></a><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <a href="../../generated/neurodsp.sim.signals.VariableSimulations.html#neurodsp.sim.signals.VariableSimulations" title="neurodsp.sim.signals.VariableSimulations" class="sphx-glr-backref-module-neurodsp-sim-signals sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sims_across_params</span></a><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_007.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_007.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_008.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_008.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_07_SimMulti_009.png" srcset="../../_images/sphx_glr_plot_07_SimMulti_009.png" alt="plot 07 SimMulti" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.316 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-07-simmulti-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/115337af03f55c68352b7b39a209f460/plot_07_SimMulti.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_07_SimMulti.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0784fddaf7f63e5d2b740baf832d770c/plot_07_SimMulti.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_07_SimMulti.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

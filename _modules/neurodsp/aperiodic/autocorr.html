@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.aperiodic.autocorr &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.aperiodic.autocorr &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -108,19 +107,23 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for neurodsp.aperiodic.autocorr</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Autocorrelation analyses of time series.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Autocorrelation related analyses of time series.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="compute_autocorr"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.autocorr.compute_autocorr.html#neurodsp.aperiodic.autocorr.compute_autocorr">[docs]</a><span class="k">def</span> <span class="nf">compute_autocorr</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">max_lag</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lag_step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the signal autocorrelation (lagged correlation).</span>
+<div class="viewcode-block" id="compute_autocorr"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.autocorr.compute_autocorr.html#neurodsp.aperiodic.autocorr.compute_autocorr">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">compute_autocorr</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">max_lag</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">lag_step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the signal autocorrelation (lagged correlation).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : array 1D</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series to compute autocorrelation over.</span>
 <span class="sd">    max_lag : int, optional, default: 1000</span>
 <span class="sd">        Maximum delay to compute autocorrelations for, in samples.</span>
@@ -133,8 +136,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    timepoints : 1d array</span>
 <span class="sd">        Time points, in samples, at which autocorrelations are computed.</span>
-<span class="sd">    autocorrs : 1d array</span>
-<span class="sd">        Autocorrelation values, for across time lags.</span>
+<span class="sd">    autocorrs : array</span>
+<span class="sd">        Autocorrelation values, across time lags.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -155,6 +158,164 @@
     <span class="n">timepoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_lag</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">lag_step</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">timepoints</span><span class="p">,</span> <span class="n">autocorrs</span></div>
+
+
+<div class="viewcode-block" id="compute_decay_time"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.autocorr.compute_decay_time.html#neurodsp.aperiodic.autocorr.compute_decay_time">[docs]</a><span class="k">def</span> <span class="nf">compute_decay_time</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="n">autocorrs</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute autocorrelation decay time, from precomputed autocorrelation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timepoints : 1d array</span>
+<span class="sd">        Timepoints for the computed autocorrelations.</span>
+<span class="sd">    autocorrs : 1d array</span>
+<span class="sd">        Autocorrelation values.</span>
+<span class="sd">    fs : int</span>
+<span class="sd">        Sampling rate of the signal.</span>
+<span class="sd">    level : float</span>
+<span class="sd">        Autocorrelation decay threshold.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : float</span>
+<span class="sd">        Autocorrelation decay time.</span>
+<span class="sd">        If decay time value not found, returns nan.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The autocorrelation decay time is computed as the time delay for the</span>
+<span class="sd">    autocorrelation to drop to (or below) the decay time threshold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">val_checks</span> <span class="o">=</span> <span class="n">autocorrs</span> <span class="o">&lt;=</span> <span class="n">level</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">val_checks</span><span class="p">):</span>
+        <span class="c1"># Get the first value to cross the threshold, and convert to time value</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">timepoints</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">val_checks</span><span class="p">)]</span> <span class="o">/</span> <span class="n">fs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="fit_autocorr"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.autocorr.fit_autocorr.html#neurodsp.aperiodic.autocorr.fit_autocorr">[docs]</a><span class="k">def</span> <span class="nf">fit_autocorr</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="n">autocorrs</span><span class="p">,</span> <span class="n">fit_function</span><span class="o">=</span><span class="s1">&#39;single_exp&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit autocorrelation function, returning timescale estimate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timepoints : 1d array</span>
+<span class="sd">        Timepoints for the computed autocorrelations, in samples or seconds.</span>
+<span class="sd">    autocorrs : 1d array</span>
+<span class="sd">        Autocorrelation values.</span>
+<span class="sd">    fs : int, optional</span>
+<span class="sd">        Sampling rate of the signal.</span>
+<span class="sd">        If provided, timepoints are converted to time values.</span>
+<span class="sd">    fit_func : {&#39;single_exp&#39;, &#39;double_exp&#39;}</span>
+<span class="sd">        Which fitting function to use to fit the autocorrelation results.</span>
+<span class="sd">    bounds : tuple of list</span>
+<span class="sd">        Parameter bounds for fitting.</span>
+<span class="sd">        Organized as ([min_p1, min_p1, ...], [max_p1, max_p2, ...]).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    popts</span>
+<span class="sd">        Fit parameters. Parameters depend on the fitting function.</span>
+<span class="sd">        If `fit_func` is &#39;single_exp&#39;, fit parameters are: tau, scale, offset</span>
+<span class="sd">        If `fit_func` is &#39;douple_exp&#39;, fit parameters are: tau1, tau2, scale1, scale2, offset</span>
+<span class="sd">        See fit function for more details.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The values / units of the returned parameters are dependent on the units of samples.</span>
+<span class="sd">    For example, if the timepoints input is in samples, the fit tau value is too.</span>
+<span class="sd">    If providing parameter bounds, these also need to match the unit of timepoints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fit_function</span> <span class="o">==</span> <span class="s1">&#39;single_exp&#39;</span><span class="p">:</span>
+            <span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">fit_function</span> <span class="o">==</span> <span class="s1">&#39;double_exp&#39;</span><span class="p">:</span>
+            <span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
+
+    <span class="n">popts</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">AC_FIT_FUNCS</span><span class="p">[</span><span class="n">fit_function</span><span class="p">],</span> <span class="n">timepoints</span><span class="p">,</span> <span class="n">autocorrs</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">popts</span></div>
+
+
+<span class="c1">## AC FITTING</span>
+
+<span class="k">def</span> <span class="nf">exp_decay_func</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponential decay fit function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timepoints : 1d array</span>
+<span class="sd">        Time values.</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Timescale value.</span>
+<span class="sd">    scale : float</span>
+<span class="sd">        Scaling factor, which captures the start value of the function.</span>
+<span class="sd">    offset : float</span>
+<span class="sd">        Offset factor, which captures the end value of the function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ac_fit : 1d array</span>
+<span class="sd">        Result of fitting the function to the autocorrelation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">timepoints</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">double_exp_decay_func</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="n">tau1</span><span class="p">,</span> <span class="n">tau2</span><span class="p">,</span> <span class="n">scale1</span><span class="p">,</span> <span class="n">scale2</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponential decay fit function with two timescales.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timepoints : 1d array</span>
+<span class="sd">        Time values.</span>
+<span class="sd">    tau1, tau2 : float</span>
+<span class="sd">        Timescale values, for the 1st and 2nd timescale.</span>
+<span class="sd">    scale1, scale2 : float</span>
+<span class="sd">        Scaling factors, for the 1st and 2nd timescale.</span>
+<span class="sd">    offset : float</span>
+<span class="sd">        Offset factor.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ac_fit : 1d array</span>
+<span class="sd">        Result of fitting the function to the autocorrelation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">scale1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">timepoints</span> <span class="o">/</span> <span class="n">tau1</span><span class="p">)</span> <span class="o">+</span> <span class="n">scale2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">timepoints</span> <span class="o">/</span> <span class="n">tau2</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
+
+
+<span class="n">AC_FIT_FUNCS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;single_exp&#39;</span> <span class="p">:</span> <span class="n">exp_decay_func</span><span class="p">,</span>
+    <span class="s1">&#39;double_exp&#39;</span> <span class="p">:</span> <span class="n">double_exp_decay_func</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="compute_ac_fit"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.autocorr.compute_ac_fit.html#neurodsp.aperiodic.autocorr.compute_ac_fit">[docs]</a><span class="k">def</span> <span class="nf">compute_ac_fit</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="o">*</span><span class="n">popts</span><span class="p">,</span> <span class="n">fit_function</span><span class="o">=</span><span class="s1">&#39;single_exp&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Regenerate values of the exponential decay fit.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timepoints : 1d array</span>
+<span class="sd">        Time values, in samples or seconds.</span>
+<span class="sd">    *popts</span>
+<span class="sd">        Fit parameters.</span>
+<span class="sd">    fit_func : {&#39;single_exp&#39;, &#39;double_exp&#39;}</span>
+<span class="sd">        Which fit function to use to fit the autocorrelation results.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit_values : 1d array</span>
+<span class="sd">        Values of the fit to the autocorrelation values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fit_func</span> <span class="o">=</span> <span class="n">AC_FIT_FUNCS</span><span class="p">[</span><span class="n">fit_function</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">fit_func</span><span class="p">(</span><span class="n">timepoints</span><span class="p">,</span> <span class="o">*</span><span class="n">popts</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
@@ -168,8 +329,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -257,7 +257,6 @@ print('Lagged coherence, not bursting = ', lc_noburst)
 
 # Download, if needed, and load example data file
 sig = load_ndsp_data('sample_data_1.npy', folder='data')
-sig_filt_true = load_ndsp_data('sample_data_1_filt.npy', folder='data')
 
 # Set sampling rate, and create a times vector for plotting
 fs = 1000

@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.filt.utils &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.filt.utils &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -120,7 +119,7 @@
 <span class="c1">###################################################################################################</span>
 
 <span class="k">def</span> <span class="nf">infer_passtype</span><span class="p">(</span><span class="n">f_range</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Given frequency definition of a filter, infer the passtype.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given frequency definition of a filter, infer the passtype.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -151,7 +150,7 @@
 
 
 <div class="viewcode-block" id="compute_frequency_response"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_frequency_response.html#neurodsp.filt.utils.compute_frequency_response">[docs]</a><span class="k">def</span> <span class="nf">compute_frequency_response</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">a_vals</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the frequency response of a filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the frequency response of a filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -203,7 +202,7 @@
 
 
 <div class="viewcode-block" id="compute_pass_band"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_pass_band.html#neurodsp.filt.utils.compute_pass_band">[docs]</a><span class="k">def</span> <span class="nf">compute_pass_band</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the pass bandwidth of a filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the pass bandwidth of a filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -247,7 +246,7 @@
 
 
 <div class="viewcode-block" id="compute_transition_band"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_transition_band.html#neurodsp.filt.utils.compute_transition_band">[docs]</a><span class="k">def</span> <span class="nf">compute_transition_band</span><span class="p">(</span><span class="n">f_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">high</span><span class="o">=-</span><span class="mi">3</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute transition bandwidth of a filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute transition bandwidth of a filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -272,7 +271,7 @@
 <span class="sd">    &gt;&gt;&gt; from neurodsp.filt.fir import design_fir_filter</span>
 <span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
 <span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(filter_coefs, 1, fs=500)</span>
-<span class="sd">    &gt;&gt;&gt; compute_transition_band(f_db, db, low=-20, high=-3)</span>
+<span class="sd">    &gt;&gt;&gt; round(float(compute_transition_band(f_db, db, low=-20, high=-3)), 1)</span>
 <span class="sd">    0.5</span>
 
 <span class="sd">    Compute the transition band of an IIR filter, using the computed frequency response:</span>
@@ -281,7 +280,7 @@
 <span class="sd">    &gt;&gt;&gt; sos = design_iir_filter(fs=500, pass_type=&#39;bandstop&#39;,</span>
 <span class="sd">    ...                         f_range=(10, 20), butterworth_order=7)</span>
 <span class="sd">    &gt;&gt;&gt; f_db, db = compute_frequency_response(sos, None, fs=500)</span>
-<span class="sd">    &gt;&gt;&gt; compute_transition_band(f_db, db, low=-20, high=-3)</span>
+<span class="sd">    &gt;&gt;&gt; round(float(compute_transition_band(f_db, db, low=-20, high=-3)), 1)</span>
 <span class="sd">    2.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -298,7 +297,7 @@
 
 
 <div class="viewcode-block" id="compute_nyquist"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.compute_nyquist.html#neurodsp.filt.utils.compute_nyquist">[docs]</a><span class="k">def</span> <span class="nf">compute_nyquist</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the Nyquist frequency.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Nyquist frequency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -323,18 +322,18 @@
 
 <div class="viewcode-block" id="remove_filter_edges"><a class="viewcode-back" href="../../../generated/neurodsp.filt.utils.remove_filter_edges.html#neurodsp.filt.utils.remove_filter_edges">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">remove_filter_edges</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">filt_len</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop the edges, by making NaN, from a filtered signal, to avoid edge artifacts.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Filtered signal to have edge artifacts removed from.</span>
 <span class="sd">    filt_len : int</span>
 <span class="sd">        Length of the filter that was applied.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Filter signal with edge artifacts switched to NaNs.</span>
 
 <span class="sd">    Examples</span>
@@ -368,8 +367,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

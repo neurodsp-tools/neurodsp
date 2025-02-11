@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.sim.sim_knee &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.sim.sim_knee &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,13 +108,13 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-sim-sim-knee">
-<h1>neurodsp.sim.sim_knee<a class="headerlink" href="#neurodsp-sim-sim-knee" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.sim.sim_knee<a class="headerlink" href="#neurodsp-sim-sim-knee" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.sim.sim_knee">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.sim.</span></span><span class="sig-name descname"><span class="pre">sim_knee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knee</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_knee"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.sim_knee" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a signal whose power spectrum has a 1/f structure with a knee.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_seconds</strong><span class="classifier">float</span></dt><dd><p>Simulation time, in seconds.</p>
 </dd>
@@ -129,7 +128,7 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series with the desired power spectrum.</p>
 </dd>
@@ -151,9 +150,9 @@ exponent1 and exponent2 are the same.</p></li>
 </dd></dl>
 
 <section id="examples-using-neurodsp-sim-sim-knee">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_knee</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-knee" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
-<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_knee</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-knee" title="Permalink to this heading">¶</a></h2>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_02_SimulateAperiodic_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_02_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-02-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
   <div class="sphx-glr-thumbnail-title">Simulating Aperiodic Signals</div>
 </div></div><div style='clear:both'></div></section>
 </section>
@@ -170,8 +169,8 @@ exponent1 and exponent2 are the same.</p></li>
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

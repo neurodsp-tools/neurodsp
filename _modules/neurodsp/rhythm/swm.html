@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.rhythm.swm &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.rhythm.swm &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -120,11 +119,11 @@
 <div class="viewcode-block" id="sliding_window_matching"><a class="viewcode-back" href="../../../generated/neurodsp.rhythm.sliding_window_matching.html#neurodsp.rhythm.sliding_window_matching">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">sliding_window_matching</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                             <span class="n">window_starts_custom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_thresh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find recurring patterns in a time series using the sliding window matching algorithm.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find recurring patterns in a time series using the sliding window matching algorithm.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -142,9 +141,9 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    windows : 2d array</span>
+<span class="sd">    windows : n x 2d array</span>
 <span class="sd">        Putative patterns discovered in the input signal.</span>
-<span class="sd">    window_starts : 1d array</span>
+<span class="sd">    window_starts : n x 1d array</span>
 <span class="sd">        Indices at which each window begins for the final set of windows.</span>
 
 <span class="sd">    Notes</span>
@@ -266,7 +265,7 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_cost</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">window_starts</span><span class="p">,</span> <span class="n">win_n_samps</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the cost, as correlation coefficients and variance across windows.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the cost, as correlation coefficients and variance across windows.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -295,7 +294,7 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_bounds</span><span class="p">(</span><span class="n">window_starts</span><span class="p">,</span> <span class="n">win_spacing</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute bounds on a new window.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute bounds on a new window.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -332,8 +331,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Using NeuroDSP with MNE &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>Using NeuroDSP with MNE &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,10 +110,10 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-examples-plot-mne-example-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="using-neurodsp-with-mne">
-<span id="sphx-glr-auto-examples-plot-mne-example-py"></span><h1>Using NeuroDSP with MNE<a class="headerlink" href="#using-neurodsp-with-mne" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-examples-plot-mne-example-py"></span><h1>Using NeuroDSP with MNE<a class="headerlink" href="#using-neurodsp-with-mne" title="Permalink to this heading">¶</a></h1>
 <p>This example explores using NeuroDSP in combination with MNE.</p>
 <p>NeuroDSP is designed to offer a selection of methods and analyses that can be applied
 to neural time series. NeuroDSP itself does not offer functionality for managing multi-channel
@@ -128,7 +127,7 @@ and applying lagged coherence.</p>
 <p>This tutorial requires that you have MNE installed. If you don’t already have
 MNE, you can follow instructions to get it
 <a class="reference external" href="https://mne-tools.github.io/stable/getting_started.html">here</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># General imports</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># General imports</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span><span class="p">,</span> <span class="n">colors</span>
@@ -150,24 +149,24 @@ MNE, you can follow instructions to get it
 </pre></div>
 </div>
 <section id="load-check-mne-data">
-<h2>Load &amp; Check MNE Data<a class="headerlink" href="#load-check-mne-data" title="Permalink to this headline">¶</a></h2>
+<h2>Load &amp; Check MNE Data<a class="headerlink" href="#load-check-mne-data" title="Permalink to this heading">¶</a></h2>
 <p>First, we will load the example dataset from MNE, and have a quick look at the data.</p>
 <p>The MNE sample dataset is a combined MEG/EEG recording with an audiovisual task, as
-described <a class="reference external" href="https://mne.tools/stable/overview/datasets_index.html?#sample">here</a>.</p>
+described <a class="reference external" href="https://mne.tools/stable/documentation/datasets.html">here</a>.</p>
 <p>For the current example, we are going to select only the EEG data,
 and analyze it as continuous (non-epoched) data.</p>
 <p>Note that if you don’t already have the data, the <code class="docutils literal notranslate"><span class="pre">sample.data_path</span></code> method
 will download the MNE sample dataset.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the data path for the MNE example data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the data path for the MNE example data</span>
 <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">data_path</span><span class="p">()</span>
 <span class="n">raw_fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_data</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis_filt-0-40_raw.fif&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the file of example MNE data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the file of example MNE data</span>
 <span class="n">raw</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select EEG channels from the dataset</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select EEG channels from the dataset</span>
 <span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eeg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;bads&#39;</span><span class="p">)</span>
 
 <span class="c1"># Grab the sampling rate from the data</span>
@@ -180,33 +179,33 @@ Removing projector &lt;Projection | PCA-v2, active : False, n_channels : 102&gt;
 Removing projector &lt;Projection | PCA-v3, active : False, n_channels : 102&gt;
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for exploring an example channel of data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for exploring an example channel of data</span>
 <span class="n">ch_label</span> <span class="o">=</span> <span class="s1">&#39;EEG 058&#39;</span>
 <span class="n">t_start</span> <span class="o">=</span> <span class="mi">20000</span>
 <span class="n">t_stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t_start</span> <span class="o">+</span> <span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract an example channel to explore</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract an example channel to explore</span>
 <span class="n">sig</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">mne</span><span class="o">.</span><span class="n">pick_channels</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">,</span> <span class="p">[</span><span class="n">ch_label</span><span class="p">]),</span>
                           <span class="n">start</span><span class="o">=</span><span class="n">t_start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">t_stop</span><span class="p">,</span> <span class="n">return_times</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a segment of the extracted time series data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a segment of the extracted time series data</span>
 <a href="../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_plot_mne_example_001.png" srcset="../_images/sphx_glr_plot_mne_example_001.png" alt="plot mne example" class = "sphx-glr-single-img"/></section>
 <section id="calculate-power-spectra">
-<h2>Calculate Power Spectra<a class="headerlink" href="#calculate-power-spectra" title="Permalink to this headline">¶</a></h2>
+<h2>Calculate Power Spectra<a class="headerlink" href="#calculate-power-spectra" title="Permalink to this heading">¶</a></h2>
 <p>Next lets check the data in the frequency domain, calculating a power spectrum
 with the median Welch’s procedure from NeuroDSP.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the power spectrum, using median Welch&#39;s &amp; extract a frequency range of interest</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the power spectrum, using median Welch&#39;s &amp; extract a frequency range of interest</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span> <span class="o">=</span> <a href="../generated/neurodsp.spectral.trim_spectrum.html#neurodsp.spectral.trim_spectrum" title="neurodsp.spectral.trim_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">trim_spectrum</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check where the peak power is</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check where the peak power is</span>
 <span class="n">peak_cf</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">powers</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">peak_cf</span><span class="p">)</span>
 </pre></div>
@@ -214,35 +213,35 @@ with the median Welch’s procedure from NeuroDSP.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>8.008199869791666
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the power spectra, and note the peak power</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the power spectra, and note the peak power</span>
 <a href="../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">powers</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freqs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">powers</span><span class="p">)],</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">powers</span><span class="p">),</span> <span class="s1">&#39;.r&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_plot_mne_example_002.png" srcset="../_images/sphx_glr_plot_mne_example_002.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7fa0491b2ee0&gt;]
+<img src="../_images/sphx_glr_plot_mne_example_002.png" srcset="../_images/sphx_glr_plot_mne_example_002.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7faa64d30e80&gt;]
 </pre></div>
 </div>
 </section>
 <section id="look-for-bursts">
-<h2>Look for Bursts<a class="headerlink" href="#look-for-bursts" title="Permalink to this headline">¶</a></h2>
+<h2>Look for Bursts<a class="headerlink" href="#look-for-bursts" title="Permalink to this heading">¶</a></h2>
 <p>Now that we have a sense of the main rhythmicity of this piece of data, lets
 explore using NeuroDSP to investigate whether this rhythm is bursty.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Burst settings</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Burst settings</span>
 <span class="n">amp_dual_thresh</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">peak_cf</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">peak_cf</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detect bursts of high amplitude oscillations in the extracted signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detect bursts of high amplitude oscillations in the extracted signal</span>
 <span class="n">bursting</span> <span class="o">=</span> <a href="../generated/neurodsp.burst.detect_bursts_dual_threshold.html#neurodsp.burst.detect_bursts_dual_threshold" title="neurodsp.burst.detect_bursts_dual_threshold" class="sphx-glr-backref-module-neurodsp-burst sphx-glr-backref-type-py-function"><span class="n">detect_bursts_dual_threshold</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp_dual_thresh</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot original signal and burst activity</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot original signal and burst activity</span>
 <a href="../generated/neurodsp.plts.plot_bursts.html#neurodsp.plts.plot_bursts" title="neurodsp.plts.plot_bursts" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_bursts</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">bursting</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Raw Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Detected Bursts&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_plot_mne_example_003.png" srcset="../_images/sphx_glr_plot_mne_example_003.png" alt="plot mne example" class = "sphx-glr-single-img"/></section>
 <section id="measure-rhythmicity-with-lagged-coherence">
-<h2>Measure Rhythmicity with Lagged Coherence<a class="headerlink" href="#measure-rhythmicity-with-lagged-coherence" title="Permalink to this headline">¶</a></h2>
+<h2>Measure Rhythmicity with Lagged Coherence<a class="headerlink" href="#measure-rhythmicity-with-lagged-coherence" title="Permalink to this heading">¶</a></h2>
 <p>So far, in an example channel of data, we have explored some rhythmic properties of
 the EEG data. We did so by finding the main frequency of rhythmic power, and checking
 this frequency for bursting.</p>
@@ -252,19 +251,19 @@ rhythmic properties across the whole dataset.</p>
 per channel, the frequency which displays the most rhythmic activity, as well as the score
 of how rhythmic this frequency is. We can do so per location, to map rhythmic activity
 topographically across a range of frequencies.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for lagged coherence, as frequency range (start, stop, step)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for lagged coherence, as frequency range (start, stop, step)</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate lagged coherence on our example channel data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate lagged coherence on our example channel data</span>
 <span class="n">lcs</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <a href="../generated/neurodsp.rhythm.compute_lagged_coherence.html#neurodsp.rhythm.compute_lagged_coherence" title="neurodsp.rhythm.compute_lagged_coherence" class="sphx-glr-backref-module-neurodsp-rhythm sphx-glr-backref-type-py-function"><span class="n">compute_lagged_coherence</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">return_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize lagged coherence across all frequencies</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize lagged coherence across all frequencies</span>
 <a href="../generated/neurodsp.plts.plot_lagged_coherence.html#neurodsp.plts.plot_lagged_coherence" title="neurodsp.plts.plot_lagged_coherence" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_lagged_coherence</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">lcs</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_plot_mne_example_004.png" srcset="../_images/sphx_glr_plot_mne_example_004.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the most rhythmic frequency and the associated lagged coherence score</span>
+<img src="../_images/sphx_glr_plot_mne_example_004.png" srcset="../_images/sphx_glr_plot_mne_example_004.png" alt="plot mne example" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the most rhythmic frequency and the associated lagged coherence score</span>
 <span class="n">max_freq</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">lcs</span><span class="p">)]</span>
 <span class="n">max_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lcs</span><span class="p">)</span>
 
@@ -275,7 +274,7 @@ topographically across a range of frequencies.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The frequency with the greatest rhythmicity is 9.2 Hz with a lagged coherence score of 0.68.
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set a 30 second window of data to analyze</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set a 30 second window of data to analyze</span>
 <span class="n">t_start</span> <span class="o">=</span>  <span class="mi">10000</span>
 <span class="n">t_stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t_start</span> <span class="o">+</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="n">fs</span><span class="p">))</span>
 
@@ -300,7 +299,7 @@ topographically across a range of frequencies.</p>
 </div>
 </section>
 <section id="plot-rhythmicity-across-the-scalp">
-<h2>Plot Rhythmicity Across the Scalp<a class="headerlink" href="#plot-rhythmicity-across-the-scalp" title="Permalink to this headline">¶</a></h2>
+<h2>Plot Rhythmicity Across the Scalp<a class="headerlink" href="#plot-rhythmicity-across-the-scalp" title="Permalink to this heading">¶</a></h2>
 <p>Now that we have calculated the lagged coherence across the scalp, we can use
 some MNE plotting utilities to plot these values across the scalp. To do so, we will
 use the EEG montage definition of the sample dataset.</p>
@@ -308,7 +307,7 @@ use the EEG montage definition of the sample dataset.</p>
 the posterior electrodes display more rhythmic properties than the frontal ones.</p>
 <p>In the next plot, of the peak frequencies, we can see that these posterior regions
 are rhythmic in the alpha range, as well as there being a central cluster of beta rhythms.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot locations with highest lagged coherence rhythmicity score</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot locations with highest lagged coherence rhythmicity score</span>
 <span class="n">vlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_score</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_score</span><span class="p">)]</span>
 <span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_score</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vlim</span><span class="o">=</span><span class="n">vlim</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -324,7 +323,11 @@ are rhythmic in the alpha range, as well as there being a central cluster of bet
 <li><img src="../_images/sphx_glr_plot_mne_example_005.png" srcset="../_images/sphx_glr_plot_mne_example_005.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 <li><img src="../_images/sphx_glr_plot_mne_example_006.png" srcset="../_images/sphx_glr_plot_mne_example_006.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot frequency with most dominant rhythmicity</span>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/Code/ModCode/neurodsp/examples/plot_mne_example.py:239: MatplotlibDeprecationWarning: Unable to determine Axes to steal space for Colorbar. Using gca(), but will raise in the future. Either provide the *cax* argument to use as the Axes for the Colorbar, provide the *ax* argument to steal space from it, or add *mappable* to an Axes.
+  cbar = plt.colorbar(sm, orientation=&#39;vertical&#39;, label=&#39;Score&#39;)
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot frequency with most dominant rhythmicity</span>
 <span class="n">vlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_freq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">plot_topomap</span><span class="p">(</span><span class="n">max_freq</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">vlim</span><span class="o">=</span><span class="n">vlim</span><span class="p">,</span> <span class="n">contours</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -340,21 +343,25 @@ are rhythmic in the alpha range, as well as there being a central cluster of bet
 <li><img src="../_images/sphx_glr_plot_mne_example_007.png" srcset="../_images/sphx_glr_plot_mne_example_007.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 <li><img src="../_images/sphx_glr_plot_mne_example_008.png" srcset="../_images/sphx_glr_plot_mne_example_008.png" alt="plot mne example" class = "sphx-glr-multi-img"/></li>
 </ul>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/Code/ModCode/neurodsp/examples/plot_mne_example.py:252: MatplotlibDeprecationWarning: Unable to determine Axes to steal space for Colorbar. Using gca(), but will raise in the future. Either provide the *cax* argument to use as the Axes for the Colorbar, provide the *ax* argument to steal space from it, or add *mappable* to an Axes.
+  cbar = plt.colorbar(sm, orientation=&#39;vertical&#39;, label=&#39;Frequency&#39;)
+</pre></div>
+</div>
 </section>
 <section id="further-analyses-with-mne">
-<h2>Further Analyses with MNE<a class="headerlink" href="#further-analyses-with-mne" title="Permalink to this headline">¶</a></h2>
+<h2>Further Analyses with MNE<a class="headerlink" href="#further-analyses-with-mne" title="Permalink to this heading">¶</a></h2>
 <p>That concludes the current example of using NeuroDSP in conjunction with MNE.</p>
 <p>In this example, we applied NeuroDSP functions to continuous segments of EEG data.</p>
 <p>Using a similar approach, you can also apply these and other analyses to epoched data,
 by managing and pre-processing data in MNE, selecting the data of interest, and then
 applying NeuroDSP functions to the data.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.918 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.706 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-mne-example-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/ca734436f406bbd3b62faeeaf69f475f/plot_mne_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mne_example.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/80ed290c95a22a0c93b8de60dcc5ccd2/plot_mne_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_mne_example.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ca734436f406bbd3b62faeeaf69f475f/plot_mne_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mne_example.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -373,8 +380,8 @@ applying NeuroDSP functions to the data.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

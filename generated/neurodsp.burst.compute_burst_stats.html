@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.burst.compute_burst_stats &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.burst.compute_burst_stats &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,13 +108,13 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-burst-compute-burst-stats">
-<h1>neurodsp.burst.compute_burst_stats<a class="headerlink" href="#neurodsp-burst-compute-burst-stats" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.burst.compute_burst_stats<a class="headerlink" href="#neurodsp-burst-compute-burst-stats" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.burst.compute_burst_stats">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.burst.</span></span><span class="sig-name descname"><span class="pre">compute_burst_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bursting</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/burst/utils.html#compute_burst_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.burst.compute_burst_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute statistics of bursts.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>bursting</strong><span class="classifier">1d array</span></dt><dd><p>Boolean indication of where bursts are present in the input signal.</p>
 </dd>
@@ -123,7 +122,7 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>stats_dict</strong><span class="classifier">dict</span></dt><dd><p>Contains the following keys:</p>
 <ul class="simple">
@@ -153,7 +152,7 @@
 </dd></dl>
 
 <section id="examples-using-neurodsp-burst-compute-burst-stats">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.compute_burst_stats</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-compute-burst-stats" title="Permalink to this headline">¶</a></h2>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.compute_burst_stats</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-compute-burst-stats" title="Permalink to this heading">¶</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Analyze neural signals for bursts of oscillations of interest."><img alt="" src="../_images/sphx_glr_plot_BurstDetection_thumb.png" />
 <p><a class="reference internal" href="../auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a></p>
   <div class="sphx-glr-thumbnail-title">Burst Detection</div>
@@ -172,8 +171,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

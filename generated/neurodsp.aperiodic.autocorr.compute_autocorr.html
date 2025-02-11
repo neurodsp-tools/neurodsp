@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.aperiodic.autocorr.compute_autocorr &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.aperiodic.autocorr.compute_autocorr &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,15 +108,15 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-aperiodic-autocorr-compute-autocorr">
-<h1>neurodsp.aperiodic.autocorr.compute_autocorr<a class="headerlink" href="#neurodsp-aperiodic-autocorr-compute-autocorr" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.aperiodic.autocorr.compute_autocorr<a class="headerlink" href="#neurodsp-aperiodic-autocorr-compute-autocorr" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.aperiodic.autocorr.compute_autocorr">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.aperiodic.autocorr.</span></span><span class="sig-name descname"><span class="pre">compute_autocorr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lag_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/aperiodic/autocorr.html#compute_autocorr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.aperiodic.autocorr.compute_autocorr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the signal autocorrelation (lagged correlation).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sig</strong><span class="classifier">array 1D</span></dt><dd><p>Time series to compute autocorrelation over.</p>
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series to compute autocorrelation over.</p>
 </dd>
 <dt><strong>max_lag</strong><span class="classifier">int, optional, default: 1000</span></dt><dd><p>Maximum delay to compute autocorrelations for, in samples.</p>
 </dd>
@@ -127,11 +126,11 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>timepoints</strong><span class="classifier">1d array</span></dt><dd><p>Time points, in samples, at which autocorrelations are computed.</p>
 </dd>
-<dt><strong>autocorrs</strong><span class="classifier">1d array</span></dt><dd><p>Autocorrelation values, for across time lags.</p>
+<dt><strong>autocorrs</strong><span class="classifier">array</span></dt><dd><p>Autocorrelation values, across time lags.</p>
 </dd>
 </dl>
 </dd>
@@ -159,8 +158,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

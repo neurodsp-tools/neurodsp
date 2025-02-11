@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.transients &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.sim.transients &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -122,7 +121,7 @@
 <span class="c1">###################################################################################################</span>
 
 <div class="viewcode-block" id="sim_synaptic_kernel"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_synaptic_kernel.html#neurodsp.sim.transients.sim_synaptic_kernel">[docs]</a><span class="k">def</span> <span class="nf">sim_synaptic_kernel</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tau_r</span><span class="p">,</span> <span class="n">tau_d</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a synaptic kernel with specified time constants.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a synaptic kernel with specified time constants.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -186,7 +185,7 @@
 
 
 <div class="viewcode-block" id="sim_action_potential"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_action_potential.html#neurodsp.sim.transients.sim_action_potential">[docs]</a><span class="k">def</span> <span class="nf">sim_action_potential</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">stds</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">heights</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate an action potential as the sum of skewed gaussians.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate an action potential as the sum of skewed gaussians.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -199,7 +198,7 @@
 <span class="sd">    stds : array-like or float</span>
 <span class="sd">        Standard deviations of the gaussian kernels, in seconds.</span>
 <span class="sd">    alphas : array-like or float</span>
-<span class="sd">        Magnitiude and direction of the skew.</span>
+<span class="sd">        Magnitude and direction of the skew.</span>
 <span class="sd">    heights : array-like or float</span>
 <span class="sd">        Maximum value of the cycles.</span>
 
@@ -257,7 +256,7 @@
 
 
 <div class="viewcode-block" id="sim_damped_erp"><a class="viewcode-back" href="../../../generated/neurodsp.sim.transients.sim_damped_erp.html#neurodsp.sim.transients.sim_damped_erp">[docs]</a><span class="k">def</span> <span class="nf">sim_damped_erp</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">time_start</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate an ERP complex as a decaying (damped) sine wave.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate an ERP complex as a decaying (damped) sine wave.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -281,7 +280,7 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This approach simulates simplified ERP complex as an exponentially decaying sine wave.</span>
+<span class="sd">    This approach simulates a simplified ERP complex as an exponentially decaying sine wave.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -293,8 +292,8 @@
 
 <span class="sd">    &gt;&gt;&gt; erp = sim_damped_erp(n_seconds=0.5, fs=500, amp=1, freq=10, decay=0.025)</span>
 
-<span class="sd">    Reference</span>
-<span class="sd">    ---------</span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
 <span class="sd">    .. [1] van Diepen, R. M., &amp; Mazaheri, A. (2018). The Caveats of observing</span>
 <span class="sd">           Inter-Trial Phase-Coherence in Cognitive Neuroscience. Scientific Reports, 8(1).</span>
 <span class="sd">           DOI: https://doi.org/10.1038/s41598-018-20423-z</span>
@@ -324,8 +323,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.spectral.power &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.spectral.power &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -118,6 +117,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">spectrogram</span><span class="p">,</span> <span class="n">medfilt</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">next_fast_len</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="kn">import</span> <span class="n">get_avg_func</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_freqs</span>
@@ -125,33 +125,32 @@
 <span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_options</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.outliers</span> <span class="kn">import</span> <span class="n">discard_outliers</span>
 <span class="kn">from</span> <span class="nn">neurodsp.timefrequency.wavelets</span> <span class="kn">import</span> <span class="n">compute_wavelet_transform</span>
-<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span>
-<span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="kn">import</span> <span class="n">check_spg_settings</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span><span class="p">,</span> <span class="n">window_pad</span>
+<span class="kn">from</span> <span class="nn">neurodsp.spectral.checks</span> <span class="kn">import</span> <span class="n">check_spg_settings</span><span class="p">,</span> <span class="n">check_mt_settings</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="compute_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the power spectral density of a time series.</span>
+<div class="viewcode-block" id="compute_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the power spectral density of a time series.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
-<span class="sd">    method : {&#39;welch&#39;, &#39;wavelet&#39;, &#39;medfilt&#39;}, optional</span>
+<span class="sd">    method : {&#39;welch&#39;, &#39;wavelet&#39;, &#39;medfilt&#39;, &#39;multitaper&#39;}, optional</span>
 <span class="sd">        Method to use to estimate the power spectrum.</span>
-<span class="sd">    avg_type : {&#39;mean&#39;, &#39;median&#39;}, optional</span>
-<span class="sd">        If relevant, the method to average across windows to create the spectrum.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Keyword arguments to pass through to the function that calculates the spectrum.</span>
+<span class="sd">        See `compute_spectrum_{welch, wavelet, medfilt}` for details.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    freqs : 1d array</span>
 <span class="sd">        Frequencies at which the measure was calculated.</span>
-<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">    spectrum : array</span>
 <span class="sd">        Power spectral density.</span>
 
 <span class="sd">    Examples</span>
@@ -164,25 +163,45 @@
 <span class="sd">    &gt;&gt;&gt; freqs, spectrum = compute_spectrum(sig, fs=500)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">check_param_options</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="s1">&#39;wavelet&#39;</span><span class="p">,</span> <span class="s1">&#39;medfilt&#39;</span><span class="p">])</span>
+    <span class="n">check_param_options</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;welch&#39;</span><span class="p">,</span> <span class="s1">&#39;wavelet&#39;</span><span class="p">,</span> <span class="s1">&#39;medfilt&#39;</span><span class="p">,</span> <span class="s1">&#39;multitaper&#39;</span><span class="p">])</span>
+    <span class="n">_spectrum_input_checks</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;welch&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">compute_spectrum_welch</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="n">avg_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_welch</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;wavelet&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">compute_spectrum_wavelet</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="n">avg_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_wavelet</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;medfilt&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">compute_spectrum_medfilt</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">compute_spectrum_medfilt</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;multitaper&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">compute_spectrum_multitaper</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="n">SPECTRUM_INPUTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;welch&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;avg_type&#39;</span><span class="p">,</span> <span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="s1">&#39;nperseg&#39;</span><span class="p">,</span> <span class="s1">&#39;noverlap&#39;</span><span class="p">,</span> <span class="s1">&#39;nfft&#39;</span><span class="p">,</span> \
+               <span class="s1">&#39;fast_len&#39;</span><span class="p">,</span> <span class="s1">&#39;f_range&#39;</span><span class="p">,</span> <span class="s1">&#39;outlier_percent&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;wavelet&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;freqs&#39;</span><span class="p">,</span> <span class="s1">&#39;avg_type&#39;</span><span class="p">,</span> <span class="s1">&#39;n_cycles&#39;</span><span class="p">,</span> <span class="s1">&#39;scaling&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;medfilt&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;filt_len&#39;</span><span class="p">,</span> <span class="s1">&#39;f_range&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_spectrum_input_checks</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check inputs to `compute_spectrum` match spectral estimation method.&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">SPECTRUM_INPUTS</span><span class="p">[</span><span class="n">method</span><span class="p">],</span> \
+            <span class="s1">&#39;Parameter </span><span class="si">{}</span><span class="s1"> not expected for </span><span class="si">{}</span><span class="s1"> estimation method&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="compute_spectrum_wavelet"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum_wavelet.html#neurodsp.spectral.compute_spectrum_wavelet">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">compute_spectrum_wavelet</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the power spectral density using wavelets.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the power spectral density using wavelets.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -199,7 +218,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    freqs : 1d array</span>
 <span class="sd">        Frequencies at which the measure was calculated.</span>
-<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">    spectrum : array</span>
 <span class="sd">        Power spectral density.</span>
 
 <span class="sd">    Examples</span>
@@ -228,13 +247,13 @@
 
 
 <div class="viewcode-block" id="compute_spectrum_welch"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum_welch.html#neurodsp.spectral.compute_spectrum_welch">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum_welch</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hann&#39;</span><span class="p">,</span>
-                           <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outlier_percent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the power spectral density using Welch&#39;s method.</span>
+                           <span class="n">nperseg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nfft</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">fast_len</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outlier_percent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the power spectral density using Welch&#39;s method.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -253,6 +272,12 @@
 <span class="sd">    noverlap : int, optional</span>
 <span class="sd">        Number of points to overlap between segments.</span>
 <span class="sd">        If None, noverlap = nperseg // 8.</span>
+<span class="sd">    nfft : int, optional</span>
+<span class="sd">        Number of samples per window. Requires nfft &gt; nperseg.</span>
+<span class="sd">        Windows are zero-padded by the difference, nfft - nperseg.</span>
+<span class="sd">    fast_len : bool, optional, default: False</span>
+<span class="sd">        Moves nperseg to the fastest length to reduce computation.</span>
+<span class="sd">        See scipy.fft.next_fast_len for details.</span>
 <span class="sd">    f_range : list of [float, float], optional</span>
 <span class="sd">        Frequency range to sub-select from the power spectrum.</span>
 <span class="sd">    outlier_percent : float, optional</span>
@@ -262,7 +287,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    freqs : 1d array</span>
 <span class="sd">        Frequencies at which the measure was calculated.</span>
-<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">    spectrum : array</span>
 <span class="sd">        Power spectral density.</span>
 
 <span class="sd">    Notes</span>
@@ -288,6 +313,18 @@
 
     <span class="c1"># Calculate the short time Fourier transform with signal.spectrogram</span>
     <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span> <span class="o">=</span> <span class="n">check_spg_settings</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
+
+    <span class="c1"># Pad signal if requested</span>
+    <span class="k">if</span> <span class="n">nfft</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nfft</span> <span class="o">&lt;</span> <span class="n">nperseg</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;nfft must be greater than nperseg.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">nfft</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">npad</span> <span class="o">=</span> <span class="n">nfft</span> <span class="o">-</span> <span class="n">nperseg</span>
+        <span class="n">noverlap</span> <span class="o">=</span> <span class="n">nperseg</span> <span class="o">//</span> <span class="mi">8</span> <span class="k">if</span> <span class="n">noverlap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">noverlap</span>
+        <span class="n">sig</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span> <span class="o">=</span> <span class="n">window_pad</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">fast_len</span><span class="p">:</span>
+        <span class="n">nperseg</span> <span class="o">=</span> <span class="n">next_fast_len</span><span class="p">(</span><span class="n">nperseg</span><span class="p">)</span>
+
+    <span class="c1"># Compute spectrogram</span>
     <span class="n">freqs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">spg</span> <span class="o">=</span> <span class="n">spectrogram</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">)</span>
 
     <span class="c1"># Throw out outliers if indicated</span>
@@ -306,11 +343,11 @@
 
 <div class="viewcode-block" id="compute_spectrum_medfilt"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum_medfilt.html#neurodsp.spectral.compute_spectrum_medfilt">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">compute_spectrum_medfilt</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">filt_len</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the power spectral density as a smoothed FFT.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the power spectral density as a smoothed FFT.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -323,7 +360,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    freqs : 1d array</span>
 <span class="sd">        Frequencies at which the measure was calculated.</span>
-<span class="sd">    spectrum : 1d or 2d array</span>
+<span class="sd">    spectrum : array</span>
 <span class="sd">        Power spectral density.</span>
 
 <span class="sd">    Examples</span>
@@ -351,6 +388,85 @@
         <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">=</span> <span class="n">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span></div>
+
+
+<div class="viewcode-block" id="compute_spectrum_multitaper"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.compute_spectrum_multitaper.html#neurodsp.spectral.compute_spectrum_multitaper">[docs]</a><span class="k">def</span> <span class="nf">compute_spectrum_multitaper</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_tapers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">low_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eigenvalue_weighting</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the power spectral density using the multi-taper method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    bandwidth : float, optional</span>
+<span class="sd">        Frequency bandwidth of multi-taper window function.</span>
+<span class="sd">        If not provided, defaults to 8 * fs / n_samples.</span>
+<span class="sd">    n_tapers : int, optional</span>
+<span class="sd">        Number of slepian windows used to compute the spectrum.</span>
+<span class="sd">        If not provided, defaults to bandwidth * n_samples / fs.</span>
+<span class="sd">    low_bias : bool, optional, default: True</span>
+<span class="sd">        If True, only use tapers with concentration ratio &gt; 0.9.</span>
+<span class="sd">    eigenvalue_weighting : bool, optional</span>
+<span class="sd">        If True, weight spectral estimates by the concentration ratio of</span>
+<span class="sd">        their respective tapers before combining. Default is True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequencies at which the measure was calculated.</span>
+<span class="sd">    spectrum : array</span>
+<span class="sd">        Power spectral density using multi-taper method.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the power spectrum of a simulated time series using the multitaper method:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, spec = compute_spectrum_multitaper(sig, fs=500)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">scipy.signal.windows</span> <span class="kn">import</span> <span class="n">dpss</span>
+
+    <span class="c1"># Compute signal length based on input shape</span>
+    <span class="n">sig_len</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">sig</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># check settings</span>
+    <span class="n">nw</span><span class="p">,</span> <span class="n">n_tapers</span> <span class="o">=</span> <span class="n">check_mt_settings</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">n_tapers</span><span class="p">)</span>
+
+    <span class="c1"># Create slepian sequences</span>
+    <span class="n">slepian_sequences</span><span class="p">,</span> <span class="n">ratios</span> <span class="o">=</span> <span class="n">dpss</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="n">nw</span><span class="p">,</span> <span class="n">n_tapers</span><span class="p">,</span> <span class="n">return_ratios</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Drop tapers with low concentration</span>
+    <span class="k">if</span> <span class="n">low_bias</span><span class="p">:</span>
+        <span class="n">slepian_sequences</span> <span class="o">=</span> <span class="n">slepian_sequences</span><span class="p">[</span><span class="n">ratios</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">]</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="n">ratios</span><span class="p">[</span><span class="n">ratios</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slepian_sequences</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No tapers with concentration ratio &gt; 0.9. &quot;</span>
+                             <span class="s2">&quot;Could not compute spectrum with low_bias=True.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute Fourier transform on signal weighted by each slepian sequence</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">spectra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">slepian_sequences</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">sig</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># combine estimates to compute final spectrum</span>
+    <span class="k">if</span> <span class="n">eigenvalue_weighting</span><span class="p">:</span>
+        <span class="c1"># weight estimates by concentration ratios and combine</span>
+        <span class="n">spectra_weighted</span> <span class="o">=</span> <span class="n">spectra</span> <span class="o">*</span> <span class="n">ratios</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">spectra_weighted</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ratios</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Average spectral estimates</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectra</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Convert output to 1d if necessary</span>
+    <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span></div>
 </pre></div>
 
     </div>
@@ -364,8 +480,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Filtering &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <title>Filtering &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,14 +110,14 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="filtering">
-<span id="sphx-glr-auto-tutorials-filt-plot-1-filtering-py"></span><h1>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-tutorials-filt-plot-1-filtering-py"></span><h1>Filtering<a class="headerlink" href="#filtering" title="Permalink to this heading">¶</a></h1>
 <p>Apply filters to neural signals, including highpass, lowpass, bandpass &amp; bandstop filters.</p>
 <p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.filt</span></code> module.</p>
 <section id="filtering-with-neurodsp">
-<h2>Filtering with NeuroDSP<a class="headerlink" href="#filtering-with-neurodsp" title="Permalink to this headline">¶</a></h2>
+<h2>Filtering with NeuroDSP<a class="headerlink" href="#filtering-with-neurodsp" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_signal()</span></code></a> function is the main function for filtering using NeuroDSP.</p>
 <p>In this tutorial, we will examine filtering signals with different passbands.
 The passband of a filter is the range of frequencies that can ‘pass’ through a filter.</p>
@@ -127,7 +126,7 @@ The passband of a filter is the range of frequencies that can ‘pass’ through
 <li><p><a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25128257/">Widman et al., 2015</a></p></li>
 <li><p><a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/30998899/">de Cheveigne &amp; Nelken, 2019</a></p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import filter function</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import filter function</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt</span> <span class="kn">import</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a>
 
 <span class="c1"># Import simulation code for creating test data</span>
@@ -139,11 +138,11 @@ The passband of a filter is the range of frequencies that can ‘pass’ through
 <span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed, for consistency simulating data</span>
 <span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># General settings for simulations</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># General settings for simulations</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">5</span>
 
@@ -155,11 +154,11 @@ The passband of a filter is the range of frequencies that can ‘pass’ through
 </pre></div>
 </div>
 <section id="bandpass-filters">
-<h3>Bandpass filters<a class="headerlink" href="#bandpass-filters" title="Permalink to this headline">¶</a></h3>
+<h3>Bandpass filters<a class="headerlink" href="#bandpass-filters" title="Permalink to this heading">¶</a></h3>
 <p>A bandpass filter allows through frequencies within a given frequency range.</p>
 <p>These filters can be useful to filter a signal to a specific band range, for example
 filtering to the theta range, defined as 4-8 Hz.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency in our simulated signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the frequency in our simulated signal</span>
 <span class="n">freq</span> <span class="o">=</span> <span class="mi">6</span>
 
 <span class="c1"># Set up simulation for a signal with aperiodic activity and an oscillation</span>
@@ -171,14 +170,14 @@ filtering to the theta range, defined as 4-8 Hz.</p>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a frequency range to filter the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a frequency range to filter the data</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 
 <span class="c1"># Bandpass filter the data, across the band of interest</span>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -188,10 +187,10 @@ the signal samples at the edges only experienced part of the filter.</p>
 <p>To bypass this feature, set <cite>remove_edges=False</cite>, but at your own risk!</p>
 </section>
 <section id="highpass-filter">
-<h3>Highpass filter<a class="headerlink" href="#highpass-filter" title="Permalink to this headline">¶</a></h3>
+<h3>Highpass filter<a class="headerlink" href="#highpass-filter" title="Permalink to this heading">¶</a></h3>
 <p>Highpass filters are filters that pass through all frequencies above a specified cutoff point.</p>
 <p>These filters can be used to remove low frequency drift from the data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the rhythmic components in the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the rhythmic components in the data</span>
 <span class="n">freq1</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">freq2</span> <span class="o">=</span> <span class="mf">0.5</span>
 
@@ -204,63 +203,63 @@ the signal samples at the edges only experienced part of the filter.</p>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data with a highpass filter</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data with a highpass filter</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;highpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_1_Filtering_002.png" srcset="../../_images/sphx_glr_plot_1_Filtering_002.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
 <section id="lowpass-filter">
-<h3>Lowpass filter<a class="headerlink" href="#lowpass-filter" title="Permalink to this headline">¶</a></h3>
+<h3>Lowpass filter<a class="headerlink" href="#lowpass-filter" title="Permalink to this heading">¶</a></h3>
 <p>Lowpass filters are filters that pass through all frequencies below a specified cutoff point.</p>
 <p>These filters can be used to remove high frequency activity from the data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;lowpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_1_Filtering_003.png" srcset="../../_images/sphx_glr_plot_1_Filtering_003.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
 <section id="bandstop-filter">
-<h3>Bandstop filter<a class="headerlink" href="#bandstop-filter" title="Permalink to this headline">¶</a></h3>
+<h3>Bandstop filter<a class="headerlink" href="#bandstop-filter" title="Permalink to this heading">¶</a></h3>
 <p>Bandstop filters are filters that remove a specified band range from the data.</p>
 <p>Next let’s try a bandstop filter, to remove 60 Hz noise from the data.</p>
 <p>Notice that it is necessary to set a non-default filter length because
 a filter of length 3 cycles of a 58Hz oscillation would not attenuate
 the 60Hz oscillation much (try this yourself!).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal, with a low frequency oscillation and 60 Hz line noise</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a signal, with a low frequency oscillation and 60 Hz line noise</span>
 <span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">60</span><span class="p">}]}</span>
 <span class="n">variances</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">variances</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">62</span><span class="p">)</span>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandstop&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/envs/mne/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/tom/opt/anaconda3/lib/python3.8/site-packages/neurodsp/filt/checks.py:153: UserWarning: The filter attenuation never goes below -20 dB. Increase filter length.
   warn(&#39;The filter attenuation never goes below {} dB. &#39;\
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_1_Filtering_004.png" srcset="../../_images/sphx_glr_plot_1_Filtering_004.png" alt="plot 1 Filtering" class = "sphx-glr-single-img"/></section>
 </section>
 <section id="real-data-example">
-<h2>Real Data Example<a class="headerlink" href="#real-data-example" title="Permalink to this headline">¶</a></h2>
+<h2>Real Data Example<a class="headerlink" href="#real-data-example" title="Permalink to this heading">¶</a></h2>
 <p>Finally, let’s apply a filter to a segment of real data.</p>
 <p>In this example, we will apply a bandpass filter in the beta range to a segment of neural data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data file</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download, if needed, and load example data file</span>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">load_ndsp_data</span><span class="p">(</span><span class="s1">&#39;sample_data_1.npy&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Set sampling rate, and create a times vector for plotting</span>
@@ -271,11 +270,11 @@ the 60Hz oscillation much (try this yourself!).</p>
 <span class="n">f_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
 <span class="n">sig_filt</span> <span class="o">=</span> <a href="../../generated/neurodsp.filt.filter_signal.html#neurodsp.filt.filter_signal" title="neurodsp.filt.filter_signal" class="sphx-glr-backref-module-neurodsp-filt sphx-glr-backref-type-py-function"><span class="n">filter_signal</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot filtered signal</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="p">[</span><span class="n">sig</span><span class="p">,</span> <span class="n">sig_filt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Raw&#39;</span><span class="p">,</span> <span class="s1">&#39;Filtered&#39;</span><span class="p">],</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -286,19 +285,19 @@ more sinusoidal than the original signal really is.</p>
 <a class="reference external" href="https://bycycle-tools.github.io/bycycle/">bycycle</a>,
 which is a tool for time-domain analyses of waveform shape.</p>
 <section id="conclusion">
-<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h3>
 <p>This tutorial has been a brief introduction to applying the filters that are available
 in NeuroDSP. Note that in practice you will likely do more checking of filters that you
 use (checking the filter response, for example), and may need to update settings.</p>
 <p>For more information on different kinds of filters and their settings and
 properties, and how to evaluate filters see the subsequent tutorials.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.503 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.663 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-filt-plot-1-filtering-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/cecc4d52322bc6b8a15fb5414115860f/plot_1_Filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1_Filtering.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/71f49ba71cadc33970b827aefcb07b17/plot_1_Filtering.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_1_Filtering.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/cecc4d52322bc6b8a15fb5414115860f/plot_1_Filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1_Filtering.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -318,8 +317,8 @@ properties, and how to evaluate filters see the subsequent tutorials.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.plts.plot_swm_pattern &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.plts.plot_swm_pattern &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,13 +108,13 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-plts-plot-swm-pattern">
-<h1>neurodsp.plts.plot_swm_pattern<a class="headerlink" href="#neurodsp-plts-plot-swm-pattern" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.plts.plot_swm_pattern<a class="headerlink" href="#neurodsp-plts-plot-swm-pattern" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.plts.plot_swm_pattern">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.plts.</span></span><span class="sig-name descname"><span class="pre">plot_swm_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/plts/rhythm.html#plot_swm_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.plts.plot_swm_pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the resulting pattern from a sliding window matching analysis.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>pattern</strong><span class="classifier">1d array</span></dt><dd><p>The resulting average pattern from applying sliding window matching.</p>
 </dd>
@@ -131,11 +130,11 @@
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.rhythm</span> <span class="kn">import</span> <span class="n">sliding_window_matching</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;f_range&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">)},</span>
-<span class="gp">... </span>                               <span class="s1">&#39;sim_bursty_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;enter_burst&#39;</span><span class="p">:</span> <span class="mf">.25</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;leave_burst&#39;</span><span class="p">:</span> <span class="mf">.25</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim_components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;f_range&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">)},</span>
+<span class="gp">... </span>                  <span class="s1">&#39;sim_bursty_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>                                             <span class="s1">&#39;burst_params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enter_burst&#39;</span> <span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+<span class="gp">... </span>                                                              <span class="s1">&#39;leave_burst&#39;</span> <span class="p">:</span> <span class="mf">0.25</span><span class="p">}}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sim_components</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">windows</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sliding_window_matching</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">win_len</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">win_spacing</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">avg_window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plot_swm_pattern</span><span class="p">(</span><span class="n">avg_window</span><span class="p">)</span>
@@ -144,7 +143,7 @@
 </dd></dl>
 
 <section id="examples-using-neurodsp-plts-plot-swm-pattern">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.plts.plot_swm_pattern</span></code><a class="headerlink" href="#examples-using-neurodsp-plts-plot-swm-pattern" title="Permalink to this headline">¶</a></h2>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.plts.plot_swm_pattern</span></code><a class="headerlink" href="#examples-using-neurodsp-plts-plot-swm-pattern" title="Permalink to this heading">¶</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Find recurring patterns in neural signals using Sliding Window Matching."><img alt="" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
 <p><a class="reference internal" href="../auto_tutorials/rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a></p>
   <div class="sphx-glr-thumbnail-title">Sliding Window Matching</div>
@@ -163,8 +162,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

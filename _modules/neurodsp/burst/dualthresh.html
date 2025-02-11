@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.burst.dualthresh &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.burst.dualthresh &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -125,11 +124,11 @@
                                  <span class="n">min_n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_burst_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                  <span class="n">avg_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">magnitude_type</span><span class="o">=</span><span class="s1">&#39;amplitude&#39;</span><span class="p">,</span>
                                  <span class="o">**</span><span class="n">filter_kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Detect bursts in a signal using the dual threshold algorithm.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect bursts in a signal using the dual threshold algorithm.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -154,7 +153,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    is_burst : 1d array</span>
+<span class="sd">    is_burst : array</span>
 <span class="sd">        Boolean indication of where bursts are present in the input signal.</span>
 <span class="sd">        True indicates that a burst was detected at that sample, otherwise False.</span>
 
@@ -216,7 +215,7 @@
 
 
 <span class="k">def</span> <span class="nf">_dual_threshold_split</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">thresh_hi</span><span class="p">,</span> <span class="n">thresh_lo</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Identify periods that are above thresh_lo and have at least one value above thresh_hi.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Identify periods that are above thresh_lo and have at least one value above thresh_hi.&quot;&quot;&quot;</span>
 
     <span class="c1"># Find all values above thresh_hi</span>
     <span class="c1"># To avoid bug in later loop, do not allow first or last index to start off as 1</span>
@@ -260,7 +259,7 @@
 
 
 <span class="k">def</span> <span class="nf">_rmv_short_periods</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Remove periods that are equal to 1 for less than n_samples.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove periods that are equal to 1 for less than n_samples.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sig</span>
@@ -301,8 +300,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

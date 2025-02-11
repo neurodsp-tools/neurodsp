@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.sim.io &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.io</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulation I/O functions that return multiple instances.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim.signals</span> <span class="kn">import</span> <span class="n">Simulations</span><span class="p">,</span> <span class="n">VariableSimulations</span><span class="p">,</span> <span class="n">MultiSimulations</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<span class="c1">## BASE I/O UTILITIES</span>
+
+<span class="k">def</span> <span class="nf">fpath</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check and combine a file name and path into a Path object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str or None</span>
+<span class="sd">        Name of the directory.</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Path</span>
+<span class="sd">        Path object for the full file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">file_name</span> <span class="k">if</span> <span class="n">file_path</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save data to a json file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the file to save to.</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        Data to save to file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">json_file</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">save_jsonlines</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save data to a jsonlines file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the file to save to.</span>
+<span class="sd">    data : list of dict</span>
+<span class="sd">        Data to save to file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonlines_file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">jsonlines_file</span><span class="p">)</span>
+            <span class="n">jsonlines_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load data from a json file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the file to load from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        Loaded data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">load_jsonlines</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load data from a jsonlines file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the file to load from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : list of dict</span>
+<span class="sd">        Loaded data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="c1">## SIMULATION OBJECT I/O</span>
+
+<div class="viewcode-block" id="save_sims"><a class="viewcode-back" href="../../../generated/neurodsp.sim.io.save_sims.html#neurodsp.sim.io.save_sims">[docs]</a><span class="k">def</span> <span class="nf">save_sims</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save simulations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sims : Simulations or VariableSimulations or MultipleSimulations</span>
+<span class="sd">        Simulations to save.</span>
+<span class="sd">    label : str</span>
+<span class="sd">        Label to attach to the simulation name.</span>
+<span class="sd">    file_path : str, optional</span>
+<span class="sd">        Directory to save to.</span>
+<span class="sd">    replace : bool, optional, default: False</span>
+<span class="sd">        Whether to replace any existing saved files with the same name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="s1">&#39;_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;Cannot have underscores in simulation label.&#39;</span>
+
+    <span class="n">save_path_items</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sim-unknown&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sims</span><span class="o">.</span><span class="n">function</span> <span class="k">else</span> <span class="n">sims</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="p">(</span><span class="n">VariableSimulations</span><span class="p">,</span> <span class="n">MultiSimulations</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">sims</span><span class="o">.</span><span class="n">component</span><span class="p">:</span>
+            <span class="n">save_path_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sims</span><span class="o">.</span><span class="n">component</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">sims</span><span class="o">.</span><span class="n">update</span><span class="p">:</span>
+            <span class="n">save_path_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sims</span><span class="o">.</span><span class="n">update</span><span class="p">)</span>
+    <span class="n">save_path_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">save_path</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path_items</span><span class="p">)</span>
+
+    <span class="n">save_folder</span> <span class="o">=</span> <span class="n">fpath</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_folder</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">replace</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Simulation files already exist.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">save_folder</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">MultiSimulations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">csims</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sims</span><span class="o">.</span><span class="n">signals</span><span class="p">):</span>
+            <span class="n">save_sims</span><span class="p">(</span><span class="n">csims</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">),</span> <span class="n">file_path</span><span class="o">=</span><span class="n">save_folder</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_folder</span> <span class="o">/</span> <span class="s1">&#39;signals&#39;</span><span class="p">,</span> <span class="n">sims</span><span class="o">.</span><span class="n">signals</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">VariableSimulations</span><span class="p">):</span>
+            <span class="n">save_jsonlines</span><span class="p">(</span><span class="n">save_folder</span> <span class="o">/</span> <span class="s1">&#39;params.jsonlines&#39;</span><span class="p">,</span> <span class="n">sims</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">Simulations</span><span class="p">):</span>
+            <span class="n">save_json</span><span class="p">(</span><span class="n">save_folder</span> <span class="o">/</span> <span class="s1">&#39;params.json&#39;</span><span class="p">,</span> <span class="n">sims</span><span class="o">.</span><span class="n">params</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_sims"><a class="viewcode-back" href="../../../generated/neurodsp.sim.io.load_sims.html#neurodsp.sim.io.load_sims">[docs]</a><span class="k">def</span> <span class="nf">load_sims</span><span class="p">(</span><span class="n">load_name</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load simulations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    load_name : str</span>
+<span class="sd">        The name or label of the simulations to load.</span>
+<span class="sd">        If not the full file name, this string can be the label the simulations were saved with.</span>
+<span class="sd">    file_path : str, optional</span>
+<span class="sd">        Directory to load from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sims : Simulations or VariableSimulations or MultipleSimulations</span>
+<span class="sd">        Loaded simulations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">load_name</span><span class="p">:</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">load_name</span> <span class="ow">in</span> <span class="n">el</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;No matches found for requested simulation label.&#39;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Multiple matches found for requested simulation label.&#39;</span>
+        <span class="n">load_name</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">splits</span> <span class="o">=</span> <span class="n">load_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;unknown&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">update</span><span class="p">,</span> <span class="n">component</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">splits</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">update</span> <span class="o">=</span> <span class="n">splits</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">component</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">splits</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">load_folder</span> <span class="o">=</span> <span class="n">fpath</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">load_name</span><span class="p">)</span>
+    <span class="n">load_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">load_folder</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s1">&#39;signals.npy&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">load_files</span><span class="p">:</span>
+
+        <span class="n">msims</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_sims</span><span class="p">(</span><span class="n">load_file</span><span class="p">,</span> <span class="n">load_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">load_file</span> <span class="ow">in</span> <span class="n">load_files</span><span class="p">]</span>
+        <span class="n">sims</span> <span class="o">=</span> <span class="n">MultiSimulations</span><span class="p">(</span><span class="n">msims</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">sigs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">load_folder</span> <span class="o">/</span> <span class="s1">&#39;signals.npy&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;params.json&#39;</span> <span class="ow">in</span> <span class="n">load_files</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">load_json</span><span class="p">(</span><span class="n">load_folder</span> <span class="o">/</span> <span class="s1">&#39;params.json&#39;</span><span class="p">)</span>
+            <span class="n">sims</span> <span class="o">=</span> <span class="n">Simulations</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="s1">&#39;params.jsonlines&#39;</span> <span class="ow">in</span> <span class="n">load_files</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">load_jsonlines</span><span class="p">(</span><span class="n">load_folder</span> <span class="o">/</span> <span class="s1">&#39;params.jsonlines&#39;</span><span class="p">)</span>
+            <span class="n">sims</span> <span class="o">=</span> <span class="n">VariableSimulations</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sims</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

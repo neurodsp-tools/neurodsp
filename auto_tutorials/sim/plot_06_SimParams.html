@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Managing Simulation Parameters &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../glossary.html">Glossary</a></li>
+                <li><a href="../index.html">Tutorials</a></li>
+                <li><a href="../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-sim-plot-06-simparams-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="managing-simulation-parameters">
+<span id="sphx-glr-auto-tutorials-sim-plot-06-simparams-py"></span><h1>Managing Simulation Parameters<a class="headerlink" href="#managing-simulation-parameters" title="Permalink to this heading">¶</a></h1>
+<p>Manage, update, and iterate across simulation parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.params</span> <span class="kn">import</span> <a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class"><span class="n">SimParams</span></a><span class="p">,</span> <a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class"><span class="n">SimIters</span></a><span class="p">,</span> <span class="n">SimSamplers</span>
+</pre></div>
+</div>
+<section id="managing-simulations-parameters">
+<h2>Managing Simulations Parameters<a class="headerlink" href="#managing-simulations-parameters" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimParams</span></code></a> object can be used to manage a set of simulation parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize object, with base parameters</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_params</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class"><span class="n">SimParams</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+
+<span class="c1"># Check the base parameters in the SimParams object</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.base" title="neurodsp.sim.params.SimParams.base" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_params</span><span class="o">.</span><span class="n">base</span></a>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250}
+</pre></div>
+</div>
+<p>A defined SimParams object with base parameters can be used to create a full set of simulation
+parameters by specifying additional parameters to add to the base parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a set of simulation parameters</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.make_params" title="neurodsp.sim.params.SimParams.make_params" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">make_params</span></a><span class="p">({</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+</pre></div>
+</div>
+<p>The object can also be used to ‘register’ (<code class="xref py py-func docutils literal notranslate"><span class="pre">register()</span></code>) a set of
+simulation parameters, meaning they can be defined and stored in the object,
+with an associated label to access them.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register a set of simulation parameters</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.register" title="neurodsp.sim.params.SimParams.register" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">register</span></a><span class="p">(</span><span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+
+<span class="c1"># Check the registered simulation definition</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_params</span></a><span class="p">[</span><span class="s1">&#39;ap&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+</pre></div>
+</div>
+<p>The SimParams object can also be updated, for example, clearing previous simulation parameters,
+updating base parameters, and/or updating previously registered simulation definitions.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clear the current set of parameter definitions</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.clear" title="neurodsp.sim.params.SimParams.clear" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">clear</span></a><span class="p">()</span>
+
+<span class="c1"># Update the base definition</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.update_base" title="neurodsp.sim.params.SimParams.update_base" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">update_base</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Check the updated base parameters</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.base" title="neurodsp.sim.params.SimParams.base" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_params</span><span class="o">.</span><span class="n">base</span></a>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250}
+</pre></div>
+</div>
+<p>The SimParams object can also be used to manage multiple different simulation parameter
+definitions, for example for different functions, which share the same base parameters.</p>
+<p>To manage multiple parameters, they can all be registered to the object.
+For convenience, multiple definitions can be registered together with the
+(<code class="xref py py-func docutils literal notranslate"><span class="pre">register_group()</span></code>) method.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register a group of parameter definitions</span>
+<a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.register_group" title="neurodsp.sim.params.SimParams.register_group" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">register_group</span></a><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ap&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span>
+     <span class="s1">&#39;osc&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}})</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the set of labels and parameters defined on the object</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.labels" title="neurodsp.sim.params.SimParams.labels" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_params</span><span class="o">.</span><span class="n">labels</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.params" title="neurodsp.sim.params.SimParams.params" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_params</span><span class="o">.</span><span class="n">params</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;ap&#39;, &#39;osc&#39;]
+{&#39;ap&#39;: {&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}, &#39;osc&#39;: {&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 10}}
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the simulation parameters for the different labels</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_params</span></a><span class="p">[</span><span class="s1">&#39;ap&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams" title="neurodsp.sim.params.SimParams" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_params</span></a><span class="p">[</span><span class="s1">&#39;osc&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 10}
+</pre></div>
+</div>
+</section>
+<section id="iterating-across-simulations-parameters">
+<h2>Iterating Across Simulations Parameters<a class="headerlink" href="#iterating-across-simulations-parameters" title="Permalink to this heading">¶</a></h2>
+<p>One application of interest for managing simulation parameters may be to iterate
+across parameter values.</p>
+<p>To do so, the <a class="reference internal" href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimIters</span></code></a> class can be used.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize base set of simulation parameters</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_iters</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class"><span class="n">SimIters</span></a><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+
+<span class="c1"># Check the base parameters of the SimIters object</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.base" title="neurodsp.sim.params.SimIters.base" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_iters</span><span class="o">.</span><span class="n">base</span></a>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 5, &#39;fs&#39;: 250}
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Re-initialize a SimIters object, exporting from existing SimParams object</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_iters</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.to_iters" title="neurodsp.sim.params.SimParams.to_iters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">to_iters</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<p>Similar to the SimParams object, the SimIter object can be used to make simulation iterators.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make a parameter iterator from the SimIter object</span>
+<a href="../../generated/neurodsp.sim.update.ParamIter.html#neurodsp.sim.update.ParamIter" title="neurodsp.sim.update.ParamIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_iter</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.make_iter" title="neurodsp.sim.params.SimIters.make_iter" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_iters</span><span class="o">.</span><span class="n">make_iter</span></a><span class="p">(</span><span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Use the iterator to step across parameters</span>
+<span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.update.ParamIter.html#neurodsp.sim.update.ParamIter" title="neurodsp.sim.update.ParamIter" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_iter</span></a><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -2}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: 0}
+</pre></div>
+</div>
+<p>Just as before, we can ‘register’ an iterator definition on the SimIter object.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register an iterator on the SimIter object</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.register_iter" title="neurodsp.sim.params.SimIters.register_iter" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_iters</span><span class="o">.</span><span class="n">register_iter</span></a><span class="p">(</span><span class="s1">&#39;exp_iter&#39;</span><span class="p">,</span> <span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Use the iterator from the SimIter object to step across parameters</span>
+<span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_iters</span></a><span class="p">[</span><span class="s1">&#39;exp_iter&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -2}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: 0}
+</pre></div>
+</div>
+<p>Just like the SimParams object, the SimIter object can be cleared, updated, etc.</p>
+<p>It can also be used to register a group of iterators, which will share the same base parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clear the current object</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.clear" title="neurodsp.sim.params.SimIters.clear" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_iters</span><span class="o">.</span><span class="n">clear</span></a><span class="p">()</span>
+
+<span class="c1"># Register a group of iterators</span>
+<a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.register_group_iters" title="neurodsp.sim.params.SimIters.register_group_iters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_iters</span><span class="o">.</span><span class="n">register_group_iters</span></a><span class="p">([</span>
+    <span class="p">[</span><span class="s1">&#39;exp_iter&#39;</span><span class="p">,</span> <span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="p">[</span><span class="s1">&#39;osc_iter&#39;</span><span class="p">,</span> <span class="s1">&#39;osc&#39;</span><span class="p">,</span> <span class="s1">&#39;freq&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]]])</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the labels for the defined iterators, and the iterators</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.labels" title="neurodsp.sim.params.SimIters.labels" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_iters</span><span class="o">.</span><span class="n">labels</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.iters" title="neurodsp.sim.params.SimIters.iters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_iters</span><span class="o">.</span><span class="n">iters</span></a><span class="p">)</span>
+
+<span class="c1"># Check a set of iterated parameters from the SimIter object</span>
+<span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters" title="neurodsp.sim.params.SimIters" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_iters</span></a><span class="p">[</span><span class="s1">&#39;osc_iter&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;exp_iter&#39;, &#39;osc_iter&#39;]
+{&#39;exp_iter&#39;: &lt;neurodsp.sim.update.ParamIter object at 0x7faa5b3478b0&gt;, &#39;osc_iter&#39;: &lt;neurodsp.sim.update.ParamIter object at 0x7faa5b347580&gt;}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 10}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 20}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 30}
+</pre></div>
+</div>
+</section>
+<section id="defining-parameters-updates">
+<h2>Defining Parameters Updates<a class="headerlink" href="#defining-parameters-updates" title="Permalink to this heading">¶</a></h2>
+<p>For the next application, we will explore defining sets of parameters to sample from.</p>
+<p>To do so, we first need to explore some functionality for defining which parameters to
+update, and how to sample parameter values from a specified set of objects.</p>
+<p>To start with, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_updater()</span></code></a> function to create a helper
+function to update parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a set of parameters</span>
+<span class="n">params1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+<span class="c1"># Create an update object for the exponent parameter</span>
+<span class="n">exp_updater</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">(</span><span class="s1">&#39;exponent&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use the exponent updater</span>
+<span class="n">exp_updater</span><span class="p">(</span><span class="n">params1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An updater can also be used to update parameters defined within specified components.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define another set of parameters, with multiple components</span>
+<span class="n">params2</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="mi">250</span><span class="p">,</span>
+           <span class="s1">&#39;components&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;sim_powerlaw&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;exponent&#39;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                           <span class="s1">&#39;sim_oscillation&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}}</span>
+
+<span class="c1"># Create an updater for the exponent, within the components</span>
+<span class="n">exp_comp_updater</span> <span class="o">=</span> <a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">(</span><span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="s1">&#39;sim_powerlaw&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use the exponent updater</span>
+<span class="n">exp_comp_updater</span><span class="p">(</span><span class="n">params2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we can define a way to sample parameter values.</p>
+<p>To do so, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_sampler()</span></code></a> function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a sampler for a set of exponent values</span>
+<a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_sampler</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Sample some values from the exponent sampler</span>
+<span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_sampler</span></a><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-2
+-1
+-2
+</pre></div>
+</div>
+<p>From the above, we can combine updaters and samplers to create definitions of how
+to sample full parameter definitions.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a combined updater and sampler for exponent values</span>
+<span class="n">exp_upd_sampler</span> <span class="o">=</span> <span class="p">{</span><a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">(</span><span class="s1">&#39;exponent&#39;</span><span class="p">)</span> <span class="p">:</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])}</span>
+</pre></div>
+</div>
+</section>
+<section id="sampling-simulations-parameters">
+<h2>Sampling Simulations Parameters<a class="headerlink" href="#sampling-simulations-parameters" title="Permalink to this heading">¶</a></h2>
+<p>To manage sampling simulation parameters, we can use the <a class="reference internal" href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers" title="neurodsp.sim.params.SimSamplers"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSamplers</span></code></a> class.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize simulation samplers, from pre-initialized SimParams object</span>
+<a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers" title="neurodsp.sim.params.SimSamplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_samplers</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.to_samplers" title="neurodsp.sim.params.SimParams.to_samplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_params</span><span class="o">.</span><span class="n">to_samplers</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Just as before, the SimSamplers object can be used to make samplers.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make a parameter sampler from the SimSamplers object</span>
+<a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_sampler</span></a> <span class="o">=</span> <a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.make_sampler" title="neurodsp.sim.params.SimSamplers.make_sampler" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">make_sampler</span></a><span class="p">(</span><span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="n">exp_upd_sampler</span><span class="p">)</span>
+
+<span class="c1"># Use the exponent sampler to check</span>
+<span class="k">for</span> <span class="n">samp_params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler" title="neurodsp.sim.update.ParamSampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">exp_sampler</span></a><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">samp_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -1}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: 0}
+</pre></div>
+</div>
+<p>As before, we can also register a sampler on the object.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register a sampler definition on the SimSamplers object</span>
+<a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.register_sampler" title="neurodsp.sim.params.SimSamplers.register_sampler" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">register_sampler</span></a><span class="p">(</span><span class="s1">&#39;exp_sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="n">exp_upd_sampler</span><span class="p">)</span>
+
+<span class="c1"># Check some example sampled parameter values</span>
+<span class="k">for</span> <span class="n">samp_params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers" title="neurodsp.sim.params.SimSamplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_samplers</span></a><span class="p">[</span><span class="s1">&#39;exp_sampler&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">samp_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -2}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: 0}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;exponent&#39;: -2}
+</pre></div>
+</div>
+<p>The object can also be cleared, updated, etc, just as the previous objects.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clear the previously defined simulation samplers</span>
+<a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.clear" title="neurodsp.sim.params.SimSamplers.clear" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">clear</span></a><span class="p">()</span>
+
+<span class="c1"># Define a new definition to sample parameter values</span>
+<span class="n">osc_upd_sampler</span> <span class="o">=</span> <span class="p">{</span><a href="../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater" title="neurodsp.sim.update.create_updater" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_updater</span></a><span class="p">(</span><span class="s1">&#39;freq&#39;</span><span class="p">)</span> <span class="p">:</span> <a href="../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler" title="neurodsp.sim.update.create_sampler" class="sphx-glr-backref-module-neurodsp-sim-update sphx-glr-backref-type-py-function"><span class="n">create_sampler</span></a><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">])}</span>
+
+<span class="c1"># Register a group of samplers to the object</span>
+<a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.register_group_samplers" title="neurodsp.sim.params.SimSamplers.register_group_samplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-method"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">register_group_samplers</span></a><span class="p">([</span>
+    <span class="p">[</span><span class="s1">&#39;exp_sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;ap&#39;</span><span class="p">,</span> <span class="n">exp_upd_sampler</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;osc_sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;osc&#39;</span><span class="p">,</span> <span class="n">osc_upd_sampler</span><span class="p">],</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the labels and defined samplers on the object</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.labels" title="neurodsp.sim.params.SimSamplers.labels" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">labels</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.samplers" title="neurodsp.sim.params.SimSamplers.samplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-property"><span class="n">sim_samplers</span><span class="o">.</span><span class="n">samplers</span></a><span class="p">)</span>
+
+<span class="c1"># Check example sampled parameter values</span>
+<span class="k">for</span> <span class="n">samp_params</span> <span class="ow">in</span> <a href="../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers" title="neurodsp.sim.params.SimSamplers" class="sphx-glr-backref-module-neurodsp-sim-params sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sim_samplers</span></a><span class="p">[</span><span class="s1">&#39;osc_sampler&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">samp_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;exp_sampler&#39;, &#39;osc_sampler&#39;]
+{&#39;exp_sampler&#39;: &lt;neurodsp.sim.update.ParamSampler object at 0x7faa5b347fa0&gt;, &#39;osc_sampler&#39;: &lt;neurodsp.sim.update.ParamSampler object at 0x7faa5b347700&gt;}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 10}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 10}
+{&#39;n_seconds&#39;: 10, &#39;fs&#39;: 250, &#39;freq&#39;: 30}
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.008 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-sim-plot-06-simparams-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2ac7c7ec21cecafb4514910b1207a762/plot_06_SimParams.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_06_SimParams.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/db673546015e7534ec6552d56f006d98/plot_06_SimParams.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_06_SimParams.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

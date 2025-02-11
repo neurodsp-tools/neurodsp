@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.sim.multi &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.multi</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulation functions that return multiple instances.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim.signals</span> <span class="kn">import</span> <span class="n">Simulations</span><span class="p">,</span> <span class="n">VariableSimulations</span><span class="p">,</span> <span class="n">MultiSimulations</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.generators</span> <span class="kn">import</span> <span class="n">sig_yielder</span><span class="p">,</span> <span class="n">sig_sampler</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.params</span> <span class="kn">import</span> <span class="n">get_base_params</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.info</span> <span class="kn">import</span> <span class="n">get_sim_func</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="sim_multiple"><a class="viewcode-back" href="../../../generated/neurodsp.sim.multi.sim_multiple.html#neurodsp.sim.multi.sim_multiple">[docs]</a><span class="k">def</span> <span class="nf">sim_multiple</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate multiple samples of a specified simulation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : str or callable</span>
+<span class="sd">        Function to create the simulated time series.</span>
+<span class="sd">        If string, should be the name of the desired simulation function.</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        The parameters for the simulated signal, passed into `function`.</span>
+<span class="sd">    n_sims : int</span>
+<span class="sd">        Number of simulations to create.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sims : Simulations</span>
+<span class="sd">        Simulations object with simulated time series and metadata.</span>
+<span class="sd">        Simulated signals are in the &#39;signals&#39; attribute with shape [n_sims, sig_length].</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate multiple samples of a powerlaw signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.aperiodic import sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; params = {&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : -1}</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_multiple(sim_powerlaw, params, n_sims=3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">Simulations</span><span class="p">(</span><span class="n">n_sims</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">sig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sig_yielder</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">)):</span>
+        <span class="n">sims</span><span class="o">.</span><span class="n">add_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">ind</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sims</span></div>
+
+
+<div class="viewcode-block" id="sim_across_values"><a class="viewcode-back" href="../../../generated/neurodsp.sim.multi.sim_across_values.html#neurodsp.sim.multi.sim_across_values">[docs]</a><span class="k">def</span> <span class="nf">sim_across_values</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate signals across different parameter values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : str or callable</span>
+<span class="sd">        Function to create the simulated time series.</span>
+<span class="sd">        If string, should be the name of the desired simulation function.</span>
+<span class="sd">    params : ParamIter or iterable or list of dict</span>
+<span class="sd">        Simulation parameters for `function`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sims : VariableSimulations</span>
+<span class="sd">        Simulations object with simulated time series and metadata.</span>
+<span class="sd">        Simulated signals are in the &#39;signals&#39; attribute with shape [n_sims, sig_length].</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate multiple powerlaw signals using a ParamIter object:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.aperiodic import sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.update import ParamIter</span>
+<span class="sd">    &gt;&gt;&gt; base_params = {&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : None}</span>
+<span class="sd">    &gt;&gt;&gt; param_iter = ParamIter(base_params, &#39;exponent&#39;, [-2, 1, 0])</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_across_values(sim_powerlaw, param_iter)</span>
+
+<span class="sd">    Simulate multiple powerlaw signals from manually defined set of simulation parameters:</span>
+
+<span class="sd">    &gt;&gt;&gt; params = [{&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : -2},</span>
+<span class="sd">    ...           {&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : -1}]</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_across_values(sim_powerlaw, params)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">VariableSimulations</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">get_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">function</span><span class="p">,</span>
+                               <span class="n">update</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                               <span class="n">component</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;component&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+    <span class="n">function</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">cur_params</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="n">sims</span><span class="o">.</span><span class="n">add_signal</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="o">**</span><span class="n">cur_params</span><span class="p">),</span> <span class="n">cur_params</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">ind</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sims</span></div>
+
+
+<div class="viewcode-block" id="sim_multi_across_values"><a class="viewcode-back" href="../../../generated/neurodsp.sim.multi.sim_multi_across_values.html#neurodsp.sim.multi.sim_multi_across_values">[docs]</a><span class="k">def</span> <span class="nf">sim_multi_across_values</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate multiple signals across different parameter values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : str or callable</span>
+<span class="sd">        Function to create the simulated time series.</span>
+<span class="sd">        If string, should be the name of the desired simulation function.</span>
+<span class="sd">    params : ParamIter or iterable or list of dict</span>
+<span class="sd">        Simulation parameters for `function`.</span>
+<span class="sd">    n_sims : int</span>
+<span class="sd">        Number of simulations to create per parameter definition.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sims : MultiSimulations</span>
+<span class="sd">        Simulations object with simulated time series and metadata.</span>
+<span class="sd">        Simulated signals are in the &#39;signals&#39; attribute with shape [n_sets, n_sims, sig_length].</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate multiple powerlaw signals using a ParamIter object:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.aperiodic import sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.update import ParamIter</span>
+<span class="sd">    &gt;&gt;&gt; base_params = {&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : None}</span>
+<span class="sd">    &gt;&gt;&gt; param_iter = ParamIter(base_params, &#39;exponent&#39;, [-2, 1, 0])</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_multi_across_values(sim_powerlaw, param_iter, n_sims=2)</span>
+
+<span class="sd">    Simulate multiple powerlaw signals from manually defined set of simulation parameters:</span>
+
+<span class="sd">    &gt;&gt;&gt; params = [{&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : -2},</span>
+<span class="sd">    ...           {&#39;n_seconds&#39; : 2, &#39;fs&#39; : 250, &#39;exponent&#39; : -1}]</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_multi_across_values(sim_powerlaw, params, n_sims=2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">MultiSimulations</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                            <span class="n">component</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;component&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">cur_params</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">sims</span><span class="o">.</span><span class="n">add_signals</span><span class="p">(</span><span class="n">sim_multiple</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">cur_params</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">sims</span></div>
+
+
+<div class="viewcode-block" id="sim_from_sampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.multi.sim_from_sampler.html#neurodsp.sim.multi.sim_from_sampler">[docs]</a><span class="k">def</span> <span class="nf">sim_from_sampler</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">sampler</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a set of signals from a parameter sampler.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : str or callable</span>
+<span class="sd">        Function to create the simulated time series.</span>
+<span class="sd">        If string, should be the name of the desired simulation function.</span>
+<span class="sd">    sampler : ParamSampler</span>
+<span class="sd">        Parameter definition to sample from.</span>
+<span class="sd">    n_sims : int</span>
+<span class="sd">        Number of simulations to create per parameter definition.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sims : VariableSimulations</span>
+<span class="sd">        Simulations object with simulated time series and metadata.</span>
+<span class="sd">        Simulated signals are in the &#39;signals&#39; attribute with shape [n_sims, sig_length].</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Simulate multiple powerlaw signals using a parameter sampler:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.aperiodic import sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim.update import create_updater, create_sampler, ParamSampler</span>
+<span class="sd">    &gt;&gt;&gt; params = {&#39;n_seconds&#39; : 10, &#39;fs&#39; : 250, &#39;exponent&#39; : None}</span>
+<span class="sd">    &gt;&gt;&gt; samplers = {create_updater(&#39;exponent&#39;) : create_sampler([-2, -1, 0])}</span>
+<span class="sd">    &gt;&gt;&gt; param_sampler = ParamSampler(params, samplers)</span>
+<span class="sd">    &gt;&gt;&gt; sims = sim_from_sampler(sim_powerlaw, param_sampler, n_sims=2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">VariableSimulations</span><span class="p">(</span><span class="n">n_sims</span><span class="p">,</span> <span class="n">get_base_params</span><span class="p">(</span><span class="n">sampler</span><span class="p">),</span> <span class="n">function</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sig_sampler</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">sampler</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">n_sims</span><span class="p">)):</span>
+        <span class="n">sims</span><span class="o">.</span><span class="n">add_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">ind</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sims</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

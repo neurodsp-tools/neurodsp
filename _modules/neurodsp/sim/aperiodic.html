@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.sim.aperiodic &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.sim.aperiodic &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -117,19 +116,19 @@
 <span class="kn">from</span> <span class="nn">neurodsp.filt</span> <span class="kn">import</span> <span class="n">filter_signal</span><span class="p">,</span> <span class="n">infer_passtype</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt.fir</span> <span class="kn">import</span> <span class="n">compute_filter_length</span>
 <span class="kn">from</span> <span class="nn">neurodsp.filt.checks</span> <span class="kn">import</span> <span class="n">check_filter_definition</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">remove_nans</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.norm</span> <span class="kn">import</span> <span class="n">normalize_sig</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.outliers</span> <span class="kn">import</span> <span class="n">remove_nans</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">normalize</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_range</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span><span class="p">,</span> <span class="n">compute_nsamples</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">normalize</span>
-<span class="kn">from</span> <span class="nn">neurodsp.utils.norm</span> <span class="kn">import</span> <span class="n">normalize_sig</span>
-<span class="kn">from</span> <span class="nn">neurodsp.sim.utils</span> <span class="kn">import</span> <span class="n">rotate_timeseries</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.modulate</span> <span class="kn">import</span> <span class="n">rotate_timeseries</span>
 <span class="kn">from</span> <span class="nn">neurodsp.sim.transients</span> <span class="kn">import</span> <span class="n">sim_synaptic_kernel</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
 <div class="viewcode-block" id="sim_poisson_pop"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_poisson_pop.html#neurodsp.sim.sim_poisson_pop">[docs]</a><span class="k">def</span> <span class="nf">sim_poisson_pop</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a Poisson population.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a Poisson population.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -183,7 +182,7 @@
 <div class="viewcode-block" id="sim_synaptic_current"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_synaptic_current.html#neurodsp.sim.sim_synaptic_current">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_synaptic_current</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">firing_rate</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span>
                          <span class="n">tau_r</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">tau_d</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">t_ker</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -239,7 +238,7 @@
 
 <div class="viewcode-block" id="sim_knee"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_knee.html#neurodsp.sim.sim_knee">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_knee</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent1</span><span class="p">,</span> <span class="n">exponent2</span><span class="p">,</span> <span class="n">knee</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a signal whose power spectrum has a 1/f structure with a knee.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a signal whose power spectrum has a 1/f structure with a knee.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -297,7 +296,7 @@
 
 
 <div class="viewcode-block" id="sim_random_walk"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_random_walk.html#neurodsp.sim.sim_random_walk">[docs]</a><span class="k">def</span> <span class="nf">sim_random_walk</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -368,7 +367,7 @@
 
 <div class="viewcode-block" id="sim_powerlaw"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_powerlaw.html#neurodsp.sim.sim_powerlaw">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_powerlaw</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a power law time series, with a specified exponent.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a power law time series, with a specified exponent.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -438,7 +437,7 @@
 
 <div class="viewcode-block" id="sim_frac_gaussian_noise"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_frac_gaussian_noise.html#neurodsp.sim.sim_frac_gaussian_noise">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_frac_gaussian_noise</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hurst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional gaussian noise.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional gaussian noise.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -521,7 +520,7 @@
 
 <div class="viewcode-block" id="sim_frac_brownian_motion"><a class="viewcode-back" href="../../../generated/neurodsp.sim.sim_frac_brownian_motion.html#neurodsp.sim.sim_frac_brownian_motion">[docs]</a><span class="nd">@normalize</span>
 <span class="k">def</span> <span class="nf">sim_frac_brownian_motion</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">hurst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional brownian motion.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate a timeseries as fractional brownian motion.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -546,7 +545,7 @@
 <span class="sd">    The time series can be specified with either a desired power law exponent,</span>
 <span class="sd">    or alternatively with a specified Hurst parameter.</span>
 
-<span class="sd">    Note that when specifying there can be some bias leading to a steeper than expected</span>
+<span class="sd">    Note that when specifying exponent there can be some bias leading to a steeper than expected</span>
 <span class="sd">    spectrum of the simulated signal. This bias is higher for exponent values near to 1,</span>
 <span class="sd">    and may be more severe in shorter signals.</span>
 
@@ -594,7 +593,7 @@
 
 
 <span class="k">def</span> <span class="nf">_create_powerlaw</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create a power law time series.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a power law time series.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -638,8 +637,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

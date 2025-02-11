@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.spectral.utils &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.spectral.utils &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,15 +110,16 @@
 <span></span><span class="sd">&quot;&quot;&quot;Utility function for neurodsp.spectral.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">next_fast_len</span>
 
 <span class="c1"># Alias a function that has moved, for backwards compatibility</span>
-<span class="kn">from</span> <span class="nn">neurodsp.sim.utils</span> <span class="kn">import</span> <span class="n">rotate_spectrum</span> <span class="k">as</span> <span class="n">rotate_powerlaw</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.modulate</span> <span class="kn">import</span> <span class="n">rotate_spectrum</span> <span class="k">as</span> <span class="n">rotate_powerlaw</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
 <div class="viewcode-block" id="trim_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.trim_spectrum.html#neurodsp.spectral.trim_spectrum">[docs]</a><span class="k">def</span> <span class="nf">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">power_spectra</span><span class="p">,</span> <span class="n">f_range</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extract a frequency range of interest from power spectra.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a frequency range of interest from power spectra.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -167,7 +167,7 @@
 
 
 <div class="viewcode-block" id="trim_spectrogram"><a class="viewcode-back" href="../../../generated/neurodsp.spectral.trim_spectrogram.html#neurodsp.spectral.trim_spectrogram">[docs]</a><span class="k">def</span> <span class="nf">trim_spectrogram</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">spg</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extract a frequency or time range of interest from a spectrogram.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a frequency or time range of interest from a spectrogram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -237,6 +237,122 @@
         <span class="n">times_ext</span> <span class="o">=</span> <span class="n">times</span>
 
     <span class="k">return</span> <span class="n">freqs_ext</span><span class="p">,</span> <span class="n">times_ext</span><span class="p">,</span> <span class="n">spg_ext</span></div>
+
+
+<span class="k">def</span> <span class="nf">window_pad</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span><span class="p">,</span>
+               <span class="n">nwindows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nsamples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad_left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad_right</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads windows (for Welch&#39;s PSD) with zeros.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d or 2d array</span>
+<span class="sd">        Time series.</span>
+<span class="sd">    nperseg : int</span>
+<span class="sd">        Length of each segment, in number of samples, at the beginning and end of each window.</span>
+<span class="sd">    noverlap : int</span>
+<span class="sd">        Number of points to overlap between segments, applied prior to zero padding.</span>
+<span class="sd">    npad : int</span>
+<span class="sd">        Number of samples to zero pad windows per side.</span>
+<span class="sd">    fast_len : bool, optional</span>
+<span class="sd">        Moves nperseg to the fastest length to reduce computation.</span>
+<span class="sd">        Adjusts zero-padding to account for the new nperseg.</span>
+<span class="sd">        See scipy.fft.next_fast_len for details.</span>
+<span class="sd">    nwindows, nsamples, pad_left, pad_right : int, optional, default: None</span>
+<span class="sd">        Prevents redundant computation when sig is 2d.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig_windowed : 1d or 2d array</span>
+<span class="sd">        Windowed signal, with zeros padded at the around each window.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Determine the number of samples and padding once,</span>
+        <span class="c1">#   to prevent redundant computation in the loop</span>
+        <span class="n">nwindows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">nperseg</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">nsamples</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">pad_left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">pad_right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nsamples</span><span class="p">,</span> <span class="n">pad_left</span><span class="p">,</span> <span class="n">pad_right</span> <span class="o">=</span> <span class="n">_find_pad_size</span><span class="p">(</span>
+                <span class="n">nperseg</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Recursively call window_pad on each signal</span>
+        <span class="k">for</span> <span class="n">sind</span><span class="p">,</span> <span class="n">csig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sig</span><span class="p">):</span>
+
+            <span class="n">_sig_win</span><span class="p">,</span> <span class="n">_nperseg</span><span class="p">,</span> <span class="n">_noverlap</span> <span class="o">=</span> <span class="n">window_pad</span><span class="p">(</span>
+                <span class="c1"># Required arguments</span>
+                <span class="n">csig</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span><span class="p">,</span>
+                <span class="c1"># Optional arguments to prevent redundant computation</span>
+                <span class="n">nwindows</span><span class="p">,</span> <span class="n">nsamples</span><span class="p">,</span> <span class="n">pad_left</span><span class="p">,</span> <span class="n">pad_right</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sind</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Initialize windowed array</span>
+                <span class="n">sig_windowed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">_sig_win</span><span class="p">)))</span>
+
+            <span class="n">sig_windowed</span><span class="p">[</span><span class="n">sind</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sig_win</span>
+
+        <span class="c1"># Update nperseg and noverlap</span>
+        <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span> <span class="o">=</span> <span class="n">_nperseg</span><span class="p">,</span> <span class="n">_noverlap</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># Compute the number of windows, samples, and padding.</span>
+        <span class="c1">#   Do not recompute if called from the 2d case</span>
+        <span class="k">if</span> <span class="n">nwindows</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nwindows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">/</span> <span class="n">nperseg</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">nsamples</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">pad_left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">pad_right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Skipped if called from the 2d case</span>
+            <span class="n">nsamples</span><span class="p">,</span> <span class="n">pad_left</span><span class="p">,</span> <span class="n">pad_right</span> <span class="o">=</span> <span class="n">_find_pad_size</span><span class="p">(</span>
+                <span class="n">nperseg</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Window signal</span>
+        <span class="n">sig_windowed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nwindows</span><span class="p">,</span> <span class="n">nsamples</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">wind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nwindows</span><span class="p">):</span>
+
+            <span class="c1"># Signal indices</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">wind</span> <span class="o">*</span> <span class="n">nperseg</span><span class="p">)</span> <span class="o">-</span> <span class="n">noverlap</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="n">start</span> <span class="o">+</span> <span class="n">nperseg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span> <span class="o">!=</span> <span class="n">nperseg</span><span class="p">:</span>
+                <span class="c1"># Stop if a full window can&#39;t be created at end of signal</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Pad</span>
+            <span class="n">sig_windowed</span><span class="p">[</span><span class="n">wind</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="p">(</span><span class="n">pad_left</span><span class="p">,</span> <span class="n">pad_right</span><span class="p">))</span>
+
+        <span class="c1"># Removed incomplete windows and flatten</span>
+        <span class="n">sig_windowed</span> <span class="o">=</span> <span class="n">sig_windowed</span><span class="p">[:</span><span class="n">wind</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="c1"># Update nperseg</span>
+        <span class="n">nperseg</span> <span class="o">+=</span> <span class="p">(</span><span class="n">pad_left</span> <span class="o">+</span> <span class="n">pad_right</span><span class="p">)</span>
+
+        <span class="c1"># Overlap is zero since overlapping segments was applied prior to padding each window</span>
+        <span class="n">noverlap</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">sig_windowed</span><span class="p">,</span> <span class="n">nperseg</span><span class="p">,</span> <span class="n">noverlap</span>
+
+
+<span class="k">def</span> <span class="nf">_find_pad_size</span><span class="p">(</span><span class="n">nperseg</span><span class="p">,</span> <span class="n">npad</span><span class="p">,</span> <span class="n">fast_len</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine pad size and number of samples required.&quot;&quot;&quot;</span>
+
+    <span class="n">nsamples</span> <span class="o">=</span> <span class="n">nperseg</span> <span class="o">+</span> <span class="n">npad</span>
+
+    <span class="n">pad_left</span> <span class="o">=</span> <span class="n">npad</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">pad_right</span> <span class="o">=</span> <span class="n">npad</span> <span class="o">-</span> <span class="n">pad_left</span>
+
+    <span class="k">if</span> <span class="n">fast_len</span><span class="p">:</span>
+        <span class="c1"># Increase nsamples to the next fastest length and update for zero-padding size</span>
+        <span class="n">nsamples</span> <span class="o">=</span> <span class="n">next_fast_len</span><span class="p">(</span><span class="n">nsamples</span><span class="p">)</span>
+
+        <span class="c1"># New padding</span>
+        <span class="n">npad</span> <span class="o">=</span> <span class="n">nsamples</span> <span class="o">-</span> <span class="n">nperseg</span>
+        <span class="n">pad_left</span> <span class="o">=</span> <span class="n">npad</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">pad_right</span> <span class="o">=</span> <span class="n">npad</span> <span class="o">-</span> <span class="n">pad_left</span>
+
+    <span class="k">return</span> <span class="n">nsamples</span><span class="p">,</span> <span class="n">pad_left</span><span class="p">,</span> <span class="n">pad_right</span>
 </pre></div>
 
     </div>
@@ -250,8 +366,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

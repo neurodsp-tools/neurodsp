@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.sim.params &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.params</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulation parameter related objects.</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">- once we hit minimum python of 3.9, dictionary merging can by updated to use |</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<span class="n">BASE_PARAMS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;n_seconds&#39;</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span><span class="p">]</span>
+
+<span class="c1">## SIMULATION PARAMETER FUNCTIONS</span>
+
+<span class="k">def</span> <span class="nf">get_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get base parameters from a parameter definition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict or list of dict or Object</span>
+<span class="sd">        Parameter definition.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    base : dict</span>
+<span class="sd">        Base parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <span class="n">BaseUpdater</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">_get_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">_get_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">BaseUpdater</span><span class="p">):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s1">&#39;base&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter definition not understood.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">base</span>
+
+
+<span class="k">def</span> <span class="nf">_get_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sub-function to get base parameters from a dictionary of parameters.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">BASE_PARAMS</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">drop_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop base parameters from a parameter definition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict or list of dict</span>
+<span class="sd">        Parameter definition(s).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    params : dict or list of dict</span>
+<span class="sd">        Parameter definition(s), excluding base parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">_drop_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">_drop_base_params</span><span class="p">(</span><span class="n">cparams</span><span class="p">)</span> <span class="k">for</span> <span class="n">cparams</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter definition not understood.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span>
+
+
+<span class="k">def</span> <span class="nf">_drop_base_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sub-function to drop base parameters from a dictionary of parameters.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BASE_PARAMS</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">get_param_values</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">extract</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a set of parameter values from a set of parameter definitions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : list of dict</span>
+<span class="sd">        Parameter definitions for multiple simulations.</span>
+<span class="sd">    extract : str</span>
+<span class="sd">        Name of the parameter to extract.</span>
+<span class="sd">    component : str, optional</span>
+<span class="sd">        Which component to extract the parameter from.</span>
+<span class="sd">        Only used if the parameter definition is for a multi-component simulation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    values : list</span>
+<span class="sd">        Extracted parameter values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">component</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span><span class="p">[</span><span class="n">cparams</span><span class="p">[</span><span class="s1">&#39;components&#39;</span><span class="p">][</span><span class="n">component</span><span class="p">][</span><span class="n">extract</span><span class="p">]</span> <span class="k">for</span> <span class="n">cparams</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">extract</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">cparams</span><span class="p">[</span><span class="n">extract</span><span class="p">]</span> <span class="k">for</span> <span class="n">cparams</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">values</span>
+
+
+<span class="c1">## SIMULATION PARAMETER OBJECTS</span>
+
+<div class="viewcode-block" id="SimParams"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams">[docs]</a><span class="k">class</span> <span class="nc">SimParams</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for managing simulation parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base : dict</span>
+<span class="sd">        Dictionary of base parameters, common across all parameter definitions.</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Dictionary of created simulation parameter definitions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimParams.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize SimParams object.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_seconds</span> <span class="o">=</span> <span class="n">n_seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make object subscriptable, to access stored simulation parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label to access simulation parameters from `params`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">[</span><span class="n">label</span><span class="p">]}</span>
+
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define object contents as whether label exists in object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label to check whether it exists in object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the base parameters, common across all simulations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        base_params : dict</span>
+<span class="sd">            Definition of the current base parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;n_seconds&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_seconds</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">}</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of labels for the defined parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        labels : list of str</span>
+<span class="sd">            Labels for all defined simulation parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of currently defined simulation parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : dict</span>
+<span class="sd">            Dictionary of currently defined simulation parameters.</span>
+<span class="sd">            Each key is a label for the parameter definition.</span>
+<span class="sd">            Each value is a dictionary of simulations parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">label</span> <span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">}</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<div class="viewcode-block" id="SimParams.make_params"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.make_params">[docs]</a>    <span class="k">def</span> <span class="nf">make_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a simulation parameter definition from given parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params : dict or list of dict</span>
+<span class="sd">            Parameter definition(s) to create simulation parameter definition.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments to create the simulation definition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : dict</span>
+<span class="sd">            Parameter definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="SimParams.register"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new simulation parameter definition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label to set simulation parameters under in `params`.</span>
+<span class="sd">        params : dict or list of dict</span>
+<span class="sd">            Parameter definition(s) to create simulation parameter definition.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments to create the simulation definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimParams.register_group"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.register_group">[docs]</a>    <span class="k">def</span> <span class="nf">register_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register multiple simulation parameter definitions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        group : dict</span>
+<span class="sd">            Dictionary of simulation parameters.</span>
+<span class="sd">            Each key should be a label, and each set of values a dictionary of parameters.</span>
+<span class="sd">        clear : bool, optional, default: False</span>
+<span class="sd">            If True, clears current parameter definitions before adding new group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimParams.update_base"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.update_base">[docs]</a>    <span class="k">def</span> <span class="nf">update_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update base parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_seconds : float, optional</span>
+<span class="sd">            Simulation time, in seconds.</span>
+<span class="sd">        fs : float, optional</span>
+<span class="sd">            Sampling rate of simulated signal, in Hz.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If set as False, value will not be updated.</span>
+<span class="sd">        If set as None, value will be updated to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">n_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_seconds</span> <span class="o">=</span> <span class="n">n_seconds</span>
+        <span class="k">if</span> <span class="n">fs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span></div>
+
+
+<div class="viewcode-block" id="SimParams.update_param"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.update_param">[docs]</a>    <span class="k">def</span> <span class="nf">update_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a simulation parameter definition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the parameter definition.</span>
+<span class="sd">        attribute : str</span>
+<span class="sd">            Name of the attribute to update.</span>
+<span class="sd">        new_value : obj</span>
+<span class="sd">            New value to give the attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span></div>
+
+
+<div class="viewcode-block" id="SimParams.clear"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clear_base</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;Clear parameter definitions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clear_base : bool, optional, default: False</span>
+<span class="sd">            Whether to also clear base parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">clear_base</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_base</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimParams.to_iters"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.to_iters">[docs]</a>    <span class="k">def</span> <span class="nf">to_iters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to a SimIters object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        iters : SimIters</span>
+<span class="sd">            A converted object, initialized with the current base parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">iters</span> <span class="o">=</span> <span class="n">SimIters</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
+        <span class="n">iters</span><span class="o">.</span><span class="n">register_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">iters</span></div>
+
+
+<div class="viewcode-block" id="SimParams.to_samplers"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.to_samplers">[docs]</a>    <span class="k">def</span> <span class="nf">to_samplers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to a SimSamplers object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_samples : int, optional</span>
+<span class="sd">            The number of parameter iterations to set as max.</span>
+<span class="sd">            If None, samplers are created as infinite generators.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        samplers : SimSamplers</span>
+<span class="sd">            A converted object, initialized with the current base parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">samplers</span> <span class="o">=</span> <span class="n">SimSamplers</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="n">samplers</span><span class="o">.</span><span class="n">register_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">samplers</span></div>
+
+
+<div class="viewcode-block" id="SimParams.copy"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimParams.html#neurodsp.sim.params.SimParams.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a copy of the current object.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_make_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sub-function to make parameter definition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params : dict or list of dict</span>
+<span class="sd">            Parameter definition(s) to create simulation parameter definition.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments to create the simulation definition.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : dict</span>
+<span class="sd">            Parameter definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span> <span class="k">else</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">comps</span> <span class="o">=</span> <span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span> <span class="k">if</span> <span class="n">params</span> <span class="k">else</span> <span class="n">kwargs</span>
+            <span class="n">out_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_combined_params</span><span class="p">(</span><span class="n">comps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_params</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+
+        <span class="c1"># If any base parameters were passed in, clear them</span>
+        <span class="n">out_params</span> <span class="o">=</span> <span class="n">drop_base_params</span><span class="p">(</span><span class="n">out_params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out_params</span>
+
+
+    <span class="k">def</span> <span class="nf">_make_combined_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">component_variances</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sub-function to make parameters for combined simulations, specifying multiple components.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        components : list of dict</span>
+<span class="sd">            List of simulation component parameters.</span>
+<span class="sd">        component_variances : list of float</span>
+<span class="sd">            Component variances for the combined simulation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        params : dict</span>
+<span class="sd">            Parameter definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">out_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">comps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+            <span class="n">comps</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">comp</span><span class="p">))</span>
+        <span class="n">out_params</span><span class="p">[</span><span class="s1">&#39;components&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">comps</span>
+
+        <span class="k">if</span> <span class="n">component_variances</span><span class="p">:</span>
+            <span class="n">out_params</span><span class="p">[</span><span class="s1">&#39;component_variances&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">component_variances</span>
+
+        <span class="k">return</span> <span class="n">out_params</span></div>
+
+
+<div class="viewcode-block" id="SimIters"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters">[docs]</a><span class="k">class</span> <span class="nc">SimIters</span><span class="p">(</span><span class="n">SimParams</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for managing simulation iterators.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimIters.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize SimIters objects.&quot;&quot;&quot;</span>
+
+        <span class="n">SimParams</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iters</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make object subscriptable, to access simulation iterators.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label to access and create parameter iterator from `_iters`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_iter</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_iters</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">iters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of currently defined simulation iterators.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        iters : dict</span>
+<span class="sd">            Dictionary of currently defined simulation iterators.</span>
+<span class="sd">            Each key is a label for the parameter iterator.</span>
+<span class="sd">            Each value is a ParamIter object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">label</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_iter</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iters</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of labels for the defined iterators.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        labels : list of str</span>
+<span class="sd">            Labels for all defined iterators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="SimIters.make_iter"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.make_iter">[docs]</a>    <span class="k">def</span> <span class="nf">make_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create iterator to step across simulation parameter values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the simulation parameters.</span>
+<span class="sd">        update : str</span>
+<span class="sd">            Name of the parameter to update.</span>
+<span class="sd">        values : 1d array</span>
+<span class="sd">            Values to iterate across.</span>
+<span class="sd">        component : str, optional</span>
+<span class="sd">            Which component to update the parameter in.</span>
+<span class="sd">            Only used if the parameter definition is for a multi-component simulation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ParamIter</span>
+<span class="sd">            Generator object for iterating across simulation parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <span class="n">ParamIter</span>
+
+        <span class="k">assert</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s2">&quot;Label for simulation parameters not found.&quot;</span>
+
+        <span class="k">return</span> <span class="n">ParamIter</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">update</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimIters.register_iter"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.register_iter">[docs]</a>    <span class="k">def</span> <span class="nf">register_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register an iterator definition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name to give the registered iterator.</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the simulation parameters.</span>
+<span class="sd">        update : str</span>
+<span class="sd">            Name of the parameter to update.</span>
+<span class="sd">        values : 1d array</span>
+<span class="sd">            Values to iterate across.</span>
+<span class="sd">        component : str, optional</span>
+<span class="sd">            Which component to update the parameter in.</span>
+<span class="sd">            Only used if the parameter definition is for a multi-component simulation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;label&#39;</span> <span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+            <span class="s1">&#39;update&#39;</span> <span class="p">:</span> <span class="n">update</span><span class="p">,</span>
+            <span class="s1">&#39;values&#39;</span> <span class="p">:</span> <span class="n">values</span><span class="p">,</span>
+            <span class="s1">&#39;component&#39;</span> <span class="p">:</span> <span class="n">component</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="SimIters.register_group_iters"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.register_group_iters">[docs]</a>    <span class="k">def</span> <span class="nf">register_group_iters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a group of simulation iterators.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        group : list of list or list of dict</span>
+<span class="sd">            Set of simulation iterator definitions.</span>
+<span class="sd">        clear : bool, optional, default: False</span>
+<span class="sd">            If True, clears current parameter iterators before adding new group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">iterdef</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterdef</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_iter</span><span class="p">(</span><span class="o">*</span><span class="n">iterdef</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterdef</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_iter</span><span class="p">(</span><span class="o">**</span><span class="n">iterdef</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimIters.update_iter"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.update_iter">[docs]</a>    <span class="k">def</span> <span class="nf">update_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the definition of an iterator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the iterator.</span>
+<span class="sd">        attribute : str</span>
+<span class="sd">            Name of the attribute to update.</span>
+<span class="sd">        new_value : obj</span>
+<span class="sd">            New value to give the attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iters</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span></div>
+
+
+<div class="viewcode-block" id="SimIters.clear"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimIters.html#neurodsp.sim.params.SimIters.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clear_iters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clear_params</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clear_base</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;Clear iterator and/or parameter definitions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clear_iters : bool, optional, default: True</span>
+<span class="sd">            Whether to clear the currently defined iterators.</span>
+<span class="sd">        clear_params : bool, optional, default: False</span>
+<span class="sd">            Whether to clear the currently defined simulation parameters.</span>
+<span class="sd">        clear_base : bool, optional, default: False</span>
+<span class="sd">            Whether to also clear base parameters.</span>
+<span class="sd">            Only applied if `clear_params` is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">clear_iters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_iters</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">clear_params</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">clear_base</span><span class="o">=</span><span class="n">clear_base</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SimSamplers"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers">[docs]</a><span class="k">class</span> <span class="nc">SimSamplers</span><span class="p">(</span><span class="n">SimParams</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for sampling simulation parameter definitions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_seconds : float</span>
+<span class="sd">        Simulation time, in seconds.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of simulated signal, in Hz.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        The number of parameter iterations to set as max.</span>
+<span class="sd">        If None, samplers are created as infinite generators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimSamplers.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize SimSamplers objects.&quot;&quot;&quot;</span>
+
+        <span class="n">SimParams</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="o">=</span> <span class="n">n_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make object subscriptable, to access simulation iterators.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label to access and create parameter sampler from `_samplers`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_sampler</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of labels for the defined iterators.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">samplers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the set of currently defined simulation samplers.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        samplers : dict</span>
+<span class="sd">            Dictionary of currently defined simulation samplers.</span>
+<span class="sd">            Each key is a label for the parameter sampler.</span>
+<span class="sd">            Each value is a ParamSampler object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">label</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_sampler</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<div class="viewcode-block" id="SimSamplers.make_sampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.make_sampler">[docs]</a>    <span class="k">def</span> <span class="nf">make_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">samplers</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sampler to sample simulation parameter values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the simulation parameters.</span>
+<span class="sd">        samplers : dict</span>
+<span class="sd">            Sampler definitions to update parameters with.</span>
+<span class="sd">            Each key should be a callable, a parameter updater function.</span>
+<span class="sd">            Each value should be a generator, to sample updated parameter values from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ParamSampler</span>
+<span class="sd">            Generator object for sampling simulation parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">neurodsp.sim.update</span> <span class="kn">import</span> <span class="n">ParamSampler</span>
+
+        <span class="k">return</span> <span class="n">ParamSampler</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">samplers</span><span class="p">,</span>
+                            <span class="n">n_samples</span> <span class="k">if</span> <span class="n">n_samples</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimSamplers.register_sampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.register_sampler">[docs]</a>    <span class="k">def</span> <span class="nf">register_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">samplers</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a sampler definition.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name to give the registered iterator.</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the simulation parameters.</span>
+<span class="sd">        samplers : dict</span>
+<span class="sd">            Sampler definitions to update parameters with.</span>
+<span class="sd">            Each key should be a callable, a parameter updater function.</span>
+<span class="sd">            Each value should be a generator, to sample updated parameter values from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;label&#39;</span> <span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+            <span class="s1">&#39;samplers&#39;</span> <span class="p">:</span> <span class="n">samplers</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="SimSamplers.register_group_samplers"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.register_group_samplers">[docs]</a>    <span class="k">def</span> <span class="nf">register_group_samplers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a group of simulation samplers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        group : list of list or list of dict</span>
+<span class="sd">            Set of simulation iterator definitions.</span>
+<span class="sd">        clear : bool, optional, default: False</span>
+<span class="sd">            If True, clears current parameter samplers before adding new group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">samplerdef</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">samplerdef</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_sampler</span><span class="p">(</span><span class="o">*</span><span class="n">samplerdef</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">samplerdef</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_sampler</span><span class="p">(</span><span class="o">**</span><span class="n">samplerdef</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimSamplers.update_sampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.update_sampler">[docs]</a>    <span class="k">def</span> <span class="nf">update_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the definition of a sampler.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : str</span>
+<span class="sd">            Label for the sampler.</span>
+<span class="sd">        attribute : str</span>
+<span class="sd">            Name of the attribute to update.</span>
+<span class="sd">        new_value : obj</span>
+<span class="sd">            New value to give the attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span></div>
+
+
+<div class="viewcode-block" id="SimSamplers.clear"><a class="viewcode-back" href="../../../generated/neurodsp.sim.params.SimSamplers.html#neurodsp.sim.params.SimSamplers.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clear_samplers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clear_params</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clear_base</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;Clear sampler and/or parameter definitions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clear_samplers : bool, optional, default: True</span>
+<span class="sd">            Whether to clear the currently defined samplers.</span>
+<span class="sd">        clear_params : bool, optional, default: False</span>
+<span class="sd">            Whether to clear the currently defined simulation parameters.</span>
+<span class="sd">        clear_base : bool, optional, default: False</span>
+<span class="sd">            Whether to also clear base parameters.</span>
+<span class="sd">            Only applied if `clear_params` is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">clear_samplers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_samplers</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">clear_params</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">clear_base</span><span class="o">=</span><span class="n">clear_base</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

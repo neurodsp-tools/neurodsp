@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.burst.detect_bursts_dual_threshold &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,15 +108,15 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-burst-detect-bursts-dual-threshold">
-<h1>neurodsp.burst.detect_bursts_dual_threshold<a class="headerlink" href="#neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.burst.detect_bursts_dual_threshold<a class="headerlink" href="#neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.burst.detect_bursts_dual_threshold">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.burst.</span></span><span class="sig-name descname"><span class="pre">detect_bursts_dual_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dual_thresh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_n_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_burst_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">magnitude_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'amplitude'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">filter_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/burst/dualthresh.html#detect_bursts_dual_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.burst.detect_bursts_dual_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect bursts in a signal using the dual threshold algorithm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series.</p>
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series.</p>
 </dd>
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
 </dd>
@@ -141,9 +140,9 @@ Only used if <cite>f_range</cite> is not defined, or if <cite>min_n_cycles</cite
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>is_burst</strong><span class="classifier">1d array</span></dt><dd><p>Boolean indication of where bursts are present in the input signal.
+<dt><strong>is_burst</strong><span class="classifier">array</span></dt><dd><p>Boolean indication of where bursts are present in the input signal.
 True indicates that a burst was detected at that sample, otherwise False.</p>
 </dd>
 </dl>
@@ -152,15 +151,16 @@ True indicates that a burst was detected at that sample, otherwise False.</p>
 <p class="rubric">Notes</p>
 <p>The dual-threshold burst detection algorithm was originally proposed in <a class="reference internal" href="#rded6269d9c01-1" id="id1">[1]</a>.</p>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="rded6269d9c01-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Feingold, J., Gibson, D. J., DePasquale, B., &amp; Graybiel, A. M. (2015).
+<div role="list" class="citation-list">
+<div class="citation" id="rded6269d9c01-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Feingold, J., Gibson, D. J., DePasquale, B., &amp; Graybiel, A. M. (2015).
 Bursts of beta oscillation differentiate postperformance activity in
 the striatum and motor cortex of monkeys performing movement tasks.
 Proceedings of the National Academy of Sciences, 112(44), 13687–13692.
 DOI: <a class="reference external" href="https://doi.org/10.1073/pnas.1517629112">https://doi.org/10.1073/pnas.1517629112</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <p>Detect bursts using the dual threshold algorithm:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
@@ -174,7 +174,7 @@ DOI: <a class="reference external" href="https://doi.org/10.1073/pnas.1517629112
 </dd></dl>
 
 <section id="examples-using-neurodsp-burst-detect-bursts-dual-threshold">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.detect_bursts_dual_threshold</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this headline">¶</a></h2>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.burst.detect_bursts_dual_threshold</span></code><a class="headerlink" href="#examples-using-neurodsp-burst-detect-bursts-dual-threshold" title="Permalink to this heading">¶</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><img alt="" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></p>
   <div class="sphx-glr-thumbnail-title">Using NeuroDSP with MNE</div>
@@ -196,8 +196,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1073/pnas.1517629112
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

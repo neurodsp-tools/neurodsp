@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.filt.fir &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.filt.fir &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,7 +110,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Filter signals with FIR filters.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">firwin</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">firwin</span><span class="p">,</span> <span class="n">convolve</span>
 
 <span class="kn">from</span> <span class="nn">neurodsp.utils</span> <span class="kn">import</span> <span class="n">remove_nans</span><span class="p">,</span> <span class="n">restore_nans</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
@@ -123,9 +122,10 @@
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="filter_signal_fir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.filter_signal_fir.html#neurodsp.filt.filter_signal_fir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                      <span class="n">print_transitions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Apply an FIR filter to a signal.</span>
+<div class="viewcode-block" id="filter_signal_fir"><a class="viewcode-back" href="../../../generated/neurodsp.filt.filter_signal_fir.html#neurodsp.filt.filter_signal_fir">[docs]</a><span class="k">def</span> <span class="nf">filter_signal_fir</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">remove_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_transitions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">return_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply an FIR filter to a signal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -145,11 +145,13 @@
 <span class="sd">        For &#39;bandpass&#39; &amp; &#39;bandstop&#39;, must be a tuple.</span>
 <span class="sd">        For &#39;lowpass&#39; or &#39;highpass&#39;, can be a float that specifies pass frequency, or can be</span>
 <span class="sd">        a tuple and is assumed to be (None, f_hi) for &#39;lowpass&#39;, and (f_lo, None) for &#39;highpass&#39;.</span>
-<span class="sd">    n_cycles : float, optional, default: 3</span>
-<span class="sd">        Length of filter, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
-<span class="sd">        This parameter is overwritten by `n_seconds`, if provided.</span>
+<span class="sd">    n_cycles : float, optional</span>
+<span class="sd">        Filter length, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
+<span class="sd">        If not provided, and `n_seconds` is also not defined, defaults to 3.</span>
 <span class="sd">    n_seconds : float, optional</span>
-<span class="sd">        Length of filter, in seconds. This parameter overwrites `n_cycles`.</span>
+<span class="sd">        Filter length, in seconds.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
 <span class="sd">    remove_edges : bool, optional</span>
 <span class="sd">        If True, replace samples within half the kernel length to be np.nan.</span>
 <span class="sd">    print_transitions : bool, optional, default: False</span>
@@ -216,7 +218,7 @@
 
 <span class="nd">@multidim</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">apply_fir_filter</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">filter_coefs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Apply an FIR filter to a signal.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply an FIR filter to a signal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -241,11 +243,11 @@
 <span class="sd">    &gt;&gt;&gt; filt_sig = apply_fir_filter(sig, filter_coefs)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">filter_coefs</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">convolve</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">filter_coefs</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="design_fir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_fir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Design an FIR filter.</span>
+<div class="viewcode-block" id="design_fir_filter"><a class="viewcode-back" href="../../../generated/neurodsp.filt.design_fir_filter.html#neurodsp.filt.design_fir_filter">[docs]</a><span class="k">def</span> <span class="nf">design_fir_filter</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Design an FIR filter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -263,11 +265,13 @@
 <span class="sd">        For &#39;bandpass&#39; &amp; &#39;bandstop&#39;, must be a tuple.</span>
 <span class="sd">        For &#39;lowpass&#39; or &#39;highpass&#39;, can be a float that specifies pass frequency, or can be</span>
 <span class="sd">        a tuple and is assumed to be (None, f_hi) for &#39;lowpass&#39;, and (f_lo, None) for &#39;highpass&#39;.</span>
-<span class="sd">    n_cycles : float, optional, default: 3</span>
-<span class="sd">        Length of filter, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
-<span class="sd">        This parameter is overwritten by `n_seconds`, if provided.</span>
-<span class="sd">    n_seconds : float or None, optional</span>
-<span class="sd">        Length of filter, in seconds. This parameter overwrites `n_cycles`.</span>
+<span class="sd">    n_cycles : float, optional</span>
+<span class="sd">        Filter length, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
+<span class="sd">        If not provided, and `n_seconds` is also not defined, defaults to 3.</span>
+<span class="sd">    n_seconds : float, optional</span>
+<span class="sd">        Filter length, in seconds.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -281,8 +285,12 @@
 <span class="sd">    &gt;&gt;&gt; filter_coefs = design_fir_filter(fs=500, pass_type=&#39;bandpass&#39;, f_range=(1, 25))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Check filter definition</span>
     <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span> <span class="o">=</span> <span class="n">check_filter_definition</span><span class="p">(</span><span class="n">pass_type</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+
+    <span class="c1"># Default to a filter length of `n_cycles` of 3, if nothing otherwise set</span>
+    <span class="k">if</span> <span class="n">n_cycles</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_seconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">3</span>
+
     <span class="n">filt_len</span> <span class="o">=</span> <span class="n">compute_filter_length</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">,</span> <span class="n">n_seconds</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">pass_type</span> <span class="o">==</span> <span class="s1">&#39;bandpass&#39;</span><span class="p">:</span>
@@ -298,7 +306,7 @@
 
 
 <span class="k">def</span> <span class="nf">compute_filter_length</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">pass_type</span><span class="p">,</span> <span class="n">f_lo</span><span class="p">,</span> <span class="n">f_hi</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the filter length for an FIR signal given specified parameters.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the filter length for an FIR signal given specified parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -310,15 +318,22 @@
 <span class="sd">        The lower frequency range of the filter, specifying the highpass frequency, if specified.</span>
 <span class="sd">    f_hi : float or None</span>
 <span class="sd">        The higher frequency range of the filter, specifying the lowpass frequency, if specified.</span>
-<span class="sd">    n_cycles : float or None, optional</span>
-<span class="sd">        Length of filter, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
-<span class="sd">    n_seconds : float or None, optional</span>
-<span class="sd">        Length of filter, in seconds.</span>
+<span class="sd">    n_cycles : float, optional</span>
+<span class="sd">        Filter length, in number of cycles, defined at the &#39;f_lo&#39; frequency.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
+<span class="sd">    n_seconds : float, optional</span>
+<span class="sd">        Filter length, in seconds.</span>
+<span class="sd">        Either `n_cycles` or `n_seconds` can be defined to set the filter length, but not both.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    filt_len : int</span>
 <span class="sd">        The length of the specified filter.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If both `n_cycles` &amp; `n_seconds` are defined, leading to a conflict in filter length.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -326,6 +341,10 @@
 
 <span class="sd">    &gt;&gt;&gt; filt_len = compute_filter_length(fs=500, pass_type=&#39;bandpass&#39;, f_lo=1, f_hi=25, n_cycles=3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check for a conflict in defining length from having both `n_cycles` &amp; `n_seconds`</span>
+    <span class="k">if</span> <span class="n">n_cycles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Either `n_cycles` or `n_seconds` can be defined, but not both.&#39;</span><span class="p">)</span>
 
     <span class="c1"># Compute filter length if specified in seconds</span>
     <span class="k">if</span> <span class="n">n_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -339,7 +358,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Either `n_cycles` or `n_seconds` needs to be defined.&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Typecast filter length to an integer, rounding up &amp; force length to be odd</span>
+    <span class="c1"># Typecast filter length to an integer, rounding up &amp; forcing length to be odd</span>
     <span class="n">filt_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">filt_len</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">filt_len</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">filt_len</span> <span class="o">=</span> <span class="n">filt_len</span> <span class="o">+</span> <span class="mi">1</span>
@@ -358,8 +377,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

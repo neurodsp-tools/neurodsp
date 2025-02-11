@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>IRASA &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <title>IRASA &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,10 +110,10 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-aperiodic-plot-irasa-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="irasa">
-<span id="sphx-glr-auto-tutorials-aperiodic-plot-irasa-py"></span><h1>IRASA<a class="headerlink" href="#irasa" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-tutorials-aperiodic-plot-irasa-py"></span><h1>IRASA<a class="headerlink" href="#irasa" title="Permalink to this heading">¶</a></h1>
 <p>Separate periodic and aperiodic activity with the IRASA algorithm.</p>
 <p>The irregular resampling auto-spectral analysis (IRASA) algorithm is a method for
 separating aperiodic (1/f) and oscillatory activity in the frequency domain.</p>
@@ -132,7 +131,7 @@ original spectrum.</p></li>
 <p>Full details of the IRASA algorithm are described in
 <a class="reference external" href="https://doi.org/10.1007/s10548-015-0448-0">Wen &amp; Liu, 2016</a>.</p>
 <p>This tutorial covers <code class="docutils literal notranslate"><span class="pre">neurodsp.aperiodic.irasa</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
 <span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">,</span> <a href="../../generated/neurodsp.spectral.trim_spectrum.html#neurodsp.spectral.trim_spectrum" title="neurodsp.spectral.trim_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">trim_spectrum</span></a>
 <span class="kn">from</span> <span class="nn">neurodsp.plts</span> <span class="kn">import</span> <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a>
@@ -142,10 +141,10 @@ original spectrum.</p></li>
 </pre></div>
 </div>
 <section id="simulate-data">
-<h2>Simulate Data<a class="headerlink" href="#simulate-data" title="Permalink to this headline">¶</a></h2>
+<h2>Simulate Data<a class="headerlink" href="#simulate-data" title="Permalink to this heading">¶</a></h2>
 <p>To explore the IRASA algorithm, we’ll use a simulated signal, with a combination of
 aperiodic 1/f and oscillatory activity.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation settings</span>
 <span class="n">n_seconds</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">500</span>
 
@@ -164,7 +163,7 @@ aperiodic 1/f and oscillatory activity.</p>
 <span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the power spectrum of the simulated signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the power spectrum of the simulated signal</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <a href="../../generated/neurodsp.spectral.compute_spectrum.html#neurodsp.spectral.compute_spectrum" title="neurodsp.spectral.compute_spectrum" class="sphx-glr-backref-module-neurodsp-spectral sphx-glr-backref-type-py-function"><span class="n">compute_spectrum</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="mi">4</span><span class="o">*</span><span class="n">fs</span><span class="p">)</span>
 
 <span class="c1"># Trim the power spectrum to the frequency range of interest</span>
@@ -178,11 +177,11 @@ aperiodic 1/f and oscillatory activity.</p>
 the 1/f activity, as well as a peak at 10 Hz, which represents the simulated oscillation.</p>
 </section>
 <section id="id1">
-<h2>IRASA<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>IRASA<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
 <p>In the analysis of neural data, we may want to separate aperiodic and periodic components
 of the data. Here, we explore using IRASA to do so.</p>
 <section id="algorithm-settings">
-<h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<h3>Algorithm Settings<a class="headerlink" href="#algorithm-settings" title="Permalink to this heading">¶</a></h3>
 <p>The main setting for IRASA are the resampling factors to use, set by the <cite>hset</cite> input.
 Here, we will use default values, which are often sufficient.</p>
 <p>In the IRASA algorithm, the periodic component is calculated as the difference between
@@ -191,11 +190,11 @@ this calculation, to restrict the periodic component to clear ‘peaks’ above 
 <p>Here we will use a threshold value (<cite>thresh</cite>), such that regions of the periodic component
 that are not above the threshold, calculates in terms of standard deviation of the power
 spectrum, are left as part of the aperiodic component.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the IRASA decomposition of the data</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the IRASA decomposition of the data</span>
 <span class="n">freqs</span><span class="p">,</span> <span class="n">psd_aperiodic</span><span class="p">,</span> <span class="n">psd_periodic</span> <span class="o">=</span> <span class="n">compute_irasa</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="n">f_range</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the isolated periodic and aperiodic components</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the isolated periodic and aperiodic components</span>
 <a href="../../generated/neurodsp.plts.plot_power_spectra.html#neurodsp.plts.plot_power_spectra" title="neurodsp.plts.plot_power_spectra" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_power_spectra</span></a><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="p">[</span><span class="n">psd_aperiodic</span><span class="p">,</span> <span class="n">psd_periodic</span><span class="p">],</span>
                    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;aperiodic&#39;</span><span class="p">,</span> <span class="s1">&#39;periodic&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;IRASA Components&quot;</span><span class="p">)</span>
 </pre></div>
@@ -205,42 +204,42 @@ a very good separation of the spectral components from our original signal.</p>
 </section>
 </section>
 <section id="decomposition">
-<h2>Decomposition<a class="headerlink" href="#decomposition" title="Permalink to this headline">¶</a></h2>
+<h2>Decomposition<a class="headerlink" href="#decomposition" title="Permalink to this heading">¶</a></h2>
 <p>Note that what IRASA returns is a decomposition of the power spectrum, separating
 aperiodic and periodic components.</p>
 <p>To verify that this is what the algorithm does, we can check that the spectrum
 of the full signal is the same as the combined periodic and aperiodic IRASA components.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check that the sum of IRASA components is same as the PSD of the whole signal</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check that the sum of IRASA components is same as the PSD of the whole signal</span>
 <span class="n">psd_irasa</span> <span class="o">=</span> <span class="n">psd_aperiodic</span> <span class="o">+</span> <span class="n">psd_periodic</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">psd_irasa</span><span class="p">,</span> <span class="n">psd</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="subsequent-analyses">
-<h2>Subsequent Analyses<a class="headerlink" href="#subsequent-analyses" title="Permalink to this headline">¶</a></h2>
+<h2>Subsequent Analyses<a class="headerlink" href="#subsequent-analyses" title="Permalink to this heading">¶</a></h2>
 <p>One of the goals of separating the components may be to further analyze each component.</p>
 <p>For example, fitting the extracted aperiodic component can be done to measure the
 properties of the aperiodic activity. Here, we can fit the IRASA extracted aperiodic
 component to see if it matches what we simulated.</p>
 <p>Note that the fitting here actually measures the slope of the power spectrum, in log-log
 space, which is equivalent to the 1/f exponent that was simulated.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the aperiodic component of the IRASA results</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the aperiodic component of the IRASA results</span>
 <span class="n">intercept</span><span class="p">,</span> <span class="n">fit_sl</span> <span class="o">=</span> <span class="n">fit_irasa</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd_aperiodic</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computed Exponent: </span><span class="si">{:1.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fit_sl</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Simulated Exponent: </span><span class="si">{:1.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exp</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computed Exponent: -2.03
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computed Exponent: -1.89
 Simulated Exponent: -2.00
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.569 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.833 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-aperiodic-plot-irasa-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/6eb4780d0a3533f1d492ab5107a47c64/plot_IRASA.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_IRASA.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/34579cb6195a5d0dbdb63c0ba3ebe3bb/plot_IRASA.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_IRASA.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/6eb4780d0a3533f1d492ab5107a47c64/plot_IRASA.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_IRASA.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -259,8 +258,8 @@ Simulated Exponent: -2.00
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

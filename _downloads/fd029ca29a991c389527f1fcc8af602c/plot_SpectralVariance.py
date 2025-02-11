@@ -34,10 +34,7 @@ from neurodsp.plts.spectral import (plot_spectral_hist, plot_scv,
 # Load example neural signal
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# First, we load the sample data, which is a segment of rat hippocampal LFP
-# taken from the publicly available database CRCNS (specifically, from the 'hc2' dataset).
-#
-# Relevant publication: Mizuseki et al, 2012, Nature Neuro
+# First, we load the sample data, an example channel of rat hippocampal LFP data.
 #
 
 ###################################################################################################

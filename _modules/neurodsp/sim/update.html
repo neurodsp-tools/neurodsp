@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.sim.update &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.update</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Simulation parameter management and updaters.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.sim.generators</span> <span class="kn">import</span> <span class="n">sig_yielder</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.params</span> <span class="kn">import</span> <span class="n">get_base_params</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.info</span> <span class="kn">import</span> <span class="n">get_sim_func</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.core</span> <span class="kn">import</span> <span class="n">counter</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<span class="c1">## BASE OBJECTS</span>
+
+<span class="k">class</span> <span class="nc">BaseUpdater</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base object for managing parameter and signal update objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Parameter definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize BaseUpdater object.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias in base parameters as property attribute.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">get_base_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+
+<span class="c1">## PARAM UPDATERS</span>
+
+<span class="k">def</span> <span class="nf">param_updater</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a lambda updater function to update a specified parameter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param : str</span>
+<span class="sd">        Name of the parameter to update.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Updater function which can update specified parameter in simulation parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">params</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">param</span> <span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+
+<span class="k">def</span> <span class="nf">component_updater</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a lambda updater function to update a parameter within a simulation component.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param : str</span>
+<span class="sd">        Name of the parameter to update.</span>
+<span class="sd">    component : str</span>
+<span class="sd">        Name of the component to update the parameter within.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Updater function which can update specified parameter in simulation parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">params</span><span class="p">,</span> <span class="n">value</span> <span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;components&#39;</span><span class="p">][</span><span class="n">component</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">param</span> <span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+
+<div class="viewcode-block" id="create_updater"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.create_updater.html#neurodsp.sim.update.create_updater">[docs]</a><span class="k">def</span> <span class="nf">create_updater</span><span class="p">(</span><span class="n">update</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an updater function for updating simulation parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    update : str</span>
+<span class="sd">        Name of the parameter to update.</span>
+<span class="sd">    component : str</span>
+<span class="sd">        Name of the component to update the parameter within.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Updater function which can update specified parameter in simulation parameters.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create an updater callable for a specified parameter:</span>
+<span class="sd">    &gt;&gt;&gt; upd = create_updater(&#39;exponent&#39;)</span>
+
+<span class="sd">    Create an updater callable for a specified parameter within a specified component:</span>
+<span class="sd">    &gt;&gt;&gt; upd = create_updater(&#39;exponent&#39;, &#39;sim_powerlaw&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">component</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">component_updater</span><span class="p">(</span><span class="n">update</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">param_updater</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">updater</span></div>
+
+
+<span class="c1">## PARAM ITER</span>
+
+<span class="k">def</span> <span class="nf">param_iter_yielder</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">updater</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter yielder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Parameter definition.</span>
+<span class="sd">    updater : callable</span>
+<span class="sd">        Updater function to update parameter definition.</span>
+<span class="sd">    values : 1d array</span>
+<span class="sd">        Values to iterate across.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Simulation parameter definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">updater</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ParamIter"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.ParamIter.html#neurodsp.sim.update.ParamIter">[docs]</a><span class="k">class</span> <span class="nc">ParamIter</span><span class="p">(</span><span class="n">BaseUpdater</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for iterating across parameter updates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Parameter definition to create iterator with.</span>
+<span class="sd">    update : str</span>
+<span class="sd">        Name of the parameter to update.</span>
+<span class="sd">    values : 1d array</span>
+<span class="sd">        Values to iterate across.</span>
+<span class="sd">    component : str, optional</span>
+<span class="sd">        Which component to update the parameter in.</span>
+<span class="sd">        Only used if the parameter definition is for a multi-component simulation.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Index of current location through the iteration.</span>
+<span class="sd">    yielder : generator</span>
+<span class="sd">        Generator for sampling the sig iterations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParamIter.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.ParamIter.html#neurodsp.sim.update.ParamIter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize parameter iteration object.&quot;&quot;&quot;</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">component</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;components&#39;</span><span class="p">][</span><span class="n">component</span><span class="p">][</span><span class="n">update</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">update</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">BaseUpdater</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="n">update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">component</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updater</span> <span class="o">=</span> <span class="n">create_updater</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample the next set of simulation parameters.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yielder</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate across simulation parameters.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">counter</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define length of the object as the number of values to step across.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_reset_yielder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the object yielder.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="n">param_iter_yielder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updater</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+
+<span class="c1">## PARAM SAMPLERS</span>
+
+<div class="viewcode-block" id="create_sampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.create_sampler.html#neurodsp.sim.update.create_sampler">[docs]</a><span class="k">def</span> <span class="nf">create_sampler</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a generator to sample from a set of parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    values : list or 1d array</span>
+<span class="sd">        Parameter values to create a generator for.</span>
+<span class="sd">    probs : 1d array, optional</span>
+<span class="sd">        Probabilities to sample from values.</span>
+<span class="sd">        If provided, should be the same lengths as `values`.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        The number of parameter iterations to set as max.</span>
+<span class="sd">        If None, creates an infinite generator.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    generator</span>
+<span class="sd">        Generator to sample parameter values from.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create a generator to sample parameter values from, for a specified number of samples:</span>
+
+<span class="sd">    &gt;&gt;&gt; sampler = create_sampler([-2, -1, 0], n_samples=5)</span>
+
+<span class="sd">    Create a generator to sampler parameter values from, with specified probability:</span>
+
+<span class="sd">    &gt;&gt;&gt; sampler = create_sampler([9, 10, 11], probs=[0.25, 0.5, 0.25])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check that length of values is same as length of probs, if provided</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">probs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of options must match the number of probabilities.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">counter</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">param_sample_yielder</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">samplers</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator to yield randomly sampled parameter definitions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        The parameters for the simulated signal.</span>
+<span class="sd">    samplers : dict</span>
+<span class="sd">        Sampler definitions to update parameters with.</span>
+<span class="sd">        Each key should be a callable, a parameter updated function.</span>
+<span class="sd">        Each value should be a generator, to sample updated parameter values from.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        The number of parameter iterations to set as max.</span>
+<span class="sd">        If None, creates an infinite generator.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Simulation parameter definition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">counter</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">out_params</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">updater</span><span class="p">,</span> <span class="n">sampler</span> <span class="ow">in</span> <span class="n">samplers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">updater</span><span class="p">(</span><span class="n">out_params</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="n">sampler</span><span class="p">))</span>
+
+        <span class="k">yield</span> <span class="n">out_params</span>
+
+
+<div class="viewcode-block" id="ParamSampler"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler">[docs]</a><span class="k">class</span> <span class="nc">ParamSampler</span><span class="p">(</span><span class="n">BaseUpdater</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for sampling parameter definitions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Parameter definition to create sampler with.</span>
+<span class="sd">    samplers : dict</span>
+<span class="sd">        Sampler definitions to update parameters with.</span>
+<span class="sd">        Each key should be a callable, a parameter updated function.</span>
+<span class="sd">        Each value should be a generator, to sample updated parameter values from.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        The number of parameter iterations to set as max.</span>
+<span class="sd">        If None, creates an infinite generator.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Index of current number of yielded parameter definitions.</span>
+<span class="sd">    yielder : generator</span>
+<span class="sd">        Generator for sampling the parameter samples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParamSampler.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.ParamSampler.html#neurodsp.sim.update.ParamSampler.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">samplers</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize parameter sampler object.&quot;&quot;&quot;</span>
+
+        <span class="n">BaseUpdater</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">samplers</span> <span class="o">=</span> <span class="n">samplers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="o">=</span> <span class="n">n_samples</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample the next set of simulation parameters.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yielder</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate across sampled simulation parameters.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">counter</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define length of the object as the maximum number of parameters to sample.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="k">else</span> <span class="mi">0</span>
+
+
+    <span class="k">def</span> <span class="nf">_reset_yielder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the object yielder.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="n">param_sample_yielder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias in base parameters as property attribute.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">get_base_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span></div>
+
+
+<span class="c1">## SIG ITER</span>
+
+<div class="viewcode-block" id="SigIter"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter">[docs]</a><span class="k">class</span> <span class="nc">SigIter</span><span class="p">(</span><span class="n">BaseUpdater</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for iterating across sampled simulations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : str or callable</span>
+<span class="sd">        Function to create simulations.</span>
+<span class="sd">        If string, should be the name of the desired simulation function.</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Simulation parameters.</span>
+<span class="sd">    n_sims : int, optional</span>
+<span class="sd">        Number of simulations to create.</span>
+<span class="sd">        If None, creates an infinite generator.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Index of current location through the iteration.</span>
+<span class="sd">    yielder : generator</span>
+<span class="sd">        Generator for sampling the sig iterations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SigIter.__init__"><a class="viewcode-back" href="../../../generated/neurodsp.sim.update.SigIter.html#neurodsp.sim.update.SigIter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_sims</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize signal iteration object.&quot;&quot;&quot;</span>
+
+        <span class="n">BaseUpdater</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_sims</span> <span class="o">=</span> <span class="n">n_sims</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample a new simulation.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yielder</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate across simulation outputs.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_yielder</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">counter</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define length of the object as the number of simulations to create.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sims</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sims</span> <span class="k">else</span> <span class="mi">0</span>
+
+
+    <span class="k">def</span> <span class="nf">_reset_yielder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the object yielder.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yielder</span> <span class="o">=</span> <span class="n">sig_yielder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sims</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

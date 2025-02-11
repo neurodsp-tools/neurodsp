@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Computation times &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=94f77982"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="api.html">API</a></li>
+                <li><a href="glossary.html">Glossary</a></li>
+                <li><a href="auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="auto_examples/index.html">Examples</a></li>
+                <li><a href="reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="computation-times">
+<span id="sphx-glr-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this heading">¶</a></h1>
+<p><strong>00:44.058</strong> total execution time for 22 files <strong>from all galleries</strong>:</p>
+<div class="docutils container">
+<style scoped>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+</style>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" class="init">
+$(document).ready( function () {
+    $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+} );
+</script><table class="table table-striped sg-datatable docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Example</p></th>
+<th class="head"><p>Time</p></th>
+<th class="head"><p>Mem (MB)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a> (<code class="docutils literal notranslate"><span class="pre">../examples/plot_mne_example.py</span></code>)</p></td>
+<td><p>00:13.706</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_02_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-02-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_02_SimulateAperiodic.py</span></code>)</p></td>
+<td><p>00:11.814</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/spectral/plot_SpectralVariance.html#sphx-glr-auto-tutorials-spectral-plot-spectralvariance-py"><span class="std std-ref">Spectral Domain Analysis: Variance</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/spectral/plot_SpectralVariance.py</span></code>)</p></td>
+<td><p>00:01.952</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/rhythm/plot_SlidingWindowMatching.py</span></code>)</p></td>
+<td><p>00:01.880</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_03_SimulateCombined.html#sphx-glr-auto-tutorials-sim-plot-03-simulatecombined-py"><span class="std std-ref">Simulating Combined Signals</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_03_SimulateCombined.py</span></code>)</p></td>
+<td><p>00:01.694</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/spectral/plot_SpectralPower.html#sphx-glr-auto-tutorials-spectral-plot-spectralpower-py"><span class="std std-ref">Spectral Domain Analysis: Power</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/spectral/plot_SpectralPower.py</span></code>)</p></td>
+<td><p>00:01.690</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_07_SimMulti.html#sphx-glr-auto-tutorials-sim-plot-07-simmulti-py"><span class="std std-ref">Simulating Multiple Signals</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_07_SimMulti.py</span></code>)</p></td>
+<td><p>00:01.316</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/timefreq/plot_InstantaneousMeasures.html#sphx-glr-auto-tutorials-timefreq-plot-instantaneousmeasures-py"><span class="std std-ref">Time-frequency analysis</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/timefreq/plot_InstantaneousMeasures.py</span></code>)</p></td>
+<td><p>00:01.303</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/timefreq/plot_MorletWavelet.html#sphx-glr-auto-tutorials-timefreq-plot-morletwavelet-py"><span class="std std-ref">Morlet Wavelet Analysis</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/timefreq/plot_MorletWavelet.py</span></code>)</p></td>
+<td><p>00:01.226</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/filt/plot_4_checks.html#sphx-glr-auto-tutorials-filt-plot-4-checks-py"><span class="std std-ref">Filter Checks</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/filt/plot_4_checks.py</span></code>)</p></td>
+<td><p>00:01.095</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_01_SimulatePeriodic.html#sphx-glr-auto-tutorials-sim-plot-01-simulateperiodic-py"><span class="std std-ref">Simulating Periodic Signals</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_01_SimulatePeriodic.py</span></code>)</p></td>
+<td><p>00:01.072</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/aperiodic/plot_IRASA.html#sphx-glr-auto-tutorials-aperiodic-plot-irasa-py"><span class="std std-ref">IRASA</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/aperiodic/plot_IRASA.py</span></code>)</p></td>
+<td><p>00:00.833</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/burst/plot_BurstDetection.html#sphx-glr-auto-tutorials-burst-plot-burstdetection-py"><span class="std std-ref">Burst Detection</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/burst/plot_BurstDetection.py</span></code>)</p></td>
+<td><p>00:00.747</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/filt/plot_1_Filtering.html#sphx-glr-auto-tutorials-filt-plot-1-filtering-py"><span class="std std-ref">Filtering</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/filt/plot_1_Filtering.py</span></code>)</p></td>
+<td><p>00:00.663</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/filt/plot_2_FIR.html#sphx-glr-auto-tutorials-filt-plot-2-fir-py"><span class="std std-ref">FIR Filters</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/filt/plot_2_FIR.py</span></code>)</p></td>
+<td><p>00:00.644</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_04_SimulateModulated.html#sphx-glr-auto-tutorials-sim-plot-04-simulatemodulated-py"><span class="std std-ref">Modulating Signals</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_04_SimulateModulated.py</span></code>)</p></td>
+<td><p>00:00.517</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/filt/plot_3_IIR.html#sphx-glr-auto-tutorials-filt-plot-3-iir-py"><span class="std std-ref">IIR Filters</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/filt/plot_3_IIR.py</span></code>)</p></td>
+<td><p>00:00.494</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_05_SimulateTransients.html#sphx-glr-auto-tutorials-sim-plot-05-simulatetransients-py"><span class="std std-ref">Simulating Cycles &amp; Transients</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_05_SimulateTransients.py</span></code>)</p></td>
+<td><p>00:00.433</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/aperiodic/plot_Autocorr.html#sphx-glr-auto-tutorials-aperiodic-plot-autocorr-py"><span class="std std-ref">Autocorrelation Measures</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/aperiodic/plot_Autocorr.py</span></code>)</p></td>
+<td><p>00:00.383</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/rhythm/plot_LaggedCoherence.html#sphx-glr-auto-tutorials-rhythm-plot-laggedcoherence-py"><span class="std std-ref">Lagged Coherence</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/rhythm/plot_LaggedCoherence.py</span></code>)</p></td>
+<td><p>00:00.382</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="auto_tutorials/aperiodic/plot_Fluctuations.html#sphx-glr-auto-tutorials-aperiodic-plot-fluctuations-py"><span class="std std-ref">Fluctuation analyses</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/aperiodic/plot_Fluctuations.py</span></code>)</p></td>
+<td><p>00:00.207</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="auto_tutorials/sim/plot_06_SimParams.html#sphx-glr-auto-tutorials-sim-plot-06-simparams-py"><span class="std std-ref">Managing Simulation Parameters</span></a> (<code class="docutils literal notranslate"><span class="pre">../tutorials/sim/plot_06_SimParams.py</span></code>)</p></td>
+<td><p>00:00.008</p></td>
+<td><p>0.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

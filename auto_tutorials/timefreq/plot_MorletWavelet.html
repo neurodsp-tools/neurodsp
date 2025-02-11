@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Morlet Wavelet Analysis &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+    <title>Morlet Wavelet Analysis &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -111,15 +110,15 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-tutorials-timefreq-plot-morletwavelet-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code.</p>
 </div>
 <section class="sphx-glr-example-title" id="morlet-wavelet-analysis">
-<span id="sphx-glr-auto-tutorials-timefreq-plot-morletwavelet-py"></span><h1>Morlet Wavelet Analysis<a class="headerlink" href="#morlet-wavelet-analysis" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-tutorials-timefreq-plot-morletwavelet-py"></span><h1>Morlet Wavelet Analysis<a class="headerlink" href="#morlet-wavelet-analysis" title="Permalink to this heading">¶</a></h1>
 <p>Perform time-frequency decomposition using wavelets.</p>
 <p>In this tutorial we will use Morlet wavelets to compute a time-frequency
 representation of the data.</p>
 <p>This tutorial primarily covers the <code class="docutils literal notranslate"><span class="pre">neurodsp.timefrequency.wavelets</span></code> module.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -133,12 +132,12 @@ representation of the data.</p>
 </pre></div>
 </div>
 <section id="simulate-data">
-<h2>Simulate Data<a class="headerlink" href="#simulate-data" title="Permalink to this headline">¶</a></h2>
+<h2>Simulate Data<a class="headerlink" href="#simulate-data" title="Permalink to this heading">¶</a></h2>
 <p>First, we’ll simulate a time series using the <a class="reference internal" href="../../generated/neurodsp.sim.combined.sim_combined.html#neurodsp.sim.combined.sim_combined" title="neurodsp.sim.combined.sim_combined"><code class="xref py py-func docutils literal notranslate"><span class="pre">sim_combined()</span></code></a> function
 to create a time-varying oscillation.</p>
 <p>For this example, our oscillation frequency will be 20 Hz, with a sampling rate of 500 Hz,
 and a simulation time of 10 seconds.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define general settings for across the example</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define general settings for across the example</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="mi">500</span>
 
 <span class="c1"># Define settings for the simulated oscillation</span>
@@ -156,13 +155,13 @@ and a simulation time of 10 seconds.</p>
 <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">n_seconds</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a segment of our simulated time series</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot a segment of our simulated time series</span>
 <a href="../../generated/neurodsp.plts.plot_time_series.html#neurodsp.plts.plot_time_series" title="neurodsp.plts.plot_time_series" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_time_series</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_MorletWavelet_001.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_001.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/></section>
 <section id="compute-wavelet-transform">
-<h2>Compute Wavelet Transform<a class="headerlink" href="#compute-wavelet-transform" title="Permalink to this headline">¶</a></h2>
+<h2>Compute Wavelet Transform<a class="headerlink" href="#compute-wavelet-transform" title="Permalink to this heading">¶</a></h2>
 <p>Now, let’s use the compute Morlet wavelet transform algorithm to compute a
 time-frequency representation of our simulated data, using Morlet wavelets.</p>
 <p>To apply the continuous Morlet wavelet transform, we need to specify frequencies of
@@ -170,14 +169,14 @@ interest. The wavelet transform can then be used to compute the power at these
 frequencies across time.</p>
 <p>For this example, we’ll compute the Morlet wavelet transform on 50 equally-spaced
 frequencies from 5 Hz to 100 Hz.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the wavelet transform algorithm</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the wavelet transform algorithm</span>
 <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 
 <span class="c1"># Compute wavelet transform using compute Morlet wavelet transform algorithm</span>
 <span class="n">mwt</span> <span class="o">=</span> <a href="../../generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">compute_wavelet_transform</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot morlet wavelet transform</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot morlet wavelet transform</span>
 <a href="../../generated/neurodsp.plts.plot_timefrequency.html#neurodsp.plts.plot_timefrequency" title="neurodsp.plts.plot_timefrequency" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_timefrequency</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">mwt</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -186,19 +185,19 @@ Morlet-wavelet transformed signal.</p>
 <p>Note that having simulated a bursty signal at 20 Hz, we can see that the
 time-frequency representation shows periods with high power at this frequency.</p>
 <section id="computing-wavelets-across-different-frequency-ranges">
-<h3>Computing wavelets across different frequency ranges<a class="headerlink" href="#computing-wavelets-across-different-frequency-ranges" title="Permalink to this headline">¶</a></h3>
+<h3>Computing wavelets across different frequency ranges<a class="headerlink" href="#computing-wavelets-across-different-frequency-ranges" title="Permalink to this heading">¶</a></h3>
 <p>If we want to compute the time-frequency representation across a different frequency range,
 we can change the frequencies passed to the Morlet wavelet transform algorithm.</p>
 <p>For the next example, let’s use an array of frequencies from 15 Hz to 50 Hz with a
 spacing of 5 Hz.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the wavelet transform algorithm</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Settings for the wavelet transform algorithm</span>
 <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
 <span class="c1"># Compute wavelet transform using compute Morlet wavelet transform algorithm</span>
 <span class="n">mwt</span> <span class="o">=</span> <a href="../../generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">compute_wavelet_transform</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot morlet wavelet transform</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot morlet wavelet transform</span>
 <a href="../../generated/neurodsp.plts.plot_timefrequency.html#neurodsp.plts.plot_timefrequency" title="neurodsp.plts.plot_timefrequency" class="sphx-glr-backref-module-neurodsp-plts sphx-glr-backref-type-py-function"><span class="n">plot_timefrequency</span></a><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">mwt</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -207,7 +206,7 @@ range. Again, we can see the how power at the frequency of our simulated oscilla
 </section>
 </section>
 <section id="wavelet-description">
-<h2>Wavelet Description<a class="headerlink" href="#wavelet-description" title="Permalink to this headline">¶</a></h2>
+<h2>Wavelet Description<a class="headerlink" href="#wavelet-description" title="Permalink to this heading">¶</a></h2>
 <p>Let’s look a little further into what a Wavelet is. In general, a wavelet is simply a small
 “wave” like signal. By sweeping this wave across our data, we can see how much of this ‘wave’
 is in our signal, which is useful to quantify variations of signal amplitude across time.</p>
@@ -219,10 +218,10 @@ sampling frequency, the fundamental frequency, and the number of cycles per freq
 <a class="reference external" href="https://www.youtube.com/watch?v=7ahrcB5HL0k">Morlet wavelets in time and frequency</a>
 a video on Youtube from Mike X Cohen.</p>
 <section id="example-plot-of-morlet-wavelet">
-<h3>Example Plot of Morlet Wavelet<a class="headerlink" href="#example-plot-of-morlet-wavelet" title="Permalink to this headline">¶</a></h3>
+<h3>Example Plot of Morlet Wavelet<a class="headerlink" href="#example-plot-of-morlet-wavelet" title="Permalink to this heading">¶</a></h3>
 <p>Here, we provide an example plot of an individual Morlet wavelet. We’ll use the
 <cite>scipy.signal</cite> function <cite>morlet</cite> to create a wavelet that is 5 cycles long.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define sampling rate, number of cycles, fundamental frequency, and length for the wavelet</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define sampling rate, number of cycles, fundamental frequency, and length for the wavelet</span>
 <span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">freq</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">scaling</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -233,7 +232,7 @@ a video on Youtube from Mike X Cohen.</p>
 <span class="n">wavelet</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">morlet</span><span class="p">(</span><span class="n">wavelet_len</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">scaling</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the real part of the wavelet</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the real part of the wavelet</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">wavelet</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
@@ -241,23 +240,23 @@ a video on Youtube from Mike X Cohen.</p>
 </div>
 <img src="../../_images/sphx_glr_plot_MorletWavelet_004.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_004.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/></section>
 <section id="real-imaginary-dimensions">
-<h3>Real &amp; Imaginary Dimensions<a class="headerlink" href="#real-imaginary-dimensions" title="Permalink to this headline">¶</a></h3>
+<h3>Real &amp; Imaginary Dimensions<a class="headerlink" href="#real-imaginary-dimensions" title="Permalink to this heading">¶</a></h3>
 <p>Note that wavelets have both real and imaginary dimensions.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot both real and imaginary dimensions of the wavelet</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot both real and imaginary dimensions of the wavelet</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">wavelet</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">wavelet</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_MorletWavelet_005.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_005.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot real and imaginary components in a 3D plot</span>
+<img src="../../_images/sphx_glr_plot_MorletWavelet_005.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_005.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot real and imaginary components in a 3D plot</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scaling</span><span class="p">,</span> <span class="n">wavelet</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">wavelet</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">wavelet</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Scaling&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Real Amplitude&#39;</span><span class="p">,</span> <span class="n">zlabel</span><span class="o">=</span><span class="s1">&#39;Imag Amplitude&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_MorletWavelet_006.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_006.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Text(-0.04176715375665995, -0.09042854049259537, &#39;Scaling&#39;), Text(0.0704766587855572, -0.07320235304988142, &#39;Real Amplitude&#39;), Text(0.10787434422876363, 0.014452421710067038, &#39;Imag Amplitude&#39;)]
+<img src="../../_images/sphx_glr_plot_MorletWavelet_006.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_006.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Text(-0.04176715375665995, -0.09042854049259537, &#39;Scaling&#39;), Text(0.07047665878555721, -0.07320235304988144, &#39;Real Amplitude&#39;), Text(0.10787434422876362, 0.014452421710067028, &#39;Imag Amplitude&#39;)]
 </pre></div>
 </div>
 <p>In the plots above, you can see both the real and imaginary components of the Morlet-wavelet.</p>
@@ -266,10 +265,10 @@ creates Morlet wavelets in the same way we have been doing here, by using the
 <cite>morlet</cite> function from scipy.</p>
 </section>
 <section id="changing-parameters">
-<h3>Changing Parameters<a class="headerlink" href="#changing-parameters" title="Permalink to this headline">¶</a></h3>
+<h3>Changing Parameters<a class="headerlink" href="#changing-parameters" title="Permalink to this heading">¶</a></h3>
 <p>Adjusting the input parameters results in a different wavelet.</p>
 <p>For example, let’s try this same plot but with a different number of cycles:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define settings for a new wavelet</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define settings for a new wavelet</span>
 <span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">freq</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">scaling</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -291,7 +290,7 @@ in the wavelet.</p>
 </section>
 </section>
 <section id="time-frequency-representations">
-<h2>Time-Frequency Representations<a class="headerlink" href="#time-frequency-representations" title="Permalink to this headline">¶</a></h2>
+<h2>Time-Frequency Representations<a class="headerlink" href="#time-frequency-representations" title="Permalink to this heading">¶</a></h2>
 <p>Let’s now return to the Morlet wavelet transform we were originally using. How this function
 works is it creates wavelets, as we’ve been doing above, and then applies them to the data
 with the <a class="reference internal" href="../../generated/neurodsp.timefrequency.convolve_wavelet.html#neurodsp.timefrequency.convolve_wavelet" title="neurodsp.timefrequency.convolve_wavelet"><code class="xref py py-func docutils literal notranslate"><span class="pre">convolve_wavelet()</span></code></a> function. This function convolves the raw signal with
@@ -301,10 +300,10 @@ result of the convolution returns a complex array (with real and imaginary compo
 we plotted above) which represents how much power of the frequency of the wavelet was
 found in our signal.</p>
 <section id="id1">
-<h3>Changing Parameters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Changing Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>Returning to the Morlet-wavelet transform algorithm, we can adjust input parameters
 to demonstrate how changes in the number of cycles per frequency affects the outputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the wavelet transform with a higher number of cycles</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the wavelet transform with a higher number of cycles</span>
 <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="n">mwt</span> <span class="o">=</span> <a href="../../generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">compute_wavelet_transform</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">)</span>
 
@@ -318,7 +317,7 @@ increase frequency resolution, but decreases temporal resolution, due to the tim
 trade off.</p>
 <p>If we adjust other input parameters, such as the frequency resolution, we can also get a
 different result.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the wavelet transform with a different set of frequencies</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the wavelet transform with a different set of frequencies</span>
 <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">mwt</span> <span class="o">=</span> <a href="../../generated/neurodsp.timefrequency.compute_wavelet_transform.html#neurodsp.timefrequency.compute_wavelet_transform" title="neurodsp.timefrequency.compute_wavelet_transform" class="sphx-glr-backref-module-neurodsp-timefrequency sphx-glr-backref-type-py-function"><span class="n">compute_wavelet_transform</span></a><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">n_cycles</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">)</span>
 
@@ -328,13 +327,13 @@ different result.</p>
 </div>
 <img src="../../_images/sphx_glr_plot_MorletWavelet_009.png" srcset="../../_images/sphx_glr_plot_MorletWavelet_009.png" alt="plot MorletWavelet" class = "sphx-glr-single-img"/><p>In the above, we used a larger frequency step, with the same starting and ending frequencies.</p>
 <p>Doing so changes the frequency resolution of our estimation.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.778 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.226 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-tutorials-timefreq-plot-morletwavelet-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/9ceff5a30767bda3627759b58a431672/plot_MorletWavelet.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_MorletWavelet.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/91b724252a500326cccd2b64622b6388/plot_MorletWavelet.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_MorletWavelet.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9ceff5a30767bda3627759b58a431672/plot_MorletWavelet.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_MorletWavelet.py</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -354,8 +353,8 @@ different result.</p>
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

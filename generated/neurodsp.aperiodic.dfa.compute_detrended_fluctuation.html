@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.aperiodic.dfa.compute_detrended_fluctuation &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.aperiodic.dfa.compute_detrended_fluctuation &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,15 +108,15 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-aperiodic-dfa-compute-detrended-fluctuation">
-<h1>neurodsp.aperiodic.dfa.compute_detrended_fluctuation<a class="headerlink" href="#neurodsp-aperiodic-dfa-compute-detrended-fluctuation" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.aperiodic.dfa.compute_detrended_fluctuation<a class="headerlink" href="#neurodsp-aperiodic-dfa-compute-detrended-fluctuation" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.aperiodic.dfa.compute_detrended_fluctuation">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.aperiodic.dfa.</span></span><span class="sig-name descname"><span class="pre">compute_detrended_fluctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/aperiodic/dfa.html#compute_detrended_fluctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.aperiodic.dfa.compute_detrended_fluctuation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute detrended fluctuation of a time series at the given window length.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series.</p>
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series.</p>
 </dd>
 <dt><strong>win_len</strong><span class="classifier">int</span></dt><dd><p>Window length for each detrended fluctuation fit, in samples.</p>
 </dd>
@@ -125,9 +124,9 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>det_fluc</strong><span class="classifier">float</span></dt><dd><p>Measured detrended fluctuation, as the average error fits of the window.</p>
+<dt><strong>det_fluc</strong><span class="classifier">float or 1d array</span></dt><dd><p>Measured detrended fluctuation, as the average error fits of the window.</p>
 </dd>
 </dl>
 </dd>
@@ -138,17 +137,19 @@
 <li><p>There is a relationship between DFA measures and 1/f exponent, as detailed in <a class="reference internal" href="#rfa69280fc6eb-2" id="id2">[2]</a>.</p></li>
 </ul>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="rfa69280fc6eb-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Peng, C.-K., Buldyrev, S. V., Havlin, S., Simons, M., Stanley, H. E., &amp;
+<div role="list" class="citation-list">
+<div class="citation" id="rfa69280fc6eb-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Peng, C.-K., Buldyrev, S. V., Havlin, S., Simons, M., Stanley, H. E., &amp;
 Goldberger, A. L. (1994). Mosaic organization of DNA nucleotides.
 Physical Review E, 49(2), 1685–1689.
 DOI: <a class="reference external" href="https://doi.org/10.1103/PhysRevE.49.1685">https://doi.org/10.1103/PhysRevE.49.1685</a></p>
-</dd>
-<dt class="label" id="rfa69280fc6eb-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis">https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis</a></p>
-</dd>
-</dl>
+</div>
+<div class="citation" id="rfa69280fc6eb-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis">https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis</a></p>
+</div>
+</div>
 </dd></dl>
 
 <div style='clear:both'></div></section>
@@ -165,8 +166,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1103/PhysRevE.49.168
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

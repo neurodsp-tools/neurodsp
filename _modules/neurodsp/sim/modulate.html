@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.sim.modulate &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.sim.modulate</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functionality to modulate simulations.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">compute_nseconds</span>
+<span class="kn">from</span> <span class="nn">neurodsp.sim.info</span> <span class="kn">import</span> <span class="n">get_sim_func</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="rotate_timeseries"><a class="viewcode-back" href="../../../generated/neurodsp.sim.modulate.rotate_timeseries.html#neurodsp.sim.modulate.rotate_timeseries">[docs]</a><span class="k">def</span> <span class="nf">rotate_timeseries</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">delta_exp</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotate a timeseries of data, changing it&#39;s 1/f exponent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        A time series to rotate.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate of the signal, in Hz.</span>
+<span class="sd">    delta_exp : float</span>
+<span class="sd">        Change in power law exponent to be applied.</span>
+<span class="sd">        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).</span>
+<span class="sd">    f_rotation : float, optional, default: 1</span>
+<span class="sd">        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sig_rotated : 1d array</span>
+<span class="sd">        The rotated version of the signal.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function works by taking the FFT and spectrally rotating the input signal.</span>
+<span class="sd">    To return a timeseries, the rotated FFT is then turned back into a time series, with an iFFT.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Rotate a timeseries of simulated data:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; rotated_sig = rotate_timeseries(sig, fs=500, delta_exp=0.5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute the FFT</span>
+    <span class="n">fft_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">),</span> <span class="mf">1.</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+
+    <span class="c1"># Rotate the spectrum to create the exponent change</span>
+    <span class="c1">#   Delta exponent is divided by two, as the FFT output is in units of amplitude not power</span>
+    <span class="n">fft_rotated</span> <span class="o">=</span> <span class="n">rotate_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">fft_vals</span><span class="p">,</span> <span class="n">delta_exp</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">f_rotation</span><span class="p">)</span>
+
+    <span class="c1"># Invert back to time series, with a z-score to normalize</span>
+    <span class="n">sig_rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fft_rotated</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">sig_rotated</span></div>
+
+
+<div class="viewcode-block" id="rotate_spectrum"><a class="viewcode-back" href="../../../generated/neurodsp.sim.modulate.rotate_spectrum.html#neurodsp.sim.modulate.rotate_spectrum">[docs]</a><span class="k">def</span> <span class="nf">rotate_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">delta_exponent</span><span class="p">,</span> <span class="n">f_rotation</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotate the power law exponent of a power spectrum.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freqs : 1d array</span>
+<span class="sd">        Frequency axis of input spectrum, in Hz.</span>
+<span class="sd">    spectrum : 1d array</span>
+<span class="sd">        Power spectrum to be rotated.</span>
+<span class="sd">    delta_exponent : float</span>
+<span class="sd">        Change in power law exponent to be applied.</span>
+<span class="sd">        Positive is clockwise rotation (steepen), negative is counter clockwise rotation (flatten).</span>
+<span class="sd">    f_rotation : float, optional, default: 1</span>
+<span class="sd">        Frequency, in Hz, to rotate the spectrum around, where power is unchanged by the rotation.</span>
+<span class="sd">        This only matters if not further normalizing signal variance.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rotated_spectrum : 1d array</span>
+<span class="sd">        Rotated spectrum.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The input power spectrum is multiplied with a mask that applies the specified exponent change.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Rotate a power spectrum, calculated on simulated data:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_combined</span>
+<span class="sd">    &gt;&gt;&gt; from neurodsp.spectral import compute_spectrum</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_combined(n_seconds=10, fs=500,</span>
+<span class="sd">    ...                    components={&#39;sim_powerlaw&#39;: {}, &#39;sim_oscillation&#39; : {&#39;freq&#39;: 10}})</span>
+<span class="sd">    &gt;&gt;&gt; freqs, spectrum = compute_spectrum(sig, fs=500)</span>
+<span class="sd">    &gt;&gt;&gt; rotated_spectrum = rotate_spectrum(freqs, spectrum, -1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">skipped_zero</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">f_0</span><span class="p">,</span> <span class="n">p_0</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">freqs</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">skipped_zero</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span> <span class="o">/</span> <span class="n">f_rotation</span><span class="p">)</span><span class="o">**-</span><span class="n">delta_exponent</span>
+    <span class="n">rotated_spectrum</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">*</span> <span class="n">spectrum</span>
+
+    <span class="k">if</span> <span class="n">skipped_zero</span><span class="p">:</span>
+        <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">f_0</span><span class="p">)</span>
+        <span class="n">rotated_spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rotated_spectrum</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p_0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rotated_spectrum</span></div>
+
+
+<div class="viewcode-block" id="modulate_signal"><a class="viewcode-back" href="../../../generated/neurodsp.sim.modulate.modulate_signal.html#neurodsp.sim.modulate.modulate_signal">[docs]</a><span class="k">def</span> <span class="nf">modulate_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mod_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply amplitude modulation to a signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sig : 1d array</span>
+<span class="sd">        A signal to modulate.</span>
+<span class="sd">    modulation : 1d array or str</span>
+<span class="sd">        Modulation to apply to the signal.</span>
+<span class="sd">        If array, the modulating signal to apply directly to the signal.</span>
+<span class="sd">        If str, a function name to use to simulate the modulating signal that will be applied.</span>
+<span class="sd">    fs : float, optional</span>
+<span class="sd">        Signal sampling rate, in Hz.</span>
+<span class="sd">        Only needed if `modulation` is a callable.</span>
+<span class="sd">    mod_params : dictionary, optional</span>
+<span class="sd">        Parameters for the modulation function.</span>
+<span class="sd">        Only needed if `modulation` is a callable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    msig : 1d array</span>
+<span class="sd">        Amplitude modulated signal.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Amplitude modulate a sinusoidal signal with a lower frequency, passing in a function label:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_oscillation</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_oscillation(n_seconds=10, fs=fs, freq=10)</span>
+<span class="sd">    &gt;&gt;&gt; msig = modulate_signal(sig, &#39;sim_oscillation&#39;, fs, {&#39;freq&#39; : 1})</span>
+
+<span class="sd">    Amplitude modulate a sinusoidal signal with precomputed 1/f signal:</span>
+
+<span class="sd">    &gt;&gt;&gt; from neurodsp.sim import sim_oscillation, sim_powerlaw</span>
+<span class="sd">    &gt;&gt;&gt; n_seconds = 10</span>
+<span class="sd">    &gt;&gt;&gt; fs = 500</span>
+<span class="sd">    &gt;&gt;&gt; sig = sim_oscillation(n_seconds, fs, freq=10)</span>
+<span class="sd">    &gt;&gt;&gt; mod = sim_powerlaw(n_seconds, fs, exponent=-1)</span>
+<span class="sd">    &gt;&gt;&gt; msig = modulate_signal(sig, mod)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modulation</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">mod_func</span> <span class="o">=</span> <span class="n">get_sim_func</span><span class="p">(</span><span class="n">modulation</span><span class="p">)</span>
+        <span class="n">modulation</span> <span class="o">=</span> <span class="n">mod_func</span><span class="p">(</span><span class="n">compute_nseconds</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">),</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">mod_params</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">modulation</span><span class="p">),</span> \
+        <span class="s1">&#39;Lengths of the signal and modulator must match to apply modulation&#39;</span>
+
+    <span class="n">msig</span> <span class="o">=</span> <span class="n">sig</span> <span class="o">*</span> <span class="n">modulation</span>
+
+    <span class="k">return</span> <span class="n">msig</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

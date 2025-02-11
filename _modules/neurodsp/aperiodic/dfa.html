@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>neurodsp.aperiodic.dfa &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/clipboard.min.js"></script>
-    <script src="../../../_static/copybutton.js"></script>
+    <title>neurodsp.aperiodic.dfa &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 
@@ -55,7 +54,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,16 +113,18 @@
 
 <span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">split_signal</span>
 <span class="kn">from</span> <span class="nn">neurodsp.utils.checks</span> <span class="kn">import</span> <span class="n">check_param_options</span>
+<span class="kn">from</span> <span class="nn">neurodsp.utils.decorators</span> <span class="kn">import</span> <span class="n">multidim</span>
 
 <span class="c1">###################################################################################################</span>
 <span class="c1">###################################################################################################</span>
 
-<div class="viewcode-block" id="compute_fluctuations"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations">[docs]</a><span class="k">def</span> <span class="nf">compute_fluctuations</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;dfa&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute a fluctuation analysis on a signal.</span>
+<div class="viewcode-block" id="compute_fluctuations"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_fluctuations.html#neurodsp.aperiodic.dfa.compute_fluctuations">[docs]</a><span class="nd">@multidim</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">compute_fluctuations</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">n_scales</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;dfa&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a fluctuation analysis on a signal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    fs : float</span>
 <span class="sd">        Sampling rate, in Hz.</span>
@@ -148,9 +149,9 @@
 <span class="sd">    -------</span>
 <span class="sd">    t_scales : 1d array</span>
 <span class="sd">        Time-scales over which fluctuation measures were computed.</span>
-<span class="sd">    fluctuations : 1d array</span>
+<span class="sd">    fluctuations : array</span>
 <span class="sd">        Average fluctuation at each scale.</span>
-<span class="sd">    result : float</span>
+<span class="sd">    result : float or 1d array</span>
 <span class="sd">        Slope of line in log-log when plotting time scales against fluctuations.</span>
 <span class="sd">        This is the alpha value for DFA, or the Hurst exponent for rescaled range.</span>
 
@@ -211,20 +212,20 @@
 
     <span class="k">return</span> <span class="n">t_scales</span><span class="p">,</span> <span class="n">fluctuations</span><span class="p">,</span> <span class="n">result</span></div>
 
-
-<div class="viewcode-block" id="compute_rescaled_range"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_rescaled_range.html#neurodsp.aperiodic.dfa.compute_rescaled_range">[docs]</a><span class="k">def</span> <span class="nf">compute_rescaled_range</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">win_len</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute rescaled range of a given time series at a given scale.</span>
+<div class="viewcode-block" id="compute_rescaled_range"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_rescaled_range.html#neurodsp.aperiodic.dfa.compute_rescaled_range">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">compute_rescaled_range</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">win_len</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute rescaled range of a given time series at a given scale.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    win_len : int</span>
 <span class="sd">        Window length for each rescaled range computation, in samples.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    rs : float</span>
+<span class="sd">    rs : float or 1d array</span>
 <span class="sd">        Average rescaled range over windows.</span>
 
 <span class="sd">    Notes</span>
@@ -250,13 +251,13 @@
 
     <span class="k">return</span> <span class="n">rs</span></div>
 
-
-<div class="viewcode-block" id="compute_detrended_fluctuation"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_detrended_fluctuation.html#neurodsp.aperiodic.dfa.compute_detrended_fluctuation">[docs]</a><span class="k">def</span> <span class="nf">compute_detrended_fluctuation</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute detrended fluctuation of a time series at the given window length.</span>
+<div class="viewcode-block" id="compute_detrended_fluctuation"><a class="viewcode-back" href="../../../generated/neurodsp.aperiodic.dfa.compute_detrended_fluctuation.html#neurodsp.aperiodic.dfa.compute_detrended_fluctuation">[docs]</a><span class="nd">@multidim</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">compute_detrended_fluctuation</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">win_len</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute detrended fluctuation of a time series at the given window length.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sig : 1d array</span>
+<span class="sd">    sig : array</span>
 <span class="sd">        Time series.</span>
 <span class="sd">    win_len : int</span>
 <span class="sd">        Window length for each detrended fluctuation fit, in samples.</span>
@@ -265,7 +266,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    det_fluc : float</span>
+<span class="sd">    det_fluc : float or 1d array</span>
 <span class="sd">        Measured detrended fluctuation, as the average error fits of the window.</span>
 
 <span class="sd">    Notes</span>
@@ -305,8 +306,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

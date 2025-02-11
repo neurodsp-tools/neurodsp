@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.rhythm.compute_lagged_coherence &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,15 +108,15 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-rhythm-compute-lagged-coherence">
-<h1>neurodsp.rhythm.compute_lagged_coherence<a class="headerlink" href="#neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.rhythm.compute_lagged_coherence<a class="headerlink" href="#neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.rhythm.compute_lagged_coherence">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.rhythm.</span></span><span class="sig-name descname"><span class="pre">compute_lagged_coherence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_spectrum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/rhythm/lc.html#compute_lagged_coherence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.rhythm.compute_lagged_coherence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute lagged coherence, reflecting the rhythmicity across a frequency range.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series.</p>
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series.</p>
 </dd>
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
 </dd>
@@ -135,9 +134,9 @@ Otherwise, only the mean lagged coherence value across the frequency range is re
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>lcs</strong><span class="classifier">float or 1d array</span></dt><dd><p>If <cite>return_spectrum</cite> is False: mean lagged coherence value across the frequency range.
+<dt><strong>lcs</strong><span class="classifier">float or array</span></dt><dd><p>If <cite>return_spectrum</cite> is False: mean lagged coherence value across the frequency range.
 If <cite>return_spectrum</cite> is True: lagged coherence values for all frequencies.</p>
 </dd>
 <dt><strong>freqs</strong><span class="classifier">1d array</span></dt><dd><p>Frequencies, corresponding to the lagged coherence values, in Hz.
@@ -151,28 +150,29 @@ Only returned if <cite>return_spectrum</cite> is True.</p>
 <li><p>The lagged coherence algorithm is described in <a class="reference internal" href="#re32d6195de75-1" id="id1">[1]</a>.</p></li>
 </ul>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="re32d6195de75-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Fransen, A. M., van Ede, F., &amp; Maris, E. (2015). Identifying neuronal
+<div role="list" class="citation-list">
+<div class="citation" id="re32d6195de75-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Fransen, A. M., van Ede, F., &amp; Maris, E. (2015). Identifying neuronal
 oscillations using rhythmicity. NeuroImage, 118, 256-267.
 DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2015.06.003">https://doi.org/10.1016/j.neuroimage.2015.06.003</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <p>Compute lagged coherence for a simulated signal with beta oscillations:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">components</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span><span class="p">:</span> <span class="p">{},</span>
-<span class="gp">... </span>                               <span class="s1">&#39;sim_bursty_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;enter_burst&#39;</span><span class="p">:</span> <span class="mf">.50</span><span class="p">,</span>
-<span class="gp">... </span>                                                          <span class="s1">&#39;leave_burst&#39;</span><span class="p">:</span> <span class="mf">.25</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim_components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sim_synaptic_current&#39;</span><span class="p">:</span> <span class="p">{},</span>
+<span class="gp">... </span>                  <span class="s1">&#39;sim_bursty_oscillation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>                                             <span class="s1">&#39;burst_params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;enter_burst&#39;</span> <span class="p">:</span> <span class="mf">0.50</span><span class="p">,</span>
+<span class="gp">... </span>                                                              <span class="s1">&#39;leave_burst&#39;</span> <span class="p">:</span> <span class="mf">0.25</span><span class="p">}}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_combined</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sim_components</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lag_cohs</span> <span class="o">=</span> <span class="n">compute_lagged_coherence</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <section id="examples-using-neurodsp-rhythm-compute-lagged-coherence">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.compute_lagged_coherence</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this headline">¶</a></h2>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.compute_lagged_coherence</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-compute-lagged-coherence" title="Permalink to this heading">¶</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example explores using NeuroDSP in combination with MNE."><img alt="" src="../_images/sphx_glr_plot_mne_example_thumb.png" />
 <p><a class="reference internal" href="../auto_examples/plot_mne_example.html#sphx-glr-auto-examples-plot-mne-example-py"><span class="std std-ref">Using NeuroDSP with MNE</span></a></p>
   <div class="sphx-glr-thumbnail-title">Using NeuroDSP with MNE</div>
@@ -194,8 +194,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.20
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>neurodsp.sim.params.SimParams &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../glossary.html">Glossary</a></li>
+                <li><a href="../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="neurodsp-sim-params-simparams">
+<h1>neurodsp.sim.params.SimParams<a class="headerlink" href="#neurodsp-sim-params-simparams" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neurodsp.sim.params.</span></span><span class="sig-name descname"><span class="pre">SimParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object for managing simulation parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_seconds</strong><span class="classifier">float</span></dt><dd><p>Simulation time, in seconds.</p>
+</dd>
+<dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate of simulated signal, in Hz.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference internal" href="#neurodsp.sim.params.SimParams.base" title="neurodsp.sim.params.SimParams.base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base</span></code></a><span class="classifier">dict</span></dt><dd><p>Get the base parameters, common across all simulations.</p>
+</dd>
+<dt><a class="reference internal" href="#neurodsp.sim.params.SimParams.params" title="neurodsp.sim.params.SimParams.params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span></code></a><span class="classifier">dict</span></dt><dd><p>Get the set of currently defined simulation parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize SimParams object.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.__init__" title="neurodsp.sim.params.SimParams.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([n_seconds, fs])</p></td>
+<td><p>Initialize SimParams object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.clear" title="neurodsp.sim.params.SimParams.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>([clear_base])</p></td>
+<td><p>&quot;Clear parameter definitions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.copy" title="neurodsp.sim.params.SimParams.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
+<td><p>Return a copy of the current object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.make_params" title="neurodsp.sim.params.SimParams.make_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_params</span></code></a>([params])</p></td>
+<td><p>Make a simulation parameter definition from given parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.register" title="neurodsp.sim.params.SimParams.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(label[, params])</p></td>
+<td><p>Register a new simulation parameter definition.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.register_group" title="neurodsp.sim.params.SimParams.register_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_group</span></code></a>(group[, clear])</p></td>
+<td><p>Register multiple simulation parameter definitions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.to_iters" title="neurodsp.sim.params.SimParams.to_iters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_iters</span></code></a>()</p></td>
+<td><p>Convert to a SimIters object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.to_samplers" title="neurodsp.sim.params.SimParams.to_samplers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_samplers</span></code></a>([n_samples])</p></td>
+<td><p>Convert to a SimSamplers object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.update_base" title="neurodsp.sim.params.SimParams.update_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_base</span></code></a>([n_seconds, fs])</p></td>
+<td><p>Update base parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.update_param" title="neurodsp.sim.params.SimParams.update_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_param</span></code></a>(label, attribute, new_value)</p></td>
+<td><p>Update a simulation parameter definition.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.base" title="neurodsp.sim.params.SimParams.base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base</span></code></a></p></td>
+<td><p>Get the base parameters, common across all simulations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.labels" title="neurodsp.sim.params.SimParams.labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code></a></p></td>
+<td><p>Get the set of labels for the defined parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#neurodsp.sim.params.SimParams.params" title="neurodsp.sim.params.SimParams.params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span></code></a></p></td>
+<td><p>Get the set of currently defined simulation parameters.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py property">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.base">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base</span></span><a class="headerlink" href="#neurodsp.sim.params.SimParams.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the base parameters, common across all simulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>base_params</strong><span class="classifier">dict</span></dt><dd><p>Definition of the current base parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clear_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Clear parameter definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>clear_base</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>Whether to also clear base parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the current object.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.labels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#neurodsp.sim.params.SimParams.labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the set of labels for the defined parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>labels</strong><span class="classifier">list of str</span></dt><dd><p>Labels for all defined simulation parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.make_params">
+<span class="sig-name descname"><span class="pre">make_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.make_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.make_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a simulation parameter definition from given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict or list of dict</span></dt><dd><p>Parameter definition(s) to create simulation parameter definition.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Additional keyword arguments to create the simulation definition.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter definition.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#neurodsp.sim.params.SimParams.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the set of currently defined simulation parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Dictionary of currently defined simulation parameters.
+Each key is a label for the parameter definition.
+Each value is a dictionary of simulations parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new simulation parameter definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>label</strong><span class="classifier">str</span></dt><dd><p>Label to set simulation parameters under in <cite>params</cite>.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">dict or list of dict</span></dt><dd><p>Parameter definition(s) to create simulation parameter definition.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Additional keyword arguments to create the simulation definition.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.register_group">
+<span class="sig-name descname"><span class="pre">register_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.register_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.register_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register multiple simulation parameter definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>group</strong><span class="classifier">dict</span></dt><dd><p>Dictionary of simulation parameters.
+Each key should be a label, and each set of values a dictionary of parameters.</p>
+</dd>
+<dt><strong>clear</strong><span class="classifier">bool, optional, default: False</span></dt><dd><p>If True, clears current parameter definitions before adding new group.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.to_iters">
+<span class="sig-name descname"><span class="pre">to_iters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.to_iters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.to_iters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to a SimIters object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>iters</strong><span class="classifier">SimIters</span></dt><dd><p>A converted object, initialized with the current base parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.to_samplers">
+<span class="sig-name descname"><span class="pre">to_samplers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.to_samplers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.to_samplers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to a SimSamplers object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_samples</strong><span class="classifier">int, optional</span></dt><dd><p>The number of parameter iterations to set as max.
+If None, samplers are created as infinite generators.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>samplers</strong><span class="classifier">SimSamplers</span></dt><dd><p>A converted object, initialized with the current base parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.update_base">
+<span class="sig-name descname"><span class="pre">update_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.update_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.update_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update base parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_seconds</strong><span class="classifier">float, optional</span></dt><dd><p>Simulation time, in seconds.</p>
+</dd>
+<dt><strong>fs</strong><span class="classifier">float, optional</span></dt><dd><p>Sampling rate of simulated signal, in Hz.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If set as False, value will not be updated.
+If set as None, value will be updated to None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neurodsp.sim.params.SimParams.update_param">
+<span class="sig-name descname"><span class="pre">update_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/params.html#SimParams.update_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.params.SimParams.update_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a simulation parameter definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>label</strong><span class="classifier">str</span></dt><dd><p>Label for the parameter definition.</p>
+</dd>
+<dt><strong>attribute</strong><span class="classifier">str</span></dt><dd><p>Name of the attribute to update.</p>
+</dd>
+<dt><strong>new_value</strong><span class="classifier">obj</span></dt><dd><p>New value to give the attribute.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="examples-using-neurodsp-sim-params-simparams">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.params.SimParams</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-params-simparams" title="Permalink to this heading">¶</a></h2>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Manage, update, and iterate across simulation parameters."><img alt="" src="../_images/sphx_glr_plot_06_SimParams_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_06_SimParams.html#sphx-glr-auto-tutorials-sim-plot-06-simparams-py"><span class="std std-ref">Managing Simulation Parameters</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Managing Simulation Parameters</div>
+</div></div></section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

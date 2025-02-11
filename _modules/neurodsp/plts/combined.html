@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>neurodsp.plts.combined &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=a56c686a"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172142294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172142294-1');
+</script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          neurodsp</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="../../../glossary.html">Glossary</a></li>
+                <li><a href="../../../auto_tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_examples/index.html">Examples</a></li>
+                <li><a href="../../../reference.html">Reference</a></li>
+                <li><a href="https://github.com/neurodsp-tools/neurodsp">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for neurodsp.plts.combined</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Plotting functions for plots with combined panels.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">neurodsp.utils.data</span> <span class="kn">import</span> <span class="n">create_times</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.spectral</span> <span class="kn">import</span> <span class="n">plot_power_spectra</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.time_series</span> <span class="kn">import</span> <span class="n">plot_time_series</span><span class="p">,</span> <span class="n">plot_multi_time_series</span>
+<span class="kn">from</span> <span class="nn">neurodsp.plts.utils</span> <span class="kn">import</span> <span class="n">savefig</span>
+
+<span class="c1">###################################################################################################</span>
+<span class="c1">###################################################################################################</span>
+
+<div class="viewcode-block" id="plot_timeseries_and_spectra"><a class="viewcode-back" href="../../../generated/neurodsp.plts.combined.plot_timeseries_and_spectra.html#neurodsp.plts.combined.plot_timeseries_and_spectra">[docs]</a><span class="nd">@savefig</span>
+<span class="k">def</span> <span class="nf">plot_timeseries_and_spectra</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">ts_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                <span class="n">spectrum_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ts_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">psd_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="o">**</span><span class="n">plt_kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot timeseries together with their associated power spectra.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sigs : 1d or 2d array</span>
+<span class="sd">        Time series to plot.</span>
+<span class="sd">    fs : float</span>
+<span class="sd">        Sampling rate, in Hz.</span>
+<span class="sd">    ts_range : list of [float, float], optional</span>
+<span class="sd">        The time range to restrict the time series to.</span>
+<span class="sd">        For visualization only - the power spectrum is computed over the entire time series.</span>
+<span class="sd">    f_range : list of [float, float], optional</span>
+<span class="sd">        The frequency range to restrict the power spectrum to.</span>
+<span class="sd">    times : 1d, optional</span>
+<span class="sd">        Time definition for the time series to be plotted.</span>
+<span class="sd">        If not provided, times are recomputed from signal length and sampling rate.</span>
+<span class="sd">    start_val : float, optional, default: 0.</span>
+<span class="sd">        The starting value for the time definition for the time series.</span>
+<span class="sd">        Only used if `times` is not provided.</span>
+<span class="sd">    spectrum_kwargs : dict, optional</span>
+<span class="sd">        Keyword arguments for computing the power spectrum.</span>
+<span class="sd">        See `compute_spectrum` for details.</span>
+<span class="sd">    ts_kwargs : dict, optional</span>
+<span class="sd">        Keyword arguments for customizing the time series plot.</span>
+<span class="sd">    psd_kwargs : dict, optional</span>
+<span class="sd">        Keyword arguments for customizing the power spectrum plot.</span>
+<span class="sd">    **plt_kwargs</span>
+<span class="sd">        Keyword arguments for customizing the plots.</span>
+<span class="sd">        These arguments are passed to both plot axes.</span>
+<span class="sd">        Plot layout can be edited with: [&#39;gap&#39;, &#39;height&#39;, &#39;bottom&#39;, &#39;ts_width&#39;, &#39;psd_width&#39;].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Import spectal functions locally to avoid circular imports</span>
+    <span class="kn">from</span> <span class="nn">neurodsp.spectral</span> <span class="kn">import</span> <span class="n">compute_spectrum</span>
+    <span class="kn">from</span> <span class="nn">neurodsp.spectral.utils</span> <span class="kn">import</span> <span class="n">trim_spectrum</span>
+
+    <span class="c1"># Allow for defining color as &#39;color&#39; (since one line per plot), rather than &#39;colors&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;color&#39;</span> <span class="ow">in</span> <span class="n">plt_kwargs</span><span class="p">:</span>
+        <span class="n">plt_kwargs</span><span class="p">[</span><span class="s1">&#39;colors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Default to drawing both plots in same color (otherwise ts is black, psd is blue)</span>
+    <span class="k">if</span> <span class="s1">&#39;colors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plt_kwargs</span><span class="p">:</span>
+        <span class="n">psd_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">psd_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">psd_kwargs</span>
+        <span class="k">if</span> <span class="s1">&#39;colors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">psd_kwargs</span><span class="p">:</span>
+            <span class="n">psd_kwargs</span><span class="p">[</span><span class="s1">&#39;colors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+
+    <span class="n">gap</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;gap&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">hgt</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">bot</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">tsw</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ts_width&#39;</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">)</span>
+    <span class="n">psw</span> <span class="o">=</span> <span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;psd_width&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">plt_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bot</span><span class="p">,</span> <span class="n">tsw</span><span class="p">,</span> <span class="n">hgt</span><span class="p">])</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="n">tsw</span> <span class="o">+</span> <span class="n">gap</span><span class="p">,</span> <span class="n">bot</span><span class="p">,</span> <span class="n">psw</span><span class="p">,</span> <span class="n">hgt</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">create_times</span><span class="p">(</span><span class="n">sigs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">fs</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">start_val</span><span class="o">=</span><span class="n">start_val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ts_range</span><span class="p">:</span>
+        <span class="n">ts_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">ts_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ts_kwargs</span>
+        <span class="n">ts_kwargs</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts_range</span>
+
+    <span class="k">if</span> <span class="n">sigs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">plot_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sigs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="o">**</span><span class="n">plt_kwargs</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">ts_kwargs</span> <span class="k">if</span> <span class="n">ts_kwargs</span> <span class="k">else</span> <span class="p">{})</span>
+    <span class="k">elif</span> <span class="n">sigs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">plot_multi_time_series</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">sigs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="o">**</span><span class="n">plt_kwargs</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">ts_kwargs</span> <span class="k">if</span> <span class="n">ts_kwargs</span> <span class="k">else</span> <span class="p">{})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only 1d or 2d inputs are supported.&#39;</span><span class="p">)</span>
+
+    <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">sigs</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="o">**</span><span class="n">spectrum_kwargs</span> <span class="k">if</span> <span class="n">spectrum_kwargs</span> <span class="k">else</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="n">f_range</span><span class="p">:</span>
+        <span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span> <span class="o">=</span> <span class="n">trim_spectrum</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="n">f_range</span><span class="p">)</span>
+    <span class="n">plot_power_spectra</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="o">**</span><span class="n">plt_kwargs</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">psd_kwargs</span> <span class="k">if</span> <span class="n">psd_kwargs</span> <span class="k">else</span> <span class="p">{})</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.sim.sim_synaptic_current &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.sim.sim_synaptic_current &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,13 +108,13 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-sim-sim-synaptic-current">
-<h1>neurodsp.sim.sim_synaptic_current<a class="headerlink" href="#neurodsp-sim-sim-synaptic-current" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.sim.sim_synaptic_current<a class="headerlink" href="#neurodsp-sim-sim-synaptic-current" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.sim.sim_synaptic_current">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.sim.</span></span><span class="sig-name descname"><span class="pre">sim_synaptic_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neurons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firing_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/aperiodic.html#sim_synaptic_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.sim_synaptic_current" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate a signal as a synaptic current, which has 1/f characteristics with a knee.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_seconds</strong><span class="classifier">float</span></dt><dd><p>Simulation time, in seconds.</p>
 </dd>
@@ -133,7 +132,7 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Simulated synaptic current.</p>
 </dd>
@@ -146,13 +145,14 @@
 <li><p>The resulting signal is most similar to unsigned intracellular current or conductance change.</p></li>
 </ul>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r6018359975dd-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Gao, R., Peterson, E. J., &amp; Voytek, B. (2017). Inferring synaptic
+<div role="list" class="citation-list">
+<div class="citation" id="r6018359975dd-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Gao, R., Peterson, E. J., &amp; Voytek, B. (2017). Inferring synaptic
 excitation/inhibition balance from field potentials. NeuroImage, 158, 70–78.
 DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2017.06.078">https://doi.org/10.1016/j.neuroimage.2017.06.078</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <p>Simulate a synaptic current signal:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">sim_synaptic_current</span><span class="p">(</span><span class="n">n_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
@@ -161,9 +161,9 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.20
 </dd></dl>
 
 <section id="examples-using-neurodsp-sim-sim-synaptic-current">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_synaptic_current</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-synaptic-current" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_SimulateAperiodic_thumb.png" />
-<p><a class="reference internal" href="../auto_tutorials/sim/plot_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.sim.sim_synaptic_current</span></code><a class="headerlink" href="#examples-using-neurodsp-sim-sim-synaptic-current" title="Permalink to this heading">¶</a></h2>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Simulate aperiodic signals."><img alt="" src="../_images/sphx_glr_plot_02_SimulateAperiodic_thumb.png" />
+<p><a class="reference internal" href="../auto_tutorials/sim/plot_02_SimulateAperiodic.html#sphx-glr-auto-tutorials-sim-plot-02-simulateaperiodic-py"><span class="std std-ref">Simulating Aperiodic Signals</span></a></p>
   <div class="sphx-glr-thumbnail-title">Simulating Aperiodic Signals</div>
 </div></div><div style='clear:both'></div></section>
 </section>
@@ -180,8 +180,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.20
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

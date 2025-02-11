@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.sim.cycles.sim_asym_harmonic_cycle &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.sim.cycles.sim_asym_harmonic_cycle &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -57,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,13 +109,13 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-sim-cycles-sim-asym-harmonic-cycle">
-<h1>neurodsp.sim.cycles.sim_asym_harmonic_cycle<a class="headerlink" href="#neurodsp-sim-cycles-sim-asym-harmonic-cycle" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.sim.cycles.sim_asym_harmonic_cycle<a class="headerlink" href="#neurodsp-sim-cycles-sim-asym-harmonic-cycle" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.sim.cycles.sim_asym_harmonic_cycle">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.sim.cycles.</span></span><span class="sig-name descname"><span class="pre">sim_asym_harmonic_cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_harmonics</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/sim/cycles.html#sim_asym_harmonic_cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.sim.cycles.sim_asym_harmonic_cycle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulate an asymmetrical cycle as a sum of harmonics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>n_seconds</strong><span class="classifier">float</span></dt><dd><p>Length of cycle window in seconds.</p>
 </dd>
@@ -128,7 +127,7 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>cycle</strong><span class="classifier">1d array</span></dt><dd><p>Simulated asymmetrical harmonic cycle.</p>
 </dd>
@@ -142,14 +141,15 @@
 <div class="math notranslate nohighlight">
 \[cycle = \sum_{j=1}^{j} \dfrac{1}{j^2} \cdot cos(j2\pi ft)+(j-1)*\phi\]</div>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="re6664a3a7275-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal
+<div role="list" class="citation-list">
+<div class="citation" id="re6664a3a7275-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Lozano-Soldevilla, D., Huurne, N. T., &amp; Oostenveld, R. (2016). Neuronal
 Oscillations with Non-sinusoidal Morphology Produce Spurious Phase-to-Amplitude
 Coupling and Directionality. Frontiers in Computational Neuroscience, 10.
 DOI: <a class="reference external" href="https://doi.org/10.3389/fncom.2016.00087">https://doi.org/10.3389/fncom.2016.00087</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <p>Simulate an asymmetrical cycle as the sum of harmonics:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cycle</span> <span class="o">=</span> <span class="n">sim_asym_harmonic_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_harmonics</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -171,8 +171,8 @@ DOI: <a class="reference external" href="https://doi.org/10.3389/fncom.2016.0008
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>

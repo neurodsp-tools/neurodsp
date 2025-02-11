@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>neurodsp.rhythm.sliding_window_matching &#8212; neurodsp 2.2.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+    <title>neurodsp.rhythm.sliding_window_matching &#8212; neurodsp 2.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=94f77982"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=a56c686a"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 
@@ -56,7 +55,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           neurodsp</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,15 +108,15 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neurodsp-rhythm-sliding-window-matching">
-<h1>neurodsp.rhythm.sliding_window_matching<a class="headerlink" href="#neurodsp-rhythm-sliding-window-matching" title="Permalink to this headline">¶</a></h1>
+<h1>neurodsp.rhythm.sliding_window_matching<a class="headerlink" href="#neurodsp-rhythm-sliding-window-matching" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="neurodsp.rhythm.sliding_window_matching">
 <span class="sig-prename descclassname"><span class="pre">neurodsp.rhythm.</span></span><span class="sig-name descname"><span class="pre">sliding_window_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_starts_custom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neurodsp/rhythm/swm.html#sliding_window_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neurodsp.rhythm.sliding_window_matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find recurring patterns in a time series using the sliding window matching algorithm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sig</strong><span class="classifier">1d array</span></dt><dd><p>Time series.</p>
+<dt><strong>sig</strong><span class="classifier">array</span></dt><dd><p>Time series.</p>
 </dd>
 <dt><strong>fs</strong><span class="classifier">float</span></dt><dd><p>Sampling rate, in Hz.</p>
 </dd>
@@ -134,11 +133,11 @@ runtime proportional to the number of low variance windows in the data.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>windows</strong><span class="classifier">2d array</span></dt><dd><p>Putative patterns discovered in the input signal.</p>
+<dt><strong>windows</strong><span class="classifier">n x 2d array</span></dt><dd><p>Putative patterns discovered in the input signal.</p>
 </dd>
-<dt><strong>window_starts</strong><span class="classifier">1d array</span></dt><dd><p>Indices at which each window begins for the final set of windows.</p>
+<dt><strong>window_starts</strong><span class="classifier">n x 1d array</span></dt><dd><p>Indices at which each window begins for the final set of windows.</p>
 </dd>
 </dl>
 </dd>
@@ -164,17 +163,19 @@ and reduced variance across windows.</p></li>
 </li>
 </ul>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r578edf91f535-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &amp;
+<div role="list" class="citation-list">
+<div class="citation" id="r578edf91f535-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Gips, B., Bahramisharif, A., Lowet, E., Roberts, M. J., de Weerd, P., Jensen, O., &amp;
 van der Eerden, J. (2017). Discovering recurring patterns in electrophysiological
 recordings. Journal of Neuroscience Methods, 275, 66-79.
 DOI: <a class="reference external" href="https://doi.org/10.1016/j.jneumeth.2016.11.001">https://doi.org/10.1016/j.jneumeth.2016.11.001</a></p>
-</dd>
-<dt class="label" id="r578edf91f535-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p>Matlab Code implementation: <a class="reference external" href="https://github.com/bartgips/SWM">https://github.com/bartgips/SWM</a></p>
-</dd>
-</dl>
+</div>
+<div class="citation" id="r578edf91f535-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Matlab Code implementation: <a class="reference external" href="https://github.com/bartgips/SWM">https://github.com/bartgips/SWM</a></p>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <p>Search for reoccurring patterns using sliding window matching in a simulated beta signal:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">neurodsp.sim</span> <span class="kn">import</span> <span class="n">sim_combined</span>
@@ -188,7 +189,7 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.jneumeth.2016
 </dd></dl>
 
 <section id="examples-using-neurodsp-rhythm-sliding-window-matching">
-<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.sliding_window_matching</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-sliding-window-matching" title="Permalink to this headline">¶</a></h2>
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">neurodsp.rhythm.sliding_window_matching</span></code><a class="headerlink" href="#examples-using-neurodsp-rhythm-sliding-window-matching" title="Permalink to this heading">¶</a></h2>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Find recurring patterns in neural signals using Sliding Window Matching."><img alt="" src="../_images/sphx_glr_plot_SlidingWindowMatching_thumb.png" />
 <p><a class="reference internal" href="../auto_tutorials/rhythm/plot_SlidingWindowMatching.html#sphx-glr-auto-tutorials-rhythm-plot-slidingwindowmatching-py"><span class="std std-ref">Sliding Window Matching</span></a></p>
   <div class="sphx-glr-thumbnail-title">Sliding Window Matching</div>
@@ -207,8 +208,8 @@ DOI: <a class="reference external" href="https://doi.org/10.1016/j.jneumeth.2016
       
     </p>
     <p>
-        &copy; Copyright 2018-2023, VoytekLab.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
+        &copy; Copyright 2018-2025, VoytekLab.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
     </p>
   </div>
 </footer>
