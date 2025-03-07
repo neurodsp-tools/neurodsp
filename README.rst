@@ -25,7 +25,7 @@
    :alt: license
 
 .. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/neurodsp.svg
-   :target: https://pypi.python.org/pypi/neurodsp/
+   :target: https://pypi.org/project/neurodsp/
    :alt: python versions
 
 .. |Publication| image:: https://joss.theoj.org/papers/10.21105/joss.01272/status.svg
@@ -82,8 +82,6 @@ It has the following dependencies:
 Optional dependencies:
 
 - `pytest <https://github.com/pytest-dev/pytest>`_ is needed if you want to run the test suite locally
-
-We recommend using the `Anaconda <https://www.anaconda.com/download>`_ distribution to manage these requirements.
 
 Install
 -------
