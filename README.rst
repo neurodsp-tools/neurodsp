@@ -9,7 +9,7 @@
    :alt: build status
 
 .. |Version| image:: https://img.shields.io/pypi/v/neurodsp.svg
-   :target: https://pypi.python.org/pypi/neurodsp/
+   :target: https://pypi.org/project/neurodsp/
    :alt: version
 
 .. |BuildStatus| image:: https://github.com/neurodsp-tools/neurodsp/actions/workflows/build.yml/badge.svg
@@ -21,7 +21,7 @@
    :alt: coverage
 
 .. |License| image:: https://img.shields.io/pypi/l/neurodsp.svg
-   :target: https://opensource.org/licenses/Apache-2.0
+   :target: https://opensource.org/license/apache-2-0
    :alt: license
 
 .. |PythonVersions| image:: https://img.shields.io/pypi/pyversions/neurodsp.svg
@@ -83,7 +83,7 @@ Optional dependencies:
 
 - `pytest <https://github.com/pytest-dev/pytest>`_ is needed if you want to run the test suite locally
 
-We recommend using the `Anaconda <https://www.anaconda.com/products/individual>`_ distribution to manage these requirements.
+We recommend using the `Anaconda <https://www.anaconda.com/download>`_ distribution to manage these requirements.
 
 Install
 -------

@@ -7,7 +7,7 @@ This example explores using NeuroDSP in combination with MNE.
 NeuroDSP is designed to offer a selection of methods and analyses that can be applied
 to neural time series. NeuroDSP itself does not offer functionality for managing multi-channel
 data and metadata. To do so, NeuroDSP can be used with other tools, such as
-`MNE <https://mne-tools.github.io/>`_.
+`MNE <https://mne.tools/>`_.
 
 Here, we explore an example of how analyses from NeuroDSP can be applied to data
 that is managed and processed by MNE. In particular, it explores applying some
@@ -17,7 +17,7 @@ and applying lagged coherence.
 
 This tutorial requires that you have MNE installed. If you don't already have
 MNE, you can follow instructions to get it
-`here <https://mne-tools.github.io/stable/getting_started.html>`_.
+`here <https://mne.tools/stable/getting_started.html>`_.
 """
 
 ###################################################################################################
