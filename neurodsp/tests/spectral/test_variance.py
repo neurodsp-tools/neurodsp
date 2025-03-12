@@ -1,6 +1,6 @@
 """Tests for neurodsp.spectral.variance."""
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.spectral.variance import *
 
