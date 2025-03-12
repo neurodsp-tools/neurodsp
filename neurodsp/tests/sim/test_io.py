@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-from neurodsp.tests.settings import TEST_FILES_PATH
+from neurodsp.tests.tsettings import TEST_FILES_PATH
 
 from neurodsp.sim.io import *
 

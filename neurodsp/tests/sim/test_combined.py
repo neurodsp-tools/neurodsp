@@ -2,12 +2,13 @@
 
 from pytest import raises
 
-from neurodsp.tests.settings import FS, N_SECONDS, FREQ1, FREQ2, EXP1
+from neurodsp.sim import sim_powerlaw
+from neurodsp.spectral import compute_spectrum
+
+from neurodsp.tests.tsettings import FS, N_SECONDS, FREQ1, FREQ2, EXP1
 from neurodsp.tests.tutils import check_sim_output
 
 from neurodsp.sim.combined import *
-from neurodsp.sim import sim_powerlaw
-from neurodsp.spectral import compute_spectrum
 
 ###################################################################################################
 ###################################################################################################

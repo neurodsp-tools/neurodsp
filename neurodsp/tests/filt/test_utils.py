@@ -2,7 +2,7 @@
 
 from pytest import raises
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.filt.fir import design_fir_filter, compute_filter_length
 

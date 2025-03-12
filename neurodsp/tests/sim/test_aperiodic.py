@@ -6,12 +6,13 @@ import numpy as np
 from scipy.stats import skew, kurtosis
 from scipy.optimize import curve_fit
 
-from neurodsp.tests.settings import N_SECONDS, FS, EXP1, EXP2, KNEE, EPS
-from neurodsp.tests.tutils import check_sim_output, check_exponent
+from neurodsp.spectral import compute_spectrum
+
+from neurodsp.tests.tsettings import N_SECONDS, FS, EXP1, EXP2, KNEE, EPS
+from neurodsp.tests.tutils import check_sim_output, linear_fit_func
 
 from neurodsp.sim.aperiodic import *
 from neurodsp.sim.aperiodic import _create_powerlaw
-from neurodsp.spectral import compute_spectrum
 
 ###################################################################################################
 ###################################################################################################
@@ -85,7 +86,7 @@ def test_sim_frac_gaussian_noise(exponent):
     # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
     powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
-    [_, exponent_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    [_, exponent_hat], _ = curve_fit(linear_fit_func, np.log10(freqs), np.log10(powers))
     assert abs(exponent_hat - exponent) < 0.2
 
 @pytest.mark.parametrize('exponent', [-1.5, -2, -2.5])
@@ -98,7 +99,7 @@ def test_sim_frac_brownian_motion(exponent):
     # Linear fit the log-log power spectrum & check error based on expected 1/f exponent
     freqs = np.linspace(1, FS//2, num=FS//2)
     powers = np.abs(np.fft.fft(sig)[1:FS//2 + 1]) ** 2
-    [_, exponent_hat], _ = curve_fit(check_exponent, np.log10(freqs), np.log10(powers))
+    [_, exponent_hat], _ = curve_fit(linear_fit_func, np.log10(freqs), np.log10(powers))
     assert abs(exponent_hat - exponent) < 0.4
 
 def test_create_powerlaw():

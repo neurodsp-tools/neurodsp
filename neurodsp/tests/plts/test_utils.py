@@ -8,7 +8,7 @@ import itertools
 import numpy as np
 import matplotlib as mpl
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH
 
 from neurodsp.plts.utils import *
 

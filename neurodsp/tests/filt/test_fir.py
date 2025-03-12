@@ -4,7 +4,7 @@ from pytest import raises
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, EPS_FILT
+from neurodsp.tests.tsettings import FS, EPS_FILT
 
 from neurodsp.filt.fir import *
 

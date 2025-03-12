@@ -5,7 +5,8 @@ import pytest
 import numpy as np
 from numpy.testing import assert_equal
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
+
 from neurodsp.spectral.utils import *
 
 ###################################################################################################

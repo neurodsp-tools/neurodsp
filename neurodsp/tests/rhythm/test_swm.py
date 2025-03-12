@@ -1,6 +1,6 @@
 """Tests for neurodsp.rhythm.swm (sliding window matching)."""
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.rhythm.swm import *
 

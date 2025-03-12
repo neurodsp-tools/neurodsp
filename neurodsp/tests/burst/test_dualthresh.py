@@ -1,6 +1,6 @@
 """Tests for neurodsp.burst.dualthresh."""
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.burst.dualthresh import *
 from neurodsp.burst.dualthresh import _dual_threshold_split, _rmv_short_periods

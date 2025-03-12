@@ -5,7 +5,7 @@ import numpy as np
 from neurodsp.spectral.power import compute_spectrum
 from neurodsp.spectral.variance import compute_spectral_hist, compute_scv, compute_scv_rs
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH, FS
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH, FS
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.spectral import *

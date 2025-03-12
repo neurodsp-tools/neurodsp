@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.spectral.checks import *
 

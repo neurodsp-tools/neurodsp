@@ -4,11 +4,12 @@ from pytest import raises
 
 import numpy as np
 
-from neurodsp.utils.decorators import *
 from neurodsp.timefrequency import robust_hilbert
 from neurodsp.filt import filter_signal
 from neurodsp.aperiodic import compute_autocorr
 from neurodsp.spectral import compute_spectrum
+
+from neurodsp.utils.decorators import *
 
 ###################################################################################################
 ###################################################################################################

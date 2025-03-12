@@ -4,7 +4,7 @@ from pytest import warns
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, FREQ1, FREQS_ARR, FREQS_LST
+from neurodsp.tests.tsettings import FS, FREQ1, FREQS_ARR, FREQS_LST
 
 from neurodsp.rhythm.lc import *
 

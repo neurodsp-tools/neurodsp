@@ -4,7 +4,7 @@ from pytest import raises
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, FREQ_SINE, FREQS_LST, FREQS_ARR, EPS
+from neurodsp.tests.tsettings import FS, FREQ_SINE, FREQS_LST, FREQS_ARR, EPS
 
 from neurodsp.spectral.power import *
 from neurodsp.spectral.power import _spectrum_input_checks

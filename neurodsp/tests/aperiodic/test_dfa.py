@@ -6,7 +6,7 @@ import numpy as np
 
 from neurodsp.sim import sim_powerlaw
 
-from neurodsp.tests.settings import N_SECONDS
+from neurodsp.tests.tsettings import N_SECONDS
 
 from neurodsp.aperiodic.dfa import *
 

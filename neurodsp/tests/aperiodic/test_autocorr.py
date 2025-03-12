@@ -1,6 +1,6 @@
 """Tests for neurodsp.aperiodic.autocorr."""
 
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.aperiodic.autocorr import *
 

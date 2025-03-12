@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, N_SECONDS, F_RANGE, EPS
+from neurodsp.tests.tsettings import FS, N_SECONDS, F_RANGE, EPS
 
 from neurodsp.timefrequency.hilbert import *
 
