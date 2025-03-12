@@ -45,5 +45,7 @@ def plot_test(func):
 
     return wrapper
 
-def check_exponent(xs, offset, exp):
+def linear_fit_func(xs, offset, exp):
+    """Linear fit function to use for tests."""
+
     return xs*exp + offset

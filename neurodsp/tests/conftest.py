@@ -18,9 +18,14 @@ from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
 ###################################################################################################
 ###################################################################################################
 
+## TEST SETUP
+
 def pytest_configure(config):
 
     set_random_seed(42)
+
+
+## TEST OBJECTS
 
 @pytest.fixture(scope='session')
 def tsig():
