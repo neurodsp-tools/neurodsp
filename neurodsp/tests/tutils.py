@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from neurodsp.utils.data import compute_nsamples
 
-from neurodsp.tests.settings import N_SECONDS, FS
+from neurodsp.tests.tsettings import N_SECONDS, FS
 
 ###################################################################################################
 ###################################################################################################
