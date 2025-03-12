@@ -4,7 +4,7 @@ from neurodsp.filt.filter import filter_signal
 from neurodsp.filt.fir import design_fir_filter
 from neurodsp.filt.utils import compute_frequency_response
 
-from neurodsp.tests.settings import FS, TEST_PLOTS_PATH
+from neurodsp.tests.tsettings import FS, TEST_PLOTS_PATH
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.filt import *

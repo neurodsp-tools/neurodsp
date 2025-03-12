@@ -5,7 +5,7 @@ import numpy as np
 from neurodsp.utils import create_times
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH, N_SECONDS, FS
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH, N_SECONDS, FS
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.timefrequency import *

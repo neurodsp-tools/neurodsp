@@ -3,7 +3,8 @@
 import numpy as np
 
 from neurodsp.tests.tutils import check_sim_output
-from neurodsp.tests.settings import N_SECONDS, N_SECONDS_ODD, FS, FS_ODD
+from neurodsp.tests.tsettings import N_SECONDS, N_SECONDS_ODD, FS, FS_ODD
+
 from neurodsp.sim.transients import *
 
 ###################################################################################################

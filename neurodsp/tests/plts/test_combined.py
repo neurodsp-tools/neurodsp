@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH, N_SECONDS, FS
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH, N_SECONDS, FS
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.combined import *

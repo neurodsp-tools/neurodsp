@@ -3,7 +3,7 @@
 import numpy as np
 
 from neurodsp.tests.tutils import check_sim_output
-from neurodsp.tests.settings import FS
+from neurodsp.tests.tsettings import FS
 
 from neurodsp.sim.modulate import *
 

@@ -5,7 +5,7 @@ import numpy as np
 from neurodsp.sim import sim_combined
 from neurodsp.spectral import compute_spectrum, trim_spectrum
 
-from neurodsp.tests.settings import FS, EXP1
+from neurodsp.tests.tsettings import FS, EXP1
 
 from neurodsp.aperiodic.irasa import *
 

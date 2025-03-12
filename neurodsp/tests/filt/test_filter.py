@@ -4,7 +4,7 @@ from pytest import raises, warns
 
 import numpy as np
 
-from neurodsp.tests.settings import FS, F_RANGE
+from neurodsp.tests.tsettings import FS, F_RANGE
 
 from neurodsp.filt.filter import *
 from neurodsp.filt.filter import _filter_input_checks

@@ -12,8 +12,8 @@ from neurodsp.sim.params import SimParams
 from neurodsp.sim.signals import Simulations, VariableSimulations, MultiSimulations
 from neurodsp.spectral import compute_spectrum
 from neurodsp.utils.sim import set_random_seed
-from neurodsp.tests.settings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
-                                     BASE_TEST_FILE_PATH, TEST_PLOTS_PATH, TEST_FILES_PATH)
+from neurodsp.tests.tsettings import (N_SECONDS, FS, FREQ_SINE, FREQ1, EXP1,
+                                      BASE_TEST_FILE_PATH, TEST_PLOTS_PATH, TEST_FILES_PATH)
 
 ###################################################################################################
 ###################################################################################################
@@ -24,6 +24,18 @@ def pytest_configure(config):
 
     set_random_seed(42)
 
+@pytest.fixture(scope='session', autouse=True)
+def check_dir():
+    """Once, prior to session, this will clear and re-initialize the test file directories."""
+
+    # If the directories already exist, clear them
+    if os.path.exists(BASE_TEST_FILE_PATH):
+        shutil.rmtree(BASE_TEST_FILE_PATH)
+
+    # Remake (empty) directories
+    os.mkdir(BASE_TEST_FILE_PATH)
+    os.mkdir(TEST_PLOTS_PATH)
+    os.mkdir(TEST_FILES_PATH)
 
 ## TEST OBJECTS
 
@@ -107,16 +119,3 @@ def tmsims(tsig2d, tsim_iters):
 
     params = [ps for ps in tsim_iters.iters['pl_exp'].yielder]
     yield MultiSimulations([tsig2d, tsig2d], params, 'sim_test', tsim_iters.iters['pl_exp'].update)
-
-@pytest.fixture(scope='session', autouse=True)
-def check_dir():
-    """Once, prior to session, this will clear and re-initialize the test file directories."""
-
-    # If the directories already exist, clear them
-    if os.path.exists(BASE_TEST_FILE_PATH):
-        shutil.rmtree(BASE_TEST_FILE_PATH)
-
-    # Remake (empty) directories
-    os.mkdir(BASE_TEST_FILE_PATH)
-    os.mkdir(TEST_PLOTS_PATH)
-    os.mkdir(TEST_FILES_PATH)

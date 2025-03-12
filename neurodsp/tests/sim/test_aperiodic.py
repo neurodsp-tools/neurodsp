@@ -6,12 +6,13 @@ import numpy as np
 from scipy.stats import skew, kurtosis
 from scipy.optimize import curve_fit
 
-from neurodsp.tests.settings import N_SECONDS, FS, EXP1, EXP2, KNEE, EPS
+from neurodsp.spectral import compute_spectrum
+
+from neurodsp.tests.tsettings import N_SECONDS, FS, EXP1, EXP2, KNEE, EPS
 from neurodsp.tests.tutils import check_sim_output, linear_fit_func
 
 from neurodsp.sim.aperiodic import *
 from neurodsp.sim.aperiodic import _create_powerlaw
-from neurodsp.spectral import compute_spectrum
 
 ###################################################################################################
 ###################################################################################################

@@ -7,7 +7,7 @@ from neurodsp.utils import create_times
 from neurodsp.burst import detect_bursts_dual_threshold
 from neurodsp.timefrequency import amp_by_time, phase_by_time, freq_by_time
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH, N_SECONDS, FS, F_RANGE
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH, N_SECONDS, FS, F_RANGE
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.time_series import *

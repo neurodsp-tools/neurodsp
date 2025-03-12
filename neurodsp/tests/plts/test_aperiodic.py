@@ -2,7 +2,7 @@
 
 from neurodsp.aperiodic.autocorr import compute_autocorr
 
-from neurodsp.tests.settings import TEST_PLOTS_PATH, FS
+from neurodsp.tests.tsettings import TEST_PLOTS_PATH, FS
 from neurodsp.tests.tutils import plot_test
 
 from neurodsp.plts.aperiodic import *

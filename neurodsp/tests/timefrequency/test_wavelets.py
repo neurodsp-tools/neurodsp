@@ -1,6 +1,6 @@
 """Tests for neurodsp.timefrequency.wavelets."""
 
-from neurodsp.tests.settings import FS, FREQ1, FREQS_ARR
+from neurodsp.tests.tsettings import FS, FREQ1, FREQS_ARR
 
 from neurodsp.timefrequency.wavelets import *
 

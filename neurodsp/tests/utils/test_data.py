@@ -2,7 +2,7 @@
 
 from numpy.testing import assert_equal, assert_almost_equal
 
-from neurodsp.tests.settings import N_SECONDS, FS, N_SECONDS_ODD, FS_ODD
+from neurodsp.tests.tsettings import N_SECONDS, FS, N_SECONDS_ODD, FS_ODD
 
 from neurodsp.utils.data import *
 
