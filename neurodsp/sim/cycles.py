@@ -159,9 +159,6 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     n_samples = compute_nsamples(n_seconds, fs)
     half_sample = int(n_samples/2)
 
-    # Check for an odd number of samples (for half peaks, we need to fix this later)
-    remainder = n_samples % 2
-
     # Calculate number of samples rising
     n_rise = int(np.round(n_samples * rdsym))
     n_rise1 = int(np.ceil(n_rise/2))
@@ -171,9 +168,14 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     n_decay = n_samples - n_rise
     n_decay1 = half_sample - n_rise1
 
+    # Check for an odd number of samples - if so we offset by one for half cycles
+    # Below we also check for special cases of rdsym, which similarly need offsetting
+    remainder = n_samples % 2
+
     # Create phase definition for cycle with both extrema being asymmetric
     if side == 'both':
 
+        n_rise1 -= 1 if rdsym == 1. else 0
         phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
                            np.linspace(np.pi/2, -np.pi/2, n_decay + 1)[1:-1],
                            np.linspace(-np.pi/2, 0, n_rise2 + 1)[:-1]])
@@ -181,6 +183,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
     # Create phase definition for cycle with only one extrema being asymmetric
     elif side == 'peak':
 
+        n_rise1 -= 1 if rdsym == 1. else 0
         half_sample += 1 if bool(remainder) else 0
         phase = np.hstack([np.linspace(0, np.pi/2, n_rise1 + 1),
                            np.linspace(np.pi/2, np.pi, n_decay1 + 1)[1:-1],
@@ -188,6 +191,7 @@ def sim_asine_cycle(n_seconds, fs, rdsym, side='both'):
 
     elif side == 'trough':
 
+        n_rise1 -= 1 if rdsym == 0. else 0
         half_sample -= 1 if not bool(remainder) else 0
         phase = np.hstack([np.linspace(0, np.pi, half_sample + 1)[:-1],
                            np.linspace(-np.pi, -np.pi/2, n_decay1 + 1),
