@@ -169,6 +169,8 @@ def _rmv_short_periods(sig, n_samples):
     if osc_ends[-1] < osc_starts[-1]:
         osc_ends = np.append(osc_ends, len(osc_changes))
 
+    osc_starts, osc_ends = np.array(osc_starts), np.array(osc_ends)
+    
     osc_length = osc_ends - osc_starts
     osc_starts_long = osc_starts[osc_length >= n_samples]
     osc_ends_long = osc_ends[osc_length >= n_samples]
