@@ -71,7 +71,7 @@ open an `issue <https://github.com/neurodsp-tools/neurodsp/issues>`_ and ask!
 Dependencies
 ------------
 
-``NeuroDSP`` is written in Python, and requires Python >= 3.6 to run.
+``NeuroDSP`` is written in Python, and requires Python >= 3.7 to run.
 
 It has the following dependencies:
 
