@@ -55,6 +55,11 @@ def test_compute_spectrum_2d(tsig2d):
     assert freqs.shape[-1] == spectrum.shape[-1]
     assert spectrum.ndim == 2
 
+def test_compute_spectrum_fft(tsig, tsig_sine):
+
+    freqs, spectrum = compute_spectrum_fft(tsig, FS)
+    assert freqs.shape == spectrum.shape
+
 def test_compute_spectrum_welch(tsig, tsig_sine):
 
     freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')

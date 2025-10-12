@@ -130,6 +130,38 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     return freqs_ext, times_ext, spg_ext
 
 
+def get_positive_fft_outputs(freqs, powers=None, drop_zero=False):
+    """Get the positive frequency values for an FFT.
+
+    Parameters
+    ----------
+    freqs : 1d array
+        Frequency vector corresponding to the FFT estimate, with positive & negative frequencies.
+    powers : 1d array, optional
+        Complex power value estimates from the FFT.
+    drop_zero : bool, optional, default: False
+        Whether to drop the estimate for frequency of 0.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the measure was calculated.
+    spectrum : array
+        Power spectral density.
+        Only returned if an input power spectrum is passed.
+    """
+
+    start_ind = 1 if drop_zero else 0
+
+    # Get the max positive ind as half length, rounded up if the length is odd
+    end_ind = int(np.ceil(len(freqs) / 2))
+
+    if powers is not None:
+        return freqs[start_ind:end_ind], powers[start_ind:end_ind]
+    else:
+        return freqs[start_ind:end_ind]
+
+
 def window_pad(sig, nperseg, noverlap, npad, fast_len,
                nwindows=None, nsamples=None, pad_left=None, pad_right=None):
     """Pads windows (for Welch's PSD) with zeros.
