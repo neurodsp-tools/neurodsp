@@ -64,6 +64,11 @@ def test_compute_spectrum_fft(tsig, tsig_sine):
     freqs2, spectrum2 = compute_spectrum_fft(tsig, FS, window='hann')
     assert freqs2.shape == spectrum2.shape
 
+    # Test padding signal
+    freqs3, spectrum3 = compute_spectrum_fft(tsig, FS, nfft=1.5*len(tsig))
+    assert freqs3.shape == spectrum3.shape
+    assert freqs2.shape != freqs3.shape
+
 def test_compute_spectrum_welch(tsig, tsig_sine):
 
     freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')

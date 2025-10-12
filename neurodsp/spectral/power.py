@@ -17,7 +17,7 @@ from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
-from neurodsp.spectral.utils import trim_spectrum, window_pad, get_positive_fft_outputs
+from neurodsp.spectral.utils import trim_spectrum, window_pad, pad_signal
 from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
 
 ###################################################################################################
@@ -140,7 +140,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 @multidim(select=[0])
-def compute_spectrum_fft(sig, fs, window=None, f_range=None):
+def compute_spectrum_fft(sig, fs, window=None, nfft=None, f_range=None):
     """Compute the power spectrum based on a single FFT.
 
     Parameters
@@ -149,10 +149,13 @@ def compute_spectrum_fft(sig, fs, window=None, f_range=None):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    window : str, tuple, float
+    window : str or tuple or float, optional
         Window function to apply to signal.
         Typically, this is a string of the name of the window to use (e.g. 'hann' or 'hamming').
         See `scipy.signal.windows.get_window` for details.
+    nfft : int, optional
+        Number of samples per for the FFT estimation.
+        If provided and nfft > len(sig), then the signal is zero-padded to this length.
     f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
 
@@ -166,6 +169,9 @@ def compute_spectrum_fft(sig, fs, window=None, f_range=None):
 
     if window is not None:
         sig = sig * get_window(window, len(sig))
+
+    if nfft is not None:
+        sig = pad_signal(sig, nfft)
 
     # Compute the FFT and convert to power & compute corresponding frequency vector
     spectrum = np.abs(np.fft.rfft(sig)) ** 2.
