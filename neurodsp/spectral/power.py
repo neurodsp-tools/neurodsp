@@ -159,11 +159,11 @@ def compute_spectrum_fft(sig, fs, f_range=None):
         Power spectral density.
     """
 
-    # Compute the FFT and take the real part of the FFT power estimate
-    spectrum = np.real(np.fft.fft(sig))
+    # Compute the FFT and compute power
+    spectrum = np.abs(np.fft.fft(sig))**2.
 
     # Compute the frequency vector, and extract positive frequency & power values
-    freqs = np.fft.fftfreq(len(sig), 1/fs)
+    freqs = np.fft.fftfreq(len(sig), 1. / fs)
     freqs, spectrum = get_positive_fft_outputs(freqs, spectrum)
 
     if f_range:
@@ -299,16 +299,15 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
     """
 
-    # Take the positive half of the spectrum, since it's symmetrical
-    ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
-    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
+    # Compute spectrum estimate as a single FFT
+    freqs, spectrum = compute_spectrum_fft(sig, fs)
 
     # Convert median filter length from Hz to samples, and make sure it is odd
     filt_len_samp = int(filt_len / (freqs[1] - freqs[0]))
     if filt_len_samp % 2 == 0:
         filt_len_samp += 1
 
-    spectrum = medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
+    spectrum = medfilt(spectrum / (fs * len(sig)), filt_len_samp)
 
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
