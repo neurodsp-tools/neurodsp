@@ -57,8 +57,12 @@ def test_compute_spectrum_2d(tsig2d):
 
 def test_compute_spectrum_fft(tsig, tsig_sine):
 
-    freqs, spectrum = compute_spectrum_fft(tsig, FS)
-    assert freqs.shape == spectrum.shape
+    freqs1, spectrum1 = compute_spectrum_fft(tsig, FS)
+    assert freqs1.shape == spectrum1.shape
+
+    # Test applying a window function
+    freqs2, spectrum2 = compute_spectrum_fft(tsig, FS, window='hann')
+    assert freqs2.shape == spectrum2.shape
 
 def test_compute_spectrum_welch(tsig, tsig_sine):
 

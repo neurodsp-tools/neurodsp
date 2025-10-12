@@ -9,6 +9,7 @@ https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.ht
 import numpy as np
 from scipy.signal import spectrogram, medfilt
 from scipy.fft import next_fast_len
+from scipy.signal.windows import get_window
 
 from neurodsp.utils.core import get_avg_func
 from neurodsp.utils.data import create_freqs
@@ -72,7 +73,7 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
 
 SPECTRUM_INPUTS = {
     'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
-    'fft' : ['f_range'],
+    'fft' : ['window', 'f_range'],
     'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'nfft', \
                'fast_len', 'f_range', 'outlier_percent'],
     'medfilt' : ['filt_len', 'f_range'],
@@ -139,7 +140,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 @multidim(select=[0])
-def compute_spectrum_fft(sig, fs, f_range=None):
+def compute_spectrum_fft(sig, fs, window=None, f_range=None):
     """Compute the power spectrum based on a single FFT.
 
     Parameters
@@ -148,6 +149,10 @@ def compute_spectrum_fft(sig, fs, f_range=None):
         Time series.
     fs : float
         Sampling rate, in Hz.
+    window : str, tuple, float
+        Window function to apply to signal.
+        Typically, this is a string of the name of the window to use (e.g. 'hann' or 'hamming').
+        See `scipy.signal.windows.get_window` for details.
     f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
 
@@ -158,6 +163,9 @@ def compute_spectrum_fft(sig, fs, f_range=None):
     spectrum : array
         Power spectral density.
     """
+
+    if window is not None:
+        sig = sig * get_window(window, len(sig))
 
     # Compute the FFT and convert to power & compute corresponding frequency vector
     spectrum = np.abs(np.fft.rfft(sig)) ** 2.
