@@ -159,12 +159,9 @@ def compute_spectrum_fft(sig, fs, f_range=None):
         Power spectral density.
     """
 
-    # Compute the FFT and compute power
-    spectrum = np.abs(np.fft.fft(sig))**2.
-
-    # Compute the frequency vector, and extract positive frequency & power values
-    freqs = np.fft.fftfreq(len(sig), 1. / fs)
-    freqs, spectrum = get_positive_fft_outputs(freqs, spectrum)
+    # Compute the FFT and convert to power & compute corresponding frequency vector
+    spectrum = np.abs(np.fft.rfft(sig)) ** 2.
+    freqs = np.fft.rfftfreq(len(sig), 1. / fs)
 
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
@@ -374,7 +371,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
                              "Could not compute spectrum with low_bias=True.")
 
     # Compute Fourier transform on signal weighted by each slepian sequence
-    freqs = np.fft.rfftfreq(sig_len, 1. /fs)
+    freqs = np.fft.rfftfreq(sig_len, 1. / fs)
     spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis] * sig)) ** 2
 
     # combine estimates to compute final spectrum

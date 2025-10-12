@@ -149,6 +149,11 @@ def get_positive_fft_outputs(freqs, powers=None, drop_zero=False):
     spectrum : array
         Power spectral density.
         Only returned if an input power spectrum is passed.
+
+    Notes
+    -----
+    This can be used to extract positive only frequency from an FFT, for example,
+    as returned by `np.fft.fft` & np.fft.fftfreq`.
     """
 
     start_ind = 1 if drop_zero else 0
@@ -176,7 +181,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
         Number of points to overlap between segments, applied prior to zero padding.
     npad : int
         Number of samples to zero pad windows per side.
-    fast_len : bool, optional
+    fast_len : bool
         Moves nperseg to the fastest length to reduce computation.
         Adjusts zero-padding to account for the new nperseg.
         See scipy.fft.next_fast_len for details.
@@ -190,13 +195,11 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
     """
 
     if sig.ndim == 2:
-        # Determine the number of samples and padding once,
-        #   to prevent redundant computation in the loop
+
+        # Determine nsamples & padding once, to prevent redundant computation in the loop
         nwindows = int(np.ceil(len(sig[0])/nperseg))
         if nsamples is None or pad_left is None or pad_right is None:
-            nsamples, pad_left, pad_right = _find_pad_size(
-                nperseg, npad, fast_len
-            )
+            nsamples, pad_left, pad_right = _find_pad_size(nperseg, npad, fast_len)
 
         # Recursively call window_pad on each signal
         for sind, csig in enumerate(sig):
@@ -226,9 +229,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
 
         if nsamples is None or pad_left is None or pad_right is None:
             # Skipped if called from the 2d case
-            nsamples, pad_left, pad_right = _find_pad_size(
-                nperseg, npad, fast_len
-            )
+            nsamples, pad_left, pad_right = _find_pad_size(nperseg, npad, fast_len)
 
         # Window signal
         sig_windowed = np.zeros((nwindows, nsamples))
