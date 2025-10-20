@@ -9,6 +9,7 @@ https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.ht
 import numpy as np
 from scipy.signal import spectrogram, medfilt
 from scipy.fft import next_fast_len
+from scipy.signal.windows import get_window
 
 from neurodsp.utils.core import get_avg_func
 from neurodsp.utils.data import create_freqs
@@ -16,7 +17,7 @@ from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
-from neurodsp.spectral.utils import trim_spectrum, window_pad
+from neurodsp.spectral.utils import trim_spectrum, window_pad, pad_signal
 from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
 
 ###################################################################################################
@@ -71,9 +72,10 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
 
 
 SPECTRUM_INPUTS = {
+    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
+    'fft' : ['window', 'f_range'],
     'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'nfft', \
                'fast_len', 'f_range', 'outlier_percent'],
-    'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
     'medfilt' : ['filt_len', 'f_range'],
 }
 
@@ -133,6 +135,50 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
     # Create the power spectrum by averaging across the time dimension
     spectrum = get_avg_func(avg_type)(mwt_power, axis=1)
+
+    return freqs, spectrum
+
+
+@multidim(select=[0])
+def compute_spectrum_fft(sig, fs, window=None, nfft=None, f_range=None):
+    """Compute the power spectrum based on a single FFT.
+
+    Parameters
+    ----------
+    sig : array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    window : str or tuple or float, optional
+        Window function to apply to signal.
+        Typically, this is a string of the name of the window to use (e.g. 'hann' or 'hamming').
+        See `scipy.signal.windows.get_window` for details.
+    nfft : int, optional
+        Number of samples per for the FFT estimation.
+        If provided and nfft > len(sig), then the signal is zero-padded to this length.
+    f_range : list of [float, float], optional
+        Frequency range to sub-select from the power spectrum.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the measure was calculated.
+    spectrum : array
+        Power spectral density.
+    """
+
+    if window is not None:
+        sig = sig * get_window(window, len(sig))
+
+    if nfft is not None:
+        sig = pad_signal(sig, nfft)
+
+    # Compute the FFT and convert to power & compute corresponding frequency vector
+    spectrum = np.abs(np.fft.rfft(sig)) ** 2.
+    freqs = np.fft.rfftfreq(len(sig), 1. / fs)
+
+    if f_range:
+        freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
 
     return freqs, spectrum
 
@@ -264,16 +310,15 @@ def compute_spectrum_medfilt(sig, fs, filt_len=1., f_range=None):
     >>> freqs, spec = compute_spectrum_medfilt(sig, fs=500)
     """
 
-    # Take the positive half of the spectrum, since it's symmetrical
-    ft = np.fft.fft(sig)[:int(np.ceil(len(sig) / 2.))]
-    freqs = np.fft.fftfreq(len(sig), 1. / fs)[:int(np.ceil(len(sig) / 2.))]
+    # Compute spectrum estimate as a single FFT
+    freqs, spectrum = compute_spectrum_fft(sig, fs)
 
     # Convert median filter length from Hz to samples, and make sure it is odd
     filt_len_samp = int(filt_len / (freqs[1] - freqs[0]))
     if filt_len_samp % 2 == 0:
         filt_len_samp += 1
 
-    spectrum = medfilt(np.abs(ft)**2. / (fs * len(sig)), filt_len_samp)
+    spectrum = medfilt(spectrum / (fs * len(sig)), filt_len_samp)
 
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
@@ -340,7 +385,7 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
                              "Could not compute spectrum with low_bias=True.")
 
     # Compute Fourier transform on signal weighted by each slepian sequence
-    freqs = np.fft.rfftfreq(sig_len, 1. /fs)
+    freqs = np.fft.rfftfreq(sig_len, 1. / fs)
     spectra = np.abs(np.fft.rfft(slepian_sequences[:, np.newaxis] * sig)) ** 2
 
     # combine estimates to compute final spectrum

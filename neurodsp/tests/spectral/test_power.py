@@ -55,6 +55,20 @@ def test_compute_spectrum_2d(tsig2d):
     assert freqs.shape[-1] == spectrum.shape[-1]
     assert spectrum.ndim == 2
 
+def test_compute_spectrum_fft(tsig, tsig_sine):
+
+    freqs1, spectrum1 = compute_spectrum_fft(tsig, FS)
+    assert freqs1.shape == spectrum1.shape
+
+    # Test applying a window function
+    freqs2, spectrum2 = compute_spectrum_fft(tsig, FS, window='hann')
+    assert freqs2.shape == spectrum2.shape
+
+    # Test padding signal
+    freqs3, spectrum3 = compute_spectrum_fft(tsig, FS, nfft=1.5*len(tsig))
+    assert freqs3.shape == spectrum3.shape
+    assert freqs2.shape != freqs3.shape
+
 def test_compute_spectrum_welch(tsig, tsig_sine):
 
     freqs, spectrum = compute_spectrum_welch(tsig, FS, avg_type='mean')
@@ -66,8 +80,7 @@ def test_compute_spectrum_welch(tsig, tsig_sine):
     # Use a rectangular window with a width of one period/cycle and no overlap
     #   The spectrum should just be a dirac spike at the first frequency
     window = np.ones(FS)
-    _, psd_welch = compute_spectrum(tsig_sine, FS, method='welch',
-                                    nperseg=FS, noverlap=0, window=window)
+    _, psd_welch = compute_spectrum_welch(tsig_sine, FS, nperseg=FS, noverlap=0, window=window)
 
     # Spike at frequency 1
     assert np.abs(psd_welch[FREQ_SINE] - 0.5) < EPS
@@ -81,7 +94,7 @@ def test_compute_spectrum_welch(tsig, tsig_sine):
     assert np.allclose(psd_welch[0:FREQ_SINE], expected_answer, atol=EPS)
 
     # Test zero padding
-    freqs, spectrum = compute_spectrum(
+    freqs, spectrum = compute_spectrum_welch(
         np.tile(tsig, (2, 1)), FS, nperseg=100, noverlap=0, nfft=1000, f_range=(1, 200)
     )
     assert np.all(spectrum[0] == spectrum[1])
@@ -99,16 +112,13 @@ def test_compute_spectrum_medfilt(tsig, tsig_sine):
     freqs, spectrum = compute_spectrum_medfilt(tsig, FS)
     assert freqs.shape == spectrum.shape
 
-    # Compute raw estimate of psd using fourier transform
-    #   Only look at the spectrum up to the Nyquist frequency
+    # Compute raw estimate of psd using FFT
     sig_len = len(tsig_sine)
-    nyq_freq = sig_len//2
-    sig_ft = np.fft.fft(tsig_sine)[:nyq_freq]
-    psd = np.abs(sig_ft)**2/(FS * sig_len)
+    psd = np.abs(np.fft.rfft(tsig_sine))**2 / (FS * sig_len)
 
     # The medfilt here should be taking the median of a window with one sample
     #   Therefore, it should match the estimate of psd from above
-    _, psd_medfilt = compute_spectrum(tsig_sine, FS, method='medfilt', filt_len=0.1)
+    _, psd_medfilt = compute_spectrum_medfilt(tsig_sine, FS, filt_len=0.1)
     assert np.allclose(psd, psd_medfilt, atol=EPS)
 
 def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
@@ -126,4 +136,3 @@ def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
     idx_freq_sine = np.argmin(np.abs(freqs - FREQ_SINE))
     idx_peak = np.argmax(spectrum)
     assert idx_freq_sine == idx_peak
-

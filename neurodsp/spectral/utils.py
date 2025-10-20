@@ -130,6 +130,73 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
     return freqs_ext, times_ext, spg_ext
 
 
+def get_positive_fft_outputs(freqs, powers=None, drop_zero=False):
+    """Get the positive frequency values for an FFT.
+
+    Parameters
+    ----------
+    freqs : 1d array
+        Frequency vector corresponding to the FFT estimate, with positive & negative frequencies.
+    powers : 1d array, optional
+        Complex power value estimates from the FFT.
+    drop_zero : bool, optional, default: False
+        Whether to drop the estimate for frequency of 0.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the measure was calculated.
+    spectrum : array
+        Power spectral density.
+        Only returned if an input power spectrum is passed.
+
+    Notes
+    -----
+    This can be used to extract positive only frequency from an FFT, for example,
+    as returned by `np.fft.fft` & np.fft.fftfreq`.
+    """
+
+    start_ind = 1 if drop_zero else 0
+
+    # Get the max positive ind as half length, rounded up if the length is odd
+    end_ind = int(np.ceil(len(freqs) / 2))
+
+    if powers is not None:
+        return freqs[start_ind:end_ind], powers[start_ind:end_ind]
+    else:
+        return freqs[start_ind:end_ind]
+
+
+def pad_signal(sig, length):
+    """Pad a signal to a desired length.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal to pad.
+    length : int
+        Output length to pad the signal to.
+
+    Returns
+    -------
+    sig : 1d array
+        Padded signal.
+
+    Notes
+    -----
+    This approach pads the signal evenly on the left and right side with 0s.
+    If the padding length ends up being odd, this approach will split to padding to
+    have one less at the front / left side pad, and one more on the right / end side pad.
+    """
+
+    if length > len(sig):
+        npad_total = length - len(sig)
+        npad_left, npad_right = int(np.floor(npad_total / 2)), int(np.ceil(npad_total / 2))
+        sig = np.pad(sig, (npad_left, npad_right), mode='constant', constant_values=0)
+
+    return sig
+
+
 def window_pad(sig, nperseg, noverlap, npad, fast_len,
                nwindows=None, nsamples=None, pad_left=None, pad_right=None):
     """Pads windows (for Welch's PSD) with zeros.
@@ -144,7 +211,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
         Number of points to overlap between segments, applied prior to zero padding.
     npad : int
         Number of samples to zero pad windows per side.
-    fast_len : bool, optional
+    fast_len : bool
         Moves nperseg to the fastest length to reduce computation.
         Adjusts zero-padding to account for the new nperseg.
         See scipy.fft.next_fast_len for details.
@@ -158,13 +225,11 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
     """
 
     if sig.ndim == 2:
-        # Determine the number of samples and padding once,
-        #   to prevent redundant computation in the loop
+
+        # Determine nsamples & padding once, to prevent redundant computation in the loop
         nwindows = int(np.ceil(len(sig[0])/nperseg))
         if nsamples is None or pad_left is None or pad_right is None:
-            nsamples, pad_left, pad_right = _find_pad_size(
-                nperseg, npad, fast_len
-            )
+            nsamples, pad_left, pad_right = _find_pad_size(nperseg, npad, fast_len)
 
         # Recursively call window_pad on each signal
         for sind, csig in enumerate(sig):
@@ -194,9 +259,7 @@ def window_pad(sig, nperseg, noverlap, npad, fast_len,
 
         if nsamples is None or pad_left is None or pad_right is None:
             # Skipped if called from the 2d case
-            nsamples, pad_left, pad_right = _find_pad_size(
-                nperseg, npad, fast_len
-            )
+            nsamples, pad_left, pad_right = _find_pad_size(nperseg, npad, fast_len)
 
         # Window signal
         sig_windowed = np.zeros((nwindows, nsamples))

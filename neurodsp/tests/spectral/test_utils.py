@@ -43,6 +43,49 @@ def test_trim_spectrogram():
     assert_equal(f_ext, np.array([6, 7, 8]))
     assert_equal(t_ext, times)
 
+def test_get_positive_fft_outputs():
+
+    # Test odd length
+    freqs_odd = np.array([0, 1, 2, -2, -1])
+    powers_odd = np.array([0, 1, 2, 3, 4])
+    freqs_out_odd, powers_out_odd = get_positive_fft_outputs(freqs_odd, powers_odd)
+    assert freqs_out_odd.shape == powers_out_odd.shape
+    assert np.array_equal(freqs_out_odd, freqs_odd[:3])
+
+    # Test drop zero
+    freqs_out_odd2, powers_out_odd2 = get_positive_fft_outputs(freqs_odd, powers_odd, drop_zero=True)
+    assert freqs_out_odd2[0] != 0
+    assert powers_out_odd2[0] != 0
+
+    # Test even length
+    freqs_even = np.array([0, 1, 2, -3, -2, -1])
+    powers_even = np.array([0, 1, 2, 3, 4, 5])
+    freqs_out_even, powers_out_even = get_positive_fft_outputs(freqs_odd, powers_odd)
+    assert freqs_out_even.shape == powers_out_even.shape
+    assert freqs_out_even.shape == powers_out_even.shape
+    assert np.array_equal(freqs_out_even, freqs_even[:3])
+
+def test_pad_signal():
+
+    # Test case: odd length, even number added per side
+    length = 5
+    out1 = pad_signal(np.array([1, 2, 3]), length)
+    assert len(out1) == length
+
+    # Test case: even length, even number added per side
+    length = 6
+    out2 = pad_signal(np.array([1, 2]), length)
+    assert len(out2) == length
+
+    # Test case: odd length, uneven number added per side
+    length = 5
+    out3 = pad_signal(np.array([1, 2]), length)
+    assert len(out3) == length
+
+    # Test case: even length, uneven number added per side
+    length = 6
+    out4 = pad_signal(np.array([1, 2, 3]), length)
+    assert len(out4) == length
 
 @pytest.mark.parametrize("fast_len", [True, False])
 def test_window_pad(fast_len):
