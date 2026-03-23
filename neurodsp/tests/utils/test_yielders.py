@@ -19,10 +19,10 @@ def test_step_over_time(tsig):
     assert isinstance(yielder, Iterable)
 
     it0 = next(yielder)
-    np.array_equal(it0, tsig[0:size])
+    assert np.array_equal(it0, tsig[0:size])
 
     it1 = next(yielder)
-    np.array_equal(it0, tsig[0+step:step+size])
+    assert np.array_equal(it1, tsig[0+step:step+size])
 
     # Test non-zero start
     nzero_start = 25
