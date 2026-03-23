@@ -10,7 +10,7 @@ from neurodsp.plts.aperiodic import *
 ###################################################################################################
 ###################################################################################################
 
-def tests_plot_autocorr(tsig, tsig_comb):
+def test_plot_autocorr(tsig, tsig_comb):
 
     times1, acs1 = compute_autocorr(tsig, max_lag=150)
     times2, acs2 = compute_autocorr(tsig_comb, max_lag=150)
