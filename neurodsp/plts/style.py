@@ -134,6 +134,10 @@ def apply_custom_style(ax, **kwargs):
             warnings.simplefilter("ignore")
             plt.tight_layout()
 
+    axis = kwargs.pop('axis', None)
+    if axis is not None:
+        ax.axis(axis)
+
 
 def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
                collection_styler=apply_collection_style, custom_styler=apply_custom_style,
