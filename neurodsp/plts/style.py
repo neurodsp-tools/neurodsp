@@ -134,6 +134,10 @@ def apply_custom_style(ax, **kwargs):
             warnings.simplefilter("ignore")
             plt.tight_layout()
 
+    axis = kwargs.pop('axis', None)
+    if axis is not None:
+        ax.axis(axis)
+
 
 def plot_style(ax, axis_styler=apply_axis_style, line_styler=apply_line_style,
                collection_styler=apply_collection_style, custom_styler=apply_custom_style,
@@ -200,7 +204,7 @@ def style_plot(func, *args, **kwargs):
         Axis          title, xlabel, ylabel, xlim, ylim, xticks, yticks, xticklabels, yticklabels, minorticks
         Line          alpha, lw, linewidth, ls, linestyle, marker, ms, markersize
         Collection    alpha, edgecolor
-        Custom        title_fontsize, label_size, tick_labelsize, legend_size, legend_loc, tight_layout
+        Custom        title_fontsize, label_size, tick_labelsize, legend_size, legend_loc, tight_layout, axis
     """
 
     @wraps(func)
