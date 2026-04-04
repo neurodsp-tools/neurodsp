@@ -14,6 +14,9 @@ from neurodsp.spectral.power import _spectrum_input_checks
 
 def test_compute_spectrum(tsig):
 
+    freqs, spectrum = compute_spectrum(tsig, FS, method='fft')
+    assert freqs.shape == spectrum.shape
+
     freqs, spectrum = compute_spectrum(tsig, FS, method='welch')
     assert freqs.shape == spectrum.shape
 

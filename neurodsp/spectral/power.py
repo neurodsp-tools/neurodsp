@@ -30,7 +30,7 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
         Time series.
     fs : float
         Sampling rate, in Hz.
-    method : {'welch', 'wavelet', 'medfilt', 'multitaper'}, optional
+    method : {'welch', 'wavelet', 'medfilt', 'multitaper', 'fft'}, optional
         Method to use to estimate the power spectrum.
     **kwargs
         Keyword arguments to pass through to the function that calculates the spectrum.
@@ -53,7 +53,7 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
     >>> freqs, spectrum = compute_spectrum(sig, fs=500)
     """
 
-    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt', 'multitaper'])
+    check_param_options(method, 'method', ['welch', 'wavelet', 'medfilt', 'multitaper', 'fft'])
     _spectrum_input_checks(method, kwargs)
 
     if method == 'welch':
@@ -67,6 +67,9 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
 
     elif method == 'multitaper':
         return compute_spectrum_multitaper(sig, fs, **kwargs)
+
+    elif method == 'fft':
+        return compute_spectrum_fft(sig, fs, **kwargs)
 
 
 SPECTRUM_INPUTS = {
