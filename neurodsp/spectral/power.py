@@ -78,6 +78,7 @@ SPECTRUM_INPUTS = {
     'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', \
                'nfft', 'fast_len', 'f_range'],
     'medfilt' : ['filt_len', 'f_range'],
+    'multitaper' : ['bandwidth', 'n_tapers', 'low_bias', 'eigenvalue_weighting'],
 }
 
 
