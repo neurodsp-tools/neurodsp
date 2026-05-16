@@ -345,7 +345,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
     -----
     - This exponential cosine cycle is implemented as Equation 9 of [1]_.
 
-    ..math::
+    .. math::
 
       cycle = ((cos(2\pi ft) + 1) / 2)^{exp}
 
