@@ -73,6 +73,12 @@ def test_sim_asine_cycle(side):
     cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS_ODD, 0.25, side=side)
     check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE, fs=FS_ODD)
 
+    # Check special cases of rdsym = {0., 1.} which can lead to a length error
+    cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS, 0., side=side)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+    cycle = sim_asine_cycle(N_SECONDS_CYCLE, FS, 1., side=side)
+    check_sim_output(cycle, n_seconds=N_SECONDS_CYCLE)
+
 def test_sim_sawtooth_cycle():
 
     cycle = sim_sawtooth_cycle(N_SECONDS_CYCLE, FS, 0.75)
