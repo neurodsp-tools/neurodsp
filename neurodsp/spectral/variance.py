@@ -1,11 +1,11 @@
 """Compute spectral variance."""
 
 import numpy as np
-from scipy.signal import spectrogram
 
 from neurodsp.utils import discard_outliers
 from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
+from neurodsp.spectral.power import compute_spectrogram
 from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_windowing_settings
 
@@ -56,9 +56,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     >>> freqs, scv = compute_scv(sig, fs=500)
     """
 
-    # Compute spectrogram of data
-    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
-    freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
+    freqs, _, spg = compute_spectrogram(sig, fs, window, nperseg, noverlap)
 
     if outlier_pct is not None:
         spg = discard_outliers(spg, outlier_pct)
@@ -134,10 +132,8 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     """
 
     check_param_options(method, 'method', ['bootstrap', 'rolling'])
-    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
 
-    # Compute spectrogram of data
-    freqs, ts, spg = spectrogram(sig, fs, window, nperseg, noverlap)
+    freqs, ts, spg = compute_spectrogram(sig, fs, window, nperseg, noverlap)
 
     if method == 'bootstrap':
 
@@ -228,9 +224,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     >>> freqs, power_bins, spectral_hist = compute_spectral_hist(sig, fs=500)
     """
 
-    # Compute spectrogram of data
-    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
-    freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
+    freqs, _, spg = compute_spectrogram(sig, fs, window, nperseg, noverlap)
 
     # Get log10 power & limit to frequency range of interest before binning
     ps = np.transpose(np.log10(spg))

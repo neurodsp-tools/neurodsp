@@ -384,3 +384,43 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
         spectrum = spectrum[0]
 
     return freqs, spectrum
+
+
+def compute_spectrogram(sig, fs, window='hann', nperseg=None, noverlap=0, nfft=None):
+    """Compute a spectrogram.
+
+    Parameters
+    ----------
+    sig : array
+        Time series.
+    fs : float
+        Sampling rate, in Hz.
+    window : str or tuple or array_like, optional, default: 'hann'
+        Desired window to use. See scipy.signal.get_window for a list of available windows.
+        If array_like, the array will be used as the window and its length must be nperseg.
+    nperseg : int, optional
+        Length of each segment, in number of samples.
+        If None, and window is str or tuple, is set to 1 second of data.
+        If None, and window is array_like, is set to the length of the window.
+    noverlap : int, optional
+        Number of points to overlap between segments.
+        If None, noverlap = nperseg // 8.
+    nfft : int, optional
+        Number of samples per window. Requires nfft > nperseg.
+        Windows are zero-padded by the difference, nfft - nperseg.
+
+    Returns
+    -------
+    freqs : 1d array
+        Frequencies at which the spectrogram was calculated.
+    times : 1d array
+        Time values at which the spectrogram was calculated.
+    spg : 2d array
+        Power values of the spectrogram.
+    """
+
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
+
+    freqs, times, spg = spectrogram(sig, fs, window, nperseg, noverlap, nfft)
+
+    return freqs, times, spg
