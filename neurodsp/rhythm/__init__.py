@@ -2,3 +2,4 @@
 
 from .lc import compute_lagged_coherence
 from .swm import sliding_window_matching
+from .phase import pairwise_phase_consistency
