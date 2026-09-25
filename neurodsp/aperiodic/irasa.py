@@ -69,15 +69,15 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
     hset = np.arange(1.1, 1.95, 0.05) if hset is None else hset
     hset = np.round(hset, 4)
 
-    # The `nperseg` input needs to be set to lock in the size of the FFT's
-    if 'nperseg' not in spectrum_kwargs:
+    # Only Welch uses `nperseg`; avoid injecting it for non-Welch methods.
+    if spectrum_kwargs.get('method', 'welch') == 'welch' and 'nperseg' not in spectrum_kwargs:
         spectrum_kwargs['nperseg'] = int(4 * fs)
 
     # Calculate the original spectrum across the whole signal
     freqs, psd = compute_spectrum(sig, fs, **spectrum_kwargs)
 
     # Do the IRASA resampling procedure
-    psds = np.zeros((len(hset), *psd.shape))
+    psds = np.full((len(hset), *psd.shape), np.nan, dtype=float)
     for ind, h_val in enumerate(hset):
 
         # Get the up-sampling / down-sampling (h, 1/h) factors as integers
@@ -92,11 +92,16 @@ def compute_irasa(sig, fs, f_range=None, hset=None, thresh=None, **spectrum_kwar
         freqs_up, psd_up = compute_spectrum(sig_up, h_val * fs, **spectrum_kwargs)
         freqs_dn, psd_dn = compute_spectrum(sig_dn, fs / h_val, **spectrum_kwargs)
 
-        # Calculate the geometric mean of h and 1/h
-        psds[ind, :] = np.sqrt(psd_up * psd_dn)
+        # Align spectra to the original frequency grid for methods whose output length
+        # changes with signal length (for example medfilt and multitaper).
+        psd_up_i = np.interp(freqs, freqs_up, psd_up, left=np.nan, right=np.nan)
+        psd_dn_i = np.interp(freqs, freqs_dn, psd_dn, left=np.nan, right=np.nan)
+
+        # Calculate the geometric mean of h and 1/h on a shared frequency grid.
+        psds[ind, :] = np.sqrt(psd_up_i * psd_dn_i)
 
     # Take the median resampled spectra, as an estimate of the aperiodic component
-    psd_aperiodic = np.median(psds, axis=0)
+    psd_aperiodic = np.nanmedian(psds, axis=0)
 
     # Subtract aperiodic from original, to get the periodic component
     psd_periodic = psd - psd_aperiodic
