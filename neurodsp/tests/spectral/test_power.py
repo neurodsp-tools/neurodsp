@@ -139,3 +139,20 @@ def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
     idx_freq_sine = np.argmin(np.abs(freqs - FREQ_SINE))
     idx_peak = np.argmax(spectrum)
     assert idx_freq_sine == idx_peak
+
+def test_compute_spectrum_multitaper_scaling():
+
+    # White noise with unit variance: the one-sided PSD is 2 / fs
+    sig = np.random.default_rng(0).standard_normal(FS * 10)
+
+    for sig_len in [len(sig), len(sig) - 1]:
+        freqs, spectrum = compute_spectrum_multitaper(sig[:sig_len], FS)
+
+        # The integral of the PSD over frequency gives the signal variance
+        assert np.isclose(np.sum(spectrum) * freqs[1], np.var(sig[:sig_len]), rtol=0.01)
+
+        # The scale matches the welch estimate
+        freqs_welch, spectrum_welch = compute_spectrum_welch(sig[:sig_len], FS)
+        assert np.isclose(np.mean(spectrum[(freqs > 5) & (freqs < 40)]),
+                          np.mean(spectrum_welch[(freqs_welch > 5) & (freqs_welch < 40)]),
+                          rtol=0.1)

@@ -379,6 +379,13 @@ def compute_spectrum_multitaper(sig, fs, bandwidth=None, n_tapers=None,
         # Average spectral estimates
         spectrum = spectra.mean(axis=0)
 
+    # Scale to a one-sided power spectral density: divide by the sampling rate, and double
+    #   all frequencies except for 0 Hz and, for an even signal length, the Nyquist frequency
+    spectrum = spectrum / fs
+    spectrum[..., 1:] *= 2
+    if sig_len % 2 == 0:
+        spectrum[..., -1] /= 2
+
     # Convert output to 1d if necessary
     if sig.ndim == 1:
         spectrum = spectrum[0]
