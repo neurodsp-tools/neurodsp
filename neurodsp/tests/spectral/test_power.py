@@ -139,3 +139,9 @@ def test_compute_spectrum_multitaper(tsig_sine, tsig2d):
     idx_freq_sine = np.argmin(np.abs(freqs - FREQ_SINE))
     idx_peak = np.argmax(spectrum)
     assert idx_freq_sine == idx_peak
+
+def test_compute_spectrogram(tsig):
+
+    freqs, times, spg = compute_spectrogram(tsig, FS)
+    assert freqs.shape[0] == spg.shape[0]
+    assert times.shape[0] == spg.shape[1]
