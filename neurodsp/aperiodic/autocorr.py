@@ -18,6 +18,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
         Time series to compute autocorrelation over.
     max_lag : int, optional, default: 1000
         Maximum delay to compute autocorrelations for, in samples.
+        Limited to the last available lag, one less than the signal length.
     lag_step : int, optional, default: 1
         Step size (lag advance) for computing autocorrelations.
     demean : bool, optional, default: True
@@ -42,6 +43,7 @@ def compute_autocorr(sig, max_lag=1000, lag_step=1, demean=True):
     if demean:
         sig = sig - sig.mean()
 
+    max_lag = min(max_lag, len(sig) - 1)
     autocorrs = np.correlate(sig, sig, "full")[len(sig)-1:]
     autocorrs = autocorrs[:max_lag+1] / autocorrs[0]
     autocorrs = autocorrs[::lag_step]

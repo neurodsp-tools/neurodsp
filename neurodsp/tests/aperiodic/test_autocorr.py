@@ -55,3 +55,28 @@ def test_fit_autocorr_acc():
     corrs2 = exp_decay_func(lags, tau, 1, 0)
     params2 = fit_autocorr(lags, corrs2)
     assert np.isclose(params2[0], tau, 0.001)
+
+def test_compute_autocorr_short_signal():
+    """Lag coordinates match direct correlations even beyond the available data."""
+    sig = np.array([1., 3., 2., -1., 4.])
+    centered = sig - sig.mean()
+    energy = np.dot(centered, centered)
+    for max_lag in [4, 5, 1000]:
+        for lag_step in [1, 2, 7]:
+            times, values = compute_autocorr(sig, max_lag=max_lag, lag_step=lag_step)
+            expected_times = np.arange(0, len(sig), lag_step)
+            expected_values = np.array([
+                np.dot(centered[:len(sig)-lag], centered[lag:]) / energy
+                for lag in expected_times
+            ])
+            np.testing.assert_array_equal(times, expected_times)
+            np.testing.assert_allclose(values, expected_values)
+
+
+def test_compute_autocorr_short_fit():
+    """Default lags can feed the documented exponential fit on a short recording."""
+    rng = np.random.default_rng(0)
+    sig = np.convolve(rng.standard_normal(300), np.exp(-np.arange(20) / 3.))[:300]
+    times, values = compute_autocorr(sig)
+    params = fit_autocorr(times, values)
+    assert np.isfinite(params).all()
