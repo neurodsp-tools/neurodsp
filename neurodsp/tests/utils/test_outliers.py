@@ -38,3 +38,21 @@ def test_discard_outliers():
 
     assert_equal(new_dat, np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1],
                                     [1, 1, 1, 1, 1, 1, 1, 1, 1]]))
+
+def test_discard_outliers_zero():
+    """Zero removal preserves all windows and the original number of axes."""
+    for shape in [(2, 4), (1, 4), (1, 2, 4), (2, 1, 4)]:
+        data = np.arange(np.prod(shape), dtype=float).reshape(shape)
+        result = discard_outliers(data, 0)
+        assert_equal(result, data)
+        assert result.shape == shape
+
+
+def test_compute_scv_zero_outliers(tsig):
+    """Explicitly disabling removal agrees with the untrimmed signal analysis."""
+    from neurodsp.spectral import compute_scv
+
+    freqs, expected = compute_scv(tsig, 500)
+    actual_freqs, actual = compute_scv(tsig, 500, outlier_pct=0)
+    assert_equal(actual_freqs, freqs)
+    assert_equal(actual, expected)
