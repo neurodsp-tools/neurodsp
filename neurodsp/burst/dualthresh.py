@@ -156,18 +156,21 @@ def _rmv_short_periods(sig, n_samples):
         return sig
 
     osc_changes = np.diff(1 * sig)
-    osc_starts = np.where(osc_changes == 1)[0]
-    osc_ends = np.where(osc_changes == -1)[0]
+    # Diff indices mark the sample before a 0->1 or 1->0 transition. Add 1 to
+    # land on the first bursting sample (start) or the first post-burst sample
+    # (end, used as an exclusive slice bound), matching compute_burst_stats.
+    osc_starts = np.where(osc_changes == 1)[0] + 1
+    osc_ends = np.where(osc_changes == -1)[0] + 1
 
     if len(osc_starts) == 0:
         osc_starts = [0]
     if len(osc_ends) == 0:
-        osc_ends = [len(osc_changes)]
+        osc_ends = [len(sig)]
 
     if osc_ends[0] < osc_starts[0]:
         osc_starts = np.insert(osc_starts, 0, 0)
     if osc_ends[-1] < osc_starts[-1]:
-        osc_ends = np.append(osc_ends, len(osc_changes))
+        osc_ends = np.append(osc_ends, len(sig))
 
     osc_length = osc_ends - osc_starts
     osc_starts_long = osc_starts[osc_length >= n_samples]
