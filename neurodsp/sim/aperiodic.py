@@ -19,7 +19,7 @@ from neurodsp.sim.transients import sim_synaptic_kernel
 ###################################################################################################
 
 def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, lam=None):
-    """Simulate a Poisson population.
+    r"""Simulate a Poisson population.
 
     Parameters
     ----------
@@ -41,8 +41,8 @@ def sim_poisson_pop(n_seconds, fs, n_neurons=1000, firing_rate=2, lam=None):
 
     Notes
     -----
-    The simulated signal is essentially white noise, but satisfies the Poisson
-    property, i.e. mean(X) = var(X).
+    The simulated signal uses a Gaussian approximation with
+    :math:`\mathrm{E}[X] = \mathrm{Var}(X)` before negative values are clipped to zero.
 
     The lambda parameter of the Poisson process (total rate) is determined as
     firing rate * number of neurons, i.e. summation of Poisson processes is still
@@ -129,7 +129,7 @@ def sim_synaptic_current(n_seconds, fs, n_neurons=1000, firing_rate=2.,
 
 @normalize
 def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
-    """Simulate a signal whose power spectrum has a 1/f structure with a knee.
+    r"""Simulate a signal whose power spectrum has a 1/f structure with a knee.
 
     Parameters
     ----------
@@ -138,9 +138,9 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent1 : float
-        Power law exponent before the knee.
+        Power law exponent in the knee-dominated regime. See Notes for the limiting slopes.
     exponent2 : float
-        Power law exponent after the knee.
+        Additional exponent parameter. The other limiting slope is ``2 * exponent1 + exponent2``.
     knee : float
         Knee parameter.
 
@@ -153,12 +153,17 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
     -----
     This simulated time series has a power spectrum that follows the Lorentzian equation:
 
-    `P(f) = 1 / (f**(exponent1) * (f**(exponent2 + exponent1) + knee))`
+    .. math::
+
+        P(f) = \frac{1}{f^{-\mathrm{exponent1}}
+                       \left(f^{-\mathrm{exponent2}-\mathrm{exponent1}}
+                             + \mathrm{knee}\right)}
 
     - This simulation creates this power spectrum shape using a sum of sinusoids.
-    - The slope of the log power spectrum before the knee is exponent1
-    - The slope after the knee is exponent2, but only when the sign of
-      exponent1 and exponent2 are the same.
+    - When :math:`f^{-\mathrm{exponent2}-\mathrm{exponent1}} \ll \mathrm{knee}`,
+      the log-log slope is ``exponent1``.
+    - When :math:`f^{-\mathrm{exponent2}-\mathrm{exponent1}} \gg \mathrm{knee}`,
+      the log-log slope is ``2 * exponent1 + exponent2`` for the implemented equation.
 
     Examples
     --------
@@ -187,7 +192,7 @@ def sim_knee(n_seconds, fs, exponent1, exponent2, knee):
 
 
 def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
-    """Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
+    r"""Simulate a mean-reverting random walk, as an Ornstein-Uhlenbeck process.
 
     Parameters
     ----------
@@ -213,7 +218,9 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     -----
     The random walk is simulated as a discretized Ornstein-Uhlenbeck process:
 
-    `dx = theta*(x-mu)*dt + sigma*dWt`
+    .. math::
+
+        dx_t = \theta (\mu - x_t)\,dt + \sigma\,dW_t
 
     Where:
 
@@ -223,7 +230,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
     - dWt : increments of Wiener process, i.e. white noise
 
     The Wiener scaling (sigma) differs from the standard deviation of the signal.
-    The standard deviation of the signal will instead equal: sigma / np.sqrt(2 * theta).
+    The standard deviation of the signal will instead equal :math:`\sigma / \sqrt{2\theta}`.
 
     See the wikipedia page [1]_ for the integral solution.
 
@@ -258,7 +265,7 @@ def sim_random_walk(n_seconds, fs, theta=1., mu=0., sigma=5., norm=True):
 
 @normalize
 def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
-    """Simulate a power law time series, with a specified exponent.
+    r"""Simulate a power law time series, with a specified exponent.
 
     Parameters
     ----------
@@ -267,7 +274,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float, optional, default: -2
-        Desired power-law exponent, of the form P(f)=f^exponent.
+        Desired power-law exponent, of the form :math:`P(f) = f^{\mathrm{exponent}}`.
     f_range : list of [float, float] or None, optional
         Frequency range to filter simulated data, as [f_lo, f_hi], in Hz.
     **filter_kwargs : kwargs, optional
@@ -328,7 +335,7 @@ def sim_powerlaw(n_seconds, fs, exponent=-2.0, f_range=None, **filter_kwargs):
 
 @normalize
 def sim_frac_gaussian_noise(n_seconds, fs, exponent=0, hurst=None):
-    """Simulate a timeseries as fractional gaussian noise.
+    r"""Simulate a timeseries as fractional gaussian noise.
 
     Parameters
     ----------
@@ -354,11 +361,19 @@ def sim_frac_gaussian_noise(n_seconds, fs, exponent=0, hurst=None):
     or alternatively with a specified Hurst parameter.
 
     The Hurst parameter is not the Hurst exponent as defined in rescaled range analysis.
-    The Hurst parameter is defined for self-similar processes such that Y(at) = a^H Y(t)
-    for all a > 0, where this equality holds in distribution.
+    The Hurst parameter describes the self-similarity of the associated fractional
+    Brownian motion :math:`Y`, such that :math:`Y(at) \overset{d}{=} a^H Y(t)`
+    for all :math:`a > 0`, where the equality holds in distribution.
 
     The relationship between the power law exponent and the Hurst parameter
-    for fractional gaussian noise is exponent = 2 * hurst - 1.
+    for the low-frequency behavior of fractional gaussian noise, using the signed exponent in
+    :math:`P(f) \propto f^{\mathrm{exponent}}`, is:
+
+    .. math::
+
+        \mathrm{exponent} = 1 - 2H
+
+    where :math:`H` is ``hurst``.
 
     For more information, consult [1]_.
 
@@ -411,7 +426,7 @@ def sim_frac_gaussian_noise(n_seconds, fs, exponent=0, hurst=None):
 
 @normalize
 def sim_frac_brownian_motion(n_seconds, fs, exponent=-2, hurst=None):
-    """Simulate a timeseries as fractional brownian motion.
+    r"""Simulate a timeseries as fractional brownian motion.
 
     Parameters
     ----------
@@ -441,11 +456,18 @@ def sim_frac_brownian_motion(n_seconds, fs, exponent=-2, hurst=None):
     and may be more severe in shorter signals.
 
     The Hurst parameter is not the Hurst exponent in general. The Hurst parameter
-    is defined for self-similar processes such that Y(at) = a^H Y(t) for all a > 0,
-    where this equality holds in distribution.
+    is defined for self-similar processes such that :math:`Y(at) \overset{d}{=} a^H Y(t)`
+    for all :math:`a > 0`, where the equality holds in distribution.
 
     The relationship between the power law exponent and the Hurst parameter
-    for fractional brownian motion is exponent = 2 * hurst + 1
+    for fractional brownian motion, using the signed exponent in
+    :math:`P(f) \propto f^{\mathrm{exponent}}`, is:
+
+    .. math::
+
+        \mathrm{exponent} = -(2H + 1)
+
+    where :math:`H` is ``hurst``.
 
     For more information, consult [1]_ and/or [2]_.
 
@@ -484,7 +506,7 @@ def sim_frac_brownian_motion(n_seconds, fs, exponent=-2, hurst=None):
 
 
 def _create_powerlaw(n_samples, fs, exponent):
-    """Create a power law time series.
+    r"""Create a power law time series.
 
     Parameters
     ----------
@@ -493,7 +515,7 @@ def _create_powerlaw(n_samples, fs, exponent):
     fs : float
         Sampling rate of simulated signal, in Hz.
     exponent : float
-        Desired powerlaw exponent, of the form P(f)=f^exponent.
+        Desired powerlaw exponent, of the form :math:`P(f) = f^{\mathrm{exponent}}`.
 
     Returns
     -------
