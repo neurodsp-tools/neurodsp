@@ -315,7 +315,7 @@ def sim_skewed_gaussian_cycle(n_seconds, fs, center, std, alpha, height=1):
 
 
 def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
-    """Simulate an exponential cosine cycle.
+    r"""Simulate an exponential cosine cycle.
 
     Parameters
     ----------
@@ -326,7 +326,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
     exp : float
         Exponent controlling the amplitude asymmetry of peaks relative to the troughs.
 
-        - `exp=0` : zeros
+        - `exp=0` : ones
         - `exp=.5`: wide peaks, narrow troughs
         - `exp=1.`: symmetrical peaks and troughs (sine wave)
         - `exp=5.`: wide troughs, narrow peaks
@@ -347,7 +347,10 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
 
     .. math::
 
-      cycle = ((cos(2\pi ft) + 1) / 2)^{exp}
+        \mathrm{cycle}(t) = \left(\frac{-\cos(2\pi f t) + \mathrm{shift}}
+                                     {\mathrm{scale}}\right)^{\mathrm{exp}}
+
+    where :math:`f = 1 / \mathrm{n\_seconds}` and :math:`t` is time in seconds.
 
     References
     ----------
@@ -373,7 +376,7 @@ def sim_exp_cos_cycle(n_seconds, fs, exp, scale=2, shift=1):
 
 
 def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
-    """Simulate an asymmetrical cycle as a sum of harmonics.
+    r"""Simulate an asymmetrical cycle as a sum of harmonics.
 
     Parameters
     ----------
@@ -384,7 +387,7 @@ def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
     phi : float
         Phase at each harmonic.
     n_harmonics : int
-        Number of harmonics to sum across.
+        Number of additional harmonics to sum with the fundamental.
 
     Returns
     -------
@@ -397,7 +400,12 @@ def sim_asym_harmonic_cycle(n_seconds, fs, phi, n_harmonics):
 
     .. math::
 
-      cycle = \sum_{j=1}^{j} \dfrac{1}{j^2} \cdot cos(j2\pi ft)+(j-1)*\phi
+        \mathrm{cycle}(t) = \sum_{j=1}^{N+1} \frac{1}{j^2}
+                            \cos\left(2\pi j f t + (j-1)\phi\right)
+
+    where :math:`N` is ``n_harmonics``, :math:`f = 1 / \mathrm{n\_seconds}`,
+    and :math:`t` is time in seconds. The sum includes the fundamental and
+    ``n_harmonics`` additional harmonics.
 
     References
     ----------

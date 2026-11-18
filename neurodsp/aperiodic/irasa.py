@@ -134,7 +134,8 @@ def fit_irasa(freqs, psd_aperiodic):
 
     Notes
     -----
-    This fits a linear function of the form `y = ax + b` to the log-log aperiodic power spectrum.
+    This fits a linear function of the form :math:`y = ax + b` to the log-log
+    aperiodic power spectrum.
     """
 
     popt, _ = curve_fit(fit_func, np.log10(freqs), np.log10(psd_aperiodic))
